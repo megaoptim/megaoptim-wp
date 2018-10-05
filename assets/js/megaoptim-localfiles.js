@@ -75,6 +75,7 @@
                         $processor_btn.prop('disabled', true);
                         $info.html(MGOLocalFiles.info_optimized)
                     }
+                    $('#megaoptim-selected-folder').html('<p><strong>'+MGOLocalFiles.selected_folder+'</strong>: ' + path + '</p>').show();
                     $optimizer_container.show();
                 } else {
                     alert("Internal server error. Please contact support.");

@@ -41,6 +41,8 @@ $tokens = $profile->get_tokens_count();
                                     <a id="megaoptim-select-current-theme-folder" data-themedir="<?php echo get_template_directory(); ?>" class="button-primary"><?php _e('Scan theme folder', 'megaoptim'); ?></a>
                                 </p>
                             </div>
+                            <div id="megaoptim-selected-folder" style="display: none;" class="megaoptim-actions">
+                            </div>
                         <?php else: ?>
                              <?php echo megaoptim_get_view('parts/out-of-tokens'); ?>
                             <div class="megaoptim-actions">
@@ -121,7 +123,7 @@ $tokens = $profile->get_tokens_count();
             <div class="megaoptim-panel-header-inner">
                 <h1 class="megaoptim-panel-title"><?php _e('Select Folder', 'megaoptim'); ?></h1>
                 <p class="megaoptim-panel-desc">
-                    <?php _e('Select a folder you want to optimize', 'megaoptim'); ?> </p>
+                    <?php _e('Click on the check icon to select a folder you want to optimize! The icon will be green if you selected a folder correctly.', 'megaoptim'); ?> </p>
             </div>
         </div>
         <div class="megaoptim-panel-body">

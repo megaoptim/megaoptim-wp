@@ -90,7 +90,7 @@ $tokens = $profile->get_tokens_count();
                                         </p>
 
                                         <p>
-                                            <strong><?php _e( 'Important:', 'megaoptim' ); ?></strong> <?php _e( 'In order to keep the optimizer running, you need to keep the tab open, you can always open a new tab and continue in that tab. If you close this tab the optimizer will stop but don\'t worry, you can always continue later where you left off.', 'megaoptim' ); ?>
+                                            <strong><?php _e( 'Important:', 'megaoptim' ); ?></strong> <?php _e( sprintf('In order to keep the optimizer running, you need to keep the tab open, you can always open a %s and continue in that tab. If you close this tab the optimizer will stop but don\'t worry, you can always continue later where from where you stopped.', '<a href="'.admin_url().'" target="_blank">new tab</a>'), 'megaoptim' ); ?>
                                         </p>
                                     <?php endif; ?>
 

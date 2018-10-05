@@ -22,11 +22,6 @@ $report = megaoptim_get_debug_report();
 ?>
 <div class="megaoptim-postbox">
     <form class="content-wrapper" method="POST" id="megaoptim-report-export">
-        <div class="megaoptim-form-header">
-            <div class="megaoptim-full">
-                <h1 class="content-header"><?php _e('Report', 'megaoptim'); ?></h1>
-            </div>
-        </div>
         <div class="megaoptim-middle-content">
             <table id="megaoptim-report-table" class="megaoptim-table wp-list-table widefat fixed striped media">
                 <tbody>

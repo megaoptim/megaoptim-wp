@@ -60,6 +60,13 @@ span.megaoptim-error {
     display: inline-block;
 }
 
+.megaoptim-attachment-buttons .megaoptim-spinner {
+    height: 16px !important;
+    width: 16px !important;
+    position: relative;
+    top: 3px;
+}
+
 .megaoptim-check {
     background: url('../img/check.png') no-repeat;
     background-size: cover;
@@ -506,7 +513,7 @@ span.megaoptim-error {
 }
 
 #megaoptim-folder-picker {
-    margin-bottom: 50px;
+    margin-bottom: 25px;
 }
 
 .directory span {
@@ -863,4 +870,8 @@ UL.jqueryFileTree A {
     margin-bottom: 28px;
     float: left;
     width: 100%;
+}
+
+#megaoptim-report-table.widefat td, #megaoptim-report-table.widefat th {
+    padding: 5px 10px;
 }

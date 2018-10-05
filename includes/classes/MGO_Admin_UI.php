@@ -35,8 +35,8 @@ class MGO_Admin_UI extends MGO_BaseObject {
 		add_filter( 'manage_media_columns', array( $this, 'manage_media_columns' ), 10, 1 );
 		add_filter( 'manage_media_custom_column', array( $this, 'manage_media_custom_column' ), 10, 2 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
-		add_action( 'add_meta_boxes', array($this, 'register_info_metabox'));
-		add_filter( "plugin_action_links_".WP_MEGAOPTIM_BASENAME, array($this, 'add_settings_link'), 20, 1 );
+		add_action( 'add_meta_boxes', array( $this, 'register_info_metabox' ) );
+		add_filter( "plugin_action_links_" . WP_MEGAOPTIM_BASENAME, array( $this, 'add_settings_link' ), 20, 1 );
 	}
 
 	/**
@@ -165,15 +165,15 @@ class MGO_Admin_UI extends MGO_BaseObject {
 	 * @return void
 	 */
 	public function activation_guide() {
-		include_once(ABSPATH.'wp-admin/includes/plugin.php');
+		include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 		if ( is_plugin_active( WP_MEGAOPTIM_BASENAME ) ) {
 			$instructions_hidden = get_option( 'megaoptim_instructions_hide' );
 			if ( ! $instructions_hidden || empty( $instructions_hidden ) || intval( $instructions_hidden ) !== 1 ) {
-				$disallowed = array('megaoptim_settings', 'megaoptim_bulk_optimizer');
-				$page       = isset($_GET['page']) ? $_GET['page'] : null;
-				if(!in_array($page, $disallowed)) {
+				$disallowed = array( 'megaoptim_settings', 'megaoptim_bulk_optimizer' );
+				$page       = isset( $_GET['page'] ) ? $_GET['page'] : null;
+				if ( ! in_array( $page, $disallowed ) ) {
 					echo megaoptim_get_view( 'misc/instructions' );
-				}	
+				}
 			}
 		}
 	}
@@ -214,21 +214,21 @@ class MGO_Admin_UI extends MGO_BaseObject {
 
 
 	public function register_info_metabox() {
-	    add_meta_box(
-	        'megaoptim_info_metabox',
-	        __('MegaOptim', 'megaoptim'),
-	        array( &$this, 'render_media_edit_buttons'),
-	        null,
-	        'side'
-        );
+		add_meta_box(
+			'megaoptim_info_metabox',
+			__( 'MegaOptim', 'megaoptim' ),
+			array( &$this, 'render_media_edit_buttons' ),
+			null,
+			'side'
+		);
 	}
 
 	/**
 	 * Prints the attachment stats modal to the footer.
 	 */
 	public function render_media_edit_buttons() {
-		$attachment_id = isset($_GET['post']) ? $_GET['post'] : null;
-		if ( !is_null($attachment_id) && megaoptim_is_connected() ) {
+		$attachment_id = isset( $_GET['post'] ) ? $_GET['post'] : null;
+		if ( ! is_null( $attachment_id ) && megaoptim_is_connected() ) {
 			echo '<div class="megaoptim_media_attachment">';
 			$attachment = new MGO_MediaAttachment( $attachment_id );
 			echo megaoptim_get_attachment_buttons( $attachment );
@@ -238,11 +238,12 @@ class MGO_Admin_UI extends MGO_BaseObject {
 
 
 	public function add_settings_link( $links ) {
-	    $custom_links = array(
-	    	'<a href="admin.php?page=megaoptim_settings">' . __( 'Settings' ) . '</a>'
-	    );
-	    $links = array_merge($custom_links, $links);
-	  	return $links;
+		$custom_links = array(
+			'<a href="admin.php?page=megaoptim_settings">' . __( 'Settings' ) . '</a>'
+		);
+		$links        = array_merge( $custom_links, $links );
+
+		return $links;
 	}
 
 	/**
@@ -287,11 +288,11 @@ class MGO_Admin_UI extends MGO_BaseObject {
 				'words'          => array(
 					'clean'                 => __( 'Clean', 'megaoptim' ),
 					'backup_delete_confirm' => __( 'Are you sure you want to delete your backups? This action can not be reversed!', 'megaoptim' ),
-					'optimize' 				=>  __( 'Optimize', 'megaoptim' ),
+					'optimize'              => __( 'Optimize', 'megaoptim' ),
 					'optimizing'            => __( 'Optimizing...', 'megaoptim' ),
 					'working'               => __( 'Working...', 'megaoptim' ),
-					'no_tokens' 			=> __('No enough tokens left. You can always top up your account at https://megaoptim.com/dashboard/', 'megaoptim'),
-					'profile_error' 		=> __('Error! We can not retrieve your profile. Please check if there is active internet connection or open a ticket in our dashboard area.', 'megaoptim')
+					'no_tokens'             => __( 'No enough tokens left. You can always top up your account at https://megaoptim.com/dashboard/', 'megaoptim' ),
+					'profile_error'         => __( 'Error! We can not retrieve your profile. Please check if there is active internet connection or open a ticket in our dashboard area.', 'megaoptim' )
 				),
 				'context'        => array(
 					'medialibrary' => MGO_MediaAttachment::TYPE,
@@ -299,7 +300,11 @@ class MGO_Admin_UI extends MGO_BaseObject {
 					'files'        => MGO_LocalFileAttachment::TYPE,
 				),
 				'ticker'         => array(
-					'enabled'  => in_array( $current_screen->id, array( 'upload', 'nggallery-manage-images', 'attachment' ) ),
+					'enabled'  => in_array( $current_screen->id, array(
+						'upload',
+						'nggallery-manage-images',
+						'attachment'
+					) ),
 					'context'  => $current_screen->id,
 					'interval' => 4000,
 				),
@@ -346,7 +351,8 @@ class MGO_Admin_UI extends MGO_BaseObject {
 					'root_path'          => megaoptim_get_wp_root_path(),
 					'alert_select_files' => __( 'Please select a folder you want to optimize from the list.', 'megaoptim' ),
 					'info_optimized'     => '<p>' . __( 'Congratulations! This folder is fully optimized. Come back later when there are more images.', 'megaoptim' ) . '</p>',
-					'info_not_optimized' => '<p>' . sprintf( '%: ', __( 'In order the plugin to work, you need to keep the tab open, you can always open a new tab and continue in that tab. If you close this tab the optimizer will stop but don\'t worry, you can always continue later where you left off.', 'megaoptim' ), '<strong>' . __( 'Important', 'megaoptim' ) . '</strong>' ) . '</p>'
+					'info_not_optimized' => '<p>' . sprintf( '%: ', __( 'In order the plugin to work, you need to keep the tab open, you can always open a %s and continue in that tab. If you close this tab the optimizer will stop but don\'t worry, you can always continue later from where you stopped.', 'megaoptim' ), '<strong>' . __( 'Important', 'megaoptim' ) . '</strong>', '<a href="'.admin_url().'" target="_blank">new tab</a>' ) . '</p>',
+					'selected_folder'    => __( 'Selected Folder', 'megaoptim' )
 				)
 			);
 		}

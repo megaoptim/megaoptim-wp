@@ -89,7 +89,7 @@ $tokens = $profile->get_tokens_count();
                                         <p>
     										<?php echo sprintf( __( 'On this screen you can optimize all of your nextgen attachments which will result in significant speed boost, better SEO and other benefits. Make sure you check the %s once more if you haven\'t still to make sure it\'s all set up for your needs.', 'megaoptim' ), '<a target="_blank" href="' . $settings_url . '">' . __( 'Settings page', 'megaoptim' ) . '</a>' ); ?>
                                         <p>
-                                            <strong><?php _e( 'Important:', 'megaoptim' ); ?></strong> <?php _e( 'In order the plugin to work, you need to keep the tab open, you can always open a new tab and continue in that tab. If you close this tab the optimizer will stop but don\'t worry, you can always continue later where you left off.', 'megaoptim' ); ?>
+                                            <strong><?php _e( 'Important:', 'megaoptim' ); ?></strong> <?php _e( sprintf('In order to keep the optimizer running, you need to keep the tab open, you can always open a %s and continue in that tab. If you close this tab the optimizer will stop but don\'t worry, you can always continue later where from where you stopped.', '<a href="'.admin_url().'" target="_blank">new tab</a>'), 'megaoptim' ); ?>
                                         </p>
     								<?php endif; ?>
                                 <?php else: ?>

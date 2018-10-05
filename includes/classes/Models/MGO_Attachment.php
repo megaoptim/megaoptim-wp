@@ -91,7 +91,7 @@ abstract class MGO_Attachment {
 					if ( $this->destroy() ) {
 						$this->data = array();
 					}
-
+					do_action('megaoptim_after_restore_attachment', $this);
 					return true;
 				} else {
 					$last = error_get_last();

@@ -189,6 +189,7 @@ class MGO_MediaAttachment extends MGO_Attachment {
 			$meta_data      = megaoptim_regenerate_thumbnails( $this->get_id(), $attachment_path );
 			$this->metadata = $meta_data;
 			$this->destroy();
+			do_action('megaoptim_after_restore_attachment', $this);
 		}
 
 		return true;
