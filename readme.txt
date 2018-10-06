@@ -150,5 +150,9 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
 
 == Changelog ==
 
+= 1.0.1 =
+* Added megaoptim_after_restore_attachment action hook (Called after attachment is restored.)
+* Improved readme and fixed typos
+
 = 1.0.0 =
 * Initial release
