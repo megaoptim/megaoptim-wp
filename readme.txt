@@ -60,7 +60,7 @@ For most of the websites **intelligent** method is enough, it auto determines th
 
 Our service comes with 200 images/tokens per month for free. Additional tokens can be purchased starting from $4.99 for 5,500 tokens. Check out our prices <a href="https://megaoptim.com/pricing">here</a>.
 
-Want more tokens for free? Help us spread MegaOptim and earn 50 tokens per sign up and 300 tokens once customer becomes paid customer. Our Referral program can be found in the <a target="_blank" href="https://megaoptim.com/dashboard">dashboard area</a>.
+Want more tokens for free? Help us spread MegaOptim and earn 120 tokens per sign up and 300 tokens once customer becomes paid customer. Our Referral program can be found in the <a target="_blank" href="https://megaoptim.com/dashboard">dashboard area</a>.
 
 **Have a question? Contact us!**
 
