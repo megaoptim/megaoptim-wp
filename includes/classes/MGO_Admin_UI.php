@@ -225,10 +225,11 @@ class MGO_Admin_UI extends MGO_BaseObject {
 
 	/**
 	 * Prints the attachment stats modal to the footer.
+	 * @throws MGO_Exception
 	 */
 	public function render_media_edit_buttons() {
 		$attachment_id = isset( $_GET['post'] ) ? $_GET['post'] : null;
-		if ( ! is_null( $attachment_id ) && megaoptim_is_connected() ) {
+		if ( ! is_null( $attachment_id ) && 'attachment' === get_post_type( $attachment_id ) && megaoptim_is_connected() ) {
 			echo '<div class="megaoptim_media_attachment">';
 			$attachment = new MGO_MediaAttachment( $attachment_id );
 			echo megaoptim_get_attachment_buttons( $attachment );
@@ -351,7 +352,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 					'root_path'          => megaoptim_get_wp_root_path(),
 					'alert_select_files' => __( 'Please select a folder you want to optimize from the list.', 'megaoptim' ),
 					'info_optimized'     => '<p>' . __( 'Congratulations! This folder is fully optimized. Come back later when there are more images.', 'megaoptim' ) . '</p>',
-					'info_not_optimized' => '<p>' . sprintf( '%: ', __( 'In order the plugin to work, you need to keep the tab open, you can always open a %s and continue in that tab. If you close this tab the optimizer will stop but don\'t worry, you can always continue later from where you stopped.', 'megaoptim' ), '<strong>' . __( 'Important', 'megaoptim' ) . '</strong>', '<a href="'.admin_url().'" target="_blank">new tab</a>' ) . '</p>',
+					'info_not_optimized' => '<p>' . sprintf( '%: ', __( 'In order the plugin to work, you need to keep the tab open, you can always open a %s and continue in that tab. If you close this tab the optimizer will stop but don\'t worry, you can always continue later from where you stopped.', 'megaoptim' ), '<strong>' . __( 'Important', 'megaoptim' ) . '</strong>', '<a href="' . admin_url() . '" target="_blank">new tab</a>' ) . '</p>',
 					'selected_folder'    => __( 'Selected Folder', 'megaoptim' )
 				)
 			);

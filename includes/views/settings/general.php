@@ -36,7 +36,7 @@ $settings = MGO_Settings::instance()->get();
                 <div class="megaoptim-field-wrap">
                     <input type="text" name="<?php echo MGO_Settings::API_KEY; ?>" value="<?php echo isset($settings[ MGO_Settings::API_KEY ]) ? $settings[ MGO_Settings::API_KEY ] : ''; ?>" class="option-control form-control" placeholder="<?php _e( 'Enter API Key', 'megaoptim' ); ?>"/> <?php echo megaoptim_is_connected() ? sprintf( '%s', '<strong>' . __( 'Your API Key is valid!', 'megaoptim' ) . '</strong>' ) : ''; ?>
                     <p class="megaoptim-field-desc">
-						<?php echo sprintf( __( 'Enter the api key. Do not have it yet? Register %s', 'megaoptim' ), '<a target="_blank" href="https://megaoptim.com/register">' . __( 'here', 'megaoptim' ) . '</a>' ); ?>
+						<?php echo sprintf( __( 'Enter the api key. Do not have it yet? Register %s here for %s', 'megaoptim' ), '<a target="_blank" href="https://megaoptim.com/register">' . __( 'here', 'megaoptim' ) . '</a>', '<strong>'.__('free!').'</strong>' ); ?>
                     </p>
                 </div>
             </div>

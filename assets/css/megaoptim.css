@@ -84,12 +84,20 @@ span.megaoptim-error {
     position: relative;
 }
 
-.instructions .megaoptim-card .megaoptim-header p {
+.instructions .megaoptim-card .megaoptim-header {
+    border-bottom: 1px solid #e3e3e3;
+    padding-bottom: 10px;
+}
+
+.instructions .megaoptim-card .megaoptim-header p.lead {
     font-size: 23px;
     color: #1a1a1a;
-    margin-bottom: 0;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #e3e3e3;
+    margin-bottom: 5px;
+
+}
+
+.instructions .megaoptim-card .megaoptim-header p.desc {
+    font-size: 15px;
 }
 
 .instructions .megaoptim-row {
@@ -874,4 +882,14 @@ UL.jqueryFileTree A {
 
 #megaoptim-report-table.widefat td, #megaoptim-report-table.widefat th {
     padding: 5px 10px;
+}
+
+.megaoptim-extra h4 {
+    margin-bottom: 0;
+    margin-top: 10px;
+}
+
+.megaoptim-instruction h4 {
+    margin-top: 10px;
+    margin-bottom: 15px;
 }
