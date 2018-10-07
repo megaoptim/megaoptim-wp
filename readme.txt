@@ -4,7 +4,7 @@ Tags: image optimizer, pagespeed, compression, compress, image, compression, opt
 Requires at least: 3.6
 Tested up to: 4.9.8
 Requires PHP: 5.3.0
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -149,6 +149,15 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
 10. NextGen Galleries: Gallery table screen buttons Integration
 
 == Changelog ==
+
+= 1.0.3 =
+* Imrpoved settings instructions
+* Removed tag folder from the plugin directory.
+
+= 1.0.2 =
+* Fix error when editing post
+* Improved Welcome instructions
+* Improved API Key form
 
 = 1.0.1 =
 * Added megaoptim_after_restore_attachment action hook (Called after attachment is restored.)

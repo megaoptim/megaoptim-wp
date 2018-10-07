@@ -214,13 +214,15 @@ class MGO_Admin_UI extends MGO_BaseObject {
 
 
 	public function register_info_metabox() {
-		add_meta_box(
-			'megaoptim_info_metabox',
-			__( 'MegaOptim', 'megaoptim' ),
-			array( &$this, 'render_media_edit_buttons' ),
-			null,
-			'side'
-		);
+		if ( isset( $_GET['post'] ) && 'attachment' === get_post_type( $_GET['post'] ) ) {
+			add_meta_box(
+				'megaoptim_info_metabox',
+				__( 'MegaOptim', 'megaoptim' ),
+				array( &$this, 'render_media_edit_buttons' ),
+				null,
+				'side'
+			);
+		}
 	}
 
 	/**
