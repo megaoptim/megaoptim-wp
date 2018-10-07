@@ -5,7 +5,7 @@ Plugin URI: https://megaoptim.com/tools/wordpress
 Description: MegaOptim is image compression plugin that optimizes your images in the cloud using intelligent image compression methods to save as much space as possible while keeping the quality almost identical. It's compatible with NextGen Gallery, MediaPress, WP Retina 2x and many other gallery plugins.
 Author: MegaOptim
 Author URI: https://megaoptim.com
-Version: 1.0.1
+Version: 1.0.2
 */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'WP_MEGAOPTIM_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WP_MEGAOPTIM_URL', plugin_dir_url( __FILE__ ) );
-define( 'WP_MEGAOPTIM_VER', '1.0.1' );
+define( 'WP_MEGAOPTIM_VER', '1.0.2' );
 define( 'WP_MEGAOPTIM_PLUGIN_FILE_PATH', __FILE__ );
 define( 'WP_MEGAOPTIM_DB_VER', 1000 );
 define( 'WP_MEGAOPTIM_INT_MAX', PHP_INT_MAX - 30 );
