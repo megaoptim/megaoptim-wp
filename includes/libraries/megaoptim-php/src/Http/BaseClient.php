@@ -40,12 +40,6 @@ abstract class BaseClient {
 	const AUTH_HEADER = 'X-API-KEY';
 
 	/**
-	 * The client user agent
-	 * @var string
-	 */
-	const USER_AGENT = 'MegaOptim PHP Client';
-
-	/**
 	 * Optimize
 	 * @url https://api.megaoptim.com/v1/optimize
 	 */
@@ -67,7 +61,7 @@ abstract class BaseClient {
 	 * Additional user agent info
 	 * @var string
 	 */
-	private static $user_agent = null;
+	public static $user_agent = 'MegaOptim PHP Client' . ' ' . Optimizer::VERSION;
 
 	/**
 	 * The MegaOptim api key that is used to authenticate the request
@@ -183,12 +177,7 @@ abstract class BaseClient {
 	 * @return string
 	 */
 	public static function get_user_agent() {
-		$user_agent = self::USER_AGENT . ' v' . Optimizer::VERSION;
-		if ( ! is_null( self::$user_agent ) && ! empty( self::$user_agent ) ) {
-			$user_agent = $user_agent . ', ' . self::$user_agent;
-		}
-
-		return $user_agent;
+		return self::$user_agent;
 	}
 
 

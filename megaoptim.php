@@ -43,6 +43,7 @@ require_once( WP_MEGAOPTIM_LIBRARIES_PATH . 'megaoptim-php' . DIRECTORY_SEPARATO
 require_once( WP_MEGAOPTIM_INC_PATH . 'loader.php' );
 
 \MegaOptim\Http\BaseClient::$api_url = WP_MEGAOPTIM_API_BASE_URL;
+\MegaOptim\Http\BaseClient::$user_agent = \MegaOptim\Http\BaseClient::$user_agent . ' / ' . 'WordPress ' . $wp_version;
 
 
 
