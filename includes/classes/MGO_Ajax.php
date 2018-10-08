@@ -76,10 +76,10 @@ class MGO_Ajax extends MGO_BaseObject {
 				$response['tokens']     = $profile->get_tokens_count();
 				wp_send_json_success( $response );
 			} else {
-				wp_send_json_error( array( 'error' => __( 'Attachment was not optimized.', 'megaoptim' ) ) );
+				wp_send_json_error( array( 'error' => __( 'Attachment was not optimized.', 'megaoptim' ), 'can_continue' => 1 ) );
 			}
 		} catch ( MGO_Exception $e ) {
-			wp_send_json_error( array( 'error' => $e->getMessage() ) );
+			wp_send_json_error( array( 'error' => $e->getMessage(), 'can_continue' => 1 ) );
 		}
 	}
 
@@ -99,10 +99,10 @@ class MGO_Ajax extends MGO_BaseObject {
 				$response['tokens']     = $profile->get_tokens_count();
 				wp_send_json_success( $response );
 			} else {
-				wp_send_json_error( array( 'error' => __( 'File was not optimized.', 'megaoptim' ) ) );
+				wp_send_json_error( array( 'error' => __( 'File was not optimized.', 'megaoptim' ), 'can_continue' => 1 ) );
 			}
 		} catch ( MGO_Exception $e ) {
-			wp_send_json_error( array( 'error' => $e->getMessage() ) );
+			wp_send_json_error( array( 'error' => $e->getMessage(), 'can_continue' => 1 ) );
 		}
 	}
 

@@ -150,6 +150,11 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
 
 == Changelog ==
 
+= 1.0.4 =
+* When image is missing on the server - don't stop the process.
+* Added the WP version in the useragent header when sending request to the api server
+* Corrected info message in the Media List Table and the Media Edit Metabox.
+
 = 1.0.3 =
 * Imrpoved settings instructions
 * Removed tag folder from the plugin directory.

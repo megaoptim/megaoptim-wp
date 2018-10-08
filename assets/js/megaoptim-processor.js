@@ -157,11 +157,15 @@
                                     window.location.href = window.location.href;
                                 }
                             } else {
+                                self.update_row_error(data[index]['ID'], response.data.error);
                                 self.log('Response ***error*** received for image with id: ' + data[index]['ID'], 'warn');
                                 self.log(response.data, 'log');
-                                self.stop_optimizer(); // is_running = false
-                                self.update_row_error(data[index]['ID'], response.data.error);
-                                // Maybe show popup?
+                                if( response.data['can_continue'] == 1 ) {
+                                    // Do nothing when image is not optimized by some reason.
+                                } else {
+                                    self.stop_optimizer();
+
+                                }
                             }
                         }
                         else {

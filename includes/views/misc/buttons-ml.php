@@ -17,10 +17,9 @@ if ( count( $optimized_thumbnails['retina'] ) > 0 ) {
 <div class="megaoptim-attachment-buttons">
 	<?php if ( $data->is_already_optimized() && $data->get( 'success' ) != 1 ): ?>
         <p>
-			<?php $method = __( 'Full size image already optimized, no further optimization needed!', 'megaoptim' ); ?><?php echo sprintf( __( '%s Additionally we optimized its thumbnails, + %s, total saved on thumbnails %s', 'megaoptim' ), '<strong>' . $method . '</strong>', $text_optimized_thumbnails, $total_saved_on_thumbnails ); ?>
+			<?php if ( $total_saved_on_thumbnails > 0 ): ?><?php $method = __( 'Full size attachment already optimized, no further optimization needed!', 'megaoptim' ); ?><?php echo sprintf( __( '%s Additionally we optimized its thumbnails, + %s, total saved on thumbnails %s', 'megaoptim' ), '<strong>' . $method . '</strong>', $text_optimized_thumbnails, $total_saved_on_thumbnails ); ?><?php else: ?><?php $method = __( 'Attachment already optimized, no further optimization needed!', 'megaoptim' ); ?><?php endif; ?>
         </p>
 	<?php elseif ( $data->is_optimized() ): ?>
-
         <p style="margin-bottom: 0">
             <strong><?php echo sprintf( __( 'Success! Image optimized successfully with %s method.', 'megaoptim' ), '<u>' . $data->get( 'compression' ) . '</u>' ); ?></strong>
         </p>

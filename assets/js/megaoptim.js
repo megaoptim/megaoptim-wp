@@ -332,7 +332,7 @@
                 beforeSend: function () {
                     $button.click();
                     $self.addClass('megaoptim-optimizing');
-                    $button.removeClass('button-primary').addClass('button disabled').html(spinner + MegaOptim.words.optimizing);
+                    $button.removeClass('button-primary').addClass('button disabled').html(spinner + ' ' + MegaOptim.words.optimizing);
                 },
                 success: function(response) {
                     // If all good, proceed.
