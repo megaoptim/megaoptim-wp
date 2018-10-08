@@ -4,7 +4,7 @@ Tags: image optimizer, pagespeed, compression, compress, image, compression, opt
 Requires at least: 3.6
 Tested up to: 4.9.8
 Requires PHP: 5.3.0
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -151,7 +151,7 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
 == Changelog ==
 
 = 1.0.4 =
-* When image is missing on the server - don't stop the process.
+* Don't stop the bulk process when image is missing on the server, continue to next instead.
 * Added the WP version in the useragent header when sending request to the api server
 * Corrected info message in the Media List Table and the Media Edit Metabox.
 

@@ -42,7 +42,7 @@
             <div class="megaoptim-colf">
                 <div class="megaoptim-extra">
                     <h4 class="navy"><?php _e('Referral program', 'megaoptim'); ?></h4>
-                    <p><?php echo sprintf(__('We have a nice referral program available for everyone. Share your %s with your friedns and get %s on each signup and %s when the referral subscribes to any plan.'), '<strong><a target="_blank" href="https://megaoptim.com/dashboard/referral">'.__('referral url').'</a></strong>', '<strong>'.__('120 tokens', 'megaoptim').'</strong>', '<strong>'.__('300 tokens', 'megaoptim').'</strong>');?></p>
+                    <p><?php echo sprintf(__('We have a beautiful referral program available for everyone. Share your %s with your friends and get %s on each signup and %s when the referral subscribes to any plan.'), '<strong><a target="_blank" href="https://megaoptim.com/dashboard/referral">'.__('referral url').'</a></strong>', '<strong>'.__('120 tokens', 'megaoptim').'</strong>', '<strong>'.__('300 tokens', 'megaoptim').'</strong>');?></p>
                 </div>
             </div>
         </div>
