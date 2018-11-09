@@ -1,5 +1,4 @@
 (function ($) {
-
     /*global $, MGOProcessorData */
     /*jslint browser:true */
 
@@ -11,6 +10,10 @@
 
         this.action = action;
         this.context = context;
+        this.loader_preparing = new $.megaoptim.loader({
+            'title' : MGOProcessorData.strings.loader_working_title,
+            'description' : MGOProcessorData.strings.loader_working_description,
+        });
 
         /**
          * Mark the optimizer as running
@@ -67,6 +70,30 @@
         };
 
         /**
+         * Is the Media Library optimizer?
+         * @returns {boolean}
+         */
+        this.is_media_library = function () {
+            return this.context === MGOProcessorData.context.media_library;
+        };
+
+        /**
+         * Is the NGG Optimizer ?
+         * @returns {boolean}
+         */
+        this.is_ngg = function () {
+            return this.context === MGOProcessorData.context.ngg;
+        };
+
+        /**
+         * Is local folders?
+         * @returns {boolean}
+         */
+        this.is_local_folders = function () {
+            return this.context === MGOProcessorData.context.local_folders;
+        };
+
+        /**
          * Init?
          */
         this.init = function () {
@@ -86,34 +113,43 @@
          * Turn on the optimizer
          */
         this.start_optimizer = function () {
+            var $spin = $('#megaoptim-running-spinner');
+            self.loader_preparing.start();
             self.unlock_optimizer();
             self.set_optimizer_running();
             var attachments = self.get_attachments();
-            if (!self.is_table_populated()) {
-                self.populate_results_table(attachments);
+            if (self.is_local_folders()) {
+                if (!self.is_table_populated()) {
+                    self.populate_results_table(attachments);
+                }
             }
             setTimeout(function () {
                 var index = 0;
                 if ($.megaoptim_current_index) {
                     index = $.megaoptim_current_index;
                 }
+                self.loader_preparing.stop();
+                $spin.show();
                 self.run(index, attachments.length, attachments);
             }, 1000);
+
         };
 
         /**
          * Turn off the optimizer
          */
         this.stop_optimizer = function () {
+            var $spin = $('#megaoptim-running-spinner');
             var $btn = $('#megaoptim-toggle-optimizer');
             self.set_optimizer_off();
             $btn.text(MGOProcessorData.strings.cancelling + '...');
             $btn.prop('disabled', true);
             setTimeout(function () {
+                $spin.hide();
                 $btn.text($btn.data('start-text'));
                 $btn.prop('disabled', false);
                 self.set_optimizer_off();
-            }, 4000);
+            }, 7000);
         };
 
         /**
@@ -135,6 +171,9 @@
                     return;
                 }
                 self.log('Start optimizing attachment with id:' + data[index]['ID'], 'info');
+                if (self.is_media_library() || self.is_ngg()) {
+                    self.add_table_row(data[index]);
+                }
                 self.update_row_status(data[index]['ID'], self.get_small_spinner(MGOProcessorData.strings.optimizing));
                 self.lock_optimizer();
                 $.ajax({
@@ -149,27 +188,20 @@
                         if (index < len) {
                             if (response.success) {
                                 self.update_table_row(response.data['attachment']);
-                                self.update_other_data(response.data['general']);
-                                self.log('Response ***success*** received for image with id: ' + data[index]['ID'], 'info');
-                                if (response.data['general']['total_remaining'] === 0) {
-                                    self.stop_optimizer(); // is_running = false
-                                } else if (response.data['tokens'] === 0) {
+                                self.update_couters(response.data['general']);
+                                if (response.data['tokens'] === 0) {
                                     window.location.href = window.location.href;
                                 }
                             } else {
                                 self.update_row_error(data[index]['ID'], response.data.error);
-                                self.log('Response ***error*** received for image with id: ' + data[index]['ID'], 'warn');
                                 self.log(response.data, 'log');
-                                if( response.data['can_continue'] == 1 ) {
-                                    // Do nothing when image is not optimized by some reason.
-                                } else {
+                                if (!(response.data['can_continue'] === 1 || response.data['can_continue'] === '1')) {
                                     self.stop_optimizer();
-
                                 }
                             }
                         }
                         else {
-                            self.stop_optimizer(); // is_running = false
+                            self.stop_optimizer();
                             self.log('Optimizer finished.', 'info');
                             return;
                         }
@@ -193,22 +225,40 @@
             if (attachments.length > 0) {
                 var $table = self.get_results_table();
                 var $body = $table.find('tbody');
-                self.bind_spinner('.megaoptim-postbox');
-                for (i = 0; i < attachments.length; i++) {
-                    var html = '<tr id="attachment_' + attachments[i]["ID"] + '">' +
-                        '<td class="thumbnail atttachment_name"><img src="' + attachments[i]['thumbnail'] + '" width="25"></td>' +
-                        '<td class="column-primary atttachment_name">' + attachments[i]["title"] + '</td>' +
-                        '<td class="column-author attachment_original_size">-</td>' +
-                        '<td class="column-author attachment_optimized_size">-</td>' +
-                        '<td class="column-author attachment_saved_bytes">-</td>' +
-                        '<td class="column-author attachment_saved_percent">-</td>' +
-                        '<td class="column-author attachment_optimized_thumbs">-</td>' +
-                        '<td class="column-status attachment_status">' + MGOProcessorData.strings.waiting + '</td>' +
-                        '</tr>';
-                    $body.append(html);
+                self.loader_preparing.start();
+                for (var i = 0; i < attachments.length; i++) {
+                    $body.append(self.generate_table_row(attachments[i]));
                 }
-                self.unbind_spinner('.megaoptim-postbox');
+                self.loader_preparing.stop();
             }
+        };
+
+        /**
+         * Returns the row html
+         * @param attachment
+         * @returns {string}
+         */
+        this.generate_table_row = function (attachment) {
+            return '<tr id="attachment_' + attachment["ID"] + '">' +
+                '<td class="thumbnail atttachment_name"><img src="' + attachment['thumbnail'] + '" width="25"></td>' +
+                '<td class="column-primary atttachment_name">' + attachment["title"] + '</td>' +
+                '<td class="column-author attachment_original_size">-</td>' +
+                '<td class="column-author attachment_optimized_size">-</td>' +
+                '<td class="column-author attachment_saved_bytes">-</td>' +
+                '<td class="column-author attachment_saved_percent">-</td>' +
+                '<td class="column-author attachment_optimized_thumbs">-</td>' +
+                '<td class="column-status attachment_status">' + MGOProcessorData.strings.waiting + '</td>' +
+                '</tr>';
+        };
+
+        /**
+         * Add row to the table
+         * @param attachment
+         */
+        this.add_table_row = function (attachment) {
+            var $table = self.get_results_table();
+            var $body = $table.find('tbody');
+            $body.prepend(self.generate_table_row(attachment));
         };
 
         /**
@@ -217,22 +267,6 @@
          */
         this.get_results_table = function () {
             return $('#megaoptim-results-table');
-        };
-
-        /**
-         * Bind spinner
-         * @param selector
-         */
-        this.bind_spinner = function (selector) {
-            $(selector).LoadingOverlay('show');
-        };
-
-        /**
-         * Unbind spinner
-         * @param selector
-         */
-        this.unbind_spinner = function (selector) {
-            $(selector).LoadingOverlay('hide');
         };
 
         /**
@@ -273,8 +307,10 @@
                 $row.find('.attachment_saved_bytes').text(attachment.saved_bytes);
                 $row.find('.attachment_saved_percent').text(attachment.saved_percent + '%');
                 var txt_optimized_thumbs = attachment.optimized_thumbs;
-                if (attachment.hasOwnProperty('optimized_thumbs_retina') && attachment.optimized_thumbs_retina > 0 && attachment.hasOwnProperty('saved_thumbs_retina') ) {
-                    txt_optimized_thumbs += ' regular (total saved: ' + attachment.saved_thumbs + ') and ' + attachment.optimized_thumbs_retina + ' retina (total saved: ' + attachment.saved_thumbs_retina + ')';
+                if (attachment.hasOwnProperty('optimized_thumbs_retina') && attachment.optimized_thumbs_retina > 0 && attachment.hasOwnProperty('saved_thumbs_retina')) {
+                    txt_optimized_thumbs += ' regular (total saved: ' + attachment.saved_thumbs + ') and ' + attachment.optimized_thumbs_retina + ' retina (total saved: ' + attachment.saved_thumbs_retina + ') thumbs';
+                } else if (attachment.hasOwnProperty('saved_thumbs') && attachment.saved_thumbs > 0) {
+                    txt_optimized_thumbs += ' regular thumbs (total saved: ' + attachment.saved_thumbs + ')';
                 }
                 $row.find('.attachment_optimized_thumbs').text(txt_optimized_thumbs);
                 var status;
@@ -302,27 +338,37 @@
          * Used to update other data in the dashboard
          * @param data
          */
-        this.update_other_data = function (data) {
-            if (data.hasOwnProperty('total_optimized_mixed')) {
-                $('#total_optimized_mixed').text(data['total_optimized_mixed']);
+        this.update_couters = function (data) {
+            var percent = 0;
+            // elements
+            var $el_total_optimized_mixed = $('#total_optimized');
+            var $el_total_remaining = $('#total_remaining');
+            var $el_total_saved_bytes = $('#total_saved_bytes');
+            var $el_percent_number = $('#progress_percentage');
+            var $el_percent_bar = $('#progress_percentage_bar');
+            // calculations
+
+            var total_processed = parseInt(data.total);
+            var total_optimized = parseInt($el_total_optimized_mixed.text()) + total_processed;
+            var total_remaining = parseInt($el_total_remaining.text()) - total_processed;
+            var total = (total_optimized + total_remaining);
+            var total_saved_bytes = parseFloat($el_total_saved_bytes.text()) + parseInt(data.saved_megabytes);
+
+            // aassignments
+            $el_total_optimized_mixed.text(total_optimized);
+            $el_total_remaining.text(total_remaining);
+            $el_total_saved_bytes.text(total_saved_bytes.toFixed(2));
+
+            // progress bar
+            if (total <= 0) {
+                percent = 100;
+            } else if (total_optimized <= 0) {
+                percent = 0;
+            } else {
+                percent = (total_optimized / total) * 100;
             }
-            if (data.hasOwnProperty('total_remaining')) {
-                $('#total_remaining').text(data['total_remaining']);
-                if (data['total_remaining'] === 0) {
-                    $('#megaoptim-toggle-optimizer').addClass('disabled').prop('disabled', true);
-                }
-            }
-            if (data.hasOwnProperty('total_saved_bytes_human')) {
-                $('#total_saved_bytes').text(data['total_saved_bytes_human']);
-            }
-            if (data.hasOwnProperty('total_optimized_mixed_percentage')) {
-                if (data['total_optimized_mixed_percentage'] <= 100) {
-                    $('.megaoptim-progress-bar-content').text(data['total_optimized_mixed_percentage'] + '%');
-                    $('.megaoptim-progress-bar-fill').css({width: data['total_optimized_mixed_percentage'] + '%'});
-                } else {
-                    alert('Progress: Unknown error.');
-                }
-            }
+            $el_percent_bar.css({width: percent.toFixed(2) + '%'});
+            $el_percent_number.text(percent.toFixed(2) + '%');
         };
 
         /**

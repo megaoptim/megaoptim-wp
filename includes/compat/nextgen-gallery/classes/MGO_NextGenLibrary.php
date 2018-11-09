@@ -33,13 +33,17 @@ class MGO_NextGenLibrary extends MGO_Library {
 	/**
 	 * Optimizes specific attachment
 	 *
-	 * @param int|MGO_File $attachment
+	 * @param $attachment
 	 * @param array $params
 	 *
-	 * @return mixed
+	 * @return MGO_ResultBag|mixed
+	 * @throws MGO_Attachment_Already_Optimized_Exception
+	 * @throws MGO_Attachment_Locked_Exception
 	 * @throws MGO_Exception
 	 */
 	public function optimize( $attachment, $params = array() ) {
+
+		$result = new MGO_ResultBag();
 
 		if ( is_numeric( $attachment ) ) {
 			$attachment = megaoptim_get_ngg_attachment( $attachment );
@@ -104,7 +108,7 @@ class MGO_NextGenLibrary extends MGO_Library {
 
 			// Optimize the original
 			$response = $this->optimizer->run( $resource, $request_params );
-
+			$result->add( 'full', $response );
 			if ( $response->isError() ) {
 				megaoptim_log( $response->getErrors() );
 			} else {
@@ -134,7 +138,9 @@ class MGO_NextGenLibrary extends MGO_Library {
 
 			$attachment_object->unlock();
 
-			return $attachment_object;
+			$result->set_attachment( $attachment_object );
+
+			return $result;
 		} catch ( Exception $e ) {
 			$attachment_object->unlock();
 			throw new MGO_Exception( $e->getMessage() . ' in ' . $e->getFile() );
@@ -160,7 +166,8 @@ class MGO_NextGenLibrary extends MGO_Library {
 	public function get_remaining_images() {
 		global $wpdb;
 		$url     = get_site_url() . "/";
-		$query   = $wpdb->prepare( "SELECT P.pid as ID, P.filename as title, CONCAT(%s,G.path,P.filename) as thumbnail,  CONCAT(%s,G.path,P.filename) as url, CONCAT(%s,G.path,P.filename) as path FROM {$wpdb->prefix}ngg_pictures P INNER JOIN {$wpdb->prefix}ngg_gallery G ON P.galleryid=G.gid LEFT JOIN {$wpdb->prefix}megaoptim_opt SOPT ON SOPT.object_id=P.pid WHERE SOPT.id IS NULL", $url, $url, megaoptim_get_wp_root_path() . DIRECTORY_SEPARATOR );
+		$path    = megaoptim_get_wp_root_path() . DIRECTORY_SEPARATOR;
+		$query   = $wpdb->prepare( "SELECT P.pid as ID, P.filename as title, CONCAT('%s',G.path,P.filename) as thumbnail,  CONCAT('%s',G.path,P.filename) as url, CONCAT('%s',G.path,P.filename) as path FROM wp_ngg_pictures P INNER JOIN wp_ngg_gallery G ON P.galleryid=G.gid LEFT JOIN wp_megaoptim_opt SOPT ON SOPT.object_id=P.pid AND SOPT.type='%s' WHERE SOPT.id IS NULL", $url, $url, $path, MGO_NextGenAttachment::TYPE );
 		$results = $wpdb->get_results( $query, ARRAY_A );
 
 		return $results;

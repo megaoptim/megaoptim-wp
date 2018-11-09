@@ -1,24 +1,26 @@
 <?php
 /********************************************************************
- * Copyright (C) 2017 Darko Gjorgjijoski (http://darkog.com)
+ * Copyright (C) 2018 MegaOptim (https://megaoptim.com)
  *
- * This program is free software: you can redistribute it and/or modify
+ * This file is part of MegaOptim Image Optimizer
+ *
+ * MegaOptim Image Optimizer is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * the Free Software Foundation, either version 2 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * MegaOptim Image Optimizer is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with MegaOptim Image Optimizer. If not, see <https://www.gnu.org/licenses/>.
  **********************************************************************/
 
 if ( ! defined( 'ABSPATH' ) ) {
 	die( 'Direct access is not allowed.' );
 }
-/* @var array $stats */
 /* @var MGO_Profile $profile */
 $settings_url  = admin_url( "admin.php?page=megaoptim_settings" );
 $profile_valid = $profile instanceof MGO_Profile && ( $profile->has_api_key() && $profile->is_valid_apikey() );
@@ -34,7 +36,7 @@ $tokens = $profile->get_tokens_count();
                         <?php if( $tokens > 0 ): ?>
                             <h1><?php _e('Optimize folders', 'megaoptim'); ?></h1>
                             <p><?php _e('On this screen you can optimize your folders that contain images and are outside of the WordPress Media Library or the NextGen Galleries.', 'megaoptim'); ?></p>
-                            <p><?php _e(sprintf('Click on "Select custom folder" to choose a folder that contains images or optimize your current theme %s folder. ( Recommended )', '<strong>'.wp_get_theme()->get( 'Name' ).'</strong>'), 'megaoptim'); ?></p>
+                            <p><?php _e(sprintf('Click on "Select custom folder" to choose a folder that contains images or optimize your current theme %s folder. (Recommended)', '<strong>'.wp_get_theme()->get( 'Name' ).'</strong>'), 'megaoptim'); ?></p>
                             <div class="megaoptim-actions">
                                 <p>
                                     <a id="megaoptim-select-folder" href="#sos-dir-select" class="button-primary"><?php _e('Select custom folder', 'megaoptim'); ?></a> <?php _e('or', 'megaoptim'); ?>
@@ -59,7 +61,7 @@ $tokens = $profile->get_tokens_count();
                         <div class="megaoptim-row">
                             <div class="megaoptim-col-4 megaoptim-extra-xs-full">
                                 <div class="megaoptim-stats-box">
-                                    <div class="megaoptim-stats-square megaoptim-bg-secondary megaoptim-border-primary" id="total_optimized_mixed"></div>
+                                    <div class="megaoptim-stats-square megaoptim-bg-secondary megaoptim-border-primary" id="total_optimized">0</div>
                                     <div class="megaoptim-stats-label">
 										<?php _e( 'Images Optimized', 'megaoptim' ); ?>
                                     </div>
@@ -67,7 +69,7 @@ $tokens = $profile->get_tokens_count();
                             </div>
                             <div class="megaoptim-col-4 megaoptim-extra-xs-full">
                                 <div class="megaoptim-stats-box">
-                                    <div class="megaoptim-stats-square megaoptim-bg-secondary megaoptim-border-primary" id="total_remaining"></div>
+                                    <div class="megaoptim-stats-square megaoptim-bg-secondary megaoptim-border-primary" id="total_remaining">0</div>
                                     <div class="megaoptim-stats-label">
 										<?php _e( 'Remaining Images', 'megaoptim' ); ?>
                                     </div>
@@ -75,7 +77,7 @@ $tokens = $profile->get_tokens_count();
                             </div>
                             <div class="megaoptim-col-4 megaoptim-extra-xs-full">
                                 <div class="megaoptim-stats-box">
-                                    <div class="megaoptim-stats-square megaoptim-bg-secondary megaoptim-border-primary" id="total_saved_bytes"></div>
+                                    <div class="megaoptim-stats-square megaoptim-bg-secondary megaoptim-border-primary" id="total_saved_bytes">0</div>
                                     <div class="megaoptim-stats-label">
 										<?Php _e( 'Total saved MB', 'megaoptim' ); ?>
                                     </div>
@@ -117,28 +119,7 @@ $tokens = $profile->get_tokens_count();
     </form>
 </div>
 
-<div class="remodal megaoptim-panel megaoptim-modal" id="sos-dir-select" data-remodal-id="sos-dir-select">
-    <div class="megaoptim-panel-inner">
-        <div class="megaoptim-panel-header">
-            <div class="megaoptim-panel-header-inner">
-                <h1 class="megaoptim-panel-title"><?php _e('Select Folder', 'megaoptim'); ?></h1>
-                <p class="megaoptim-panel-desc">
-                    <?php _e('Click on the check icon to select a folder you want to optimize! The icon will be green if you selected a folder correctly.', 'megaoptim'); ?> </p>
-            </div>
-        </div>
-        <div class="megaoptim-panel-body">
-            <div class="megaoptim-panel-body-inner">
-                <div class="megaoptimdirtree"></div>
-            </div>
-        </div>
-        <div class="megaoptim-panel-footer">
-            <div class="megaoptim-panel-footer-inner">
-                <button data-remodal-action="cancel" class="megaoptim-btn megaoptim-cancel"><?php _e('Cancel', 'megaoptim'); ?></button>
-                <button id="sos-dir-select-action" class="megaoptim-btn megaoptim-ok"><?php _e('OK', 'megaoptim'); ?></button>
-            </div>
-        </div>
-    </div>
-</div>
+<?php megaoptim_view('modals/folders'); ?>
 
 <div id="megaoptim-results">
     <table id="megaoptim-results-table" class="megaoptim-table wp-list-table widefat fixed striped media">

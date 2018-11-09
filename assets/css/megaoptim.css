@@ -76,6 +76,115 @@ span.megaoptim-error {
 }
 
 /**
+ * Loaders
+ */
+
+#megaoptim-loader .megaoptim-panel-title {
+    text-align: center;
+    margin-bottom: 20px !important;
+    margin-top: 15px !important;
+}
+
+#megaoptim-loader .megaoptim-panel-body-inner p {
+    font-size: 16px;
+    line-height: 24px;
+}
+
+#megaoptim-running-spinner {
+    margin-bottom: 20px;
+}
+
+/* spinner style */
+.mgo-spinner {
+    position: relative;
+    width: 125px;
+    height: 125px;
+    display: inline-block;
+}
+
+.mgo-spinner:before, .mgo-spinner:after {
+    content: "";
+    display: block;
+    position: absolute;
+    border: 4px solid;
+    border-radius: 50%;
+}
+
+/* spinner-3 styles */
+@-webkit-keyframes scale-2 {
+    0% {
+        -webkit-transform: scale(0);
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        -webkit-transform: scale(0.7);
+        transform: scale(0.7);
+        opacity: 1;
+    }
+    100% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+@keyframes scale-2 {
+    0% {
+        -webkit-transform: scale(0);
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        -webkit-transform: scale(0.7);
+        transform: scale(0.7);
+        opacity: 1;
+    }
+    100% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+.mgo-spinner.spinner-1:before {
+    width: 117px;
+    height: 117px;
+    top: 0px;
+    left: 0px;
+    -webkit-animation: scale-2 1s linear 0s infinite;
+    animation: scale-2 1s linear 0s infinite;
+}
+.mgo-spinner.spinner-1:after {
+    width: 117px;
+    height: 117px;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    -webkit-animation: scale-2 1s linear 0.5s infinite;
+    animation: scale-2 1s linear 0.5s infinite;
+}
+
+.mgo-spinner.spinner-1.mgo-spinner-dark:before {
+    border-color: #212121;
+}
+.mgo-spinner.spinner-1.mgo-spinner-dark:after {
+    border-color: #212121;
+}
+
+.mgo-spinner.spinner-1.mgo-spinner-light:before {
+    border-color: #BEBEBE;
+}
+.mgo-spinner.spinner-1.mgo-spinner-light:after {
+    border-color: #BEBEBE;
+}
+
+.mgo-spinner.spinner-1.mgo-spinner-navy:before {
+    border-color: #00317e;
+}
+.mgo-spinner.spinner-1.mgo-spinner-navy:after {
+    border-color: #00317e;
+}
+
+/**
  * Instructions
  */
 .instructions .megaoptim-card {
@@ -156,6 +265,9 @@ span.megaoptim-error {
 /**
  * Layout
  */
+.remodal-overlay {
+    background: rgba(25, 35, 65, 0.95);
+}
 .megaoptim-page .wrap {
     display: block;
     width: 100%;
@@ -407,8 +519,27 @@ span.megaoptim-error {
     }
 }
 
+@media(min-width: 768px ) {
+    #megaoptim-progress-bar .megaoptim-progress-bar {
+        max-width: 80%;
+        margin-right: auto;
+        margin-left: auto;
+    }
+}
+
 .megaoptim-margin-top-0 {
     margin-top: 0 !important;
+}
+
+.mgo-error input[type=text], .mgo-error input[type=email], .mgo-error input[type=password] {
+    border: 1px solid red;
+}
+
+span.mgo-field-error {
+    color: red;
+    margin-top: 5px;
+    display: block;
+    font-size: 12px !important;
 }
 
 /**
@@ -446,11 +577,11 @@ span.megaoptim-error {
 #megaoptim-progress-bar {
     float: left;
     width: 100%;
-    margin-top: 40px;
+    margin-top: 39px;
     border-top: 1px solid #f0f0f0;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     padding-bottom: 0;
-    padding-top: 40px;
+    padding-top: 25px;
 }
 
 #megaoptim-results {
@@ -609,7 +740,7 @@ UL.jqueryFileTree A {
 }
 
 .megaoptim-panel-body-inner, .megaoptim-panel-header-inner, .megaoptim-panel-footer-inner {
-    padding: 20px;
+    padding: 20px 40px;
 }
 
 .megaoptim-panel-desc {
@@ -681,6 +812,47 @@ UL.jqueryFileTree A {
     .megaoptim-modal {
         max-width: 500px;
     }
+}
+
+/**
+ * Margins
+ */
+.megaoptim-mb-0 {
+    margin-bottom: 0;
+}
+.megaoptim-mb-10 {
+    margin-bottom: 10px;
+}
+.megaoptim-mb-15 {
+    margin-bottom: 15px;
+}
+.megaoptim-mb-20 {
+    margin-bottom: 20px;
+}
+.megaoptim-mb-25 {
+    margin-bottom: 25px;
+}
+.megaoptim-mb-30 {
+    margin-bottom: 30px;
+}
+.megaoptim-mt-5 {
+    margin-top:5px;
+}
+
+.megaoptim-mt-10 {
+    margin-top: 10px;
+}
+.megaoptim-mt-15 {
+    margin-top: 15px;
+}
+.megaoptim-mt-20 {
+    margin-top: 20px;
+}
+.megaoptim-mt-25 {
+    margin-top: 25px;
+}
+.megaoptim-mt-30 {
+    margin-top: 30px;
 }
 
 /**
@@ -892,4 +1064,18 @@ UL.jqueryFileTree A {
 .megaoptim-instruction h4 {
     margin-top: 10px;
     margin-bottom: 15px;
+}
+
+
+.mgo-form-group {
+    margin-bottom: 15px;
+}
+
+.mgo-form-group input[type=text], .mgo-form-group input[type=password], .mgo-form-group input[type=email] {
+    width: 100%;
+}
+.mgo-form-group label {
+    width: 100%;
+    display: inline-block;
+    margin-bottom: 3px;
 }

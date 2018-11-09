@@ -45,17 +45,16 @@ class MGO_Profile {
 			$this->_api_key = $api_key;
 		}
 		$this->_cache_key = 'profile_' . $this->_api_key;
-		if( $this->__load() ) {
+		if ( $this->__load() ) {
 			$this->fresh = true;
 		}
 	}
 
 
 	/**
-	 * Load user data.
-	 *
 	 * @param bool $forceReload
 	 *
+	 * @return bool
 	 * @throws MGO_Exception
 	 */
 	private function __load( $forceReload = false ) {
@@ -71,12 +70,14 @@ class MGO_Profile {
 						$this->data['valid'] = 1;
 					}
 					megaoptim_cache_set( $this->_cache_key, $this->data, $this->_cache_key );
+
 					return true;
-				}	
+				}
 			}
 		} else {
 			$this->data = $data;
 		}
+
 		return false;
 	}
 
@@ -96,6 +97,7 @@ class MGO_Profile {
 				'httpversion' => '1.0',
 				'blocking'    => true,
 				'headers'     => array( strtolower( WP_MEGAOPTIM_API_HEADER_KEY ) => $api_key ),
+				'sslverify'   => false,
 			)
 		);
 		if ( is_wp_error( $response ) ) {
@@ -103,6 +105,28 @@ class MGO_Profile {
 		} else {
 			return @json_decode( $response['body'], true );
 		}
+	}
+
+	/**
+	 * Register api url
+	 *
+	 * @param $data
+	 *
+	 * @return array|WP_Error
+	 */
+	public static function register( $data ) {
+		$response = wp_remote_post( WP_MEGAOPTIM_REGISTER_API_URL, array(
+				'method'      => 'POST',
+				'timeout'     => 45,
+				'redirection' => 5,
+				'httpversion' => '1.0',
+				'blocking'    => true,
+				'body'        => $data,
+				'sslverify'   => false,
+			)
+		);
+
+		return $response;
 	}
 
 	/**
@@ -126,10 +150,10 @@ class MGO_Profile {
 	 * @return mixed|string
 	 */
 	public function get_tokens_count() {
-		if( ! $this->fresh ) {
+		if ( ! $this->fresh ) {
 			$this->refresh();
 		}
-		
+
 		$tokens = $this->get( 'tokens' );
 		if ( ! is_numeric( $tokens ) ) {
 			return 0;

@@ -36,5 +36,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 function _megaoptim_before_optimization() {
 	megaoptim_raise_memory_limit();
 }
-
 add_action( 'megaoptim_before_optimization', '_megaoptim_before_optimization', 10, 0 );
+
+
+function _megaoptim_admin_footer() {
+
+	if ( megaoptim_is_admin_page() ) {
+		megaoptim_view( 'modals/loader' );
+	}
+
+	// Requires: Remodal.min.js
+	megaoptim_view( 'modals/register' );
+}
+add_action( 'admin_footer', '_megaoptim_admin_footer' );

@@ -173,6 +173,27 @@ function megaoptim_human_file_size( $size, $unit = "", $include_unit = true ) {
 
 
 /**
+ * Convert bytes to the unit specified by the $to parameter.
+ *
+ * @param integer $bytes The filesize in Bytes.
+ * @param string $to The unit type to convert to. Accepts K, M, or G for Kilobytes, Megabytes, or Gigabytes, respectively.
+ * @param integer $decimal_places The number of decimal places to return.
+ *
+ * @return integer Returns only the number of units, not the type letter. Returns 0 if the $to unit type is out of scope.
+ *
+ */
+function megaoptim_convert_bytes_to_specified( $bytes, $to, $decimal_places = 1 ) {
+	$formulas = array(
+		'KB' => number_format( $bytes / 1024, $decimal_places ),
+		'MB' => number_format( $bytes / 1048576, $decimal_places ),
+		'GB' => number_format( $bytes / 1073741824, $decimal_places )
+	);
+
+	return isset( $formulas[ $to ] ) ? $formulas[ $to ] : 0;
+}
+
+
+/**
  * Get debug report
  * @return array
  */
@@ -860,4 +881,38 @@ function megaoptim_maybe_fix_url( $url ) {
 	$url = str_replace( "\\", "/", $url );
 
 	return $url;
+}
+
+/**
+ * Validates email
+ *
+ * @param $email
+ *
+ * @return bool
+ */
+function megaoptim_validate_email( $email = '' ) {
+	if ( ! filter_var( $email, FILTER_VALIDATE_EMAIL ) ) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * Is registration pending?
+ * @return bool
+ */
+function megaoptim_is_registration_pending() {
+	$is_pending = megaoptim_validate_email( get_option( 'megaoptim_registration_email' ) );
+	return $is_pending;
+}
+
+/**
+ * Is registration pending?
+ * @return bool|string
+ */
+function megaoptim_get_validation_email() {
+	$email      = get_option( 'megaoptim_registration_email' );
+	$is_pending = megaoptim_validate_email( $email );
+	return $is_pending ? $email : false;
 }

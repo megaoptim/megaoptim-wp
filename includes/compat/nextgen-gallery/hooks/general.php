@@ -92,3 +92,23 @@ function _megaoptim_ngg_optimizer_params( $params, $optimizer, $module, $menu ) 
 	);
 }
 add_filter( 'megaoptim_optimizer_params', '_megaoptim_ngg_optimizer_params', 10, 4 );
+
+
+function _megaoptim_ngg_is_optimizer_page($is_optimizer, $optimizer, $module) {
+	if( $optimizer === MGO_NextGenAttachment::TYPE ) {
+		if( $module === 'nextgen' ) {
+			$is_optimizer = true;
+		}
+	}
+	return $is_optimizer;
+}
+add_filter('megaoptim_is_optimizer_page', '_megaoptim_ngg_is_optimizer_page', 10, 3);
+
+
+function _megaoptim_ngg_library_data($stats, $context) {
+	if( $context === MGO_NextGenAttachment::TYPE ) {
+		$stats = MGO_NextGenLibrary::instance()->get_stats(true);
+	}
+	return $stats;
+}
+add_filter('megaoptim_library_data', '_megaoptim_ngg_library_data', 10, 2);

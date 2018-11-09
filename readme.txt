@@ -4,11 +4,11 @@ Tags: image optimizer, pagespeed, compression, compress, image, compression, opt
 Requires at least: 3.6
 Tested up to: 4.9.8
 Requires PHP: 5.3.0
-Stable tag: 1.0.4
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-With MegaOptim you can compress your WordPress images and boost your website load speed and SEO rankings.
+Auto compress all images within your website and greatly improve your page load speed and SEO.
 
 == Description ==
 **MegaOptim is image optimization plugin/service and a freemium that is easy to use, stable and actively maintained by dedicated team behind.**
@@ -58,7 +58,7 @@ For most of the websites **intelligent** method is enough, it auto determines th
 
 **How much does MegaOptim cost?**
 
-Our service comes with 200 images/tokens per month for free. Additional tokens can be purchased starting from $4.99 for 5,500 tokens. Check out our prices <a href="https://megaoptim.com/pricing">here</a>.
+Our service comes with 300 images/tokens per month for free. Additional tokens can be purchased starting from $4.99 for 5,500 tokens. Check out our prices <a href="https://megaoptim.com/pricing">here</a>.
 
 Want more tokens for free? Help us spread MegaOptim and earn 120 tokens per sign up and 300 tokens once customer becomes paid customer. Our Referral program can be found in the <a target="_blank" href="https://megaoptim.com/dashboard">dashboard area</a>.
 
@@ -149,6 +149,15 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
 10. NextGen Galleries: Gallery table screen buttons Integration
 
 == Changelog ==
+
+= 1.1.0 =
+* Added feature to sign up for api key from the WordPress Dashboard
+* Improved UI & added scan library button
+* Improved instructions
+* Removed the unnecessary database queries for faster bulk processing
+* Removed the unnecessary megaoptim API calls for faster bulk processing
+* Removed unnecessary code leftovers
+* Fixed nextgen gallery sql query used to find all unoptimized images
 
 = 1.0.4 =
 * Don't stop the bulk process when image is missing on the server, continue to next instead.

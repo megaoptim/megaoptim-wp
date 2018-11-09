@@ -1,4 +1,48 @@
 /**
+ * MegaOptim globals
+ */
+(function ($) {
+    $.megaoptim = {};
+    /**
+     * MegaOptim Loader
+     * @param params
+     */
+    $.megaoptim.loader = function (params) {
+        this.start = function () {
+            self.modal = $(self.element);
+            self.instance = self.modal.remodal(self.modal_opts);
+            self.modal.find('.megaoptim-panel-title').text(self.params.title);
+            self.modal.find('.megaoptim-panel-body-inner').html('<p>' + self.params.description + '</p>');
+            self.instance.open();
+        };
+        this.stop = function () {
+            setTimeout(function () {
+                self.modal = $(self.element);
+                self.instance = self.modal.remodal(self.modal_opts);
+                self.modal.find('.megaoptim-panel-title').text('');
+                self.modal.find('.megaoptim-panel-body-inner').text('');
+                //while(self.instance.getState() !== 'closed') {
+                self.instance.close();
+                //}
+                //self.instance.destroy();
+            }, 1000);
+
+        };
+        this.element = '#megaoptim-loader';
+        this.modal = null;
+        this.instance = null;
+        this.modal_opts = {
+            hashTracking: false,
+            closeOnOutsideClick: false,
+            closeOnEscape: false
+        };
+        this.params = params;
+        var self = this;
+    };
+    // .. other
+})(jQuery);
+
+/**
  * MegaOptim Options
  */
 (function ($) {
@@ -72,9 +116,70 @@
             });
         }
     });
-    $("form#megaoptim-register-modal").submit(function (e) {
-        var data = $(this).serialize();
-        //TODO
+})(jQuery);
+
+/**
+ * Register for API key
+ */
+(function ($) {
+    $.megaoptim.register = {};
+    $.megaoptim.register.process_step = function (step, form_data, success) {
+        $.ajax({
+            url: MegaOptim.ajax_url + '?action=megaoptim_api_register&step='+step+'&nonce=' + MegaOptim.nonce_default,
+            type: "POST",
+            data: form_data,
+            cache: false,
+            beforeSend: function () {
+                $('.megaoptim-panel-body').LoadingOverlay('show');
+            },
+            success: success,
+            complete: function () {
+                $('.megaoptim-panel-body').LoadingOverlay('hide');
+            }
+        });
+    };
+    $("form#megaoptim-register-form").submit(function (e) {
+        var $self = $(this);
+        var form_data = $self.serialize();
+        var form_step = $self.data('step');
+        $.megaoptim.register.process_step(form_step, form_data, function (response) {
+            switch (form_step) {
+                case 1:
+                    if (!response.success) {
+                        $('.mgo-form-group').each(function () {
+                            $(this).find('.mgo-field-error').detach().remove();
+                            $(this).removeClass('mgo-error');
+                        });
+                        for (var i in  response.data.errors) {
+                            var $item = $('#mgo-' + i);
+                            $item.addClass('mgo-error');
+                            $item.find('.mgo-field-error').detach().remove();
+                            $item.append('<span class="mgo-field-error">' +  response.data.errors[i][0] + '</span>');
+                        }
+                    } else {
+                        $('.mgo-form-group').each(function () {
+                            $(this).find('.mgo-field-error').detach().remove();
+                            $(this).removeClass('mgo-error');
+                        });
+                        $self.data('step', parseInt(form_step) + 1);
+                        $('#megaoptim-register-form-step1').hide();
+                        $('#megaoptim-register-form-step2').show();
+                    }
+                    break;
+                case 2:
+                    if(response.success) {
+                        $('#megaoptim-register-form-step2').hide();
+                        $('#megaoptim-register-form-step3').show();
+                        $self.closest('.remodal').find('.megaoptim-ok').detach().remove();
+                    } else {
+                        var $field = $('#mgo_api_key');
+                        $field.addClass('mgo-error');
+                        $field.find('.mgo-field-error').detach().remove();
+                        $field.append('<span class="mgo-field-error">' +  response.data + '</span>');
+                    }
+                    break;
+            }
+        });
         return false;
     });
 })(jQuery);
@@ -147,7 +252,7 @@
  */
 (function ($) {
     $(document).on('click', '.megaoptim-remove-backups', function (e) {
-        if (confirm(MegaOptim.words.backup_delete_confirm)) {
+        if (confirm(MegaOptim.strings.backup_delete_confirm)) {
             var status = false;
             var $self = $(this);
             var spinner = '<span class="megaoptim-spinner"></span>';
@@ -167,14 +272,14 @@
                     success: function (response) {
                         if (response.success) {
                             status = true;
-                            $self.html(MegaOptim.words.clean);
+                            $self.html(MegaOptim.strings.clean);
                             $self.prop('disabled', true);
                         } else {
                             alert(response.data);
                         }
                     },
                     complete: function () {
-                        if ($self.text() !== MegaOptim.words.clean) {
+                        if ($self.text() !== MegaOptim.strings.clean) {
                             var html = $self.html();
                             html.replace(spinner, '');
                         }
@@ -209,7 +314,7 @@
 
     if (MegaOptim.ticker.enabled) {
 
-        if(MegaOptim.ticker.context === 'upload' || MegaOptim.ticker.context === 'attachment') {
+        if (MegaOptim.ticker.context === 'upload' || MegaOptim.ticker.context === 'attachment') {
             $.megaoptim_upload_ticker = setIntervalImmediately(function () {
                 var $attachments = $('.megaoptim_media_attachment');
                 var processing_items = [];
@@ -235,12 +340,12 @@
                                         if (!current.is_locked && !current.is_optimized) {
                                             // Do nothing
                                         } else {
-                                            if(MegaOptim.ticker.context === 'attachment') {
+                                            if (MegaOptim.ticker.context === 'attachment') {
                                                 var selector = 'div.megaoptim_media_attachment';
                                             } else {
                                                 var selector = '#post-' + current.id + ' td.megaoptim_media_attachment';
                                             }
-                                            
+
                                             $(selector).html(current.html);
                                         }
                                     }
@@ -250,7 +355,7 @@
                     });
                 }
             }, MegaOptim.ticker.interval);
-        } else if( MegaOptim.ticker.context === 'nggallery-manage-images' ) {
+        } else if (MegaOptim.ticker.context === 'nggallery-manage-images') {
             $.megaoptim_upload_ticker = setIntervalImmediately(function () {
                 var $attachments = $('#the-list tr');
                 var processing_items = [];
@@ -302,7 +407,7 @@
 
         var spinner = '<span class="megaoptim-spinner"></span>';
 
-        var optimize_single_attachment = function($self, url) {
+        var optimize_single_attachment = function ($self, url) {
             var context = $self.closest('.megaoptim-optimize').data('context');
             var attachment_id = $self.closest('.megaoptim-optimize').data('attachmentid');
             var compression = $self.data('compression');
@@ -332,22 +437,22 @@
                 beforeSend: function () {
                     $button.click();
                     $self.addClass('megaoptim-optimizing');
-                    $button.removeClass('button-primary').addClass('button disabled').html(spinner + ' ' + MegaOptim.words.optimizing);
+                    $button.removeClass('button-primary').addClass('button disabled').html(spinner + ' ' + MegaOptim.strings.optimizing);
                 },
-                success: function(response) {
+                success: function (response) {
                     // If all good, proceed.
-                    if(response.success) {
-                        if(response.data.tokens > 0) {
+                    if (response.success) {
+                        if (response.data.tokens > 0) {
                             optimize_single_attachment($self, url_optimize);
                         } else {
-                            alert(MegaOptim.words.no_tokens);
-                            $button.addClass('button-primary').removeClass('button').removeClass('disabled').html(MegaOptim.words.optimize);
+                            alert(MegaOptim.strings.no_tokens);
+                            $button.addClass('button-primary').removeClass('button').removeClass('disabled').html(MegaOptim.strings.optimize);
                             $self.removeClass('megaoptim-optimizing');
                         }
                     } else {
-                        $button.addClass('button-primary').removeClass('button').removeClass('disabled').html(MegaOptim.words.optimize);
+                        $button.addClass('button-primary').removeClass('button').removeClass('disabled').html(MegaOptim.strings.optimize);
                         $self.removeClass('megaoptim-optimizing');
-                        alert(MegaOptim.words.profile_error);
+                        alert(MegaOptim.strings.profile_error);
                     }
                 }
             })
@@ -378,7 +483,7 @@
                 url: url,
                 type: "POST",
                 beforeSend: function () {
-                    $self.addClass('disabled').html(MegaOptim.spinner + MegaOptim.words.working);
+                    $self.addClass('disabled').html(MegaOptim.spinner + MegaOptim.strings.working);
                 },
                 data: {attachmentid: attachment_id, context: context},
                 success: function (response) {

@@ -27,6 +27,7 @@ require_once( WP_MEGAOPTIM_INC_PATH . DIRECTORY_SEPARATOR . 'functions' . DIRECT
 $includes = array(
 
 	'classes/MGO_BaseObject.php',
+	'classes/MGO_ResultBag.php',
 
 	// Cache Classes
 	'classes/MGO_Cache.php',
@@ -59,6 +60,7 @@ $includes = array(
 	//Load Internal Functions
 	'functions/compat.php',
 	'functions/helpers.php',
+	'functions/admin.php',
 
 	//Load Internal Hooks
 	'hooks/tasks.php',
@@ -98,4 +100,8 @@ if ( megaoptim_is_nextgen_active() ) {
 }
 
 megaoptim_include_files( $includes );
+
+global $wp_version;
+\MegaOptim\Http\BaseClient::$api_url = WP_MEGAOPTIM_API_BASE_URL;
+\MegaOptim\Http\BaseClient::$user_agent = \MegaOptim\Http\BaseClient::$user_agent . ' / ' . 'WordPress ' . $wp_version . ' / Plugin ' . WP_MEGAOPTIM_VER;
 

@@ -30,11 +30,13 @@ class MGO_MediaLibrary extends MGO_Library {
 	 * @param int|MGO_MediaAttachment $attachment
 	 * @param array $params
 	 *
-	 * @return mixed|MGO_MediaAttachment
+	 * @return MGO_ResultBag
 	 * @throws MGO_Attachment_Already_Optimized_Exception
 	 * @throws MGO_Exception
 	 */
 	public function optimize( $attachment, $params = array() ) {
+
+		$result = new MGO_ResultBag();
 
 		//Don't go further if not connected
 		$profile = megaoptim_is_connected();
@@ -67,7 +69,7 @@ class MGO_MediaLibrary extends MGO_Library {
 		}
 
 		// Bail if no tokens left.
-		if( $profile->get_tokens_count() <= 0 ) {
+		if ( $profile->get_tokens_count() <= 0 ) {
 			throw new MGO_Exception( 'No tokens left. Please top up your account at https://megaoptim.com/dashboard in order to continue.' );
 		}
 
@@ -88,7 +90,7 @@ class MGO_MediaLibrary extends MGO_Library {
 
 		//Get the file names
 		$original_resource = $this->get_attachment( $attachment, 'full', false );
-		$original_path = $this->get_attachment_path($attachment, 'full', false);
+		$original_path     = $this->get_attachment_path( $attachment, 'full', false );
 		if ( ! file_exists( $original_path ) ) {
 			throw new MGO_Exception( __( 'Original image version does not exist on the server.', 'megaoptim' ) );
 		}
@@ -104,6 +106,7 @@ class MGO_MediaLibrary extends MGO_Library {
 			$attachment_object->lock();
 			if ( ! $attachment_object->is_size_optimized( 'full' ) ) {
 				$response = $this->optimizer->run( $original_resource, $request_params );
+				$result->add( 'full', $response );
 				if ( $response->isError() ) {
 					megaoptim_log( $response->getErrors() );
 				} else {
@@ -116,7 +119,7 @@ class MGO_MediaLibrary extends MGO_Library {
 					if ( $attachment_object->is_already_optimized() ) {
 						$attachment_object->delete_backup();
 					}
-					megaoptim_log($response->getRawResponse());
+					megaoptim_log( $response->getRawResponse() );
 					megaoptim_log( 'Full size version successfully optimized.' );
 
 					/**
@@ -144,10 +147,11 @@ class MGO_MediaLibrary extends MGO_Library {
 						$thumbnail_resource = $this->get_attachment( $attachment, $size, false );
 						if ( ! empty( $thumbnail_resource ) ) {
 							$response = $this->optimizer->run( $thumbnail_resource, $request_params );
+							$result->add( $size, $response );
 							if ( $response->isError() ) {
 								megaoptim_log( $response->getErrors() );
 							} else {
-								$thumbnail_path = $this->get_attachment_path($attachment, $size, false);
+								$thumbnail_path = $this->get_attachment_path( $attachment, $size, false );
 								megaoptim_log( 'Thumbnail ' . $size . ' optimized successfully!' );
 								foreach ( $response->getOptimizedFiles() as $file ) {
 									// TODO: Maybe backup thumbnail?
@@ -172,13 +176,16 @@ class MGO_MediaLibrary extends MGO_Library {
 				}
 			}
 
-			do_action( 'megaoptim_before_finish', $attachment_object, $request_params );
+			do_action( 'megaoptim_before_finish', $attachment_object, $request_params, $result );
 
 			$attachment_object->refresh();
 
 			$attachment_object->unlock();
 
-			return $attachment_object;
+			$result->set_attachment( $attachment_object );
+
+			return $result;
+
 		} catch ( Exception $e ) {
 			$attachment_object->unlock();
 			throw new MGO_Exception( $e->getMessage() . ' in ' . $e->getFile() );
@@ -204,7 +211,7 @@ class MGO_MediaLibrary extends MGO_Library {
 		global $wpdb;
 		//$query  = $wpdb->prepare( "SELECT P.ID, P.post_title FROM $wpdb->posts P WHERE P.post_type='attachment' AND P.post_mime_type LIKE %s", "%image%" );
 
-		$query  = $wpdb->prepare( "SELECT P.ID, P.post_title, PM1.meta_value as metadata, PM2.meta_value as megaoptim FROM {$wpdb->posts} P INNER JOIN {$wpdb->postmeta} PM1 ON PM1.post_id=P.ID AND PM1.meta_key='_wp_attachment_metadata' LEFT JOIN {$wpdb->postmeta} PM2 ON PM2.post_id=P.ID AND PM2.meta_key='_megaoptim_data' WHERE P.post_type='attachment' AND P.post_mime_type LIKE %s", "%image%" );
+		$query  = "SELECT P.ID, P.post_title, PM1.meta_value as metadata, PM2.meta_value as megaoptim FROM {$wpdb->posts} P INNER JOIN {$wpdb->postmeta} PM1 ON PM1.post_id=P.ID AND PM1.meta_key='_wp_attachment_metadata' LEFT JOIN {$wpdb->postmeta} PM2 ON PM2.post_id=P.ID AND PM2.meta_key='_megaoptim_data' WHERE P.post_type='attachment' AND P.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif') ORDER BY P.post_date DESC";
 		$result = $wpdb->get_results( $query, ARRAY_A );
 
 		return $result;
@@ -218,6 +225,7 @@ class MGO_MediaLibrary extends MGO_Library {
 	 * @return mixed|MGO_Stats
 	 */
 	public function get_stats( $include_remaining = false ) {
+		@set_time_limit(0);
 		$images_total         = 0;
 		$optimized_total      = 0;
 		$optimized_thumbnails = 0;
@@ -231,10 +239,9 @@ class MGO_MediaLibrary extends MGO_Library {
 			$empty_gallery = false;
 			foreach ( $images as $image ) {
 				try {
-					// TODO: Create attachments with one query! Not one database hit per query
-
+					// Create attachments with one query! Not one database hit per query
 					$attachment = MGO_MediaAttachment::create( $image['ID'], $image['metadata'], $image['megaoptim'] );
-					//$attachment = new MGO_MediaAttachment( $image['ID'] );
+					//OLD WAY $attachment = new MGO_MediaAttachment( $image['ID'] );
 
 					if ( $attachment->get_optimized_status() == 1 ) {
 						$optimized_total ++;
@@ -290,7 +297,7 @@ class MGO_MediaLibrary extends MGO_Library {
 		}
 		$data->setup();
 
-		return apply_filters('megaoptim_ml_stats', $data, $this);
+		return apply_filters( 'megaoptim_ml_stats', $data, $this );
 	}
 
 	/**
@@ -342,7 +349,7 @@ class MGO_MediaLibrary extends MGO_Library {
 			}
 		}
 
-		return wp_normalize_path($path_with_size);
+		return wp_normalize_path( $path_with_size );
 	}
 
 	/**

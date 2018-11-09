@@ -47,14 +47,87 @@ class MGO_Ajax extends MGO_BaseObject {
 		add_action( 'wp_ajax_megaoptim_directory_tree', array( $this, 'directory_tree' ) );
 		add_action( 'wp_ajax_megaoptim_directory_data', array( $this, 'directory_data' ) );
 
+		add_action( 'wp_ajax_megaoptim_library_data', array( $this, 'library_data' ) );
+
 		add_action( 'wp_ajax_megaoptim_empty_backup_dir', array( $this, 'empty_backup_dir' ) );
 		add_action( 'wp_ajax_megaoptim_ticker_upload', array( $this, 'ticker_upload' ) );
 
 		add_action( 'wp_ajax_megaoptim_get_profile', array( $this, 'get_profile' ) );
 		add_action( 'wp_ajax_megaoptim_optimize_single_attachment', array( $this, 'optimize_single_attachment' ) );
 		add_action( 'wp_ajax_megaoptim_restore_single_attachment', array( $this, 'restore_single_attachment' ) );
+
+		add_action( 'wp_ajax_megaoptim_api_register', array( $this, 'api_register' ) );
 	}
-	
+
+	/**
+	 * Handles registration via popup
+	 */
+	public function api_register() {
+		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], MGO_Ajax::NONCE_DEFAULT ) ) {
+			wp_send_json_error( array( 'error' => __( 'Internal server error.', 'megaoptim' ) ) );
+		}
+
+		$step = isset( $_REQUEST['step'] ) ? $_REQUEST['step'] : 0;
+
+		switch ( $step ) {
+			case 1:
+				$data   = array();
+				$fields = array(
+					'first_name',
+					'last_name',
+					'email',
+					'password',
+					'password_confirmation',
+					'terms_and_conditions'
+				);
+				foreach ( $fields as $field ) {
+					if ( isset( $_POST[ $field ] ) ) {
+						$data[ $field ] = $_POST[ $field ];
+					}
+				}
+				$response = MGO_Profile::register( $data );
+				if ( is_wp_error( $response ) ) {
+					wp_send_json_error( $response->get_error_message() );
+				} else {
+					$response = json_decode( $response['body'] );
+					if ( $response->status === 'ok' ) {
+						if ( megaoptim_validate_email( $response->result->email ) ) {
+							update_option( 'megaoptim_registration_email', $response->result->email );
+							wp_send_json_success( __( 'WooHoo! You are all set!' ) );
+						} else {
+							wp_send_json_error( array( 'email' => 'Invalid email!' ) );
+						}
+
+					} else {
+						wp_send_json_error( $response );
+					}
+				}
+				break;
+			case 2:
+				if ( isset( $_REQUEST['api_key'] ) && ! empty( $_REQUEST['api_key'] ) ) {
+					try {
+						$profile = new MGO_Profile( $_REQUEST['api_key'] );
+						if ( $profile->is_valid_apikey() ) {
+							MGO_Settings::instance()->update( array(
+								MGO_Settings::API_KEY => $_REQUEST['api_key']
+							) );
+							wp_send_json_success();
+						} else {
+							wp_send_json_error( __( 'Invalid API key.' ), 'megaoptim' );
+						}
+					} catch ( MGO_Exception $e ) {
+						wp_send_json_error( $e->getMessage() );
+					}
+
+				}
+				break;
+			default:
+				wp_send_json_error( 'Invalid step.' );
+		}
+		die;
+	}
+
+
 	/**
 	 * Optimize Attachment for Bulk Optimization process
 	 */
@@ -68,15 +141,18 @@ class MGO_Ajax extends MGO_BaseObject {
 		}
 		$attachment_id = $_REQUEST['attachment']['ID'];
 		try {
-			$attachment = MGO_MediaLibrary::instance()->optimize( $attachment_id );
-			$profile    = new MGO_Profile();
+			$result     = MGO_MediaLibrary::instance()->optimize( $attachment_id );
+			$attachment = $result->get_attachment();
 			if ( $attachment instanceof MGO_MediaAttachment ) {
 				$response['attachment'] = $attachment->get_optimization_stats();
-				$response['general']    = MGO_MediaLibrary::instance()->get_stats( false );
-				$response['tokens']     = $profile->get_tokens_count();
+				$response['general']    = $result->get_optimization_info();
+				$response['tokens']     = $result->get_last_response()->getUser()->getTokens();
 				wp_send_json_success( $response );
 			} else {
-				wp_send_json_error( array( 'error' => __( 'Attachment was not optimized.', 'megaoptim' ), 'can_continue' => 1 ) );
+				wp_send_json_error( array(
+					'error'        => __( 'Attachment was not optimized.', 'megaoptim' ),
+					'can_continue' => 1
+				) );
 			}
 		} catch ( MGO_Exception $e ) {
 			wp_send_json_error( array( 'error' => $e->getMessage(), 'can_continue' => 1 ) );
@@ -91,15 +167,18 @@ class MGO_Ajax extends MGO_BaseObject {
 			wp_send_json_error( array( 'error' => __( 'No attachment provided.', 'megaoptim' ) ) );
 		}
 		try {
-			$attachment = MGO_LocalDirectories::instance()->optimize( new MGO_File( $_REQUEST['attachment'] ) );
-			$profile    = new MGO_Profile();
+			$result     = MGO_LocalDirectories::instance()->optimize( new MGO_File( $_REQUEST['attachment'] ) );
+			$attachment = $result->get_attachment();
 			if ( $attachment instanceof MGO_LocalFileAttachment ) {
 				$response['attachment'] = $attachment->get_optimization_stats();
-				$response['general']    = MGO_LocalDirectories::instance()->get_stats( $_REQUEST['attachment']['directory'] );
-				$response['tokens']     = $profile->get_tokens_count();
+				$response['general']    = $result->get_optimization_info();
+				$response['tokens']     = $result->get_last_response()->getUser()->getTokens();
 				wp_send_json_success( $response );
 			} else {
-				wp_send_json_error( array( 'error' => __( 'File was not optimized.', 'megaoptim' ), 'can_continue' => 1 ) );
+				wp_send_json_error( array(
+					'error'        => __( 'File was not optimized.', 'megaoptim' ),
+					'can_continue' => 1
+				) );
 			}
 		} catch ( MGO_Exception $e ) {
 			wp_send_json_error( array( 'error' => $e->getMessage(), 'can_continue' => 1 ) );
@@ -315,6 +394,31 @@ class MGO_Ajax extends MGO_BaseObject {
 		die( json_encode( megaoptim_get_debug_report() ) );
 	}
 
+	public function library_data() {
+		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_DEFAULT ) ) {
+			wp_send_json_error( __( 'Internal server error.', 'megaoptim' ) );
+		}
+
+		if ( ! isset( $_REQUEST['context'] ) ) {
+			wp_send_json_error( __( 'Invalid context.', 'megaoptim' ) );
+		} else {
+			$context = $_REQUEST['context'];
+			switch ( $context ) {
+				case MGO_MediaAttachment::TYPE:
+					$stats = MGO_MediaLibrary::instance()->get_stats( true );
+					break;
+				default:
+					$stats = apply_filters( 'megaoptim_library_data', null, $context );
+			}
+			if ( ! is_null( $stats ) ) {
+				wp_send_json_success( $stats );
+			} else {
+				wp_send_json_error( 'Unsupported context.', 'megaoptim' );
+			}
+		}
+		die;
+	}
+
 
 	public function directory_tree() {
 
@@ -526,7 +630,7 @@ class MGO_Ajax extends MGO_BaseObject {
 		}
 		$profile = new MGO_Profile();
 		$tokens  = $profile->get_tokens_count();
-		wp_send_json_success(array('tokens' => $tokens));
+		wp_send_json_success( array( 'tokens' => $tokens ) );
 	}
 
 	public function optimize_single_attachment() {

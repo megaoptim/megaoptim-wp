@@ -11,7 +11,7 @@
         <div class="megaoptim-row">
             <p>
                 <a href="#" class="button-primary" id="setapikey" data-wrapper=".content-wrapper"><?php _e('Validate your API key', 'megaoptim'); ?></a>
-                <a target="_blank" href="<?php echo WP_MEGAOPTIM_REGISTER_URL; ?>" class="button"><?php _e('Register for free API Key', 'megaoptim'); ?></a>
+                <a href="#" target="_blank" id="megaoptim-trigger-register" data-remodal-target="megaoptim-register" class="button"><?php _e('Register for free API Key', 'megaoptim'); ?></a> <?php _e('or', 'megaoptim'); ?> <a target="_blank" href="https://megaoptim.com/register"><?php _e('register here', 'megaoptim'); ?></a>
             </p>
         </div>
     </div>

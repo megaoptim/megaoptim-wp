@@ -25,8 +25,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * @param MGO_MediaAttachment $attachment_object
  * @param $request_params
+ * @param MGO_ResultBag $result
  */
-function _megaoptim_wr2x_before_finish( $attachment_object, $request_params ) {
+function _megaoptim_wr2x_before_finish( $attachment_object, $request_params, $result ) {
 
 	try {
 		$megaoptim = MGO_Library::get_optimizer();
@@ -41,6 +42,7 @@ function _megaoptim_wr2x_before_finish( $attachment_object, $request_params ) {
 			$retina_resource = MGO_MediaLibrary::instance()->get_attachment( $attachment_object->get_id(), 'full', true );
 			if ( ! empty( $retina_resource ) ) {
 				$response = $megaoptim->run( $retina_resource, $request_params );
+				$result->add( 'full@2x', $response );
 				if ( $response->isError() ) {
 					megaoptim_log( $response->getErrors() );
 				} else {
@@ -79,6 +81,7 @@ function _megaoptim_wr2x_before_finish( $attachment_object, $request_params ) {
 
 					if ( ! empty( $thumbnail_resource ) ) {
 						$response = $megaoptim->run( $thumbnail_resource, $request_params );
+						$result->add( "{$size}@2x", $response );
 						if ( $response->isError() ) {
 							megaoptim_log( $response->getErrors() );
 						} else {
@@ -112,6 +115,7 @@ function _megaoptim_wr2x_before_finish( $attachment_object, $request_params ) {
 		megaoptim_log( $e->getMessage() );
 	}
 }
+
 add_action( 'megaoptim_before_finish', '_megaoptim_wr2x_before_finish', 10, 3 );
 
 
@@ -146,6 +150,7 @@ function _megaoptim_wr2x_ml_attachment_unoptimized_thumbnails( $thumbnails, $att
 
 	return $thumbnails;
 }
+
 add_filter( 'megaoptim_ml_attachment_unoptimized_thumbnails', '_megaoptim_wr2x_ml_attachment_unoptimized_thumbnails', 10, 2 );
 
 /**
@@ -169,6 +174,7 @@ function _megaoptim_wr2x_ml_attachment_optimized_thumbnails( $thumbnails, $attac
 
 	return $thumbnails;
 }
+
 add_filter( 'megaoptim_ml_attachment_optimized_thumbnails', '_megaoptim_wr2x_ml_attachment_optimized_thumbnails', 10, 2 );
 
 
@@ -195,6 +201,7 @@ function _megaoptim_wr2x_ml_is_optimized( $status, $attachment ) {
 		return $status && $total_unoptimized === 0;
 	}
 }
+
 add_filter( 'megaoptim_ml_attachmed_is_optimized', '_megaoptim_wr2x_ml_is_optimized', 10, 2 );
 
 
@@ -211,6 +218,7 @@ function _megaoptim_wr2x_ml_total_saved_bytes( $saved_bytes, $attachment ) {
 
 	return $saved_bytes + $retina_saved_bytes;
 }
+
 add_filter( 'megaoptim_ml_total_saved_bytes', '_megaoptim_wr2x_ml_total_saved_bytes', 10, 2 );
 
 /**
@@ -224,6 +232,7 @@ function _megaoptim_wr2x_ml_total_saved_bytes_thumbnails( $saved_bytes, $attachm
 
 	return $saved_bytes + $retina_saved_bytes;
 }
+
 add_filter( 'megaoptim_ml_total_saved_bytes_thumbnails', '_megaoptim_wr2x_ml_total_saved_bytes_thumbnails', 10, 2 );
 
 
@@ -238,4 +247,5 @@ function _megaoptim_attachment_optimization_stats( $row, $attachment ) {
 
 	return $row;
 }
+
 add_filter( 'megaoptim_attachment_optimization_stats', '_megaoptim_attachment_optimization_stats', 10, 2 );
