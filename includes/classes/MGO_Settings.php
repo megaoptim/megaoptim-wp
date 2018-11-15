@@ -169,7 +169,7 @@ class MGO_Settings extends MGO_BaseObject {
 			self::BACKUP_MEDIA_LIBRARY_ATTACHMENTS => 1,
 			self::BACKUP_NEXTGEN_ATTACHMENTS       => 1,
 			self::BACKUP_FOLDER_FILES              => 1,
-			self::AUTO_OPTIMIZE                    => 1,
+			self::AUTO_OPTIMIZE                    => 0,
 			self::MAX_HEIGHT                       => 0,
 			self::MAX_WIDTH                        => 0,
 			self::PRESERVE_EXIF                    => 0,

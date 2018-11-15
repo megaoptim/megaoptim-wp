@@ -622,11 +622,11 @@ function megaoptim_view( $file, $data = array(), $extension = '' ) {
  */
 function megaoptim_async_task( $data ) {
 	$args = array(
-		'timeout'   => 3,
+		'timeout'   => 20,
 		'blocking'  => false,
 		'body'      => $data,
 		'cookies'   => isset( $_COOKIE ) && is_array( $_COOKIE ) ? $_COOKIE : array(),
-		'sslverify' => apply_filters( 'https_local_ssl_verify', false ),
+		'sslverify' => false,
 	);
 	/**
 	 * Filter the arguments for the non-blocking request.
@@ -755,14 +755,14 @@ function megaoptim_get_attachment_buttons( $attachment ) {
  *
  * @param $attachment_id
  * @param array $metadata
- * @param array $params
+ * @param array $additional_parameters
  */
-function megaoptim_async_optimize_attachment( $attachment_id, $metadata = array(), $params = array() ) {
+function megaoptim_async_optimize_attachment( $attachment_id, $metadata = array(), $additional_parameters = array() ) {
 	$params = array(
 		'action'        => 'megaoptim_async_optimize_ml_attachment',
 		'_nonce'        => wp_create_nonce( 'megaoptim_async_optimize_ml_attachment' . '_' . $attachment_id ),
 		'attachment_id' => $attachment_id,
-		'params'        => $params
+		'params'        => $additional_parameters
 	);
 	if ( is_array( $metadata ) && ! empty( $metadata ) ) {
 		$params['metadata'] = $metadata;

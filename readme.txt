@@ -13,7 +13,7 @@ Auto compress all images within your website and greatly improve your page load 
 == Description ==
 **MegaOptim is image optimization plugin/service and a freemium that is easy to use, stable and actively maintained by dedicated team behind.**
 
-Image compression is playing important role in your page load speed, google's pagespeed score and SEO rankings. Having correctly compressed images will give your website faster loading times, save bandwidth and disk space, keep the image quality identical and boost your SEO rankings and that can be achieved with MegaOptim.
+Image compression is playing important role in your page load speed, Google's pagespeed score and SEO rankings. Having correctly compressed images will make your website faster, save bandwidth and disk space, keep the image quality identical and boost your SEO rankings and that can be achieved with MegaOptim.
 
 The plugin uses minimal resources on your hosting and all the heavy lifting is done by our API service in the cloud, meaning that no binaries will be installed on your server to resize or compress images unlike some other plugins.
 
@@ -66,7 +66,7 @@ Want more tokens for free? Help us spread MegaOptim and earn 120 tokens per sign
 
 * Email  [<a href="https://megaoptim.com/contact">Click Here</a>]
 * Twitter [<a href="https://twitter.com/MegaoptimO">Click Here</a>]
-* Facebook [<a href="https://www.facebook.com/MegaOptim-234727427394835">Click Here</a>]
+* Facebook [<a href="https://www.facebook.com/megaoptimio">Click Here</a>]
 
 == Installation ==
 1.) Sign up for api key at https://megaoptim.com/register
@@ -158,6 +158,7 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
 * Removed the unnecessary megaoptim API calls for faster bulk processing
 * Removed unnecessary code leftovers
 * Fixed nextgen gallery sql query used to find all unoptimized images
+* Imrpoved compatibility with PHP5.3 and onwards
 
 = 1.0.4 =
 * Don't stop the bulk process when image is missing on the server, continue to next instead.
