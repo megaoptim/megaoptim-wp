@@ -1,3 +1,3 @@
-	</div>
-    </div> <!-- megaoptim-cotnainer -->
+	</div>
+    </div> <!-- megaoptim-cotnainer -->
 </div> <!-- .wrap.megaoptim -->

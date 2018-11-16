@@ -61,8 +61,7 @@ abstract class BaseClient {
 	 * Additional user agent info
 	 * @var string
 	 */
-	public static $user_agent = 'MegaOptim PHP Client';
-
+	public static $user_agent = 'MegaOptim PHP Client' . ' ' . Optimizer::VERSION;
 
 	/**
 	 * The MegaOptim api key that is used to authenticate the request

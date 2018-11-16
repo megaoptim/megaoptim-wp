@@ -64,12 +64,14 @@ function _megaoptim_optimize_media_attachment( $metadata, $attachment_id ) {
 	 */
 	$optimize = apply_filters( 'megaoptim_auto_optimize_media_attachment', megaoptim_is_auto_optimize_enabled(), $attachment_id, $metadata );
 
-	if ( $optimize ) {
-		megaoptim_async_optimize_attachment( $attachment_id, $metadata );
+	if ( ! $optimize ) {
+		return $metadata;
 	}
+	megaoptim_async_optimize_attachment( $attachment_id, $metadata );
 
 	return $metadata;
 }
+
 add_filter( 'wp_generate_attachment_metadata', '_megaoptim_optimize_media_attachment', WP_MEGAOPTIM_INT_MAX, 2 );
 
 
