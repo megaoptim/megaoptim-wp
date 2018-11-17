@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /* @var MGO_Profile $profile */
 $settings_url     = admin_url( "admin.php?page=megaoptim_settings" );
 $is_profile_valid = $profile instanceof MGO_Profile && ( $profile->has_api_key() && $profile->is_valid_apikey() );
-$tokens           = $profile->get_tokens_count();
+$tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
 
 ?>
 <script>window.megaoptim_attachment_list = ''</script>

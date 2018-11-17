@@ -103,5 +103,5 @@ megaoptim_include_files( $includes );
 
 global $wp_version;
 \MegaOptim\Http\BaseClient::$api_url = WP_MEGAOPTIM_API_BASE_URL;
-\MegaOptim\Http\BaseClient::$user_agent = \MegaOptim\Http\BaseClient::$user_agent . ' / ' . 'WordPress ' . $wp_version . ' / Plugin ' . WP_MEGAOPTIM_VER;
+\MegaOptim\Http\BaseClient::set_user_agent('WordPress ' . $wp_version . ' / Plugin ' . WP_MEGAOPTIM_VER);
 

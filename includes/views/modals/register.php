@@ -1,10 +1,15 @@
 <?php
 $step = 1;
 
-if ( megaoptim_is_registration_pending() ) {
+$is_pending = megaoptim_is_registration_pending();
+
+if ( $is_pending ) {
 	$step = 2;
 }
-if ( ! empty( MGO_Settings::instance()->getApiKey() ) ) {
+
+$api_key = MGO_Settings::instance()->getApiKey();
+
+if ( ! empty( $api_key ) ) {
 	$step = 3;
 }
 ?>
