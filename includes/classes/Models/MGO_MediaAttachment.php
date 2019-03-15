@@ -29,7 +29,6 @@ class MGO_MediaAttachment extends MGO_Attachment {
 
 	const TYPE = 'wp';
 
-
 	const PM_DATA_KEY = '_megaoptim_data';
 
 	const WP_METADATA_KEY = '_wp_attachment_metadata';
@@ -292,21 +291,6 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	}
 
 	/**
-	 * Is thumbnail optimized ?
-	 *
-	 * @param $size
-	 *
-	 * @return bool
-	 */
-	public function is_thumbnail_optimized( $size ) {
-		if ( ! isset( $this->data['thumbs'][ $size ] ) || ! isset( $this->data['thumbs'][ $size ]['status'] ) || $this->data['thumbs'][ $size ]['status'] != 1 ) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	/**
 	 * Only return true if the image is fully optimized
 	 * @return bool
 	 */
@@ -321,11 +305,29 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	}
 
 	/**
-	 * Is image already optimized?
+	 * Size file exist?
+	 * @param $size
+	 *
 	 * @return bool
 	 */
-	public function is_already_optimized() {
-		return isset( $this->data['success'] ) && $this->data['success'] == 0;
+	public function thumbnail_exists($size) {
+		$path = MGO_MediaLibrary::instance()->get_attachment_path( $this->get_id(), $size, false );
+		return file_exists($path);
+	}
+
+	/**
+	 * Is thumbnail optimized ?
+	 *
+	 * @param $size
+	 *
+	 * @return bool
+	 */
+	public function is_thumbnail_optimized( $size ) {
+		if ( ! isset( $this->data['thumbs'][ $size ] ) || ! isset( $this->data['thumbs'][ $size ]['status'] ) || $this->data['thumbs'][ $size ]['status'] != 1 ) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	/**
@@ -342,6 +344,14 @@ class MGO_MediaAttachment extends MGO_Attachment {
 		} else {
 			return false !== $path && isset( $this->data['thumbs'][ $size ]['status'] ) && ! empty( $this->data['thumbs'][ $size ]['status'] );
 		}
+	}
+
+	/**
+	 * Is image already optimized?
+	 * @return bool
+	 */
+	public function is_already_optimized() {
+		return isset( $this->data['success'] ) && $this->data['success'] == 0;
 	}
 
 
@@ -361,7 +371,7 @@ class MGO_MediaAttachment extends MGO_Attachment {
 						continue;
 					}
 					// Iff the size doesn't exist, or exist but the status doesn't exist, or size and status exist but they aren't
-					if ( ! $this->is_thumbnail_optimized( $key ) ) {
+					if ( $this->thumbnail_exists($key)  && ! $this->is_thumbnail_optimized( $key ) ) {
 						array_push( $thumbnails['normal'], $key );
 					}
 				}

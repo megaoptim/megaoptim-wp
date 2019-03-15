@@ -178,9 +178,11 @@ class MGO_MediaLibrary extends MGO_Library {
 
 			do_action( 'megaoptim_before_finish', $attachment_object, $request_params, $result );
 
-			$attachment_object->refresh();
-
 			$attachment_object->unlock();
+
+			$attachment_object->save();
+
+			$attachment_object->refresh();
 
 			$result->set_attachment( $attachment_object );
 

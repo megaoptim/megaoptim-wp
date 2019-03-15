@@ -167,7 +167,7 @@ class MGO_NextGenLibrary extends MGO_Library {
 		global $wpdb;
 		$url     = get_site_url() . "/";
 		$path    = megaoptim_get_wp_root_path() . DIRECTORY_SEPARATOR;
-		$query   = $wpdb->prepare( "SELECT P.pid as ID, P.filename as title, CONCAT('%s',G.path,P.filename) as thumbnail,  CONCAT('%s',G.path,P.filename) as url, CONCAT('%s',G.path,P.filename) as path FROM wp_ngg_pictures P INNER JOIN wp_ngg_gallery G ON P.galleryid=G.gid LEFT JOIN wp_megaoptim_opt SOPT ON SOPT.object_id=P.pid AND SOPT.type='%s' WHERE SOPT.id IS NULL", $url, $url, $path, MGO_NextGenAttachment::TYPE );
+		$query   = $wpdb->prepare( "SELECT P.pid as ID, P.filename as title, CONCAT('%s',G.path,P.filename) as thumbnail,  CONCAT('%s',G.path,P.filename) as url, CONCAT('%s',G.path,P.filename) as path FROM {$wpdb->prefix}ngg_pictures P INNER JOIN {$wpdb->prefix}ngg_gallery G ON P.galleryid=G.gid LEFT JOIN {$wpdb->prefix}megaoptim_opt SOPT ON SOPT.object_id=P.pid AND SOPT.type='%s' WHERE SOPT.id IS NULL", $url, $url, $path, MGO_NextGenAttachment::TYPE );
 		$results = $wpdb->get_results( $query, ARRAY_A );
 
 		return $results;

@@ -4,7 +4,7 @@ Tags: image optimizer, pagespeed, compression, compress, image, compression, opt
 Requires at least: 3.6
 Tested up to: 4.9.8
 Requires PHP: 5.3.0
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,18 +13,15 @@ Auto compress all images within your website and greatly improve your page load 
 == Description ==
 **MegaOptim is image optimization plugin/service and a freemium that is easy to use, stable and actively maintained by dedicated team behind.**
 
-Image compression is playing important role in your page load speed, Google's pagespeed score and SEO rankings. Having correctly compressed images will make your website faster, save bandwidth and disk space, keep the image quality identical and boost your SEO rankings and that can be achieved with MegaOptim.
+Image compression is playing vital role in your page load speed, Google's pagespeed score and SEO rankings. Correctly optimized images for web will make your pages faster, save bandwidth and disk space, boost your SEO rankings while keeping your images identical.
 
 The plugin uses minimal resources on your hosting and all the heavy lifting is done by our API service in the cloud, meaning that no binaries will be installed on your server to resize or compress images unlike some other plugins.
 
-The plugin supports all major image formats (JPG, PNG, GIF) and has three different compression levels (lossless, intelligent and ultra).
-
-For most of the websites **intelligent** method is enough, it auto determines the level of compression of the image that works best for the human eye. The **ultra** mode is similar to **intelligent** but goes a bit further to save more space. If you are willing to sacrifice small bits of the image quality then this mode is the way to go. Finally, with the lossless method the service attempts to optimize the images without touching the image quality. It is not recommended method if you are looking for google pagespeed score or page load speed.
-
+The plugin supports all major image formats (JPG, PNG, GIF) and has three different compression levels (lossless, intelligent and ultra). You can check our FAQ about the compression levels.
 
 **What makes MegaOptim a better choice than the other image compression tools?**
 
-* supports all popular image formats such as JPG, PNG, GIF
+* 300 free images per month, more than majority of the other freemium image compression plugins available.
 * supports three different optimization levels (ultra, intelligent, losses)
 * supports optimization of the images automatically on upload for WordPress Media Library, NextGen, MediaPress, Envira and other gallery plugins.
 * supports large images, no file size limit.
@@ -58,7 +55,7 @@ For most of the websites **intelligent** method is enough, it auto determines th
 
 **How much does MegaOptim cost?**
 
-Our service comes with 300 images/tokens per month for free. Additional tokens can be purchased starting from $4.99 for 5,500 tokens. Check out our prices <a href="https://megaoptim.com/pricing">here</a>.
+Our service comes with 300 FREE images/tokens per month. Additional tokens can be purchased starting from $4.99 for 5,500 tokens. Check out our prices <a href="https://megaoptim.com/pricing">here</a>.
 
 Want more tokens for free? Help us spread MegaOptim and earn 120 tokens per sign up and 300 tokens once customer becomes paid customer. Our Referral program can be found in the <a target="_blank" href="https://megaoptim.com/dashboard">dashboard area</a>.
 
@@ -89,6 +86,9 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
 
 = Can i use the same API Key on multiple websites? =
     Absolutely. You can use your API key on as many websites as you want.
+
+= Which compression level should i use? =
+     For most of the websites **intelligent** method is enough, it auto determines the level of compression of the image that works best for the human eye. The **ultra** mode is similar to **intelligent** but goes a bit further to save more space. If you are willing to sacrifice small bits of the image quality then this mode is the way to go. Finally, with the lossless method the service attempts to optimize the images without touching the image quality. It is not recommended method if you are looking for google pagespeed score or page load speed.
 
 = I am using PHP 5.2 but want to still use the plugin?
     MegaOptim plugin supports PHP 5.3 or newer, but no worries. We offer up to one hour support to upgrade your hosting account with newer PHP version if you have access to do so.
@@ -149,6 +149,10 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
 10. NextGen Galleries: Gallery table screen buttons Integration
 
 == Changelog ==
+
+
+= 1.1.1 =
+* Fixed error warnings
 
 = 1.1.0 =
 * Added feature to sign up for api key from the WordPress Dashboard

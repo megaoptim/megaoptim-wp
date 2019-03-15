@@ -419,7 +419,7 @@ abstract class MGO_Attachment {
 	 * @return string
 	 */
 	protected function get_lock_key() {
-		$lock = 'megaoptim_lock_' . $this->getType() . '_' . $this->get_id();
+		$lock = 'lock_' . $this->getType() . '_' . $this->get_id();
 
 		return $lock;
 	}
@@ -451,7 +451,7 @@ abstract class MGO_Attachment {
 	public function is_locked() {
 		$lock = $this->get_lock();
 
-		return $lock !== false;
+		return $lock != false;
 	}
 
 	/**
