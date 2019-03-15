@@ -4,7 +4,7 @@ Tags: image optimizer, pagespeed, compression, compress, image, compression, opt
 Requires at least: 3.6
 Tested up to: 4.9.8
 Requires PHP: 5.3.0
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -150,6 +150,8 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
 
 == Changelog ==
 
+= 1.1.2 =
+* Security hardening
 
 = 1.1.1 =
 * Fixed error warnings
