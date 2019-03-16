@@ -11,7 +11,7 @@
                 <div class="megaoptim-instruction">
                     <h4 class="navy"><?php _e( '1. Obtain API Key', 'megaoptim' ); ?></h4>
                     <p>
-						<?php echo sprintf( __( 'The API key is essential to use the plugin, you can get it by clicking the button below. The initial FREE plan starts from %s tokens a month. You can also purcahse larger quota anytime from our %s.', 'megaoptim' ), '<strong>300</strong>', '<a title="'.__('In the dahsboard you can monitor see your optimization reports, api key, open support tickets and much more', 'megaoptim').'" href="https://megaoptim.com/dashboard/api/credentials" target="_blank">' . __( 'dashboard', 'megaoptim' ) . '</a>' ); ?>
+						<?php echo sprintf( __( 'The API key is essential to use the plugin, you can get it by clicking the button below. The initial FREE plan starts from %s tokens a month. You can also purcahse larger quota anytime from our %s.', 'megaoptim' ), '<strong>500</strong>', '<a title="'.__('In the dahsboard you can monitor see your optimization reports, api key, open support tickets and much more', 'megaoptim').'" href="https://megaoptim.com/dashboard/api/credentials" target="_blank">' . __( 'dashboard', 'megaoptim' ) . '</a>' ); ?>
                     </p>
                     <p><a target="_blank" id="megaoptim-trigger-register" data-remodal-target="megaoptim-register" class="button button-primary"><?php _e('Get API Key','megaoptim'); ?></a> or <a href="<?php echo WP_MEGAOPTIM_REGISTER_URL; ?>" target="_blank">register here</a> </p>
                 </div>
@@ -42,7 +42,7 @@
             <div class="megaoptim-colf">
                 <div class="megaoptim-extra">
                     <h4 class="navy"><?php _e('Referral program', 'megaoptim'); ?></h4>
-                    <p><?php echo sprintf(__('We have a referral program available for everyone. Help us spread by sharing your %s with your friends and get %s on each signup and %s when the referral subscribes to any plan.'), '<strong><a target="_blank" href="https://megaoptim.com/dashboard/referral">'.__('referral url').'</a></strong>', '<strong>'.__('120 tokens', 'megaoptim').'</strong>', '<strong>'.__('300 tokens', 'megaoptim').'</strong>');?></p>
+                    <p><?php echo sprintf(__('We have a referral program available for everyone. Help us spread by sharing your %s with your friends and get %s on each signup and %s when the referral subscribes to any plan.'), '<strong><a target="_blank" href="https://megaoptim.com/dashboard/referral">'.__('referral url').'</a></strong>', '<strong>'.__('120 tokens', 'megaoptim').'</strong>', '<strong>'.__('500 tokens', 'megaoptim').'</strong>');?></p>
                 </div>
             </div>
         </div>

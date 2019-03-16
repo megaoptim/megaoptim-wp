@@ -2,13 +2,13 @@
 Contributors: megaoptim, darkog
 Tags: image optimizer, pagespeed, compression, compress, image, compression, optimize, image optimiser, image optimiser, image compression, resize, compress pdf, compress jpg, compress png, image compression, compress retina
 Requires at least: 3.6
-Tested up to: 4.9.8
+Tested up to: 5.1.1
 Requires PHP: 5.3.0
 Stable tag: 1.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Auto compress all images within your website and greatly improve your page load speed and SEO.
+Compress your images and improve your page load speed and SEO.
 
 == Description ==
 **MegaOptim is image optimization plugin/service and a freemium that is easy to use, stable and actively maintained by dedicated team behind.**
@@ -21,18 +21,19 @@ The plugin supports all major image formats (JPG, PNG, GIF) and has three differ
 
 **What makes MegaOptim a better choice than the other image compression tools?**
 
-* 300 free images per month, more than majority of the other freemium image compression plugins available.
-* supports three different optimization levels (ultra, intelligent, losses)
-* supports optimization of the images automatically on upload for WordPress Media Library, NextGen, MediaPress, Envira and other gallery plugins.
+* 500 free images per month, more than majority of the other freemium image compression plugins available.
+* three different optimization levels (ultra, intelligent, losses)
+* automatic optimization of images on upload for WordPress Media Library, NextGen, MediaPress, Envira and other gallery plugins.
 * supports large images, no file size limit.
-* supports bulk optimization modes for WordPress Media Library, Custom Folders and NextGen Galleries.
-* using custom folders feature optimize any other folder you want in your web hosting account.
+* bulk optimization modes for WordPress Media Library, Custom Folders and NextGen Galleries.
+* optimization of custom folders, can optimize any folder you want in your web hosting account by selecting it.
 * supports WordPress multisite, you can separately setup the plugin on each site in the network.
-* supports integration with WordPress Media Screens and NextGen gallery editor screen, in both screens you will have optimize/restroe buttons and stats.
-* supports option to choose which regular thumbnails to optimize
-* supports WP Retina 2x and separate option where you can choose which retina thumbnails to be optimized
+* integration with WordPress Media screen and NextGen gallery screen, in both screens you have optimize/restroe buttons and stats.
+* allows you to choose which thumbnail sizes to optimize (both regular and retina)
+* advanced integration with WP Retina 2x (Free and Pro)
 * supports CloudFlare and integrates with CloudFlare plugins, purges(refreshes) CloudFlare image urls after optimization
-* supports backups and management for the backups, choose what you want to backup, clean up specific backup when you don't need them, etc.
+* choose what tto backup automatically, clean up specific backup when you don't need them.
+* restore files from backup anytime if backup is available
 * option to enable/disable auto convert from CMYK to RGB(A better color profile for web)
 * option to choose if you want to preserve the EXIF(location, time, camera model) data - useful option for photographers.
 * option to resize images while optimizing to specific maximum width or height (bigger of two)
@@ -46,18 +47,18 @@ The plugin supports all major image formats (JPG, PNG, GIF) and has three differ
 * uses progressive JPEG for the larger images to display them faster in the browser.
 * single api key for multiple sites
 * compatible with WP Engine, Siteground and all other hosting providers
-* compatible with both Windows/UNIX based servers
-* images that are optimized and the total saved size is less than 5% are free, no tokens are charged.
-* optimization reports in the plugin or in our <a target="_blank" href="https://megaoptim.com/dashboard">dashboard area</a>
-* supports WooCommerce & Easy Digital Downloads, etc
-* free optimization credits for non-profit organizations, you can contact us about that.
+* compatible with both Windows/UNIX based hosting environments
+* images that are optimized and the total saved size is less than 5% are free, no tokens are deducted.
+* detailed optimization stats available at <a target="_blank" href="https://megaoptim.com/dashboard">dashboard area</a>
+* supports WooCommerce & Easy Digital Downloads
+* free optimization credits for non-profit organizations (contact us)
 * dedicated support team, ready to help you 24/7.
 
 **How much does MegaOptim cost?**
 
-Our service comes with 300 FREE images/tokens per month. Additional tokens can be purchased starting from $4.99 for 5,500 tokens. Check out our prices <a href="https://megaoptim.com/pricing">here</a>.
+Our service comes with 500 FREE images/tokens per month. Additional tokens can be purchased starting from $4.99 for 5,500 tokens. Check out our prices <a href="https://megaoptim.com/pricing">here</a>.
 
-Want more tokens for free? Help us spread MegaOptim and earn 120 tokens per sign up and 300 tokens once customer becomes paid customer. Our Referral program can be found in the <a target="_blank" href="https://megaoptim.com/dashboard">dashboard area</a>.
+Want more tokens for free? Help us spread MegaOptim and earn 120 tokens per sign up and 500 tokens once customer becomes paid customer. Our Referral program can be found in the <a target="_blank" href="https://megaoptim.com/dashboard">dashboard area</a>.
 
 **Have a question? Contact us!**
 
