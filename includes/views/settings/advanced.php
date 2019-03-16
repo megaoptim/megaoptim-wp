@@ -129,11 +129,11 @@ $settings = MGO_Settings::instance()->get();
 										<?php
                                             $tooltip = ($image_size['width']*2) . 'x' . ($image_size['height']*2);
 										?>
-                                        <label title="<?Php echo $tooltip; ?>" class="checkbox" for="cb_<?php echo $key; ?>">
+                                        <label title="<?Php echo $tooltip; ?>" class="checkbox" for="cb_retina_<?php echo $key; ?>">
                                             <input
 												<?php echo is_array( $settings[ MGO_Settings::RETINA_IMAGE_SIZES ] )
 												           && in_array( $key, $settings[ MGO_Settings::RETINA_IMAGE_SIZES ] ) ? 'checked' : ''; ?>
-                                                    type="checkbox" name="<?php echo MGO_Settings::RETINA_IMAGE_SIZES; ?>[]" value="<?php echo $key; ?>" id="cb_<?php echo $key; ?>">
+                                                    type="checkbox" name="<?php echo MGO_Settings::RETINA_IMAGE_SIZES; ?>[]" value="<?php echo $key; ?>" id="cb_retina_<?php echo $key; ?>">
 											<?php echo $key . ' (' . $tooltip . ')'; ?>
                                         </label>
                                     </p>
