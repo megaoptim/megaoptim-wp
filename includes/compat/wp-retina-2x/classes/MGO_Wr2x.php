@@ -28,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Date: 9/5/2018
  * Time: 3:42 PM
  */
-class MGO_Wr2X extends MGO_BaseObject {
+class MGO_Wr2x extends MGO_BaseObject {
 
 	/**
 	 * The core class for working with WP Retina 2x plugin
@@ -347,4 +347,4 @@ class MGO_Wr2X extends MGO_BaseObject {
 
 }
 
-MGO_Wr2X::instance();
+MGO_Wr2x::instance();
