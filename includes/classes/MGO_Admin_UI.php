@@ -208,8 +208,12 @@ class MGO_Admin_UI extends MGO_BaseObject {
 		if ( megaoptim_is_connected() ) {
 			switch ( $column_name ) {
 				case 'megaoptim_media_attachment':
-					$attachment = new MGO_MediaAttachment( $attachment_id );
-					echo megaoptim_get_attachment_buttons( $attachment );
+					try {
+						$attachment = new MGO_MediaAttachment( $attachment_id );
+						echo megaoptim_get_attachment_buttons( $attachment );
+					} catch (\Exception $e) {
+						echo $e->getMessage();
+					}
 					break;
 			}
 		}
@@ -236,8 +240,12 @@ class MGO_Admin_UI extends MGO_BaseObject {
 		$attachment_id = isset( $_GET['post'] ) ? $_GET['post'] : null;
 		if ( ! is_null( $attachment_id ) && 'attachment' === get_post_type( $attachment_id ) && megaoptim_is_connected() ) {
 			echo '<div class="megaoptim_media_attachment">';
-			$attachment = new MGO_MediaAttachment( $attachment_id );
-			echo megaoptim_get_attachment_buttons( $attachment );
+			try {
+				$attachment = new MGO_MediaAttachment( $attachment_id );
+				echo megaoptim_get_attachment_buttons( $attachment );
+			} catch (\Exception $e) {
+				echo $e->getMessage();
+			}
 			echo '</div>';
 		}
 	}

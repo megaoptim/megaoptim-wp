@@ -51,7 +51,7 @@ class MGO_MediaAttachment extends MGO_Attachment {
 
 		if ( ! is_null( $id ) ) {
 			if ( ! wp_attachment_is_image( $id ) ) {
-				throw ( new MGO_Exception( 'Not valid image attachment ID' ) );
+				throw ( new MGO_Exception( 'Not a valid image.' ) );
 			}
 			parent::__construct( $id );
 		}
