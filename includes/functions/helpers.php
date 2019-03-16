@@ -549,16 +549,12 @@ function megaoptim_is_excluded( $dir ) {
 /**
  * Returns true if url is valid
  *
- * @param $str
+ * @param $url
  *
  * @return bool
  */
-function megaoptim_is_url( $str ) {
-	if ( filter_var( $str, FILTER_VALIDATE_URL ) ) {
-		return true;
-	} else {
-		return false;
-	}
+function megaoptim_is_url( $url ) {
+	return \MegaOptim\Tools\URL::validate($url);
 }
 
 /**

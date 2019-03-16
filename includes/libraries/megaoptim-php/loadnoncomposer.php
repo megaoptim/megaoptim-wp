@@ -18,6 +18,8 @@
  * along with MegaOptim Image Optimizer. If not, see <https://www.gnu.org/licenses/>.
  **********************************************************************/
 
+require_once('src/Tools/PATH.php');
+require_once('src/Tools/URL.php');
 require_once('src/Interfaces/IFile.php');
 require_once('src/Tools/FileSystem.php');
 require_once('src/Http/HTTP.php');

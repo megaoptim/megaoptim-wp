@@ -37,7 +37,7 @@ class FileSystem {
 		if ( ! is_dir( $dir ) ) {
 			return $resources;
 		} else {
-			foreach ( Optimizer::accepted_types() as $extension => $mime_type ) {
+			foreach ( PATH::accepted_types() as $extension => $mime_type ) {
 				$paths = glob( $dir . DIRECTORY_SEPARATOR . '*.' . $extension );
 				if ( is_array( $paths ) ) {
 					$resources = array_merge( $resources, $paths );

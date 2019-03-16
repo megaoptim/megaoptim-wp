@@ -22,6 +22,7 @@ namespace MegaOptim\Responses;
 
 use MegaOptim\Http\HTTP;
 use MegaOptim\Optimizer;
+use MegaOptim\Tools\URL;
 
 class Response implements HTTP {
 	/**
@@ -124,7 +125,7 @@ class Response implements HTTP {
 			return;
 		}
 		for ( $i = 0; $i < count( $resource ); $i ++ ) {
-			if ( Optimizer::is_url( $resource[ $i ] ) ) {
+			if ( URL::validate( $resource[ $i ] ) ) {
 				break;
 			}
 			if ( basename( $resource[ $i ] ) === $this->result[ $i ]->getFileName() ) {
