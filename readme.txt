@@ -1,6 +1,6 @@
 === MegaOptim Image Optimizer ===
 Contributors: megaoptim, darkog
-Tags: image optimizer, pagespeed, compression, compress, image, compression, optimize, image optimiser, image optimiser, image compression, resize, compress pdf, compress jpg, compress png, image compression, compress retina
+Tags: image optimizer, image compression, pagespeed, lighthouse, optimize images, image optimiser, image compressor, optimize images, optimize jpg, compress jpg, compress png, compress retina
 Requires at least: 3.6
 Tested up to: 5.1.1
 Requires PHP: 5.3.0
@@ -153,6 +153,9 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
 
 = 1.1.2 =
 * Security hardening
+* WordPress 5.1+ compatibility
+* Fix undefined variable problem on 'Custom folders' screen
+* Fix non-unique html ids for thumbnail size checkboxes
 
 = 1.1.1 =
 * Fixed error warnings
