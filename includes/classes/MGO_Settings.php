@@ -121,7 +121,7 @@ class MGO_Settings extends MGO_BaseObject {
 	public function update( $data ) {
 		$_settings = $this->get();
 		foreach ( $data as $key => $value ) {
-			$_settings[ $key ] = $value;
+			$_settings[ $key ] = sanitize_text_field($value);
 		}
 
 		return update_option( self::OPTIONS_KEY, $_settings );

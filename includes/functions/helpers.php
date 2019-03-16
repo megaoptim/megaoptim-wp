@@ -715,16 +715,16 @@ function megaoptim_basename( $str, $suffix = '' ) {
 
 /**
  * Multibyte Basename support
- *
- * @param $Path
+ * @param $path
+ * @param bool $suffix
  *
  * @return bool|mixed|string
  */
-function megaoptim_mb_basename( $Path ) {
+function megaoptim_mb_basename( $path, $suffix = false ) {
 	$Separator = " qq ";
-	$qqPath    = preg_replace( "/[^ ]/u", $Separator . "\$0" . $Separator, $Path );
+	$qqPath    = preg_replace( "/[^ ]/u", $Separator . "\$0" . $Separator, $path );
 	if ( ! $qqPath ) { //this is not an UTF8 string!! Don't rely on basename either, since if filename starts with a non-ASCII character it strips it off
-		$fileName = end( explode( DIRECTORY_SEPARATOR, $Path ) );
+		$fileName = end( explode( DIRECTORY_SEPARATOR, $path ) );
 		$pos      = strpos( $fileName, $suffix );
 		if ( $pos !== false ) {
 			return substr( $fileName, 0, $pos );

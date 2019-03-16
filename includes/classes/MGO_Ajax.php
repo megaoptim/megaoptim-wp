@@ -92,7 +92,7 @@ class MGO_Ajax extends MGO_BaseObject {
 					$response = json_decode( $response['body'] );
 					if ( $response->status === 'ok' ) {
 						if ( megaoptim_validate_email( $response->result->email ) ) {
-							update_option( 'megaoptim_registration_email', $response->result->email );
+							update_option( 'megaoptim_registration_email', sanitize_text_field($response->result->email) );
 							wp_send_json_success( __( 'WooHoo! You are all set!' ) );
 						} else {
 							wp_send_json_error( array( 'email' => 'Invalid email!' ) );
