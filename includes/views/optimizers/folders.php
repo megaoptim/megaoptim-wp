@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 /* @var MGO_Profile $profile */
 $settings_url  = admin_url( "admin.php?page=megaoptim_settings" );
-$profile_valid = $profile instanceof MGO_Profile && ( $profile->has_api_key() && $profile->is_valid_apikey() );
+$is_profile_valid = $profile instanceof MGO_Profile && ( $profile->has_api_key() && $profile->is_valid_apikey() );
 $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
 
 ?>
@@ -31,7 +31,7 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
 <div class="megaoptim-postbox">
     <form class="content-wrapper" method="POST" id="megaoptim-folder-toptimizer">
         <div class="megaoptim-middle-content">
-			<?php if ( $profile_valid ): ?>
+			<?php if ( $is_profile_valid ): ?>
                 <div id="megaoptim-folder-picker">
                     <div class="row text-center">
                         <?php if( $tokens > 0 ): ?>
