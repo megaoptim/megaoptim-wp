@@ -904,39 +904,38 @@ UL.jqueryFileTree A {
     margin-bottom: 5px;
     margin-top: 0;
 }
-
+.content-header {
+    font-size: 23px;
+    font-weight: normal;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+}
 .megaoptim-subrow h1 {
     font-size: 14px;
     margin-bottom: 0;
     margin-top: 0;
 }
 
-.megaoptim-postbox h1 {
+.megaoptim-postbox h3 {
     font-size: 23px;
     margin-bottom: 5px;
     margin-top: 0;
 }
 
-.megaoptim-postbox h2 {
+.megaoptim-postbox h4 {
     font-size: 20px;
     margin-bottom: 5px;
     margin-top: 0;
 }
 
-.megaoptim-postbox h3 {
+.megaoptim-postbox h5 {
     font-size: 18px;
     margin-bottom: 5px;
     margin-top: 0;
 }
 
-.megaoptim-postbox h4 {
+.megaoptim-postbox h6 {
     font-size: 16px;
-    margin-bottom: 5px;
-    margin-top: 0;
-}
-
-.megaoptim-postbox h5 {
-    font-size: 13px;
     margin-bottom: 5px;
     margin-top: 0;
 }

@@ -24,7 +24,7 @@ $settings = MGO_Settings::instance()->get();
     <form class="content-wrapper" method="POST" id="megaoptim_save_form" data-action="megaoptim_save_settings">
         <div class="megaoptim-form-header">
             <div class="megaoptim-full">
-                <h1 class="content-header"><?php _e( 'General Settings', 'megaoptim' ); ?></h1>
+                <h3 class="content-header"><?php _e( 'General Settings', 'megaoptim' ); ?></h3>
             </div>
         </div>
         <div class="megaoptim-field-group" id="save_status"></div>

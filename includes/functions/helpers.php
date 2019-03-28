@@ -54,7 +54,7 @@ function megaoptim_get_tmp_path() {
  * @param        $message
  * @param string $filename
  */
-function megaoptim_log( $message, $filename = "debug.txt" ) {
+function megaoptim_log( $message, $filename = "debug.log" ) {
 
 	$log_file_path = megaoptim_get_tmp_path();
 	if ( ! file_exists( $log_file_path ) ) {

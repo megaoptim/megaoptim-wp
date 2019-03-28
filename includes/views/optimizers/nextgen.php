@@ -33,7 +33,7 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
 		<div class="megaoptim-middle-content">
 			<?php if ( $is_profile_valid && $tokens > 0 ): ?>
 				<div id="megaoptim-optimizer-scan" class="text-center">
-					<h1><?php _e( 'Scan for unoptimized images', 'megaoptim' ); ?></h1>
+					<h3><?php _e( 'Scan for unoptimized images', 'megaoptim' ); ?></h3>
 					<P class="megaoptim-mb-20 megaoptim-mt-20"><?php _e( sprintf( 'Click on the button below to scan your %s for unoptimized images. If images are found you will be able to optimize them by clicking Start button.', '<strong>' . __( 'NextGen Galleries', 'megaoptim' ) . '</strong>' ), 'megaoptim' ); ?></P>
 					<div id="megaoptim-control">
 						<div class="megaoptim-row">

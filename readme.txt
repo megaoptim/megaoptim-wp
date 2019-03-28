@@ -8,63 +8,61 @@ Stable tag: 1.1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Compress your images and improve your page load speed and SEO.
+Compress your images to speed up your site and boost your SEO. Compatible with any gallery or slider.
 
 == Description ==
-**MegaOptim is image optimization plugin/service and a freemium that is easy to use, stable and actively maintained by dedicated team behind.**
+**MegaOptim is image optimization plugin/service and that is easy to use, stable and actively maintained by dedicated team behind.**
 
-Image compression is playing vital role in your page load speed, Google's pagespeed score and SEO rankings. Correctly optimized images for web will make your pages faster, save bandwidth and disk space, boost your SEO rankings while keeping your images identical.
+The plugin uses minimal resources on your server and all the heavy lifting is done by our API service in the cloud. No binaries will be installed on your server to resize or compress images directly on it unlike some other plugins.
 
-The plugin uses minimal resources on your hosting and all the heavy lifting is done by our API service in the cloud, meaning that no binaries will be installed on your server to resize or compress images unlike some other plugins.
+= What is image optimization / compression? =
 
-The plugin supports all major image formats (JPG, PNG, GIF) and has three different compression levels (lossless, intelligent and ultra). You can check our FAQ about the compression levels.
+Image Optimization is delivering the high-quality images in the right format, dimension, size, and resolution while keeping the smallest possible size. This will increase your page load speed and boost your SEO.
 
-**What makes MegaOptim a better choice than the other image compression tools?**
+= How much does MegaOptim cost? =
 
-* 500 free images per month, more than majority of the other freemium image compression plugins available.
-* three different optimization levels (ultra, intelligent, losses)
-* automatic optimization of images on upload for WordPress Media Library, NextGen, MediaPress, Envira and other gallery plugins.
-* supports large images, no file size limit.
-* bulk optimization modes for WordPress Media Library, Custom Folders and NextGen Galleries.
-* optimization of custom folders, can optimize any folder you want in your web hosting account by selecting it.
-* supports WordPress multisite, you can separately setup the plugin on each site in the network.
-* integration with WordPress Media screen and NextGen gallery screen, in both screens you have optimize/restroe buttons and stats.
-* allows you to choose which thumbnail sizes to optimize (both regular and retina)
-* advanced integration with WP Retina 2x (Free and Pro)
-* supports CloudFlare and integrates with CloudFlare plugins, purges(refreshes) CloudFlare image urls after optimization
-* choose what tto backup automatically, clean up specific backup when you don't need them.
-* restore files from backup anytime if backup is available
-* option to enable/disable auto convert from CMYK to RGB(A better color profile for web)
-* option to choose if you want to preserve the EXIF(location, time, camera model) data - useful option for photographers.
-* option to resize images while optimizing to specific maximum width or height (bigger of two)
-* option to restore optimized image (if backups available/enabled) - Useful if you want to test the compression results.
-* supports basic http authentication, if your website is protected with http password.
-* easy to reoptimize the image using different technique (if backups are enabled)
-* works seamlessly on localhost ( development environments )
-* works great with plugins like Envira, FooGallery, MediaPress, etc.
-* debug page - if something is wrong go to Settings > Debug. You can even export it and send it to us to check your configuration.
-* supports both HTTP and HTTPS
-* uses progressive JPEG for the larger images to display them faster in the browser.
-* single api key for multiple sites
-* compatible with WP Engine, Siteground and all other hosting providers
-* compatible with both Windows/UNIX based hosting environments
-* images that are optimized and the total saved size is less than 5% are free, no tokens are deducted.
-* detailed optimization stats available at <a target="_blank" href="https://megaoptim.com/dashboard">dashboard area</a>
-* supports WooCommerce & Easy Digital Downloads
-* free optimization credits for non-profit organizations (contact us)
-* dedicated support team, ready to help you 24/7.
+The service comes with **500 FREE images/tokens per month for everyone**. Additional tokens can be purchased starting from $4.99 for 6000 tokens. Check out our prices <a href="https://megaoptim.com/pricing" target="_blank">here</a>.
 
-**How much does MegaOptim cost?**
+Want more tokens for free? Help us spread MegaOptim and earn 120 tokens per sign up and 300 tokens once customer becomes paid customer. Our Referral program can be found in the <a target="_blank" href="https://megaoptim.com/dashboard">dashboard area</a>.
 
-Our service comes with 500 FREE images/tokens per month. Additional tokens can be purchased starting from $4.99 for 5,500 tokens. Check out our prices <a href="https://megaoptim.com/pricing">here</a>.
+= What features does MegaOptim offer? =
 
-Want more tokens for free? Help us spread MegaOptim and earn 120 tokens per sign up and 500 tokens once customer becomes paid customer. Our Referral program can be found in the <a target="_blank" href="https://megaoptim.com/dashboard">dashboard area</a>.
+- Three different optimization levels (ultra, intelligent, lossless)
+- Bulk optimization for the Media Library, NextGen Libaries, MediaPress, Envira and other
+- Bulk optimization of Custom folders by your choice in your hosting account
+- Auto-optimization for the Media Library, NextGen Libraries, MediaPress, Envira and other
+- Option to choose thumbnail sizes you want to be optimized for both regular and retina thumbnails
+- Option to choose what to backup automatically
+- Auto-backups for the optimized images. If you don't want the results you can always restore the image from backup with a single click
+- Button to remove all the backups to free up the space if you don't plan to restore the images
+- Supports large images, no filesize limit
+- Supports WordPress Multisite, setup the plugin separately on the sites you want.
+- Integrates with Media Library and NextGen Galleries screens and adds buttons for optimization/restoration of specific image
+- Integrates with WP Retina 2x(Free and Pro). It will optimize all the retina images too
+- Supports Cloudflare, if you are connected to CF with plugins or you enter your credentials in the setup page it will purge the image automatically from CloudFlare cache after it is optimized
+- Option to enable/disable auto conversion from CMYK to RGB (A better color profile for web)
+- Option to preserve EXIF data(location, time, camera model) or remove it upon the optimization
+- Option to specify maximum dimensions of optimized images. You may not need plugins like Imansity
+- Supports both HTTP and HTTPS
+- Supports localhost and non-public sites. If your site is not accessible by our server, you can still optimize images as long as you have internet access
+- Supports Basic HTTP authentication, if your site is protected with .htpasswd
+- Uses progressive JPEG for the larger images to display them faster in the browser
+- Single api key for multiple sites
+- Compatible with WP Engine, SiteGround and other hosting providers
+- Compatible with Windows/UNIX(Linux, OSx) hosting environments
+- Images that are optimized and the total saved size is less than 5% are free, no tokens are deducted
+- Optimization stats available at the <a target="_blank" href="https://megaoptim.com/dashboard">dashboard area</a>
+- Dedicated support team ready to help you 24/7.
 
-**Have a question? Contact us!**
+= Have a question? Contact us! =
 
 * Email  [<a href="https://megaoptim.com/contact">Click Here</a>]
 * Twitter [<a href="https://twitter.com/MegaoptimO">Click Here</a>]
 * Facebook [<a href="https://www.facebook.com/megaoptimio">Click Here</a>]
+
+= Are you a developer? =
+
+Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here</a> to read more about the actions and filters that are available.
 
 == Installation ==
 1.) Sign up for api key at https://megaoptim.com/register
@@ -73,12 +71,6 @@ Want more tokens for free? Help us spread MegaOptim and earn 120 tokens per sign
 4.) Navigate to wp-admin and in the sidebar menu click on "MegaOptim", hover over and go to "Settings", here you can paste the api key and save the settings.
 5.) In the same section check the other settings, change them according to your needs.
 6.) You are all set! Begin optimizing by navigating to "MegaOptim" > "Optimizer" ( In the top right corner you can select optimizer )
-
-
-== Hooks for Developers ==
-
-Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here</a> to read more about the actions and filters that are available for developers.
-
 
 == Frequently Asked Questions ==
 
@@ -91,7 +83,7 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
 = Which compression level should i use? =
      For most of the websites **intelligent** method is enough, it auto determines the level of compression of the image that works best for the human eye. The **ultra** mode is similar to **intelligent** but goes a bit further to save more space. If you are willing to sacrifice small bits of the image quality then this mode is the way to go. Finally, with the lossless method the service attempts to optimize the images without touching the image quality. It is not recommended method if you are looking for google pagespeed score or page load speed.
 
-= I am using PHP 5.2 but want to still use the plugin?
+= I am using PHP 5.2 but want to still use the plugin? =
     MegaOptim plugin supports PHP 5.3 or newer, but no worries. We offer up to one hour support to upgrade your hosting account with newer PHP version if you have access to do so.
 
 = Is the plugin compatible with WP offload S3 and WP Stateless? =
