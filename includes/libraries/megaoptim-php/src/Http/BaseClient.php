@@ -20,8 +20,6 @@
 
 namespace MegaOptim\Http;
 
-use MegaOptim\Optimizer;
-
 abstract class BaseClient {
 
 	/**
@@ -108,7 +106,9 @@ abstract class BaseClient {
 	 * @return mixed
 	 * @throws \Exception
 	 */
-	abstract public static function _post( $url, $data, $files = array(), $api_key = null );
+	public static function _post( $url, $data, $files = array(), $api_key = null ) {
+
+	}
 
 
 	/**
@@ -121,7 +121,9 @@ abstract class BaseClient {
 	 * @return mixed
 	 * @throws \Exception
 	 */
-	abstract public static function _get( $url, $api_key = null );
+	public static function _get( $url, $api_key = null ) {
+
+	}
 
 
 	/**
@@ -180,7 +182,10 @@ abstract class BaseClient {
 		return self::$user_agent;
 	}
 
-
+	/**
+	 * Set the user agent
+	 * @param $user_agent
+	 */
 	public static function set_user_agent( $user_agent ) {
 		static::$user_agent = $user_agent;
 	}
