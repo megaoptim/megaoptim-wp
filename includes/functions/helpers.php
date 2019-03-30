@@ -49,31 +49,74 @@ function megaoptim_get_tmp_path() {
 }
 
 /**
+ * Used to write contents into file provided by parameters
+ * @param $file string
+ * @param $contents string
+ */
+function megaoptim_write($file, $contents) {
+	if ( file_exists( $file ) ) {
+		$fp = fopen( $file, 'a' );
+		fwrite( $fp, $contents . "\n" );
+	} else {
+		$fp = fopen( $file, 'w' );
+		fwrite( $fp, $contents . "\n" );
+	}
+	fclose( $fp );
+}
+
+/**
+ * Makes specific dir secure.
+ * @param $dir
+ * @param bool $noindex
+ */
+function megaoptim_protect_dir($dir, $noindex = true) {
+	if(!is_dir($dir)) {
+		@mkdir($dir);
+	}
+	// Create empty index file
+	if(is_dir($dir)) {
+		$index_path = $dir . DIRECTORY_SEPARATOR . 'index.html';
+		if(!file_exists($index_path)) {
+			@touch($index_path);
+		}
+	}
+	// Create noindex to the directory for some hosting environemnts.
+	if($noindex) {
+		$htaccess_path = $dir . DIRECTORY_SEPARATOR . '.htaccess';
+		if(!file_exists($htaccess_path)) {
+			$contents = '<IfModule headers_module>
+Header set X-Robots-Tag "noindex"
+</IfModule>';
+			megaoptim_write($htaccess_path, $contents);
+		}
+	}
+}
+
+/**
  * Wrapper for writing the interactions to /wp-content/uploads/ file
  *
  * @param        $message
  * @param string $filename
  */
 function megaoptim_log( $message, $filename = "debug.log" ) {
-
-	$log_file_path = megaoptim_get_tmp_path();
-	if ( ! file_exists( $log_file_path ) ) {
-		@mkdir( $log_file_path );
+	$log_file_dir = megaoptim_get_tmp_path();
+	megaoptim_protect_dir($log_file_dir);
+	if ( ! file_exists( $log_file_dir ) ) {
+		@mkdir( $log_file_dir );
 	}
-	$log_file_path = $log_file_path . DIRECTORY_SEPARATOR . $filename;
+	$log_file_path = $log_file_dir . DIRECTORY_SEPARATOR . $filename;
+	// TODO: Remove after some time
+	$old_file_path = $log_file_dir . DIRECTORY_SEPARATOR . 'debug.txt';
+	if(file_exists($old_file_path)) {
+		@rename($old_file_path, $log_file_path);
+	}
+	// END TODO
 	if ( ! is_string( $message ) && ! is_numeric( $message ) ) {
 		ob_start();
 		megaoptim_dump( $message );
 		$message = ob_get_clean();
 	}
-	if ( file_exists( $log_file_path ) ) {
-		$fp = fopen( $log_file_path, 'a' );
-		fwrite( $fp, $message . "\n" );
-	} else {
-		$fp = fopen( $log_file_path, 'w' );
-		fwrite( $fp, $message . "\n" );
-	}
-	fclose( $fp );
+	megaoptim_write($log_file_path, $message);
 }
 
 /**

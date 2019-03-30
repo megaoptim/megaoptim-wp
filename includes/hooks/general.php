@@ -26,15 +26,15 @@ if ( ! function_exists( '_megaoptim_install' ) ) {
 	function _megaoptim_install() {
 		$dt = new MGO_DB_Init();
 		$dt->run();
-
 		// Set defaults
 		if ( ! MGO_Settings::was_installed_previously() ) {
 			MGO_Settings::instance()->update( MGO_Settings::defaults() );
 		}
+		// Make the tmp dir secure
+		$dir = megaoptim_get_tmp_path();
+		megaoptim_protect_dir($dir);
 	}
-
 	register_activation_hook( WP_MEGAOPTIM_PLUGIN_FILE_PATH, '_megaoptim_install' );
 }
-
 
 
