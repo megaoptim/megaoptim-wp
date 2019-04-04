@@ -136,8 +136,15 @@ $settings = MGO_Settings::instance()->get();
                     <div class="checkbox_confirm">
                         <label class="checkbox" for="cb_resize_large_images">
                             <input
-								<?php checked( $settings[ MGO_Settings::RESIZE_LARGE_IMAGES ], 1 ); ?>
-                                    type="checkbox" name="<?php echo MGO_Settings::RESIZE_LARGE_IMAGES; ?>" data-toggle="checkbox" value="1" id="cb_resize_large_images">
+                            <?php checked( $settings[ MGO_Settings::RESIZE_LARGE_IMAGES ], 1 ); ?>
+                                type="checkbox"
+                                name="<?php echo MGO_Settings::RESIZE_LARGE_IMAGES; ?>"
+                                value="1"
+                                class="megaoptim-checkbox-conditional"
+                                data-target="#<?php echo MGO_Settings::MAX_WIDTH; ?>, #<?php echo MGO_Settings::MAX_HEIGHT; ?>"
+                                data-targetclearvalues="1"
+                                data-targetstate="disabled"
+                                >
                             Yes please! <br/> To maximum
                             <input
 								<?php disabled( $settings[ MGO_Settings::RESIZE_LARGE_IMAGES ], 0 ); ?>
@@ -177,17 +184,4 @@ $settings = MGO_Settings::instance()->get();
             </div>
         </div>
     </form>
-
-    <script>
-        //Dependency
-        (function ($) {
-            $('#cb_resize_large_images').on('change', function () {
-                if ($(this).is(':checked')) {
-                    $("#maximum_size_w, #maximum_size_h").prop('disabled', false);
-                } else {
-                    $("#maximum_size_w, #maximum_size_h").prop('disabled', true);
-                }
-            });
-        })(jQuery);
-    </script>
 </div>

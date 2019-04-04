@@ -107,10 +107,10 @@ abstract class MGO_Library extends MGO_BaseObject {
 		$http_pass   = $this->settings->get( MGO_Settings::HTTP_PASS );
 
 		if ( ! empty( $max_width ) && $max_width > 0 ) {
-			$params['max_width'] = $width;
+			$params['max_width'] = $max_width;
 		}
 		if ( ! empty( $max_height ) && $max_height > 0 ) {
-			$params['max_height'] = $height;
+			$params['max_height'] = $max_height;
 		}
 		if ( in_array( $compression, array( 'intelligent', 'ultra', 'lossless' ) ) ) {
 			$params['compression'] = $compression;

@@ -4,7 +4,7 @@ Tags: image optimizer, image compression, pagespeed, lighthouse, optimize images
 Requires at least: 3.6
 Tested up to: 5.1.1
 Requires PHP: 5.3.0
-Stable tag: 1.1.5
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,6 +31,7 @@ Want more tokens for free? Help us spread MegaOptim and earn 120 tokens per sign
 - Bulk optimization for the Media Library, NextGen Libaries, MediaPress, Envira and other
 - Bulk optimization of Custom folders by your choice in your hosting account
 - Auto-optimization for the Media Library, NextGen Libraries, MediaPress, Envira and other
+- WebP Support - Convert images to WebP upon optimization and automatically replace the content images with WebP version if available
 - Option to choose thumbnail sizes you want to be optimized for both regular and retina thumbnails
 - Option to choose what to backup automatically
 - Auto-backups for the optimized images. If you don't want the results you can always restore the image from backup with a single click
@@ -142,6 +143,14 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
 10. NextGen Galleries: Gallery table screen buttons Integration
 
 == Changelog ==
+
+= 1.2.0 =
+* WebP Support
+* Security hardening and improvements
+* Admin UI improvements
+* Fixed PHP Strict Standards warning
+* Fixed saving max dimensions value
+* Improved settings data persistence
 
 = 1.1.5 =
 * Improved WP Retina 2x compatibility

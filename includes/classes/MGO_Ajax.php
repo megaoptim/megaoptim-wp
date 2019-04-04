@@ -92,7 +92,7 @@ class MGO_Ajax extends MGO_BaseObject {
 					$response = json_decode( $response['body'] );
 					if ( $response->status === 'ok' ) {
 						if ( megaoptim_validate_email( $response->result->email ) ) {
-							update_option( 'megaoptim_registration_email', sanitize_text_field($response->result->email) );
+							update_option( 'megaoptim_registration_email', sanitize_text_field( $response->result->email ) );
 							wp_send_json_success( __( 'WooHoo! You are all set!' ) );
 						} else {
 							wp_send_json_error( array( 'email' => 'Invalid email!' ) );
@@ -290,25 +290,26 @@ class MGO_Ajax extends MGO_BaseObject {
 			if ( ! isset( $_REQUEST[ MGO_Settings::MAX_WIDTH ] ) && ! isset( $_REQUEST[ MGO_Settings::MAX_HEIGHT ] ) ) {
 				array_push( $errors, __( 'If you enabled the option for mimimum image size, you need to set at least one of the fields with correct number greater than 100.', 'megaoptim' ) );
 			} else {
-				if ( $_REQUEST[ MGO_Settings::MAX_WIDTH ] <= 100 ) {
+				if ( isset( $_REQUEST[ MGO_Settings::MAX_WIDTH ] ) && is_numeric( $_REQUEST[ MGO_Settings::MAX_WIDTH ] ) && $_REQUEST[ MGO_Settings::MAX_WIDTH ] <= 100 ) {
 					array_push( $errors, __( 'Image maximum width should be greater than 100.', 'megaoptim' ) );
 				}
-				if ( $_REQUEST[ MGO_Settings::MAX_HEIGHT ] <= 100 ) {
+				if ( isset( $_REQUEST[ MGO_Settings::MAX_HEIGHT ] ) && is_numeric( $_REQUEST[ MGO_Settings::MAX_HEIGHT ] ) && $_REQUEST[ MGO_Settings::MAX_HEIGHT ] <= 100 ) {
 					array_push( $errors, __( 'Image maximum height should be greater than 100.', 'megaoptim' ) );
 				}
 			}
 		}
 		//Storage
-		if ( sizeof( $errors ) === 0 ) {
+		if ( count( $errors ) === 0 ) {
 			$data = array();
 			if ( ! $megaoptimpt_resize_large_images ) {
 				$data[ MGO_Settings::MAX_WIDTH ]           = '';
 				$data[ MGO_Settings::MAX_HEIGHT ]          = '';
 				$data[ MGO_Settings::RESIZE_LARGE_IMAGES ] = '';
+
 			} else {
 				// Update max image sizes
-				$data[ MGO_Settings::MAX_WIDTH ]           = ( isset( $_REQUEST[ MGO_Settings::MAX_WIDTH ] ) && ! empty( $_REQUEST[ MGO_Settings::MAX_WIDTH ] ) ) ? $_REQUEST[ MGO_Settings::MAX_WIDTH ] : '';
-				$data[ MGO_Settings::MAX_HEIGHT ]          = ( isset( $_REQUEST[ MGO_Settings::MAX_HEIGHT ] ) && ! empty( $_REQUEST[ MGO_Settings::MAX_HEIGHT ] ) ) ? $_REQUEST[ MGO_Settings::MAX_HEIGHT ] : '';
+				$data[ MGO_Settings::MAX_WIDTH ]           = ( isset( $_REQUEST[ MGO_Settings::MAX_WIDTH ] ) && is_numeric( $_REQUEST[ MGO_Settings::MAX_WIDTH ] ) ) ? $_REQUEST[ MGO_Settings::MAX_WIDTH ] : '';
+				$data[ MGO_Settings::MAX_HEIGHT ]          = ( isset( $_REQUEST[ MGO_Settings::MAX_HEIGHT ] ) && is_numeric( $_REQUEST[ MGO_Settings::MAX_HEIGHT ] ) ) ? $_REQUEST[ MGO_Settings::MAX_HEIGHT ] : '';
 				$data[ MGO_Settings::RESIZE_LARGE_IMAGES ] = 1;
 			}
 			// Update other metadata

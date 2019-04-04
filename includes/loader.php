@@ -48,14 +48,12 @@ $includes = array(
 	'classes/Adapters/MGO_MediaLibrary.php',
 	'classes/Models/MGO_LocalFileAttachment.php',
 	'classes/Adapters/MGO_LocalDirectories.php',
-
 	'compat/nextgen-gallery/classes/MGO_NextGenAttachment.php' => megaoptim_is_nextgen_active(),
 	'compat/nextgen-gallery/classes/MGO_NextGenLibrary.php'    => megaoptim_is_nextgen_active(),
 
 	// UI/AJAX
 	'classes/MGO_Ajax.php',
 	'classes/MGO_Admin_UI.php'                                 => is_admin(),
-
 
 	//Load Internal Functions
 	'functions/compat.php',
@@ -67,6 +65,10 @@ $includes = array(
 	'hooks/general.php',
 	'hooks/internal.php',
 	'hooks/attachments.php',
+
+	// Webp Support
+	'functions/webp.php',
+	'hooks/webp.php',
 
 	// Compatibility with third party.
 	// -- CloudFlare

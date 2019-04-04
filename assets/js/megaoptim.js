@@ -531,3 +531,39 @@
         }
     });
 })(jQuery);
+
+
+// Admin settings conditional checkbox
+(function ($) {
+    $('.megaoptim-checkbox-conditional').on('change', function () {
+        var target= $(this).data('target');
+        var clearinputs = $(this).data('targetclearvalues') ? 1 : 0;
+        var state = $(this).data('targetstate');
+        if(!state) {
+            state = 'disabled';
+        }
+        if(target) {
+            var $self = $(this);
+            var $target = $(target);
+            if($target.length > 0) {
+                if($self.is(':checked')) {
+                    if(state === 'hide') {
+                        $target.hide();
+                    } else {
+                        $target.prop(state, false);
+                    }
+                    if(clearinputs) {
+                        $target.val('');
+                        $target.find('input').val('');
+                    }
+                } else {
+                    if(state === 'hide') {
+                        $target.show();
+                    } else {
+                        $target.prop(state, true);
+                    }
+                }
+            }
+        }
+    });
+})(jQuery);
