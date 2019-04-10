@@ -49,6 +49,11 @@ class MGO_Settings extends MGO_BaseObject {
 	const CLOUDFLARE_API_KEY = 'megaoptimpt_cloudflare_api_key';
 	const CLOUDFLARE_ZONE = 'megaoptimpt_cloudflare_zone';
 
+	const WEBP_CREATE_IMAGES = 'webp_create';
+	const WEBP_DELIVERY_METHOD = 'webp_delivery_method'; // Possible values: picture, rewrite, none
+	const WEBP_TARGET_TO_REPLACE = 'webp_target_to_replace'; // default (the_content, the_excerpt, post_thumbnail), global (using output buffer)
+
+
 	private $settings = array();
 
 	/**
@@ -121,9 +126,12 @@ class MGO_Settings extends MGO_BaseObject {
 	public function update( $data ) {
 		$_settings = $this->get();
 		foreach ( $data as $key => $value ) {
-			$_settings[ $key ] = sanitize_text_field($value);
+			if(is_string($value)) {
+				$_settings[ $key ] = sanitize_text_field($value);
+			} else {
+				$_settings[ $key ] = $value;
+			}
 		}
-
 		return update_option( self::OPTIONS_KEY, $_settings );
 	}
 
@@ -150,7 +158,9 @@ class MGO_Settings extends MGO_BaseObject {
 			self::CMYKTORGB,
 			self::CLOUDFLARE_EMAIL,
 			self::CLOUDFLARE_API_KEY,
-			self::CLOUDFLARE_ZONE
+			self::CLOUDFLARE_ZONE,
+			self::WEBP_CREATE_IMAGES,
+			self::WEBP_DELIVERY_METHOD
 		);
 	}
 
@@ -181,7 +191,9 @@ class MGO_Settings extends MGO_BaseObject {
 			self::CLOUDFLARE_EMAIL                 => '',
 			self::CLOUDFLARE_ZONE                  => '',
 			self::IMAGE_SIZES                      => $sizes,
-			self::RETINA_IMAGE_SIZES               => $sizes
+			self::RETINA_IMAGE_SIZES               => $sizes,
+			self::WEBP_CREATE_IMAGES               => 0,
+			self::WEBP_DELIVERY_METHOD              => 'picture'
 		);
 	}
 

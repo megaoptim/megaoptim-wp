@@ -438,6 +438,17 @@ span.megaoptim-error {
     margin-bottom: 10px;
 }
 
+.megaoptim-full-wrap {
+    width: 100%;
+}
+
+.megaoptim-mt-5 {
+    margin-top: 5px !important;
+}
+.megaoptim-mb-5 {
+    margin-bottom: 5px !important;
+}
+
 .megaoptim-field-desc {
     margin-bottom: 10px;
     margin-top: 5px;

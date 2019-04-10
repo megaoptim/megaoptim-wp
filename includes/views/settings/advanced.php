@@ -32,15 +32,77 @@ $settings = MGO_Settings::instance()->get();
             </div>
         </div>
         <div class="megaoptim-field-group" id="save_status"></div>
+
         <div class="megaoptim-field-group">
             <div class="megaoptim-field-group-inner">
                 <div class="megaoptim-label-wrap">
-                    <label class="megaoptim-option-label"><?php _e( 'Manage Backups', 'megaoptim' ); ?></label>
-                    <p class="megaoptim-small-paragraph">Select which libaries to backup</p>
+                    <label class="megaoptim-option-label"><?php _e( 'WebP Management', 'megaoptim' ); ?></label>
+                    <p class="megaoptim-small-paragraph">Configure next-gen image formats settings</p>
                 </div>
                 <div class="megaoptim-field-wrap">
                     <div class="megaoptim-checkbox">
-                        <input type="checkbox" <?php checked( $settings[ MGO_Settings::BACKUP_MEDIA_LIBRARY_ATTACHMENTS ], 1 ); ?> id="<?php echo MGO_Settings::BACKUP_MEDIA_LIBRARY_ATTACHMENTS; ?>" name="<?php echo MGO_Settings::BACKUP_MEDIA_LIBRARY_ATTACHMENTS; ?>" value="1"/> Media Library Backup
+                        <input type="checkbox"
+							<?php checked( $settings[ MGO_Settings::WEBP_CREATE_IMAGES ], 1 ); ?>
+                               id="<?php echo MGO_Settings::WEBP_CREATE_IMAGES; ?>" name="<?php echo MGO_Settings::WEBP_CREATE_IMAGES; ?>" value="1"/>
+                        <label for="<?php echo MGO_Settings::WEBP_CREATE_IMAGES; ?>">
+                            Create optimized WebP images <strong>for free</strong>
+                        </label>
+                        <p class="megaoptim-field-desc">
+		                    <?php _e( 'We can create WebP versions of your images while optimizing only if resulting WebP version is smaller than the original image. Below you have option to deliver the created WebP on the front-end instead of the jpg/png formats if available.', 'megaoptim' ); ?>
+                        </p>
+                    </div>
+                    <div class="megaoptim-checkbox">
+                        <div class="megaoptim-full-wrap megaoptim-mt-5">
+                            <label class="megaoptim-option-label" for="<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>">WebP Front-end Delivery Method</label>
+                        </div>
+                        <div class="megaoptim-full-wrap">
+                            <select name="<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>" id="<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>">
+                                <option value="none">No front-end delivery</option>
+                                <option value="picture">Using &lt;PICTURE&gt; TAG</option>
+                                <option value="rewritting">Using server-side rewritting.</option>
+                            </select>
+                        </div>
+                        <div class="megaoptim-full-wrap">
+                            <div class="megaoptim-checkbox-explanation">
+                                <p id="megaoptim-<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>-none" class="megaoptim-option-explanation">
+			                        <?php _e( 'Skip delivering WebP on front end for now.', 'megaoptim' ); ?>
+                                </p>
+                            </div>
+                            <div class="megaoptim-checkbox-explanation">
+                                <p id="megaoptim-<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>-picture" class="megaoptim-option-explanation">
+		                            <?php _e( 'Using the &lt;PICTURE&gt; method replaces &lt;img&gt; tags with &lt;PICTURE&gt; tags. While this is recommended method of delivery. Please note that there can be display inconssitency after switching if your site relies on styling the &lt;img&gt; tags. You can switch to other option anytime.', 'megaoptim' ); ?>
+                                </p>
+                                <div class="megaoptim-full-wrap">
+                                    <input type="radio"
+		                                <?php checked( $settings[ MGO_Settings::WEBP_TARGET_TO_REPLACE ], 1 ); ?>
+                                           id="<?php echo MGO_Settings::WEBP_TARGET_TO_REPLACE; ?>" name="<?php echo MGO_Settings::WEBP_TARGET_TO_REPLACE; ?>" value="1"/>
+                                    <label for="<?php echo MGO_Settings::WEBP_TARGET_TO_REPLACE; ?>">
+                                        Create optimized WebP images <strong>for free</strong>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="megaoptim-field-group">
+            <div class="megaoptim-field-group-inner">
+                <div class="megaoptim-label-wrap">
+                    <label class="megaoptim-option-label"><?php _e( 'Backup Management', 'megaoptim' ); ?></label>
+                    <p class="megaoptim-small-paragraph">Select which libaries to backup</p>
+                </div>
+                <div class="megaoptim-field-wrap">
+                    <p class="megaoptim-field-desc">
+						<?php _e( 'Backups are useful if you want to restore the original version of the optimized image or reoptimize it using other method such as Lossless or Lossy and we recommend to keep this option On.', 'megaoptim' ); ?>
+                    </p>
+                    <div class="megaoptim-checkbox">
+                        <input type="checkbox"
+							<?php checked( $settings[ MGO_Settings::BACKUP_MEDIA_LIBRARY_ATTACHMENTS ], 1 ); ?>
+                               id="<?php echo MGO_Settings::BACKUP_MEDIA_LIBRARY_ATTACHMENTS; ?>" name="<?php echo MGO_Settings::BACKUP_MEDIA_LIBRARY_ATTACHMENTS; ?>" value="1"/>
+                        <label for="<?php echo MGO_Settings::BACKUP_MEDIA_LIBRARY_ATTACHMENTS; ?>">Media Library Backup</label>
                     </div>
                     <div class="megaoptim-checkbox">
                         <input type="checkbox" <?php checked( $settings[ MGO_Settings::BACKUP_NEXTGEN_ATTACHMENTS ], 1 ); ?> id="<?php echo MGO_Settings::BACKUP_NEXTGEN_ATTACHMENTS; ?>" name="<?php echo MGO_Settings::BACKUP_NEXTGEN_ATTACHMENTS; ?>" value="1"/> Local Folders Backup
@@ -48,10 +110,9 @@ $settings = MGO_Settings::instance()->get();
                     <div class="megaoptim-checkbox">
                         <input type="checkbox" <?php checked( $settings[ MGO_Settings::BACKUP_FOLDER_FILES ], 1 ); ?> id="<?php echo MGO_Settings::BACKUP_FOLDER_FILES; ?>" name="<?php echo MGO_Settings::BACKUP_FOLDER_FILES; ?>" value="1"/> NextGen Backup
                     </div>
-                    <p class="megaoptim-field-desc" style="margin-top: 10px;">
-						<?php _e( 'Backups are useful if you want to restore the original version of the optimized image or reoptimize it using other method such as Lossless or Lossy and we recommend to keep this option On.', 'megaoptim' ); ?>
+                    <p style="margin-top: 10px; margin-bottom: 0;">
+                        <strong><?php _e( 'Existing Backups', 'megaoptim' ); ?></strong>
                     </p>
-                    <strong><?php _e( 'Existing Backups', 'megaoptim' ); ?></strong>
                     <p class="megaoptim-field-desc"><?php _e( sprintf( 'Here you can clean up the backup folders, please note that if you clean up the folders you will not be able to restore the images or reoptimize them using different technique. %s', '<strong>' . __( 'Only do this if you know what you are doing.', 'megaoptim' ) . '</strong>' ), 'megaoptim' ); ?></p>
                     <div class="megaoptim-row">
 
@@ -63,16 +124,16 @@ $settings = MGO_Settings::instance()->get();
                                 </p>
                             </div>
                         </div>
-                        <?php if( class_exists('MGO_NextGenAttachment') ): ?>
-                        <div class="megaoptim-col-4">
-                            <div class="megaoptim-subrow">
-                                <p><strong>Nextgen Libraries Backups</strong></p>
-                                <p>
-                                    <button <?php disabled( true, $nextgen_backup_dir_size <= 0 ); ?> type="button" data-context="<?php echo MGO_NextGenAttachment::TYPE; ?>" class="button megaoptim-button-small megaoptim-remove-backups"><?php _e( 'Clean', 'megaoptim' ); ?>&nbsp;<?php echo $nextgen_backup_dir_size > 0 ? megaoptim_human_file_size( $nextgen_backup_dir_size ) : ''; ?></button>
-                                </p>
+						<?php if ( class_exists( 'MGO_NextGenAttachment' ) ): ?>
+                            <div class="megaoptim-col-4">
+                                <div class="megaoptim-subrow">
+                                    <p><strong>Nextgen Libraries Backups</strong></p>
+                                    <p>
+                                        <button <?php disabled( true, $nextgen_backup_dir_size <= 0 ); ?> type="button" data-context="<?php echo MGO_NextGenAttachment::TYPE; ?>" class="button megaoptim-button-small megaoptim-remove-backups"><?php _e( 'Clean', 'megaoptim' ); ?>&nbsp;<?php echo $nextgen_backup_dir_size > 0 ? megaoptim_human_file_size( $nextgen_backup_dir_size ) : ''; ?></button>
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-                    	<?php endif; ?>
+						<?php endif; ?>
                         <div class="megaoptim-col-4">
                             <div class="megaoptim-subrow">
                                 <p><strong>Custom Files Backups</strong></p>
@@ -113,7 +174,7 @@ $settings = MGO_Settings::instance()->get();
 												<?php echo is_array( $settings[ MGO_Settings::IMAGE_SIZES ] )
 												           && in_array( $key, $settings[ MGO_Settings::IMAGE_SIZES ] ) ? 'checked' : ''; ?>
                                                     type="checkbox" name="<?php echo MGO_Settings::IMAGE_SIZES; ?>[]" value="<?php echo $key; ?>" id="cb_<?php echo $key; ?>">
-	                                        <?php echo $key . ' (' . $tooltip . ')'; ?>
+											<?php echo $key . ' (' . $tooltip . ')'; ?>
                                         </label>
                                     </p>
 								<?php } ?>
@@ -121,13 +182,14 @@ $settings = MGO_Settings::instance()->get();
                         </div>
                         <div class="megaoptim-col-2">
                             <div class="checkboxes">
-                                <p class="megaoptim-margin-top-0"><strong>Retina thumbnails (When available)</strong></p>
+                                <p class="megaoptim-margin-top-0"><strong>Retina thumbnails (When available)</strong>
+                                </p>
 								<?php
 								$image_sizes = MGO_MediaLibrary::get_image_sizes();
 								foreach ( $image_sizes as $key => $image_size ) { ?>
                                     <p class="megaoptim-checkbox-row">
 										<?php
-                                            $tooltip = ($image_size['width']*2) . 'x' . ($image_size['height']*2);
+										$tooltip = ( $image_size['width'] * 2 ) . 'x' . ( $image_size['height'] * 2 );
 										?>
                                         <label title="<?Php echo $tooltip; ?>" class="checkbox" for="cb_retina_<?php echo $key; ?>">
                                             <input
@@ -161,7 +223,7 @@ $settings = MGO_Settings::instance()->get();
                     <br/>
                     <input type="text" name="<?php echo MGO_Settings::CLOUDFLARE_ZONE; ?>" id="<?php echo MGO_Settings::CLOUDFLARE_ZONE; ?>" value="<?php echo $settings[ MGO_Settings::CLOUDFLARE_ZONE ]; ?>" class="option-control form-control" placeholder="Zone ID">
                     <p class="megaoptim-field-desc">
-					    <?php _e( 'If you are running using CloudFlare APIs and or any WordPress CloudFlare plugins enter your details to be able to purge the cached urls of the files that MegaOptim optimizes.', 'megaoptim' ); ?>
+						<?php _e( 'If you are running using CloudFlare APIs and or any WordPress CloudFlare plugins enter your details to be able to purge the cached urls of the files that MegaOptim optimizes.', 'megaoptim' ); ?>
                     </p>
                 </div>
             </div>
