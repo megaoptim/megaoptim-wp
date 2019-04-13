@@ -39,7 +39,7 @@ class Optimizer {
 	const RESOURCE_FILES = 'files';
 	const MAX_ALLOWED_RESOURCES = 5;
 
-	const VERSION = '1.0';
+	const VERSION = '1.0.2';
 	/**
 	 * @var string
 	 */
@@ -82,6 +82,7 @@ class Optimizer {
 			'keep_exif'   => 0,
 			'cmyktorgb'   => 1,
 			'compression' => Optimizer::COMPRESSION_INTELLIGENT,
+			'webp'        => 0,
 		);
 		$this->separator = DIRECTORY_SEPARATOR;
 	}
@@ -152,7 +153,7 @@ class Optimizer {
 					$tmp_response = $this->service->get_result( $response->getProcessId(), 1 );
 					if ( $tmp_response->isSuccessful() && ! $tmp_response->isProcessing() ) {
 						$tmp_response->setLocalResources( $resource );
-						$tmp_response->setProcessId( $processID );
+						$tmp_response->setProcessId( $pid );
 
 						return $tmp_response;
 					}

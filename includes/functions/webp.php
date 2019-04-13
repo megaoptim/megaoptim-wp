@@ -195,35 +195,29 @@ function megaoptim_get_dom_element_attributes( $content, $element ) {
 	return $attr;
 }
 
-function megaoptim_get_htaccess_start_tag() {
-    return '# MegaOptim-IO START #';
-}
-
-function megaoptim_get_htaccess_end_tag() {
-	return '# MegaOptim-IO END #';
-}
-
 /**
- * Prints
+ * Creates htaccess file used for adding webp support through .htaccess
+ * @return bool
  */
 function megaoptim_add_webp_support_via_htaccess() {
 	$htaccess_path = megaoptim_get_htaccess_path();
 
-	if(!is_writable($htaccess_path)) {
-	    megaoptim_log('.htaccess file not writable.');
-	    return;
+	if(!is_writable(dirname($htaccess_path))) {
+	    megaoptim_log('.htaccess dir not writable.');
+	    return false;
     }
 	$htaccess_contents = '';
     if(file_exists($htaccess_path)) {
         ob_start();
         include($htaccess_path);
         $htaccess_contents = ob_get_clean();
-	    $htaccess_contents = megaoptim_remove_between(megaoptim_get_htaccess_start_tag(), megaoptim_get_htaccess_end_tag(), $htaccess_contents);
+	    $htaccess_contents = trim(megaoptim_remove_between('# BEGIN MegaOptimIO', '# END MegaOptimIO', $htaccess_contents));
     }
 
 	ob_start();
 	?>
-<?php echo megaoptim_get_htaccess_start_tag(); ?>
+
+# BEGIN MegaOptimIO
 <IfModule mod_setenvif.c>
     # Vary: Accept for all the requests to jpeg and png
     SetEnvIf Request_URI "\.(jpe?g|png)$" REQUEST_image
@@ -243,8 +237,32 @@ function megaoptim_add_webp_support_via_htaccess() {
 <IfModule mod_mime.c>
     AddType image/webp .webp
 </IfModule>
-<?php echo megaoptim_get_htaccess_end_tag(); ?>
+# END MegaOptimIO
+
 	<?php
 	$htaccess_contents .= ob_get_clean();
-	megaoptim_write($htaccess_path, $htaccess_contents);
+	megaoptim_write($htaccess_path, $htaccess_contents, 'w');
+	return true;
+}
+
+/**
+ * Removes WebP support from the .htaccess file.
+ */
+function megaoptim_remove_webp_support_via_htaccess() {
+	$htaccess_path = megaoptim_get_htaccess_path();
+	if(!is_writable(dirname($htaccess_path))) {
+		megaoptim_log('.htaccess dir not writable.');
+		return false;
+	}
+	if(!file_exists($htaccess_path)) {
+	    return false;
+	}
+
+	ob_start();
+	include($htaccess_path);
+	$htaccess_contents = ob_get_clean();
+	$htaccess_contents = trim(megaoptim_remove_between('# BEGIN MegaOptimIO', '# END MegaOptimIO', $htaccess_contents));
+	megaoptim_write($htaccess_path, $htaccess_contents, 'w');
+
+	return true;
 }

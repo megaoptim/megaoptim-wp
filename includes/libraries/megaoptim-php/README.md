@@ -33,6 +33,7 @@ public function run($resource, $args = array())
   * ```'max_height'``` - Numeric px value
   * ```'cmyktorgb'``` - 1 OR 0
   * ```'compression'``` - intelligent (default), ultra OR lossless
+  * ```'webp'``` - 1 OR 0 (generate or don't generate webp)
 
 
 The ```$args``` parameter is not required and the defaults are as follows: 
@@ -43,7 +44,8 @@ The ```$args``` parameter is not required and the defaults are as follows:
 	'max_width' => 0,
 	'max_height' => 0,
 	'cmyktorgb' => 1, 
-	'compression' => 'intelligent', 
+	'compression' => 'intelligent',
+        'webp'        => 1, 
 ] 
 ```  
 
@@ -117,6 +119,7 @@ We have the following properties and methods available to use for each optimized
 - ```$file->getSavedBytes()``` - Returns the total saved bytes.
 - ```$file->getSavedPercent()``` - Returns the total saved space in percentage.
 - ```$file->getUrl()``` - Returns the optimized image url. You need to download and store it on your server because it will be removed after 1 hour from MegaOptim server
+- ```$file->getWebP()``` - Returns NULL if there is no webp version available or ResultWebP instance for the webp version of this file.
 
 To save the optimized images locally we have three methods available:
 - ```$file->saveOverwrite()``` - Overwrites the local file with the new optimized file. **Only available when local files are being optimized, not URLs.**

@@ -82,15 +82,29 @@ $settings = MGO_Settings::instance()->get();
                             </div>
                             <div id="megaoptim-<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>-rewrite" class="megaoptim-explanation-wrapper" style="<?php echo $settings[MGO_Settings::WEBP_DELIVERY_METHOD] === 'rewrite' ? '' : 'display: none;'; ?>">
                                 <p class="megaoptim-option-explanation">
-                                    <?php if(megaoptim_contains(strtolower($_SERVER['SERVER_SOFTWARE']), 'apache')): ?>
-                                        You are using <strong><?php echo $_SERVER['SERVER_SOFTWARE']; ?></strong> which supports .htaccess. We will automatically alter your .htaccess file to support webp rewritting. Please do not remove any snippet in .htaccess that is between # MEGAOPTIM IO # comments.
+                                    <?php if(megaoptim_contains(strtolower($_SERVER['SERVER_SOFTWARE']), 'apache') || megaoptim_contains(strtolower($_SERVER['SERVER_SOFTWARE']), 'litespeed')): ?>
+                                        <?php
+                                        $htaccess_path = megaoptim_get_htaccess_path();
+                                        if(!file_exists($htaccess_path) && is_writable(dirname($htaccess_path))) { // if .htaccess doesn't exist and the root dir is writable, we can create it probably.
+                                            $writable = 1;
+                                        } else if(file_exists($htaccess_path) && is_writable($htaccess_path)) { // if .htaccess exists and is writable, we can alter it probably.
+                                            $writable = 1;
+                                        } else { // If none of those, htaccess is not writable.
+                                            $writable = 0;
+                                        }
+                                        ?>
+                                        <?php if(!$writable): ?>
+                                            <span style="color: red;">Permission denied. We tried to alter your .htaccess file but it looks like we don't have enough permissions to do it. We kindly ask you to contact your administrator and ask to grant you with permissions to write to .htaccess and then come back on this page and re-save the advanced settings tab. If everything is alright the .htaccess webp snippet will be added automatically upon save.</span>
+                                        <?php else: ?>
+                                            You are using <strong><?php echo $_SERVER['SERVER_SOFTWARE']; ?></strong> which supports .htaccess. <br/>
+                                            We will try to automatically alter your .htaccess file to add support for webp rewriting. Once you hit "Save" button below, you can check your .htaccess file to see if there is block of code that starts with "# BEGIN MegaOptimIO". If the code is there, no other action required.
+                                        <?php endif; ?>
+                                        ?>
                                     <?php elseif(megaoptim_contains(strtolower($_SERVER['SERVER_SOFTWARE']), 'nginx')): ?>
-                                        <span style="color:red">You are using <strong><?php echo $_SERVER['SERVER_SOFTWARE']; ?></strong>, since nginx configuration file is not accessible by our plugin. You need to manually insert a snippet and restart your nginx server. We only recommend this feature if you know what you are doing.</span><br/>
-                                        <a target="_blank" href="#">Follow Guide</a>
-                                    <?php elseif(megaoptim_contains(strtolower($_SERVER['SERVER_SOFTWARE']), 'litespeed')): ?>
-                                        You are using <strong><?php echo $_SERVER['SERVER_SOFTWARE']; ?></strong> which supports .htaccess. We will automatically alter your .htaccess file to support webp rewritting. Please do not remove any snippet in .htaccess that is between # MEGAOPTIM IO # comments.
+                                        <span style="color:red">You are using <strong><?php echo $_SERVER['SERVER_SOFTWARE']; ?></strong>! The nginx configuration file is not accessible by our plugin and is private, you will need to manually insert a snippet and restart your nginx server. We only recommend this feature if you know what you are doing.</span><br/>
+                                        <a style="margin-top: 10px;" target="_blank" href="https://megaoptim.com/blog/how-to-serve-webp-images-in-wordpress-with-nginx">Follow the Guide</a>
                                     <?php else: ?>
-	                                    <?php _e( 'Looks like you are using unsupported web server. This feature will not be supported.', 'megaoptim' ); ?>
+	                                    <?php _e( 'Looks like you are using unsupported web server. This feature will not be supported. Please choose the picture method instead.', 'megaoptim' ); ?>
                                     <?php endif; ?>
                                 </p>
                             </div>

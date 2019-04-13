@@ -18,16 +18,20 @@
  * along with MegaOptim Image Optimizer. If not, see <https://www.gnu.org/licenses/>.
  **********************************************************************/
 
-require_once('src/Tools/PATH.php');
-require_once('src/Tools/URL.php');
-require_once('src/Interfaces/IFile.php');
-require_once('src/Tools/FileSystem.php');
-require_once('src/Http/HTTP.php');
-require_once('src/Http/BaseClient.php');
-require_once('src/Http/Client.php');
-require_once('src/Responses/ResultWebP.php');
-require_once('src/Responses/Result.php');
-require_once('src/Responses/Response.php');
-require_once('src/Responses/Profile.php');
-require_once('src/Services/OptimizerService.php');
-require_once('src/Optimizer.php');
+namespace MegaOptim\Responses;
+
+class ResultWebP {
+	public $url;
+	public $optimized_size;
+	public $saved_bytes;
+	public $saved_percent;
+
+	public function __construct($response) {
+		if(isset($response->webp) && isset($response->webp->url)) {
+			$this->url = $response->webp->url;
+			$this->optimized_size = $response->webp->optimized_size;
+			$this->saved_bytes = $response->webp->saved_bytes;
+			$this->saved_percent = $response->webp->saved_percent;
+		}
+	}
+}

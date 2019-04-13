@@ -50,15 +50,19 @@ function megaoptim_get_tmp_path() {
 
 /**
  * Used to write contents into file provided by parameters
+ *
  * @param $file string
  * @param $contents string
+ * @param string $force_flag
  */
-function megaoptim_write($file, $contents) {
+function megaoptim_write($file, $contents, $force_flag = '') {
 	if ( file_exists( $file ) ) {
-		$fp = fopen( $file, 'a' );
+		$flag = $force_flag !== '' ? $force_flag : 'a';
+		$fp = fopen( $file, $flag );
 		fwrite( $fp, $contents . "\n" );
 	} else {
-		$fp = fopen( $file, 'w' );
+		$flag = $force_flag !== '' ? $force_flag : 'w';
+		$fp = fopen( $file, $flag );
 		fwrite( $fp, $contents . "\n" );
 	}
 	fclose( $fp );

@@ -57,6 +57,12 @@ class Result implements IFile {
 	private $url = '';
 
 	/**
+	 * WebP Result
+	 * @var ResultWebP
+	 */
+	private $webp;
+
+	/**
 	 * The local file
 	 * If this is not null it means a file by path was optimized and this is it's local path.
 	 * If this is null it means that url was optimized and there is no local path.
@@ -90,6 +96,9 @@ class Result implements IFile {
 		}
 		if ( isset( $result->url ) ) {
 			$this->url = $result->url;
+		}
+		if ( isset( $result->webp ) ) {
+			$this->webp = new ResultWebP($result);
 		}
 	}
 

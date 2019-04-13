@@ -389,6 +389,8 @@ class MGO_Ajax extends MGO_BaseObject {
 				}
 				if($supported) {
 					megaoptim_add_webp_support_via_htaccess();
+				} else {
+					megaoptim_remove_webp_support_via_htaccess();
 				}
 			}
 
