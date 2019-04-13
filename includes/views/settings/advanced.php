@@ -51,35 +51,48 @@ $settings = MGO_Settings::instance()->get();
 		                    <?php _e( 'We can create WebP versions of your images while optimizing only if resulting WebP version is smaller than the original image. Below you have option to deliver the created WebP on the front-end instead of the jpg/png formats if available.', 'megaoptim' ); ?>
                         </p>
                     </div>
-                    <div class="megaoptim-checkbox">
+                    <div id="<?php echo MGO_Settings::WEBP_CREATE_IMAGES; ?>_additional" class="megaoptim-checkbox" style="<?php echo $settings[ MGO_Settings::WEBP_CREATE_IMAGES ] == 1 ? '' : 'display: none;'; ?>">
                         <div class="megaoptim-full-wrap megaoptim-mt-5">
                             <label class="megaoptim-option-label" for="<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>">WebP Front-end Delivery Method</label>
                         </div>
                         <div class="megaoptim-full-wrap">
                             <select name="<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>" id="<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>">
-                                <option value="none">No front-end delivery</option>
-                                <option value="picture">Using &lt;PICTURE&gt; TAG</option>
-                                <option value="rewritting">Using server-side rewritting.</option>
+                                <option <?php selected( $settings[ MGO_Settings::WEBP_DELIVERY_METHOD ], 'none' ); ?> value="none">No front-end delivery</option>
+                                <option <?php selected( $settings[ MGO_Settings::WEBP_DELIVERY_METHOD ], 'picture' ); ?> value="picture">Using &lt;PICTURE&gt; TAG</option>
+                                <option <?php selected( $settings[ MGO_Settings::WEBP_DELIVERY_METHOD ], 'rewrite' ); ?> value="rewrite">Using server-side rewritting</option>
                             </select>
                         </div>
                         <div class="megaoptim-full-wrap">
-                            <div class="megaoptim-checkbox-explanation">
-                                <p id="megaoptim-<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>-none" class="megaoptim-option-explanation">
-			                        <?php _e( 'Skip delivering WebP on front end for now.', 'megaoptim' ); ?>
-                                </p>
-                            </div>
-                            <div class="megaoptim-checkbox-explanation">
-                                <p id="megaoptim-<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>-picture" class="megaoptim-option-explanation">
+                            <div id="megaoptim-<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>-picture" class="megaoptim-explanation-wrapper" style="<?php echo $settings[MGO_Settings::WEBP_DELIVERY_METHOD] === 'picture' ? '' : 'display: none;'; ?>">
+                                <p class="megaoptim-option-explanation">
 		                            <?php _e( 'Using the &lt;PICTURE&gt; method replaces &lt;img&gt; tags with &lt;PICTURE&gt; tags. While this is recommended method of delivery. Please note that there can be display inconssitency after switching if your site relies on styling the &lt;img&gt; tags. You can switch to other option anytime.', 'megaoptim' ); ?>
                                 </p>
                                 <div class="megaoptim-full-wrap">
                                     <input type="radio"
-		                                <?php checked( $settings[ MGO_Settings::WEBP_TARGET_TO_REPLACE ], 1 ); ?>
-                                           id="<?php echo MGO_Settings::WEBP_TARGET_TO_REPLACE; ?>" name="<?php echo MGO_Settings::WEBP_TARGET_TO_REPLACE; ?>" value="1"/>
-                                    <label for="<?php echo MGO_Settings::WEBP_TARGET_TO_REPLACE; ?>">
-                                        Create optimized WebP images <strong>for free</strong>
-                                    </label>
+			                            <?php checked( $settings[ MGO_Settings::WEBP_TARGET_TO_REPLACE ], 'default' ); ?>
+                                           name="<?php echo MGO_Settings::WEBP_TARGET_TO_REPLACE; ?>" value="default"/>
+                                    <label for="<?php echo MGO_Settings::WEBP_TARGET_TO_REPLACE; ?>">Default (the_content, the_excerpt, acf_the_content, widget_text) filters. <strong>(Recommended)</strong></label>
                                 </div>
+                                <div class="megaoptim-full-wrap">
+                                    <input type="radio"
+			                            <?php checked( $settings[ MGO_Settings::WEBP_TARGET_TO_REPLACE ], 'global' ); ?>
+                                           name="<?php echo MGO_Settings::WEBP_TARGET_TO_REPLACE; ?>" value="global"/>
+                                    <label for="<?php echo MGO_Settings::WEBP_TARGET_TO_REPLACE; ?>">Global (Captures the output using output buffer and replaces the images. May not work always)</label>
+                                </div>
+                            </div>
+                            <div id="megaoptim-<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>-rewrite" class="megaoptim-explanation-wrapper" style="<?php echo $settings[MGO_Settings::WEBP_DELIVERY_METHOD] === 'rewrite' ? '' : 'display: none;'; ?>">
+                                <p class="megaoptim-option-explanation">
+                                    <?php if(megaoptim_contains(strtolower($_SERVER['SERVER_SOFTWARE']), 'apache')): ?>
+                                        You are using <strong><?php echo $_SERVER['SERVER_SOFTWARE']; ?></strong> which supports .htaccess. We will automatically alter your .htaccess file to support webp rewritting. Please do not remove any snippet in .htaccess that is between # MEGAOPTIM IO # comments.
+                                    <?php elseif(megaoptim_contains(strtolower($_SERVER['SERVER_SOFTWARE']), 'nginx')): ?>
+                                        <span style="color:red">You are using <strong><?php echo $_SERVER['SERVER_SOFTWARE']; ?></strong>, since nginx configuration file is not accessible by our plugin. You need to manually insert a snippet and restart your nginx server. We only recommend this feature if you know what you are doing.</span><br/>
+                                        <a target="_blank" href="#">Follow Guide</a>
+                                    <?php elseif(megaoptim_contains(strtolower($_SERVER['SERVER_SOFTWARE']), 'litespeed')): ?>
+                                        You are using <strong><?php echo $_SERVER['SERVER_SOFTWARE']; ?></strong> which supports .htaccess. We will automatically alter your .htaccess file to support webp rewritting. Please do not remove any snippet in .htaccess that is between # MEGAOPTIM IO # comments.
+                                    <?php else: ?>
+	                                    <?php _e( 'Looks like you are using unsupported web server. This feature will not be supported.', 'megaoptim' ); ?>
+                                    <?php endif; ?>
+                                </p>
                             </div>
                         </div>
                     </div>

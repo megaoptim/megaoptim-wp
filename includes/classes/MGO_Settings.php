@@ -160,7 +160,8 @@ class MGO_Settings extends MGO_BaseObject {
 			self::CLOUDFLARE_API_KEY,
 			self::CLOUDFLARE_ZONE,
 			self::WEBP_CREATE_IMAGES,
-			self::WEBP_DELIVERY_METHOD
+			self::WEBP_DELIVERY_METHOD,
+			self::WEBP_TARGET_TO_REPLACE,
 		);
 	}
 
@@ -193,7 +194,8 @@ class MGO_Settings extends MGO_BaseObject {
 			self::IMAGE_SIZES                      => $sizes,
 			self::RETINA_IMAGE_SIZES               => $sizes,
 			self::WEBP_CREATE_IMAGES               => 0,
-			self::WEBP_DELIVERY_METHOD              => 'picture'
+			self::WEBP_DELIVERY_METHOD              => 'picture',
+			self::WEBP_TARGET_TO_REPLACE           => 'default', // default or global
 		);
 	}
 

@@ -40,6 +40,11 @@
     font-size: 14px !important;
 }
 
+.megaoptim-option-explanation {
+    margin-bottom: 8px;
+    margin-top: 8px;
+}
+
 span.megaoptim-error {
     color: red;
 }

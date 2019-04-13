@@ -194,3 +194,57 @@ function megaoptim_get_dom_element_attributes( $content, $element ) {
 
 	return $attr;
 }
+
+function megaoptim_get_htaccess_start_tag() {
+    return '# MegaOptim-IO START #';
+}
+
+function megaoptim_get_htaccess_end_tag() {
+	return '# MegaOptim-IO END #';
+}
+
+/**
+ * Prints
+ */
+function megaoptim_add_webp_support_via_htaccess() {
+	$htaccess_path = megaoptim_get_htaccess_path();
+
+	if(!is_writable($htaccess_path)) {
+	    megaoptim_log('.htaccess file not writable.');
+	    return;
+    }
+	$htaccess_contents = '';
+    if(file_exists($htaccess_path)) {
+        ob_start();
+        include($htaccess_path);
+        $htaccess_contents = ob_get_clean();
+	    $htaccess_contents = megaoptim_remove_between(megaoptim_get_htaccess_start_tag(), megaoptim_get_htaccess_end_tag(), $htaccess_contents);
+    }
+
+	ob_start();
+	?>
+<?php echo megaoptim_get_htaccess_start_tag(); ?>
+<IfModule mod_setenvif.c>
+    # Vary: Accept for all the requests to jpeg and png
+    SetEnvIf Request_URI "\.(jpe?g|png)$" REQUEST_image
+</IfModule>
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Check if browser supports WebP images
+    RewriteCond %{HTTP_ACCEPT} image/webp
+    # Check if WebP replacement image exists
+    RewriteCond %{DOCUMENT_ROOT}/$1.webp -f
+    # Serve WebP image instead
+    RewriteRule (.+)\.(jpe?g|png)$ $1.webp [T=image/webp]
+</IfModule>
+<IfModule mod_headers.c>
+    Header append Vary Accept env=REQUEST_image
+</IfModule>
+<IfModule mod_mime.c>
+    AddType image/webp .webp
+</IfModule>
+<?php echo megaoptim_get_htaccess_end_tag(); ?>
+	<?php
+	$htaccess_contents .= ob_get_clean();
+	megaoptim_write($htaccess_path, $htaccess_contents);
+}

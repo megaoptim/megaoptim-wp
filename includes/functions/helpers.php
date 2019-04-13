@@ -352,6 +352,27 @@ function megaoptim_contains( $str, $substring ) {
 	return ( strpos( $str, $substring ) !== false );
 }
 
+/**
+ *
+ * @param $beginning
+ * @param $end
+ * @param $string
+ *
+ * @return mixed
+ */
+function megaoptim_remove_between($beginning, $end, $string) {
+	$beginning_pos = strpos($string, $beginning);
+	$end_pos = strpos($string, $end);
+	if ($beginning_pos === false || $end_pos === false) {
+		return $string;
+	}
+	$text = substr($string, $beginning_pos, ($end_pos + strlen($end)) - $beginning_pos);
+	$text = str_replace($text, '', $string);
+	$text = str_replace($beginning, '', $text);
+	$text = str_replace($end, '', $text);
+	return $text;
+}
+
 
 /**
  * Returns user agent
@@ -521,6 +542,15 @@ function megaoptim_is_wp_module() {
 function megaoptim_get_wp_root_path() {
 	return $_SERVER['DOCUMENT_ROOT'];
 }
+
+/**
+ * Returns the htaccess path
+ * @return string
+ */
+function megaoptim_get_htaccess_path() {
+	return megaoptim_get_wp_root_path() . DIRECTORY_SEPARATOR . '.htaccess';
+}
+
 
 /**
  * Array except
