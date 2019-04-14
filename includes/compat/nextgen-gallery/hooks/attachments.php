@@ -133,9 +133,12 @@ add_action( 'ngg_generated_image', '_megaoptim_ngg_generated_image', WP_MEGAOPTI
  */
 function _megaoptim_ngg_delete_picture( $id ) {
 	$attachment = new MGO_NextGenAttachment( $id );
+	// Delete Backup if exist.
 	if ( $attachment->has_backup() ) {
 		$attachment->delete_backup();
 	}
+	// Delete WebP if exist.
+	$attachment->delete_webp();
 	$attachment->destroy();
 }
 

@@ -31,9 +31,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 function _megaoptim_delete_media_attachment_backup( $post_id ) {
 	try {
 		$attachment = new MGO_MediaAttachment( $post_id );
+		// Delete backup if exist.
 		if ( $attachment->has_backup() ) {
 			$attachment->delete_backup();
 		}
+		// Delete WebP if exist.
+		$attachment->delete_webp();
 	} catch ( MGO_Exception $e ) {
 		megaoptim_log( 'Error deleting the media attachment: ' . $e->getMessage() );
 	}

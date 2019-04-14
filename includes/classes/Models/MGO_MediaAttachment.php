@@ -188,7 +188,7 @@ class MGO_MediaAttachment extends MGO_Attachment {
 			$meta_data      = megaoptim_regenerate_thumbnails( $this->get_id(), $attachment_path );
 			$this->metadata = $meta_data;
 			$this->destroy();
-			do_action('megaoptim_after_restore_attachment', $this);
+			do_action( 'megaoptim_after_restore_attachment', $this );
 		}
 
 		return true;
@@ -306,13 +306,15 @@ class MGO_MediaAttachment extends MGO_Attachment {
 
 	/**
 	 * Size file exist?
+	 *
 	 * @param $size
 	 *
 	 * @return bool
 	 */
-	public function thumbnail_exists($size) {
+	public function thumbnail_exists( $size ) {
 		$path = MGO_MediaLibrary::instance()->get_attachment_path( $this->get_id(), $size, false );
-		return file_exists($path);
+
+		return file_exists( $path );
 	}
 
 	/**
@@ -371,7 +373,7 @@ class MGO_MediaAttachment extends MGO_Attachment {
 						continue;
 					}
 					// Iff the size doesn't exist, or exist but the status doesn't exist, or size and status exist but they aren't
-					if ( $this->thumbnail_exists($key)  && ! $this->is_thumbnail_optimized( $key ) ) {
+					if ( $this->thumbnail_exists( $key ) && ! $this->is_thumbnail_optimized( $key ) ) {
 						array_push( $thumbnails['normal'], $key );
 					}
 				}
@@ -536,24 +538,26 @@ class MGO_MediaAttachment extends MGO_Attachment {
 
 	/**
 	 * Return WebP
+	 *
 	 * @param string $size
 	 *
 	 * @return \MegaOptim\Responses\ResultWebP|null
 	 */
-	public function get_webp($size = 'full') {
-		$fields = array('url', 'optimized_size', 'saved_bytes', 'saved_percent');
-		if($size === 'full') {
-			$webp = isset($this->metadata['webp']) ? $this->metadata['webp'] : null;
+	public function get_webp( $size = 'full' ) {
+		$fields = array( 'url', 'optimized_size', 'saved_bytes', 'saved_percent' );
+		if ( $size === 'full' ) {
+			$webp = isset( $this->metadata['webp'] ) ? $this->metadata['webp'] : null;
 		} else {
-			$webp = isset($this->metadata['thumbs'][$size]['webp']) ? $this->metadata['thumbs'][$size]['webp'] : null;
+			$webp = isset( $this->metadata['thumbs'][ $size ]['webp'] ) ? $this->metadata['thumbs'][ $size ]['webp'] : null;
 		}
-		if(is_array($webp)) {
+		if ( is_array( $webp ) ) {
 			$result = new \MegaOptim\Responses\ResultWebP();
-			foreach($fields as $field) {
-				if(isset($webp[$field])) {
-					$result->$field = $webp[$field];
+			foreach ( $fields as $field ) {
+				if ( isset( $webp[ $field ] ) ) {
+					$result->$field = $webp[ $field ];
 				}
 			}
+
 			return $result;
 		} else {
 			return null;
@@ -563,6 +567,7 @@ class MGO_MediaAttachment extends MGO_Attachment {
 
 	/**
 	 * Set ID
+	 *
 	 * @param $ID
 	 */
 	public function set_id( $ID ) {
@@ -605,5 +610,25 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	 */
 	public function refresh() {
 		$this->__load();
+	}
+
+	/**
+	 * Remove the webp images when attachment is deleted.
+	 */
+	public function delete_webp() {
+		$full_webp_path = MGO_MediaLibrary::instance()->get_attachment_path( $this->get_id(), 'full', false );
+		$full_webp_path = $full_webp_path . '.webp';
+		if ( ! empty( $full_webp_path ) && file_exists( $full_webp_path ) ) {
+			@unlink( $full_webp_path );
+		}
+		if ( isset($this->metadata['sizes']) && is_array( $this->metadata['sizes'] ) ) {
+			foreach ( $this->metadata['sizes'] as $key => $thumb ) {
+				$thumbnail_path      = MGO_MediaLibrary::instance()->get_attachment_path( $this->get_id(), $key, false );
+				$thumbnail_path_webp = $thumbnail_path . '.webp';
+				if ( file_exists( $thumbnail_path_webp ) ) {
+					@unlink( $thumbnail_path_webp );
+				}
+			}
+		}
 	}
 }

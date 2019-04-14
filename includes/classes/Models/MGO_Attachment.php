@@ -484,6 +484,21 @@ abstract class MGO_Attachment {
 	 * @param string $size
 	 */
 	public function set_webp($data, $size = 'full') {
+		// TODO: Remove later.
+	}
 
+
+	public function get_webp_path() {
+		return isset($this->data['file_path']) ? $this->data['file_path'] . '.webp' : false;
+	}
+
+	/**
+	 * Removes WebP file.
+	 */
+	public function delete_webp() {
+		$webp_path = $this->get_webp_path();
+		if(false !== $webp_path && file_exists($webp_path)) {
+			@unlink($webp_path);
+		}
 	}
 }
