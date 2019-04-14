@@ -526,12 +526,62 @@ class MGO_MediaAttachment extends MGO_Attachment {
 		return $file;
 	}
 
+	/**
+	 * Get metadata
+	 * @return array
+	 */
 	public function get_metadata() {
 		return $this->metadata;
 	}
 
+	/**
+	 * Return WebP
+	 * @param string $size
+	 *
+	 * @return \MegaOptim\Responses\ResultWebP|null
+	 */
+	public function get_webp($size = 'full') {
+		$fields = array('url', 'optimized_size', 'saved_bytes', 'saved_percent');
+		if($size === 'full') {
+			$webp = isset($this->metadata['webp']) ? $this->metadata['webp'] : null;
+		} else {
+			$webp = isset($this->metadata['thumbs'][$size]['webp']) ? $this->metadata['thumbs'][$size]['webp'] : null;
+		}
+		if(is_array($webp)) {
+			$result = new \MegaOptim\Responses\ResultWebP();
+			foreach($fields as $field) {
+				if(isset($webp[$field])) {
+					$result->$field = $webp[$field];
+				}
+			}
+			return $result;
+		} else {
+			return null;
+		}
+
+	}
+
+	/**
+	 * Set ID
+	 * @param $ID
+	 */
 	public function set_id( $ID ) {
 		$this->ID = $ID;
+	}
+
+	/**
+	 * Set the webp result
+	 * @param \MegaOptim\Responses\ResultWebP  $webp
+	 * @param string $size
+	 */
+	public function set_webp($webp, $size) {
+		if(!is_null($webp)) {
+			if($size === 'full') {
+				$this->metadata['webp'] = (array) $webp;
+			} else {
+				$this->metadata['thumbs'][$size]['webp'] = (array) $webp;
+			}
+		}
 	}
 
 	/**
@@ -565,7 +615,9 @@ class MGO_MediaAttachment extends MGO_Attachment {
 		}
 	}
 
-
+	/**
+	 * Refresh the model
+	 */
 	public function refresh() {
 		$this->__load();
 	}

@@ -105,6 +105,7 @@ abstract class MGO_Library extends MGO_BaseObject {
 		$cmyktorgb   = $this->settings->get( MGO_Settings::CMYKTORGB );
 		$http_user   = $this->settings->get( MGO_Settings::HTTP_USER );
 		$http_pass   = $this->settings->get( MGO_Settings::HTTP_PASS );
+		$webp        = $this->settings->get( MGO_Settings::WEBP_CREATE_IMAGES );
 
 		if ( ! empty( $max_width ) && $max_width > 0 ) {
 			$params['max_width'] = $max_width;
@@ -127,7 +128,9 @@ abstract class MGO_Library extends MGO_BaseObject {
 		} else {
 			$params['cmyktorgb'] = $cmyktorgb;
 		}
-
+		if( $webp == 1 ) {
+			$params['webp'] = 1;
+		}
 		if ( ! empty( $http_user ) && ! empty( $http_pass ) ) {
 			$params['http_user'] = $http_user;
 			$params['http_pass'] = $http_pass;

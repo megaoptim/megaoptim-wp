@@ -160,6 +160,14 @@ class Result implements IFile {
 		return $this->url;
 	}
 
+	/**
+	 * Returns WebP object
+	 * @return ResultWebP
+	 */
+	public function getWebP() {
+		return $this->webp;
+	}
+
 
 	/**
 	 * Overwrite the local file with the optimized file

@@ -18,17 +18,60 @@
  * along with MegaOptim Image Optimizer. If not, see <https://www.gnu.org/licenses/>.
  **********************************************************************/
 
-add_filter( 'the_content', 'megaoptim_webp_filter_content', 9999, 1 );
-add_filter( 'the_excerpt', 'megaoptim_webp_filter_content', 9999, 1 );
-add_filter( 'post_thumbnail_html', 'megaoptim_webp_filter_content', 9999, 1 );
+
 /**
- * The actual filter attached to the_content, the_excerpt and post_thumbnail_html
- * @param $content
- * @return string|string[]|null
+ * WebP functionality
  */
-function megaoptim_webp_filter_content( $content ) {
-	if ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ) {
-		return $content;
-	}
-	return megaoptim_webp_convert_text($content);
+function megaoptim_webp_init() {
+	// TODO: Conditionally enable this. Based on the settings
+	
+	add_filter( 'the_content', 'megaoptim_webp_filter_content', 9999, 1 );
+	add_filter( 'the_excerpt', 'megaoptim_webp_filter_content', 9999, 1 );
+	add_filter( 'post_thumbnail_html', 'megaoptim_webp_filter_content', 9999, 1 );
 }
+add_action('init', 'megaoptim_webp_init', 0);
+
+
+/**
+ * @param MGO_MediaAttachment $attachment_object - The media attachment object
+ * @param string $resource - Path or url to the resource
+ * @param \MegaOptim\Responses\Response $response - The api response object
+ * @param array $params - Array of parameters
+ * @param $size - Can be: full, or other registered thumbnail size.
+ */
+function megaoptim_webp_attachment_optimized($attachment_object, $resource, $response, $params, $size) {
+
+	// Bail, If this no webp requested.
+	if($params['webp'] != 1) {
+		return;
+	}
+
+	// Only one per request always in this plugin.
+	$webp = null;
+	foreach($response->getOptimizedFiles() as $file) {
+		$webp = $file->getWebP();
+		break;
+	}
+	if(is_null($webp) || ! $webp instanceof \MegaOptim\Responses\ResultWebP) {
+		// Bail if no ResultWebP instance!
+		return;
+	} else {
+		// Handle WebP file here
+		// Save dir of the original attachment
+		$file_dir = dirname($attachment_object->get_path());
+		// Get file name of the optimized resource
+		$file_name = basename($resource);
+		// Assemble full path
+		$full_path = $file_dir . DIRECTORY_SEPARATOR . $file_name . '.webp';
+		try {
+			MegaOptim\Http\Client::download( $webp->url, $full_path );
+			if(file_exists($full_path)) {
+				$attachment_object->set_webp($webp, $size);
+				$attachment_object->save();
+			}
+		} catch ( Exception $e ) {
+			megaoptim_log('Failed to download webp version to '. $full_path . '. Error: '.$e->getMessage());
+		}
+	}
+}
+add_action('megaoptim_attachment_optimized', 'megaoptim_webp_attachment_optimized', 15, 5);

@@ -19,6 +19,21 @@
  **********************************************************************/
 
 /**
+ * The actual filter attached to the_content, the_excerpt and post_thumbnail_html
+ * @param $content
+ * @return string|string[]|null
+ */
+function megaoptim_webp_filter_content( $content ) {
+	if ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ) {
+		return $content;
+	}
+	if ( is_feed() || is_admin() ) {
+		return $content;
+	}
+	return megaoptim_webp_convert_text($content);
+}
+
+/**
  * Convert content images to webp images. Replaces .png,.jpg to .web if they exist.
  * This function can be used as standalone
  * eg. megaoptim_webp_convert_text($your_content)
@@ -28,10 +43,6 @@
  * @return string
  */
 function megaoptim_webp_convert_text( $content ) {
-	if ( is_feed() || is_admin() ) {
-		return $content;
-	}
-
 	return preg_replace_callback( '/<img[^>]*>/', 'megaoptim_replace_img_with_webp', $content );
 }
 
@@ -247,6 +258,7 @@ function megaoptim_add_webp_support_via_htaccess() {
 
 /**
  * Removes WebP support from the .htaccess file.
+ * @return bool
  */
 function megaoptim_remove_webp_support_via_htaccess() {
 	$htaccess_path = megaoptim_get_htaccess_path();
