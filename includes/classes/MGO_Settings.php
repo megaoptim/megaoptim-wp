@@ -52,7 +52,7 @@ class MGO_Settings extends MGO_BaseObject {
 	const WEBP_CREATE_IMAGES = 'webp_create';
 	const WEBP_DELIVERY_METHOD = 'webp_delivery_method'; // Possible values: picture, rewrite, none
 	const WEBP_TARGET_TO_REPLACE = 'webp_target_to_replace'; // default (the_content, the_excerpt, post_thumbnail), global (using output buffer)
-
+	const WEBP_PICTUREFILL = 'webp_picturefill';
 
 	private $settings = array();
 
@@ -162,6 +162,7 @@ class MGO_Settings extends MGO_BaseObject {
 			self::WEBP_CREATE_IMAGES,
 			self::WEBP_DELIVERY_METHOD,
 			self::WEBP_TARGET_TO_REPLACE,
+			self::WEBP_PICTUREFILL
 		);
 	}
 
@@ -194,8 +195,9 @@ class MGO_Settings extends MGO_BaseObject {
 			self::IMAGE_SIZES                      => $sizes,
 			self::RETINA_IMAGE_SIZES               => $sizes,
 			self::WEBP_CREATE_IMAGES               => 0,
-			self::WEBP_DELIVERY_METHOD              => 'picture',
+			self::WEBP_DELIVERY_METHOD             => 'picture',
 			self::WEBP_TARGET_TO_REPLACE           => 'default', // default or global
+			self::WEBP_PICTUREFILL         => 0,
 		);
 	}
 

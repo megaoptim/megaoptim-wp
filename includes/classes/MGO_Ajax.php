@@ -339,11 +339,6 @@ class MGO_Ajax extends MGO_BaseObject {
 		$data   = array();
 		$errors = array();
 
-		// WebP Management
-		if( isset($_REQUEST[MGO_Settings::WEBP_CREATE_IMAGES])) {
-
-		}
-
 		// Image sizes
 		if ( ! isset( $_REQUEST[ MGO_Settings::IMAGE_SIZES ] ) OR ! is_array( $_REQUEST[ MGO_Settings::IMAGE_SIZES ] )
 		     OR count( $_REQUEST[ MGO_Settings::IMAGE_SIZES ] ) === 0
@@ -376,24 +371,37 @@ class MGO_Ajax extends MGO_BaseObject {
 			$data[ MGO_Settings::CLOUDFLARE_EMAIL ]                 = isset( $_REQUEST[ MGO_Settings::CLOUDFLARE_EMAIL ] ) ? $_REQUEST[ MGO_Settings::CLOUDFLARE_EMAIL ] : '';
 			$data[ MGO_Settings::CLOUDFLARE_API_KEY ]               = isset( $_REQUEST[ MGO_Settings::CLOUDFLARE_API_KEY ] ) ? $_REQUEST[ MGO_Settings::CLOUDFLARE_API_KEY ] : '';
 			$data[ MGO_Settings::CLOUDFLARE_ZONE ]                  = isset( $_REQUEST[ MGO_Settings::CLOUDFLARE_ZONE ] ) ? $_REQUEST[ MGO_Settings::CLOUDFLARE_ZONE ] : '';
-			$data[ MGO_Settings::WEBP_CREATE_IMAGES ]               = isset( $_REQUEST[ MGO_Settings::WEBP_CREATE_IMAGES ] ) ? $_REQUEST[ MGO_Settings::WEBP_CREATE_IMAGES ] : '';
-			$data[ MGO_Settings::WEBP_DELIVERY_METHOD ]             = isset( $_REQUEST[ MGO_Settings::WEBP_DELIVERY_METHOD ] ) ? $_REQUEST[ MGO_Settings::WEBP_DELIVERY_METHOD ] : 'none';
-			$data[ MGO_Settings::WEBP_TARGET_TO_REPLACE ]           = isset( $_REQUEST[ MGO_Settings::WEBP_TARGET_TO_REPLACE ] ) ? $_REQUEST[ MGO_Settings::WEBP_TARGET_TO_REPLACE ] : 'filters';
 
-			if($data[MGO_Settings::WEBP_DELIVERY_METHOD] === 'rewrite') {
+			// WebP Management
+			$data[ MGO_Settings::WEBP_CREATE_IMAGES ]     = isset( $_REQUEST[ MGO_Settings::WEBP_CREATE_IMAGES ] ) ? $_REQUEST[ MGO_Settings::WEBP_CREATE_IMAGES ] : 0;
+			$data[ MGO_Settings::WEBP_DELIVERY_METHOD ]   = isset( $_REQUEST[ MGO_Settings::WEBP_DELIVERY_METHOD ] ) ? $_REQUEST[ MGO_Settings::WEBP_DELIVERY_METHOD ] : 'none';
+			$data[ MGO_Settings::WEBP_TARGET_TO_REPLACE ] = isset( $_REQUEST[ MGO_Settings::WEBP_TARGET_TO_REPLACE ] ) ? $_REQUEST[ MGO_Settings::WEBP_TARGET_TO_REPLACE ] : 'filters';
+
+			// If WebP is disabled then set picturefill to 0
+			if ( ! $data[ MGO_Settings::WEBP_CREATE_IMAGES ] ) {
+				$data[ MGO_Settings::WEBP_PICTUREFILL ] = 0;
+			} else {
+				$data[ MGO_Settings::WEBP_PICTUREFILL ] = isset( $_REQUEST[ MGO_Settings::WEBP_PICTUREFILL ] ) ? $_REQUEST[ MGO_Settings::WEBP_PICTUREFILL ] : 0;
+			}
+			// Write .htaccess automatically upon save if the site is on apache or litespeed.
+			// If delivery method is switched back to other remove the snippet from .htaccess
+			if ( $data[ MGO_Settings::WEBP_DELIVERY_METHOD ] === 'rewrite' ) {
 				$supported = 0;
-				foreach(array('litespeed', 'apache') as $webserver_name) {
-					if(megaoptim_contains(strtolower($_SERVER['SERVER_SOFTWARE']), $webserver_name) ) {
+				foreach ( array( 'litespeed', 'apache' ) as $webserver_name ) {
+					if ( megaoptim_contains( strtolower( $_SERVER['SERVER_SOFTWARE'] ), $webserver_name ) ) {
 						$supported = 1;
 					}
 				}
-				if($supported) {
+				if ( $supported ) {
 					megaoptim_add_webp_support_via_htaccess();
 				} else {
 					megaoptim_remove_webp_support_via_htaccess();
 				}
+			} else {
+				megaoptim_remove_webp_support_via_htaccess();
 			}
 
+			// Update
 			MGO_Settings::instance()->update( $data );
 			// Return response
 			$data['success'] = true;

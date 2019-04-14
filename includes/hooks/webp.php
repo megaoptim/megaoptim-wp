@@ -23,13 +23,42 @@
  * WebP functionality
  */
 function megaoptim_webp_init() {
-	// TODO: Conditionally enable this. Based on the settings
-	
-	add_filter( 'the_content', 'megaoptim_webp_filter_content', 9999, 1 );
-	add_filter( 'the_excerpt', 'megaoptim_webp_filter_content', 9999, 1 );
-	add_filter( 'post_thumbnail_html', 'megaoptim_webp_filter_content', 9999, 1 );
+
+	$delivery_method = MGO_Settings::instance()->get(MGO_Settings::WEBP_DELIVERY_METHOD);
+	if($delivery_method === 'picture') {
+		$target = MGO_Settings::instance()->get(MGO_Settings::WEBP_TARGET_TO_REPLACE);
+		if($target === 'global') {
+			ob_start();
+			add_action('shutdown', function() {
+				$final = '';
+				$levels = ob_get_level();
+				for ($i = 0; $i < $levels; $i++) {
+					$final .= ob_get_clean();
+				}
+				echo apply_filters('megaoptim_final_output', $final);
+			}, 0);
+			add_filter('megaoptim_final_output', 'megaoptim_webp_filter_content');
+		} else {
+			$filters = megaoptim_webp_target_filters();
+			foreach($filters as $filter) {
+				add_filter( $filter, 'megaoptim_webp_filter_content', 9999, 1 );
+			}
+		}
+	}
 }
 add_action('init', 'megaoptim_webp_init', 0);
+
+/**
+ * Enqueues required scripts.
+ */
+function megaoptim_webp_enqueue_scripts() {
+	$delivery_method = MGO_Settings::instance()->get(MGO_Settings::WEBP_DELIVERY_METHOD);
+	$picture_fill = MGO_Settings::instance()->get(MGO_Settings::WEBP_PICTUREFILL);
+	if($delivery_method === 'picture' && $picture_fill) {
+		wp_enqueue_script('megaoptim-picturefill', WP_MEGAOPTIM_ASSETS_URL . 'js/picturefill.min.js', array(), null, false);
+	}
+}
+add_action('wp_enqueue_scripts', 'megaoptim_webp_enqueue_scripts', 100);
 
 
 /**

@@ -207,6 +207,17 @@ function megaoptim_get_dom_element_attributes( $content, $element ) {
 }
 
 /**
+ * Returns target filters for webp analyzis and image replacement
+ * @return mixed|array
+ */
+function megaoptim_webp_target_filters() {
+    return apply_filters('megaoptim_webp_target_filters', array(
+	    'the_content', 'the_excerpt', 'post_thumbnail_html', 'acf_the_content', 'widget_text'
+    ));
+}
+
+
+/**
  * Creates htaccess file used for adding webp support through .htaccess
  * @return bool
  */
