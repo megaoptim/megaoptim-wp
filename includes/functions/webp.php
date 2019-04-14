@@ -54,15 +54,15 @@ function megaoptim_webp_convert_text( $content ) {
  * @return string
  */
 function megaoptim_replace_img_with_webp( $match ) {
-	// Skip megaoptim images that contains class that is skipped.
+	// Skip images with this class
 	$ignore_webp_by_class = apply_filters( 'megaoptim_webp_ignored_class', 'mgo-skip-webp' );
 
 	if ( megaoptim_contains( $match[0], $ignore_webp_by_class ) ) {
 		return $match[0];
 	}
+
 	$img = megaoptim_get_dom_element_attributes( $match[0], 'img' );
 
-	// Src parameters
 	$src_data      = megaoptim_get_image_attributes( $img, 'src' );
 	$src           = $src_data['value'];
 	$src_prefix    = $src_data['prefix'];
@@ -73,32 +73,21 @@ function megaoptim_replace_img_with_webp( $match ) {
 	$sizes         = $sizes_data['value'];
 	$sizes_prefix  = $sizes_data['prefix'];
 	$alt_attr      = isset( $img['alt'] ) && strlen( $img['alt'] ) ? ' alt="' . $img['alt'] . '"' : '';
-	$wp_uploads    = wp_upload_dir();
-	$protocol      = explode( "://", $src );
-	if ( count( $protocol ) > 1 ) {
-		//check that baseurl uses the same http/https proto and if not, change
-		$protocol = $protocol[0];
-		if ( strpos( $wp_uploads['baseurl'], $protocol . "://" ) === false ) {
-			$base = explode( "://", $wp_uploads['baseurl'] );
-			if ( count( $base ) > 1 ) {
-				$wp_uploads['baseurl'] = $protocol . "://" . $base[1];
-			}
-		}
-	}
-	$uploads_path_base = ( file_exists( $wp_uploads['basedir'] ) ? '' : ABSPATH ) . $wp_uploads['basedir'];
-	$uploads_path_base = str_replace( $wp_uploads['baseurl'], $uploads_path_base, $src );
 
-	if ( $uploads_path_base == $src ) {
+	$uploads_path_base = megaoptim_webp_get_image_dir($src);
+	if($uploads_path_base === false) {
 		return $match[0];
 	}
-	$uploads_path_base = dirname( $uploads_path_base ) . '/';
-	// We don't wanna have src-ish attributes on the <picture>
+
+	// Remove all previous attributes.
 	unset( $img['src'] );
 	unset( $img['data-src'] );
 	unset( $img['data-lazy-src'] );
 	unset( $img['srcset'] );
 	unset( $img['sizes'] );
 	unset( $img['alt'] );
+
+	// Try to assemble the picture
 	$srcset_webp = '';
 	if ( $srcset ) {
 		$defs = explode( ",", $srcset );
@@ -142,6 +131,57 @@ function megaoptim_replace_img_with_webp( $match ) {
 	       . ( strlen( $srcset ) ? ' srcset="' . $srcset . '"' : '' ) . ( strlen( $sizes ) ? ' sizes="' . $sizes . '"' : '' ) . '>'
 	       . '</picture>';
 }
+
+/**
+ * Returns the image dir if it's local. Otherwise it returns false.
+ * @param $src
+ *
+ * @return bool|mixed|string
+ */
+function megaoptim_webp_get_image_dir($src) {
+	$updir = wp_upload_dir();
+
+	$content_dir = WP_CONTENT_DIR;
+	$content_url = content_url();
+
+	$base_dir = $updir['basedir'];
+	$base_url = $updir['baseurl'];
+
+	// Make the src and the current protocol same protocol.
+	$protocol = explode( "://", $src );
+	if ( count( $protocol ) > 1 ) {
+		$protocol = $protocol[0];
+		if ( strpos( $base_url, $protocol . "://" ) === false ) {
+			$url_parts = explode( "://", $base_url );
+			if ( count( $url_parts ) > 1 ) {
+				$base_url = $protocol . "://" . $url_parts[1];
+			}
+		}
+	}
+	// Handle non-upload paths
+	$base_img_src = str_replace( $base_url, $base_dir, $src );
+	if ( $base_img_src == $src ) {
+		$base_img_src = str_replace( $content_url, $content_dir, $src );
+	}
+	// Handle CDN, subdomain or relative url cases.
+	if ( $base_img_src == $src ) {
+		$url  = parse_url( $src );
+		$base = parse_url( $base_url );
+		$src_host     = array_reverse( explode( '.', $url['host'] ) );
+		$base_url_host = array_reverse( explode( '.', $base['host'] ) );
+		if ( $src_host[0] === $base_url_host[0] && $src_host[1] === $base_url_host[1] && ( strlen( $src_host[1] ) > 3 || isset( $src_host[2] ) && isset( $src_host[2] ) && $src_host[2] == $base_url_host[2] ) ) {
+			$baseurl   = str_replace( $base['scheme'] . '://' . $base['host'], $url['scheme'] . '://' . $url['host'], $base_url );
+			$base_img_src = str_replace( $baseurl, $base_dir, $src );
+		}
+		// Bail if external url
+		if ( $base_img_src == $src ) {
+			return false;
+		}
+	}
+	$base_img_src = trailingslashit(dirname($base_img_src));
+	return $base_img_src;
+}
+
 
 /**
  * Returns the parameter needed out of array of parameters for specific html img tag.
@@ -191,6 +231,9 @@ function megaoptim_create_dom_element_attributes( $attribute_array ) {
  * @return array
  */
 function megaoptim_get_dom_element_attributes( $content, $element ) {
+    if(empty($content)) {
+        return array();
+    }
 	if ( function_exists( "mb_convert_encoding" ) ) {
 		$content = mb_convert_encoding( $content, 'HTML-ENTITIES', 'UTF-8' );
 	}

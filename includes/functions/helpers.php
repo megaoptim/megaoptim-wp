@@ -930,6 +930,10 @@ function megaoptim_generate_thumbnail_data( $response, $params ) {
 				break;
 			}
 		}
+		if(isset($thumb_object['webp'])) {
+			$thumb_object['webp_size'] = isset($thumb_object['webp']['optimized_size']) ? $thumb_object['webp']['optimized_size'] : 0;
+			unset($thumb_object['webp']);
+		}
 		$thumb_object['status']     = (int) $response->isSuccessful();
 		$thumb_object['process_id'] = $response->getProcessId();
 		$thumb_object['time']       = date( 'Y-m-d H:i:s', time() );

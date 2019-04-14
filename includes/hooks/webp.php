@@ -95,7 +95,8 @@ function megaoptim_webp_attachment_optimized($attachment_object, $resource, $res
 		try {
 			MegaOptim\Http\Client::download( $webp->url, $full_path );
 			if(file_exists($full_path)) {
-				$attachment_object->set_webp($webp, $size);
+				// Not needed.
+				//$attachment_object->set_webp($webp, $size);
 				$attachment_object->save();
 			}
 		} catch ( Exception $e ) {
