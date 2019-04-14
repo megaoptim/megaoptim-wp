@@ -145,12 +145,15 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
 == Changelog ==
 
 = 1.2.0 =
-* WebP Support
-* Security hardening and improvements
-* Admin UI improvements
+* Added WebP Support
+* Removed MegaOptim from main menu and added the settings part in "Settings" and the optimizer in "Media" tabs.
+* Improved settings data persistence
+* Improved security
+* Improved Admin UI
 * Fixed PHP Strict Standards warning
 * Fixed saving max dimensions value
-* Improved settings data persistence
+
+* Revamped database upgrade process
 
 = 1.1.5 =
 * Improved WP Retina 2x compatibility

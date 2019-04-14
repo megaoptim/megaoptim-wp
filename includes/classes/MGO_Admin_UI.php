@@ -396,7 +396,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 	 * @return string
 	 */
 	public static function get_settings_url() {
-		return admin_url( 'admin.php?page=megaoptim_settings' );
+		return admin_url( 'options-general.php?page=megaoptim_settings' );
 	}
 
 	/**
@@ -404,7 +404,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 	 * @return string
 	 */
 	public static function get_optimizer_url() {
-		return admin_url( 'admin.php?page=megaoptim_bulk_optimizer' );
+		return admin_url( 'upload.php?page=megaoptim_bulk_optimizer' );
 	}
 }
 
