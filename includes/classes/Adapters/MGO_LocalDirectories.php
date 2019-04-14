@@ -133,7 +133,7 @@ class MGO_LocalDirectories extends MGO_Library {
 	 * @return array
 	 */
 	public function get_images( $directory ) {
-		$types     = array_keys( \MegaOptim\Optimizer::accepted_types() );
+		$types     = array_keys( \MegaOptim\Tools\PATH::accepted_types() );
 		$file_list = array();
 		foreach ( $types as $ext ) {
 			$found_files = glob( $directory . "*." . $ext );

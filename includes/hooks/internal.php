@@ -38,7 +38,9 @@ function _megaoptim_before_optimization() {
 }
 add_action( 'megaoptim_before_optimization', '_megaoptim_before_optimization', 10, 0 );
 
-
+/**
+ * Output scripts to admin footer
+ */
 function _megaoptim_admin_footer() {
 
 	if ( megaoptim_is_admin_page() ) {
@@ -49,3 +51,11 @@ function _megaoptim_admin_footer() {
 	megaoptim_view( 'modals/register' );
 }
 add_action( 'admin_footer', '_megaoptim_admin_footer' );
+
+/**
+ * Check and run database upgrade if needed.
+ */
+function _megaoptim_database_upgrade() {
+	MGO_Upgrader::instance()->maybe_upgrade();
+}
+add_action('plugins_loaded', '_megaoptim_database_upgrade', 100);

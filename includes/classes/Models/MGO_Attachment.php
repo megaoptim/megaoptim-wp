@@ -384,7 +384,13 @@ abstract class MGO_Attachment {
 				foreach ( $data['result'] as $optimization ) {
 					foreach ( $optimization as $key => $value ) {
 						if ( ! in_array( $key, self::excluded_params() ) ) {
-							$this->data[ $key ] = $value;
+							if($key === 'webp') {
+								if(isset($value['optimized_size'])) {
+									$this->data['webp_size'] = $value['optimized_size'];
+								}
+							} else {
+								$this->data[ $key ] = $value;
+							}
 						}
 					}
 					// Only one optimization per request!
@@ -470,5 +476,14 @@ abstract class MGO_Attachment {
 	 */
 	public static function excluded_params() {
 		return array( 'http_user', 'http_pass' );
+	}
+
+	/**
+	 * Set WebP data if exist.
+	 * @param $data
+	 * @param string $size
+	 */
+	public function set_webp($data, $size = 'full') {
+
 	}
 }

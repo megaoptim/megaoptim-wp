@@ -45,4 +45,3 @@ require_once( WP_MEGAOPTIM_INC_PATH . 'loader.php' );
 
 
 
-

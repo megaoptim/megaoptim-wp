@@ -34,7 +34,8 @@ $includes = array(
 	'functions/cache.php',
 
 	//Load Internal Classes
-	'migrations/MGO_DB_Init.php', // TODO: Tweak
+	'migrations/MGO_Upgrader.php',
+
 	'classes/Models/MGO_Attachment.php',
 	'classes/Adapters/MGO_Library.php',
 	'classes/Exceptions/MGO_Exception.php',

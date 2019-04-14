@@ -3,17 +3,17 @@ $page        = isset( $_GET['page'] ) ? $_GET['page'] : null;
 $section     = isset( $_GET['section'] ) ? $_GET['section'] : null;
 $module      = isset( $_GET['module'] ) ? $_GET['module'] : null;
 $menu        = isset( $menu ) ? $menu : false;
-$current_url = admin_url( "admin.php?page=megaoptim_bulk_optimizer" );
+$home_url = $menu === 'settings' ? admin_url('options-general.php?page=megaoptim_settings') : admin_url( "admin.php?page=megaoptim_bulk_optimizer" );
 if ( ! is_null( $module ) ) {
-	$current_url = add_query_arg( 'module', $module, $current_url );
-	$current_url = add_query_arg( 'switch', 1, $current_url );
+	$home_url = add_query_arg( 'module', $module, $home_url );
+	$home_url = add_query_arg( 'switch', 1, $home_url );
 }
 ?>
 <div class="megaoptim wrap">
     <div class="megaoptim-container">
         <div class="megaoptim-header megaoptim-bg-primary">
             <div class="megaoptim-header-logo">
-                <a class="navbar-brand" href="<?php echo $current_url; ?>">
+                <a class="navbar-brand" href="<?php echo $home_url; ?>">
                     <img src="<?php echo WP_MEGAOPTIM_URL . '/assets/img/logo-white.png'; ?>"/>
                 </a>
             </div>
@@ -21,17 +21,17 @@ if ( ! is_null( $module ) ) {
                 <div class="megaoptim-header-menu">
                     <ul class="megaoptim-menu">
                         <li class="megaoptim-menu-item <?php echo ( is_null( $section ) && $page === 'megaoptim_settings' ) ? 'active' : ''; ?>">
-                            <a href="<?php echo admin_url( "admin.php?page=megaoptim_settings" ); ?>">
+                            <a href="<?php echo admin_url( "options-general.php?page=megaoptim_settings" ); ?>">
 								<?php _e( 'General', 'megaoptim' ); ?>
                             </a>
                         </li>
                         <li class="megaoptim-menu-item <?php echo ( $page === 'megaoptim_settings' && $section === 'advanced' ) ? 'active' : ''; ?>">
-                            <a href="<?php echo admin_url( "admin.php?page=megaoptim_settings&section=advanced" ); ?>">
+                            <a href="<?php echo admin_url( "options-general.php?page=megaoptim_settings&section=advanced" ); ?>">
 								<?php _e( 'Advanced', 'megaoptim' ); ?>
                             </a>
                         </li>
                         <li class="megaoptim-menu-item <?php echo ( $page === 'megaoptim_settings' && $section === 'status' ) ? 'active' : ''; ?>">
-                            <a href="<?php echo admin_url( "admin.php?page=megaoptim_settings&section=status" ); ?>">
+                            <a href="<?php echo admin_url( "options-general.php?page=megaoptim_settings&section=status" ); ?>">
 								<?php _e( 'Debug', 'megaoptim' ); ?>
                             </a>
                         </li>
@@ -39,7 +39,7 @@ if ( ! is_null( $module ) ) {
                 </div>
 			<?php elseif ( $menu === 'optimizer' ): ?>
                 <div class="megaoptim-header-menu">
-                    <form class="optimizer-switcher" method="GET" action="<?php echo admin_url( "admin.php" ); ?>">
+                    <form class="optimizer-switcher" method="GET" action="<?php echo admin_url( "upload.php" ); ?>">
                         <input type="hidden" name="page" value="megaoptim_bulk_optimizer"/>
                         <label for="module">Select optimizer</label>
                         <select name="module" id="module">

@@ -47,19 +47,9 @@ class MGO_Admin_UI extends MGO_BaseObject {
 	 */
 	public function register_ui_pages() {
 
-		add_menu_page(
-			__( 'MegaOptim Optimizer', 'megaoptim' ),
-			__( 'MegaOptim', 'megaoptim' ),
-			'manage_options',
+		add_media_page(
 			'megaoptim_bulk_optimizer',
-			null,
-			WP_MEGAOPTIM_URL . '/assets/img/logo-white-rocket-menu.png'
-		);
-
-		add_submenu_page(
-			'megaoptim_bulk_optimizer',
-			__( 'MegaOptim Optimizer', 'megaoptim' ),
-			__( 'Optimizer', 'megaoptim' ),
+			__( 'Bulk MegaOptim', 'megaoptim' ),
 			'manage_options',
 			'megaoptim_bulk_optimizer',
 			array(
@@ -68,10 +58,9 @@ class MGO_Admin_UI extends MGO_BaseObject {
 			)
 		);
 
-		add_submenu_page(
+		add_options_page(
 			'megaoptim_bulk_optimizer',
-			__( 'MegaOptim Settings', 'megaoptim' ),
-			__( 'Settings', 'megaoptim' ),
+			__( 'MegaOptim', 'megaoptim' ),
 			'manage_options',
 			'megaoptim_settings',
 			array(

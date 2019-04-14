@@ -24,8 +24,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! function_exists( '_megaoptim_install' ) ) {
 	function _megaoptim_install() {
-		$dt = new MGO_DB_Init();
-		$dt->run();
+		// Upgrade db
+		$upgrader = new MGO_Upgrader();
+		$upgrader->maybe_upgrade();
 		// Set defaults
 		if ( ! MGO_Settings::was_installed_previously() ) {
 			MGO_Settings::instance()->update( MGO_Settings::defaults() );

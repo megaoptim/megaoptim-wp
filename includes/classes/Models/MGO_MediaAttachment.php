@@ -574,7 +574,7 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	 * @param \MegaOptim\Responses\ResultWebP  $webp
 	 * @param string $size
 	 */
-	public function set_webp($webp, $size) {
+	public function set_webp($webp, $size = 'full') {
 		if(!is_null($webp)) {
 			if($size === 'full') {
 				$this->metadata['webp'] = (array) $webp;
