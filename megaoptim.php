@@ -5,7 +5,7 @@ Plugin URI: https://megaoptim.com/tools/wordpress
 Description: Compress and optimize your WordPress images and save bandwith, disk space and boost pagespeed/lighthouse & seo score. Integrates seamlessly with NextGen, WP Retina 2x, Envira and other media/image plugins.
 Author: MegaOptim
 Author URI: https://megaoptim.com
-Version: 1.2.0-dev
+Version: 1.2.0
 */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -28,7 +28,7 @@ define( 'WP_MEGAOPTIM_LIBRARIES_PATH', WP_MEGAOPTIM_INC_PATH . 'libraries' . DIR
 define( 'WP_MEGAOPTIM_REGISTER_URL', 'https://megaoptim.com/register' );
 define( 'WP_MEGAOPTIM_DASHBOARD_URL', 'https://megaoptim.com/dashboard' );
 define( 'WP_MEGAOPTIM_REGISTER_API_URL', 'https://megaoptim.com/api/register' );
-define( 'WP_MEGAOPTIM_API_BASE_URL', 'https://api.megaoptim.test' );
+define( 'WP_MEGAOPTIM_API_BASE_URL', 'https://api.megaoptim.com' );
 define( 'WP_MEGAOPTIM_API_VERSION', 'v1' );
 define( 'WP_MEGAOPTIM_API_URL', WP_MEGAOPTIM_API_BASE_URL . '/' . WP_MEGAOPTIM_API_VERSION );
 define( 'WP_MEGAOPTIM_API_PROFILE', WP_MEGAOPTIM_API_URL . '/users/info' );
@@ -40,7 +40,6 @@ define( 'MEGAOPTIM_TEN_MINUTES_IN_SECONDS', 10 * MEGAOPTIM_ONE_MINUTE_IN_SECONDS
 define( 'MEGAOPTIM_ONE_HOUR_IN_SECONDS', 60 * MEGAOPTIM_ONE_MINUTE_IN_SECONDS );
 define( 'MEGAOPTIM_HALF_HOUR_IN_SECONDS', 30 * MEGAOPTIM_ONE_MINUTE_IN_SECONDS );
 
-require_once( WP_MEGAOPTIM_LIBRARIES_PATH . 'megaoptim-php' . DIRECTORY_SEPARATOR . 'loadnoncomposer.php' );
 require_once( WP_MEGAOPTIM_INC_PATH . 'loader.php' );
 
 
