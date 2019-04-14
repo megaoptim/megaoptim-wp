@@ -34,6 +34,8 @@ class MGO_Rev_1001 extends MGO_Rev {
 			if(megaoptim_column_exists($table_name, 'webp_size')) {
 				megaoptim_set_db_version($this->id);
 			}
+		} else {
+			megaoptim_set_db_version($this->id);
 		}
 	}
 
