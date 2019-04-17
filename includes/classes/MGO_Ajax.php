@@ -259,7 +259,7 @@ class MGO_Ajax extends MGO_BaseObject {
 				if ( $response === false ) {
 					array_push( $errors, __( 'Could not verify your API key. The API can not be reached. Please contact support.', 'megaoptim' ) );
 				} else if ( ! isset( $response['status'] ) ) {
-					array_push( $errors, __( 'Invalid results received. Please contact support.', 'megaoptim' ) );
+					array_push( $errors, __( 'We received invalid response trying to authenticate your api key. Please contact support.', 'megaoptim' ) );
 				} else if ( $response['status'] != 'ok' ) {
 					array_push( $errors, __( 'Your API key is invalid. Please make sure you use correct API issued by MegaOptim.com', 'megaoptim' ) );
 				}

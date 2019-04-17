@@ -28,7 +28,7 @@ class MGO_Upgrader extends MGO_BaseObject {
 	 * List of database revisions
 	 * @var MGO_Rev[]
 	 */
-	protected $revisions = [];
+	protected $revisions = array();
 
 	/**
 	 * MGO_DB_Upgrader constructor.
