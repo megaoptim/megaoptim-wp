@@ -411,7 +411,10 @@ span.megaoptim-error {
 .megaoptim-form-header {
     margin-bottom: 20px;
 }
-
+.webp-info {
+    vertical-align: middle;
+    line-height: 18px;
+}
 .megaoptim-form-header, .megaoptim-field-group, .megaoptim-form-actions {
     display: block;
     width: 100%;

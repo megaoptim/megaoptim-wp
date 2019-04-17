@@ -93,11 +93,8 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
 = Can i optimize the WordPress Media Library =
     Sure, just go to MegaOptim > Optimizer and in the top right select \"WP Media Library\" and start the process!
 
-= Can i backup the images? =
-    Yes, MegaOptim have option to backup the images and it is enabled by default.
-
-= Can i restore the images? =
-    If you have backups enabled you can easily restore any compressed image from backup.
+= Can i backup and restore the images? =
+    Yes, MegaOptim have option to backup the images and it is enabled by default. You can alawys restore the original images if there is backup.
 
 = What image formats can be optimized? =
     MegaOptim supports JPEG, PNG, GIF (animated or non animated)
@@ -105,17 +102,17 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
 = Does the plugin optimizes the images in cloud or in my website's hosting? =
     MegaOptim send each image to our cloud service and each image is optimized and then downloaded and replaced with the original, if you have backups enabled the image will be backed up additionally.
 
+= Do i need separate tokens for WebP Images?
+    No, WebP versions are free of charge!
+
 = What payment methods do you support? =
     We support both PayPal and Credit Card via Paddle
 
 = What happens if i stop using or deactivate MegaOptim plugin? =
-    Nothing, your images will remain optimized.
+    Nothing, your images will remain optimized, if you used the WebP feature the site won't serve WebP any longer.
 
-= Do you have one time packages? =
-    Yes. Please check out <a href="https://megaoptim.com/pricing">here</a>.
-
-= Do you have monthly packages? =
-    Yes. Please check out <a href="https://megaoptim.com/pricing">here</a>.
+= What are the pricing packages? =
+    We do both one-time and monthly. Please check out <a href="https://megaoptim.com/pricing">here</a>.
 
 = Can i cancel my subscription? =
     Absolutely! You can cancel your subscription whenever you want.
