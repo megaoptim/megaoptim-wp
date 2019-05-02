@@ -48,7 +48,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 	public function register_ui_pages() {
 
 		add_media_page(
-			'megaoptim_bulk_optimizer',
+			__( 'Media Optimizer, File Optimizer, NextGen Optimizer', 'megaoptim' ),
 			__( 'Bulk MegaOptim', 'megaoptim' ),
 			'manage_options',
 			'megaoptim_bulk_optimizer',
@@ -59,7 +59,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 		);
 
 		add_options_page(
-			'megaoptim_bulk_optimizer',
+			__( 'MegaOptim Settings' ),
 			__( 'MegaOptim', 'megaoptim' ),
 			'manage_options',
 			'megaoptim_settings',
@@ -200,7 +200,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 					try {
 						$attachment = new MGO_MediaAttachment( $attachment_id );
 						echo megaoptim_get_attachment_buttons( $attachment );
-					} catch (\Exception $e) {
+					} catch ( \Exception $e ) {
 						echo $e->getMessage();
 					}
 					break;
@@ -232,7 +232,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 			try {
 				$attachment = new MGO_MediaAttachment( $attachment_id );
 				echo megaoptim_get_attachment_buttons( $attachment );
-			} catch (\Exception $e) {
+			} catch ( \Exception $e ) {
 				echo $e->getMessage();
 			}
 			echo '</div>';
