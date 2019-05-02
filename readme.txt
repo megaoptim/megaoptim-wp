@@ -4,7 +4,7 @@ Tags: image optimizer, image compression, pagespeed, lighthouse, optimize images
 Requires at least: 3.6
 Tested up to: 5.1.1
 Requires PHP: 5.3.0
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -141,6 +141,10 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
 
 == Changelog ==
 
+= 1.2.1 =
+- Improved Admin pages
+- Improved WebP support
+
 = 1.2.0 =
 * Added WebP Support
 * Removed MegaOptim from main menu and added the settings part in "Settings" and the optimizer in "Media" tabs.
@@ -149,7 +153,6 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
 * Improved Admin UI
 * Fixed PHP Strict Standards warning
 * Fixed saving max dimensions value
-
 * Revamped database upgrade process
 
 = 1.1.5 =
