@@ -20,7 +20,9 @@
 
 /**
  * The actual filter attached to the_content, the_excerpt and post_thumbnail_html
+ *
  * @param $content
+ *
  * @return string|string[]|null
  */
 function megaoptim_webp_filter_content( $content ) {
@@ -30,7 +32,8 @@ function megaoptim_webp_filter_content( $content ) {
 	if ( is_feed() || is_admin() ) {
 		return $content;
 	}
-	return megaoptim_webp_convert_text($content);
+
+	return megaoptim_webp_convert_text( $content );
 }
 
 /**
@@ -62,6 +65,9 @@ function megaoptim_replace_img_with_webp( $match ) {
 	}
 
 	$img = megaoptim_get_dom_element_attributes( $match[0], 'img' );
+	if ( $img === false ) {
+		return $match[0];
+	}
 
 	$src_data      = megaoptim_get_image_attributes( $img, 'src' );
 	$src           = $src_data['value'];
@@ -74,8 +80,8 @@ function megaoptim_replace_img_with_webp( $match ) {
 	$sizes_prefix  = $sizes_data['prefix'];
 	$alt_attr      = isset( $img['alt'] ) && strlen( $img['alt'] ) ? ' alt="' . $img['alt'] . '"' : '';
 
-	$uploads_path_base = megaoptim_webp_get_image_dir($src);
-	if($uploads_path_base === false) {
+	$uploads_path_base = megaoptim_webp_get_image_dir( $src );
+	if ( $uploads_path_base === false ) {
 		return $match[0];
 	}
 
@@ -134,11 +140,12 @@ function megaoptim_replace_img_with_webp( $match ) {
 
 /**
  * Returns the image dir if it's local. Otherwise it returns false.
+ *
  * @param $src
  *
  * @return bool|mixed|string
  */
-function megaoptim_webp_get_image_dir($src) {
+function megaoptim_webp_get_image_dir( $src ) {
 	$updir = wp_upload_dir();
 
 	$content_dir = WP_CONTENT_DIR;
@@ -167,10 +174,14 @@ function megaoptim_webp_get_image_dir($src) {
 	if ( $base_img_src == $src ) {
 		$url  = parse_url( $src );
 		$base = parse_url( $base_url );
-		$src_host     = array_reverse( explode( '.', $url['host'] ) );
+		// Bail if no host
+		if ( ! isset( $url['host'] ) || ! isset( $base['host'] ) ) {
+			return false;
+		}
+		$src_host      = array_reverse( explode( '.', $url['host'] ) );
 		$base_url_host = array_reverse( explode( '.', $base['host'] ) );
 		if ( $src_host[0] === $base_url_host[0] && $src_host[1] === $base_url_host[1] && ( strlen( $src_host[1] ) > 3 || isset( $src_host[2] ) && isset( $src_host[2] ) && $src_host[2] == $base_url_host[2] ) ) {
-			$baseurl   = str_replace( $base['scheme'] . '://' . $base['host'], $url['scheme'] . '://' . $url['host'], $base_url );
+			$baseurl      = str_replace( $base['scheme'] . '://' . $base['host'], $url['scheme'] . '://' . $url['host'], $base_url );
 			$base_img_src = str_replace( $baseurl, $base_dir, $src );
 		}
 		// Bail if external url
@@ -178,7 +189,8 @@ function megaoptim_webp_get_image_dir($src) {
 			return false;
 		}
 	}
-	$base_img_src = trailingslashit(dirname($base_img_src));
+	$base_img_src = trailingslashit( dirname( $base_img_src ) );
+
 	return $base_img_src;
 }
 
@@ -231,9 +243,9 @@ function megaoptim_create_dom_element_attributes( $attribute_array ) {
  * @return array
  */
 function megaoptim_get_dom_element_attributes( $content, $element ) {
-    if(empty($content)) {
-        return array();
-    }
+	if ( empty( $content ) ) {
+		return array();
+	}
 	if ( function_exists( "mb_convert_encoding" ) ) {
 		$content = mb_convert_encoding( $content, 'HTML-ENTITIES', 'UTF-8' );
 	}
@@ -254,9 +266,13 @@ function megaoptim_get_dom_element_attributes( $content, $element ) {
  * @return mixed|array
  */
 function megaoptim_webp_target_filters() {
-    return apply_filters('megaoptim_webp_target_filters', array(
-	    'the_content', 'the_excerpt', 'post_thumbnail_html', 'acf_the_content', 'widget_text'
-    ));
+	return apply_filters( 'megaoptim_webp_target_filters', array(
+		'the_content',
+		'the_excerpt',
+		'post_thumbnail_html',
+		'acf_the_content',
+		'widget_text'
+	) );
 }
 
 
@@ -267,46 +283,48 @@ function megaoptim_webp_target_filters() {
 function megaoptim_add_webp_support_via_htaccess() {
 	$htaccess_path = megaoptim_get_htaccess_path();
 
-	if(!is_writable(dirname($htaccess_path))) {
-	    megaoptim_log('.htaccess dir not writable.');
-	    return false;
-    }
+	if ( ! is_writable( dirname( $htaccess_path ) ) ) {
+		megaoptim_log( '.htaccess dir not writable.' );
+
+		return false;
+	}
 	$htaccess_contents = '';
-    if(file_exists($htaccess_path)) {
-        ob_start();
-        include($htaccess_path);
-        $htaccess_contents = ob_get_clean();
-	    $htaccess_contents = trim(megaoptim_remove_between('# BEGIN MegaOptimIO', '# END MegaOptimIO', $htaccess_contents));
-    }
+	if ( file_exists( $htaccess_path ) ) {
+		ob_start();
+		include( $htaccess_path );
+		$htaccess_contents = ob_get_clean();
+		$htaccess_contents = trim( megaoptim_remove_between( '# BEGIN MegaOptimIO', '# END MegaOptimIO', $htaccess_contents ) );
+	}
 
 	ob_start();
 	?>
 
-# BEGIN MegaOptimIO
-<IfModule mod_setenvif.c>
-    # Vary: Accept for all the requests to jpeg and png
-    SetEnvIf Request_URI "\.(jpe?g|png)$" REQUEST_image
-</IfModule>
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-    # Check if browser supports WebP images
-    RewriteCond %{HTTP_ACCEPT} image/webp
-    # Check if WebP replacement image exists
-    RewriteCond %{DOCUMENT_ROOT}/$1.webp -f
-    # Serve WebP image instead
-    RewriteRule (.+)\.(jpe?g|png)$ $1.webp [T=image/webp]
-</IfModule>
-<IfModule mod_headers.c>
-    Header append Vary Accept env=REQUEST_image
-</IfModule>
-<IfModule mod_mime.c>
-    AddType image/webp .webp
-</IfModule>
-# END MegaOptimIO
+    # BEGIN MegaOptimIO
+    <IfModule mod_setenvif.c>
+        # Vary: Accept for all the requests to jpeg and png
+        SetEnvIf Request_URI "\.(jpe?g|png)$" REQUEST_image
+    </IfModule>
+    <IfModule mod_rewrite.c>
+        RewriteEngine On
+        # Check if browser supports WebP images
+        RewriteCond %{HTTP_ACCEPT} image/webp
+        # Check if WebP replacement image exists
+        RewriteCond %{DOCUMENT_ROOT}/$1.webp -f
+        # Serve WebP image instead
+        RewriteRule (.+)\.(jpe?g|png)$ $1.webp [T=image/webp]
+    </IfModule>
+    <IfModule mod_headers.c>
+        Header append Vary Accept env=REQUEST_image
+    </IfModule>
+    <IfModule mod_mime.c>
+        AddType image/webp .webp
+    </IfModule>
+    # END MegaOptimIO
 
 	<?php
 	$htaccess_contents .= ob_get_clean();
-	megaoptim_write($htaccess_path, $htaccess_contents, 'w');
+	megaoptim_write( $htaccess_path, $htaccess_contents, 'w' );
+
 	return true;
 }
 
@@ -316,19 +334,20 @@ function megaoptim_add_webp_support_via_htaccess() {
  */
 function megaoptim_remove_webp_support_via_htaccess() {
 	$htaccess_path = megaoptim_get_htaccess_path();
-	if(!is_writable(dirname($htaccess_path))) {
-		megaoptim_log('.htaccess dir not writable.');
+	if ( ! is_writable( dirname( $htaccess_path ) ) ) {
+		megaoptim_log( '.htaccess dir not writable.' );
+
 		return false;
 	}
-	if(!file_exists($htaccess_path)) {
-	    return false;
+	if ( ! file_exists( $htaccess_path ) ) {
+		return false;
 	}
 
 	ob_start();
-	include($htaccess_path);
+	include( $htaccess_path );
 	$htaccess_contents = ob_get_clean();
-	$htaccess_contents = trim(megaoptim_remove_between('# BEGIN MegaOptimIO', '# END MegaOptimIO', $htaccess_contents));
-	megaoptim_write($htaccess_path, $htaccess_contents, 'w');
+	$htaccess_contents = trim( megaoptim_remove_between( '# BEGIN MegaOptimIO', '# END MegaOptimIO', $htaccess_contents ) );
+	megaoptim_write( $htaccess_path, $htaccess_contents, 'w' );
 
 	return true;
 }
