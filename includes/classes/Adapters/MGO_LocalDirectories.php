@@ -176,7 +176,6 @@ class MGO_LocalDirectories extends MGO_Library {
 		foreach ( $images as $key => $image ) {
 			$query = $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->prefix}megaoptim_opt SOPT WHERE SOPT.object_id=%s and SOPT.type=%s", $image['ID'], 'localfiles' );
 			$r     = $wpdb->get_var( $query );
-			#var_dump($r);
 			if ( $r > 0 ) {
 				unset( $images[ $key ] );
 			}

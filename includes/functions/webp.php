@@ -33,20 +33,43 @@ function megaoptim_webp_filter_content( $content ) {
 		return $content;
 	}
 
-	return megaoptim_webp_convert_text( $content );
+	$content = megaoptim_webp_convert_inline_backgrounds( $content );
+	$content = megaoptim_webp_convert_img_tags( $content );
+
+	return $content;
 }
 
 /**
  * Convert content images to webp images. Replaces .png,.jpg to .web if they exist.
  * This function can be used as standalone
- * eg. megaoptim_webp_convert_text($your_content)
+ * eg. megaoptim_webp_convert_img_tags($your_content)
  *
  * @param $content
  *
  * @return string
  */
-function megaoptim_webp_convert_text( $content ) {
+function megaoptim_webp_convert_img_tags( $content ) {
 	return preg_replace_callback( '/<img[^>]*>/', 'megaoptim_replace_img_with_webp', $content );
+}
+
+/**
+ * Convert inline images to webp images in background: css property.
+ * This function can be used as standalone
+ * eg. megaoptim_webp_convert_inline_backgrounds($your_content)
+ *
+ * @param $content
+ *
+ * @return string
+ */
+function megaoptim_webp_convert_inline_backgrounds( $content ) {
+	$matches = array();
+	preg_match_all( '/url\(.*\)/isU', $content, $matches );
+	if ( count( $matches ) == 0 ) {
+		return $content;
+	}
+	$content = megaoptim_replace_inline_backgrounds_with_webp( $matches, $content );
+
+	return $content;
 }
 
 /**
@@ -69,16 +92,19 @@ function megaoptim_replace_img_with_webp( $match ) {
 		return $match[0];
 	}
 
-	$src_data      = megaoptim_get_image_attributes( $img, 'src' );
-	$src           = $src_data['value'];
-	$src_prefix    = $src_data['prefix'];
+	$src_data   = megaoptim_get_image_attributes( $img, 'src' );
+	$src        = $src_data['value'];
+	$src_prefix = $src_data['prefix'];
+
 	$srcset_data   = megaoptim_get_image_attributes( $img, 'srcset' );
 	$srcset        = $srcset_data['value'];
 	$srcset_prefix = $srcset ? $srcset_data['prefix'] : $src_data['prefix'];
-	$sizes_data    = megaoptim_get_image_attributes( $img, 'sizes' );
-	$sizes         = $sizes_data['value'];
-	$sizes_prefix  = $sizes_data['prefix'];
-	$alt_attr      = isset( $img['alt'] ) && strlen( $img['alt'] ) ? ' alt="' . $img['alt'] . '"' : '';
+
+	$sizes_data   = megaoptim_get_image_attributes( $img, 'sizes' );
+	$sizes        = $sizes_data['value'];
+	$sizes_prefix = $sizes_data['prefix'];
+
+	$alt_attr = isset( $img['alt'] ) && strlen( $img['alt'] ) ? ' alt="' . $img['alt'] . '"' : '';
 
 	$uploads_path_base = megaoptim_webp_get_image_dir( $src );
 	if ( $uploads_path_base === false ) {
@@ -139,6 +165,68 @@ function megaoptim_replace_img_with_webp( $match ) {
 }
 
 /**
+ * Replaces img jpg or png src to webp src if exists.
+ *
+ * @param $matches array  eg. array( array( 'url('http://mgo.test/wp-content/uploads/2018/10/shutterstock_98494004.jpg')'))
+ * @param $content string eg. <div style="background-image:url(...
+ *
+ * @return string
+ */
+function megaoptim_replace_inline_backgrounds_with_webp( $matches, $content ) {
+
+	// Bail if empty
+	if ( empty( $matches ) || count($matches) == 1 && empty($matches[0]) ) {
+		return $content;
+	}
+
+	$allowed_extensions = array( 'jpg', 'jpeg', 'png', 'gif' );
+	$converted          = array();
+	for ( $i = 0; $i < count( $matches[0] ); $i ++ ) {
+		$item = $matches[0][ $i ];
+		preg_match( '/url\(\'(.*)\'\)/imU', $item, $match );
+		if ( ! isset( $match[1] ) ) {
+			continue;
+		}
+		/**
+		 * $match[0] => 'url('http://mgo.test/wp-content/uploads/2018/10/shutterstock_98494004.jpg')'
+         * $match[1] => http://mgo.test/wp-content/uploads/2018/10/shutterstock_98494004.jpg
+		 */
+		$url           = $match[1];
+		$file_basename = basename( $url );
+		$file_name     = pathinfo( $url, PATHINFO_FILENAME );
+		$file_ext      = pathinfo( $url, PATHINFO_EXTENSION );
+		if ( ! in_array( $file_ext, $allowed_extensions ) ) {
+			continue;
+		}
+		$image_base_url  = str_replace( $file_basename, '', $url );
+		$image_base_path = megaoptim_webp_get_image_dir( $url );
+		if ( ! $image_base_path ) {
+			continue;
+		}
+		$full_webp_url = '';
+		if ( file_exists( $image_base_path . $file_name . '.' . $file_ext . '.webp' ) ) {
+			$full_webp_url = $image_base_url . $file_name . '.' . $file_ext . '.webp';
+		} elseif ( file_exists( $image_base_path . $file_name . '.webp' ) ) {
+			$full_webp_url = $image_base_url . $file_name . '.webp';
+		}
+		if ( ! empty( $full_webp_url ) ) {
+			// Note: if webp, then add another URL() def after the targeted one.
+			// (str_replace old full URL def, with new one on main match)
+			$target_urldef = $matches[0][ $i ];
+			// Note: If the same image is on multiple elements, this replace might go double. prevent.
+			if ( ! isset( $converted[ $target_urldef ] ) ) {
+				$converted[] = $target_urldef;
+				$new_urldef  = "url('" . $full_webp_url . "'), " . $target_urldef;
+				$content     = str_replace( $target_urldef, $new_urldef, $content );
+			}
+		}
+
+	}
+
+	return $content;
+}
+
+/**
  * Returns the image dir if it's local. Otherwise it returns false.
  *
  * @param $src
@@ -165,6 +253,7 @@ function megaoptim_webp_get_image_dir( $src ) {
 			}
 		}
 	}
+
 	// Handle non-upload paths
 	$base_img_src = str_replace( $base_url, $base_dir, $src );
 	if ( $base_img_src == $src ) {

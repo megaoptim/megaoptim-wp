@@ -141,10 +141,14 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
 
 == Changelog ==
 
-= 1.2.2 =
-- Added info below the 'Optimize' button when the attachment is not fully optimized
+= 1.3.0 =
+- Improved WebP support
+- Improved Settings pages
+- Improved WPEngine compatibility
+- Fixed Cloudflare purge compatibility
 - Fixed problem when auto-optimizing nextgen gallery images
-- Added detection for the child theme folder in 'Local Directories' optimizer
+- Added info below the 'Optimize' button when the attachment is not fully optimized
+- Added detection for the child theme folder in 'Local Folders' optimizer
 
 = 1.2.1 =
 - Improved Admin pages
