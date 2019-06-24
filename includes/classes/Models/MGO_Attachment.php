@@ -128,6 +128,16 @@ abstract class MGO_Attachment {
 	}
 
 	/**
+	 * Removes WebP file.
+	 */
+	public function delete_webp() {
+		$webp_path = $this->get_webp_path();
+		if(false !== $webp_path && file_exists($webp_path)) {
+			@unlink($webp_path);
+		}
+	}
+
+	/**
 	 * If this is once optimized?
 	 * @return bool
 	 */
@@ -138,6 +148,27 @@ abstract class MGO_Attachment {
 	 * @return bool
 	 */
 	abstract public function is_already_optimized();
+
+	/**
+	 * Returns the attachment type
+	 * @return mixed
+	 */
+	abstract public function getType();
+
+	/**
+	 * Destroy the megaoptim data
+	 * @return bool
+	 */
+	abstract public function destroy();
+
+	/**
+	 * The overall savings from all thumbnails of this specific attachment.
+	 *
+	 * @param bool $formatted
+	 *
+	 * @return int
+	 */
+	public abstract function get_total_saved_bytes( $formatted = false );
 
 	/**
 	 * Returns the attachment ID
@@ -238,13 +269,12 @@ abstract class MGO_Attachment {
 	}
 
 	/**
-	 * The overall savings from all thumbnails of this specific attachment.
-	 *
-	 * @param bool $formatted
-	 *
-	 * @return int
+	 * Is optimized?
+	 * @return int|mixed
 	 */
-	public abstract function get_total_saved_bytes( $formatted = false );
+	public function get_optimized_status() {
+		return isset( $this->data['status'] ) ? $this->data['status'] : 0;
+	}
 
 	/**
 	 * Returns the raw data array.
@@ -255,11 +285,11 @@ abstract class MGO_Attachment {
 	}
 
 	/**
-	 * Is optimized?
-	 * @return int|mixed
+	 * Returns webp path
+	 * @return bool|string
 	 */
-	public function get_optimized_status() {
-		return isset( $this->data['status'] ) ? $this->data['status'] : 0;
+	public function get_webp_path() {
+		return isset($this->data['file_path']) ? $this->data['file_path'] . '.webp' : false;
 	}
 
 	/**
@@ -349,6 +379,56 @@ abstract class MGO_Attachment {
 	}
 
 	/**
+	 * Set metadata non-Thumb file
+	 *
+	 * @param \MegaOptim\Responses\Response $response
+	 * @param $params
+	 */
+	public function set_data( $response, $params ) {
+		$this->set_optimized_status( (int) $response->isSuccessful() );
+		$files = $response->getOptimizedFiles();
+		if ( ! empty( $files ) ) {
+			$this->set_process_id( $response->getProcessId() );
+			$this->set_optimization_data( $response->getRawResponse() );
+			$this->set_optimization_time( date( 'Y-m-d H:i:s', time() ) );
+			$this->set_query_params( $params );
+		}
+	}
+
+	/**
+	 * Set the optimization data properties from raw response (json).
+	 *
+	 * @param string $rawr
+	 */
+	public function set_optimization_data($rawr) {
+
+		$data = @json_decode( $rawr, true );
+
+		if ( isset($data['result']) && ! empty( $data['result'] ) ) {
+			foreach ( $data['result'] as $optimization ) {
+				foreach ( $optimization as $key => $value ) {
+					if ( ! in_array( $key, self::excluded_params() ) ) {
+						if($key === 'webp') {
+							if(isset($value['optimized_size'])) {
+								$this->data['webp_size'] = $value['optimized_size'];
+							} else {
+								$this->data['webp_size'] = 0;
+							}
+						} else {
+							$this->data[ $key ] = $value;
+						}
+					}
+					if(!isset($this->data['webp_size']) || is_null($this->data['webp_size'])) {
+						$this->data['webp_size'] = 0;
+					}
+				}
+				// Note: Only one optimization per request!
+				break;
+			}
+		}
+	}
+
+	/**
 	 * Set key value
 	 *
 	 * @param $key
@@ -356,6 +436,15 @@ abstract class MGO_Attachment {
 	 */
 	public function set( $key, $value ) {
 		$this->data[ $key ] = $value;
+	}
+
+	/**
+	 * Set raw data.
+	 *
+	 * @param $data
+	 */
+	public function set_raw_data( $data ) {
+		$this->data = $data;
 	}
 
 	/**
@@ -369,56 +458,6 @@ abstract class MGO_Attachment {
 		return isset( $this->data[ $key ] ) ? $this->data[ $key ] : null;
 	}
 
-	/**
-	 * Set metadata non-Thumb file
-	 *
-	 * @param \MegaOptim\Responses\Response $response
-	 * @param $params
-	 */
-	public function set_data( \MegaOptim\Responses\Response $response, $params ) {
-		$this->set_optimized_status( (int) $response->isSuccessful() );
-		$files = $response->getOptimizedFiles();
-		if ( ! empty( $files ) ) {
-			$data = json_decode( $response->getRawResponse(), true );
-			if ( ! empty( $data['result'] ) ) {
-				foreach ( $data['result'] as $optimization ) {
-					foreach ( $optimization as $key => $value ) {
-						if ( ! in_array( $key, self::excluded_params() ) ) {
-							if($key === 'webp') {
-								if(isset($value['optimized_size'])) {
-									$this->data['webp_size'] = $value['optimized_size'];
-								}
-							} else {
-								$this->data[ $key ] = $value;
-							}
-						}
-					}
-					// Only one optimization per request!
-					break;
-				}
-			}
-			$this->set_process_id( $response->getProcessId() );
-			$this->set_optimization_time( date( 'Y-m-d H:i:s', time() ) );
-			$this->set_query_params( $params );
-		}
-	}
-
-	/**
-	 * Set raw data.
-	 *
-	 * @param $data
-	 */
-	public function set_raw_data( $data ) {
-		$this->data = $data;
-	}
-
-	abstract public function getType();
-
-	/**
-	 * Destroy the megaoptim data
-	 * @return bool
-	 */
-	abstract public function destroy();
 
 	/**
 	 * Returns the key for the current lock
@@ -428,6 +467,27 @@ abstract class MGO_Attachment {
 		$lock = 'lock_' . $this->getType() . '_' . $this->get_id();
 
 		return $lock;
+	}
+
+
+	/**
+	 * Return the lock ( time() value when this attachment was locked )
+	 * @return mixed
+	 */
+	public function get_lock() {
+		$lock = $this->get_lock_key();
+
+		return megaoptim_cache_get( $lock );
+	}
+
+	/**
+	 * Check if attachment is locked
+	 * @return mixed
+	 */
+	public function is_locked() {
+		$lock = $this->get_lock();
+
+		return $lock != false;
 	}
 
 	/**
@@ -451,54 +511,10 @@ abstract class MGO_Attachment {
 	}
 
 	/**
-	 * Check if attachment is locked
-	 * @return mixed
-	 */
-	public function is_locked() {
-		$lock = $this->get_lock();
-
-		return $lock != false;
-	}
-
-	/**
-	 * Return the lock ( time() value when this attachment was locked )
-	 * @return mixed
-	 */
-	public function get_lock() {
-		$lock = $this->get_lock_key();
-
-		return megaoptim_cache_get( $lock );
-	}
-
-	/**
 	 * Returns array of excluded params
 	 * @return array
 	 */
 	public static function excluded_params() {
 		return array( 'http_user', 'http_pass' );
-	}
-
-	/**
-	 * Set WebP data if exist.
-	 * @param $data
-	 * @param string $size
-	 */
-	public function set_webp($data, $size = 'full') {
-		// TODO: Remove later.
-	}
-
-
-	public function get_webp_path() {
-		return isset($this->data['file_path']) ? $this->data['file_path'] . '.webp' : false;
-	}
-
-	/**
-	 * Removes WebP file.
-	 */
-	public function delete_webp() {
-		$webp_path = $this->get_webp_path();
-		if(false !== $webp_path && file_exists($webp_path)) {
-			@unlink($webp_path);
-		}
 	}
 }

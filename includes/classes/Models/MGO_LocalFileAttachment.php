@@ -78,8 +78,10 @@ class MGO_LocalFileAttachment extends MGO_Attachment {
 	 * @return bool
 	 */
 	public function save() {
+		if ( isset( $this->data['webp_size'] ) && is_null( $this->data['webp_size'] ) ) {
+			$this->data['webp_size'] = 0;
+		}
 		if ( $this->has_result() ) {
-
 			$result = $this->db->update( $this->table_name, megaoptim_array_except( $this->data, array(
 				'id',
 				'object_id',

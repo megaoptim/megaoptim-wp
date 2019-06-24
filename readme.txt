@@ -2,9 +2,9 @@
 Contributors: megaoptim, darkog
 Tags: image optimizer, image compression, pagespeed, lighthouse, optimize images, image optimiser, image compressor, optimize images, optimize jpg, compress jpg, compress png, compress retina
 Requires at least: 3.6
-Tested up to: 5.1.1
+Tested up to: 5.2.0
 Requires PHP: 5.3.0
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -140,6 +140,10 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
 10. NextGen Galleries: Gallery table screen buttons Integration
 
 == Changelog ==
+
+= 1.2.2 =
+- Added info below the 'Optimize' button when the attachment is not fully optimized
+- Fixed problem when auto-optimizing nextgen gallery images
 
 = 1.2.1 =
 - Improved Admin pages

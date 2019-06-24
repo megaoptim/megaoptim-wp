@@ -67,7 +67,7 @@ class MGO_NextGenAttachment extends MGO_Attachment {
 			$this->data['object_id']  = $this->ID;
 			$this->data['gallery_id'] = $gallery_id;
 			//if ( is_null( $this->megaoptim_result_id ) ) {
-				//$this->data['time'] = date("Y-m-d H:i:s", time());
+			//$this->data['time'] = date("Y-m-d H:i:s", time());
 			//}
 			return true;
 		} else {
@@ -93,6 +93,10 @@ class MGO_NextGenAttachment extends MGO_Attachment {
 	public function save() {
 		if ( isset( $this->data['file_name'] ) ) {
 			unset( $this->data['file_name'] );
+		}
+		// Default webp_size to 0
+		if ( ( isset( $this->data['webp_size'] ) && is_null( $this->data['webp_size'] ) ) || !isset($this->data['webp_size']) ) {
+			$this->data['webp_size'] = 0;
 		}
 		if ( $this->has_result() ) {
 			$result = $this->db->update( $this->table_name, $this->data, array( 'id' => $this->megaoptim_result_id ) );

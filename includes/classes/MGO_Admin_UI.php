@@ -48,7 +48,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 	public function register_ui_pages() {
 
 		add_media_page(
-			__( 'Media Optimizer, File Optimizer, NextGen Optimizer', 'megaoptim' ),
+			__( 'MegaOptim Bulk Optimizer', 'megaoptim' ),
 			__( 'Bulk MegaOptim', 'megaoptim' ),
 			'manage_options',
 			'megaoptim_bulk_optimizer',

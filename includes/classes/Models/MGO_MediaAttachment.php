@@ -247,7 +247,7 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	 * @param \MegaOptim\Responses\Response $response
 	 * @param $params
 	 */
-	public function set_data( \MegaOptim\Responses\Response $response, $params ) {
+	public function set_data( $response, $params ) {
 		parent::set_data( $response, $params );
 	}
 
@@ -258,7 +258,7 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	 * @param \MegaOptim\Responses\Response $response
 	 * @param $params
 	 */
-	public function set_thumbnail_data( $size, \MegaOptim\Responses\Response $response, $params ) {
+	public function set_thumbnail_data( $size, $response, $params ) {
 		$thumbnail_data = megaoptim_generate_thumbnail_data( $response, $params );
 		if ( ! isset( $this->data['thumbs'] ) ) {
 			$this->data['thumbs'] = array();

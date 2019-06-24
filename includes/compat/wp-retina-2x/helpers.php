@@ -220,7 +220,7 @@ function megaoptim_retina_set_data( $attachment, $response, $params ) {
  *
  * @return MGO_MediaAttachment
  */
-function megaoptim_retina_set_thumbnail_data( $attachment, $size, \MegaOptim\Responses\Response $response, $params ) {
+function megaoptim_retina_set_thumbnail_data( $attachment, $size, $response, $params ) {
 
 	$data = $attachment->get_raw_data();
 

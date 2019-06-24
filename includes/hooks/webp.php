@@ -62,6 +62,8 @@ add_action('wp_enqueue_scripts', 'megaoptim_webp_enqueue_scripts', 100);
 
 
 /**
+ * Download webp attachments.
+ *
  * @param MGO_MediaAttachment $attachment_object - The media attachment object
  * @param string $resource - Path or url to the resource
  * @param \MegaOptim\Responses\Response $response - The api response object
@@ -71,7 +73,8 @@ add_action('wp_enqueue_scripts', 'megaoptim_webp_enqueue_scripts', 100);
 function megaoptim_webp_attachment_optimized($attachment_object, $resource, $response, $params, $size) {
 
 	// Bail, If this no webp requested.
-	if($params['webp'] != 1) {
+	$is_webp = isset($params['webp']) && $params['webp'] == 1;
+	if(!$is_webp) {
 		return;
 	}
 
