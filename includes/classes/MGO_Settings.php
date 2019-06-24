@@ -57,20 +57,33 @@ class MGO_Settings extends MGO_BaseObject {
 	private $settings = array();
 
 	/**
+	 * MGO_Settings constructor.
+	 */
+	public function __construct() {
+		// Set defaults if they aren't set.
+		if ( ! self::was_installed_previously() ) {
+			$defaults = self::defaults();
+			$this->update( $defaults );
+		}
+	}
+
+	/**
 	 * Returns the MegaOptim WordPress settings
 	 *
 	 * @param $key
 	 *
+	 * @param null $default
+	 *
 	 * @return array|string
 	 */
 
-	public function get( $key = null ) {
+	public function get( $key = null, $default = null ) {
 		$this->settings = get_option( self::OPTIONS_KEY );
 		if ( false === $this->settings ) {
 			return false;
 		}
 		if ( ! is_null( $key ) ) {
-			return isset( $this->settings[ $key ] ) ? $this->settings[ $key ] : null;
+			return isset( $this->settings[ $key ] ) ? $this->settings[ $key ] : $default;
 		} else {
 			return $this->settings;
 		}
@@ -126,12 +139,13 @@ class MGO_Settings extends MGO_BaseObject {
 	public function update( $data ) {
 		$_settings = $this->get();
 		foreach ( $data as $key => $value ) {
-			if(is_string($value)) {
-				$_settings[ $key ] = sanitize_text_field($value);
+			if ( is_string( $value ) ) {
+				$_settings[ $key ] = sanitize_text_field( $value );
 			} else {
 				$_settings[ $key ] = $value;
 			}
 		}
+
 		return update_option( self::OPTIONS_KEY, $_settings );
 	}
 
@@ -197,7 +211,7 @@ class MGO_Settings extends MGO_BaseObject {
 			self::WEBP_CREATE_IMAGES               => 0,
 			self::WEBP_DELIVERY_METHOD             => 'picture',
 			self::WEBP_TARGET_TO_REPLACE           => 'default', // default or global
-			self::WEBP_PICTUREFILL         => 0,
+			self::WEBP_PICTUREFILL                 => 0,
 		);
 	}
 
