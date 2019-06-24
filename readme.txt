@@ -144,6 +144,7 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
 = 1.2.2 =
 - Added info below the 'Optimize' button when the attachment is not fully optimized
 - Fixed problem when auto-optimizing nextgen gallery images
+- Added detection for the child theme folder in 'Local Directories' optimizer
 
 = 1.2.1 =
 - Improved Admin pages

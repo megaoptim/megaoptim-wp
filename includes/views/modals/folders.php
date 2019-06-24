@@ -1,4 +1,4 @@
-<div class="remodal megaoptim-panel megaoptim-modal" id="sos-dir-select" data-remodal-id="sos-dir-select">
+<div class="remodal megaoptim-panel megaoptim-modal" id="megaoptim-dir-select" data-remodal-id="megaoptim-dir-select">
     <div class="megaoptim-panel-inner">
         <div class="megaoptim-panel-header">
             <div class="megaoptim-panel-header-inner">
@@ -16,7 +16,7 @@
         <div class="megaoptim-panel-footer">
             <div class="megaoptim-panel-footer-inner">
                 <button data-remodal-action="cancel" class="megaoptim-btn megaoptim-cancel"><?php _e( 'Cancel', 'megaoptim' ); ?></button>
-                <button id="sos-dir-select-action" class="megaoptim-btn megaoptim-ok"><?php _e( 'OK', 'megaoptim' ); ?></button>
+                <button id="megaoptim-dir-select-action" class="megaoptim-btn megaoptim-ok"><?php _e( 'OK', 'megaoptim' ); ?></button>
             </div>
         </div>
     </div>

@@ -84,7 +84,7 @@
     });
 
     // Select folder action
-    $(document).on('click', '#sos-dir-select-action', function (e) {
+    $(document).on('click', '#megaoptim-dir-select-action', function (e) {
         var $selected = $('.megaoptim-directory-selected');
         if ($selected.length <= 0) {
             alert(MGOLocalFiles.strings.alert_select_files);
@@ -96,7 +96,7 @@
         }
     });
 
-    $(document).on('click', '#megaoptim-select-current-theme-folder', function (e) {
+    $(document).on('click', '.megaoptim-optimize-theme-folder', function (e) {
         var path = $(this).data('themedir');
         $.prepare_processor(path, {recursive: 1});
     });

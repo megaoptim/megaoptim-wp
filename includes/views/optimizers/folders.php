@@ -26,6 +26,7 @@ $settings_url  = admin_url( "admin.php?page=megaoptim_settings" );
 $is_profile_valid = $profile instanceof MGO_Profile && ( $profile->has_api_key() && $profile->is_valid_apikey() );
 $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
 
+
 ?>
 <script>window.megaoptim_attachment_list = []</script>
 <div class="megaoptim-postbox">
@@ -40,8 +41,13 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
                             <p><?php _e(sprintf('Click on "Select custom folder" to choose a folder that contains images or optimize your current theme %s folder. (Recommended)', '<strong>'.wp_get_theme()->get( 'Name' ).'</strong>'), 'megaoptim'); ?></p>
                             <div class="megaoptim-actions">
                                 <p>
-                                    <a id="megaoptim-select-folder" href="#sos-dir-select" class="button-primary"><?php _e('Select custom folder', 'megaoptim'); ?></a> <?php _e('or', 'megaoptim'); ?>
-                                    <a id="megaoptim-select-current-theme-folder" data-themedir="<?php echo get_template_directory(); ?>" class="button-primary"><?php _e('Scan theme folder', 'megaoptim'); ?></a>
+                                    <?php if(is_child_theme()): ?>
+                                        <a id="megaoptim-select-parent-theme-folder" class="button-primary megaoptim-optimize-theme-folder" data-themedir="<?php echo get_template_directory(); ?>" class="button-primary"><?php _e('Scan parent theme folder', 'megaoptim'); ?></a>
+                                        <a id="megaoptim-select-current-theme-folder" class="button-primary megaoptim-optimize-theme-folder" data-themedir="<?php echo get_stylesheet_directory(); ?>" class="button-primary"><?php _e('Scan child theme folder', 'megaoptim'); ?></a>
+                                    <?php else: ?>
+                                        <a id="megaoptim-select-current-theme-folder" class="button-primary megaoptim-optimize-theme-folder" data-themedir="<?php echo get_template_directory(); ?>" class="button-primary"><?php _e('Scan theme folder', 'megaoptim'); ?></a>
+                                    <?php endif; ?>
+	                                <?php _e('or', 'megaoptim'); ?> <a id="megaoptim-select-folder" href="#megaoptim-dir-select" class="button-default"><?php _e('Select custom folder', 'megaoptim'); ?></a>
                                 </p>
                             </div>
                             <div id="megaoptim-selected-folder" style="display: none;" class="megaoptim-actions">

@@ -38,7 +38,7 @@
             $('select[name=module]').prop('disabled', true);
             $('#megaoptim-selected-dir').prop('disabled', true);
             $('#megaoptim-select-folder').addClass('disabled').prop('disabled', true);
-            $('#megaoptim-select-current-theme-folder').addClass('disabled').prop('disabled', true);
+            $('.megaoptim-optimize-theme-folder').addClass('disabled').prop('disabled', true);
         };
 
         /**
@@ -50,7 +50,7 @@
             $('select[name=module]').prop('disabled', false);
             $('#megaoptim-selected-dir').prop('disabled', false);
             $('#megaoptim-select-folder').removeClass('disabled').prop('disabled', false);
-            $('#megaoptim-select-current-theme-folder').removeClass('disabled').prop('disabled', false);
+            $('.megaoptim-optimize-theme-folder').removeClass('disabled').prop('disabled', false);
         };
 
         /**
