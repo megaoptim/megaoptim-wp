@@ -75,11 +75,14 @@ $includes = array(
 	'hooks/webp.php',
 
 	// Compatibility with third party.
+
 	// -- CloudFlare
 	'compat/cloudflare/classes/MGO_CloudFlare.php',
 	'compat/cloudflare/hooks.php',
+
 	// -- Hosting platforms
-	'compat/hosting/hooks/general.php',
+	'compat/hosting/general/hooks.php',
+
 	// -- MediaPress
 	'compat/mediapress/hooks/attachments.php',
 );
@@ -103,6 +106,13 @@ if ( megaoptim_is_nextgen_active() ) {
 		'compat/nextgen-gallery/hooks/tasks.php',
 		'compat/nextgen-gallery/hooks/attachments.php',
 	) );
+}
+
+if( megaoptim_is_wpengine() ) {
+	$includes = array_merge($includes, array(
+		// -- WPEngine
+		'compat/hosting/wpengine/hooks.php'
+	));
 }
 
 megaoptim_include_files( $includes );

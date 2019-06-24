@@ -66,3 +66,11 @@ function megaoptim_is_wr2x_active() {
 
 	return is_plugin_active( 'wp-retina-2x/wp-retina-2x.php' ) || is_plugin_active( 'wp-retina-2x-pro/wp-retina-2x-pro.php' ) || class_exists( 'Meow_WR2X_Core' );
 }
+
+/**
+ * Is WPEngine environment?
+ * @return bool
+ */
+function megaoptim_is_wpengine() {
+	return function_exists('is_wpe') && is_wpe();
+}
