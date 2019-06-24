@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( 'Direct access is not allowed.' );
 }
 
-if ( ! function_exists( 'megaoptim_cloudflare_purge' ) ) {
+if ( ! function_exists( '_megaoptim_cloudflare_purge' ) ) {
 	/**
 	 * @param MGO_MediaAttachment|MGO_LocalFileAttachment|MGO_NextGenLibrary $attachment
 	 * @param string $resource
@@ -39,7 +39,7 @@ if ( ! function_exists( 'megaoptim_cloudflare_purge' ) ) {
 				// Purge thumbnails
 				$url_data = wp_get_attachment_image_src( $attachment->get_id(), $size );
 				if ( ! empty( $url_data ) ) {
-					array_push( $urls_to_purge, $url_data );
+					array_push( $urls_to_purge, $url_data[0] );
 				}
 			} else if ( $attachment instanceof MGO_NextGenAttachment || $attachment instanceof MGO_LocalFileAttachment ) {
 				// If $resource is url it means that the website is public and probably uses cloudflare.
@@ -47,7 +47,8 @@ if ( ! function_exists( 'megaoptim_cloudflare_purge' ) ) {
 					array_push( $urls_to_purge, $response );
 				}
 			}
-			if ( ! empty( $urls_to_purge ) ) {
+			// If urls found, purge them.
+			if ( ! empty( $urls_to_purge ) && count($urls_to_purge) > 0 ) {
 				if ( ! $cloudflare->purge_files( $urls_to_purge ) ) {
 					megaoptim_log( __( 'Warning: Failed to purge the cloudflare urls.', 'megaoptim' ) );
 				}
