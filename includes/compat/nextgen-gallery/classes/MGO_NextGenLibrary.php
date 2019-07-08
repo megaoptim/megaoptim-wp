@@ -68,7 +68,8 @@ class MGO_NextGenLibrary extends MGO_Library {
 		}
 
 		// Bail if no tokens left.
-		if ( $profile->get_tokens_count() <= 0 ) {
+		$tokens = $profile->get_tokens_count();
+		if ( $tokens != -1 && $tokens <= 0 ) {
 			throw new MGO_Exception( 'No tokens left. Please top up your account at https://megaoptim.com/dashboard in order to continue.' );
 		}
 

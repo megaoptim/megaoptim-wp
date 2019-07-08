@@ -36,6 +36,8 @@ class MGO_MediaLibrary extends MGO_Library {
 	 */
 	public function optimize( $attachment, $params = array() ) {
 
+		//@set_time_limit(0);
+
 		$result = new MGO_ResultBag();
 
 		//Don't go further if not connected
@@ -69,8 +71,7 @@ class MGO_MediaLibrary extends MGO_Library {
 		}
 
 		// Bail if no tokens left.
-		$tokens = $profile->get_tokens_count();
-		if ( $tokens != -1 && $tokens <= 0 ) {
+		if ( $profile->get_tokens_count() <= 0 ) {
 			throw new MGO_Exception( 'No tokens left. Please top up your account at https://megaoptim.com/dashboard in order to continue.' );
 		}
 
@@ -82,10 +83,12 @@ class MGO_MediaLibrary extends MGO_Library {
 
 		/**
 		 * Fired before the optimization of the attachment
-		 * @since 1.0
 		 *
 		 * @param MGO_MediaAttachment $attachment_object
 		 * @param array $request_params
+		 *
+		 * @since 1.0
+		 *
 		 */
 		do_action( 'megaoptim_before_optimization', $attachment_object, $request_params );
 
@@ -102,75 +105,85 @@ class MGO_MediaLibrary extends MGO_Library {
 			$attachment_object->set_backup_path( $backup_path );
 		}
 
+		// Optimize the original and the thumbnails
 		try {
-			// Optimize the original
-			$attachment_object->lock();
-			if ( ! $attachment_object->is_size_optimized( 'full' ) ) {
-				$response = $this->optimizer->run( $original_resource, $request_params );
-				$result->add( 'full', $response );
-				if ( $response->isError() ) {
-					megaoptim_log( $response->getErrors() );
-				} else {
-					foreach ( $response->getOptimizedFiles() as $file ) {
-						$file->saveAsFile( $original_path );
-					}
-					$attachment_object->set_data( $response, $request_params );
-					$attachment_object->save();
-					// No need to backup attachments that are already optimized!
-					if ( $attachment_object->is_already_optimized() ) {
-						$attachment_object->delete_backup();
-					}
-					megaoptim_log( $response->getRawResponse() );
-					megaoptim_log( 'Full size version successfully optimized.' );
+			//$attachment_object->lock();
+			$resources   = array();
+			$attachments = array();
 
-					/**
-					 * Fired when attachment is successfully optimized
-					 * Tip: Use instanceof $attachment_object to check what kind of attachment was optimized.
-					 * @since 1.0.0
-					 *
-					 * @param MGO_MediaAttachment $attachment_object - The media attachment.
-					 * @param \MegaOptim\Responses\Response $response - The api request response
-					 * @param array $request_params - The api request parameters
-					 * @param string $size - The size optimized
-					 */
-					do_action( 'megaoptim_attachment_optimized', $attachment_object, $original_resource, $response, $request_params, 'full' );
-				}
+			// Collect the full size one
+			if ( ! $attachment_object->is_size_processed( 'full' ) ) {
+				array_push( $resources, $original_resource );
+				array_push( $attachments, array( 'size' => 'full', 'save_path' => $original_path ) );
 			}
 
-			// Optimize the thumbnails
+			// Collect the thumbnails
 			$attachment_object->maybe_set_metadata();
-			// TODO: Handle big number of thumbnails better
 			$remaining_thumbnails = $attachment_object->get_unoptimized_thumbnails();
+			foreach ( $remaining_thumbnails['normal'] as $size ) {
+				if ( $attachment_object->is_size_processed( $size ) ) {
+					continue;
+				}
+				$thumbnail_resource = $this->get_attachment( $attachment, $size, false );
+				$thumbnail_path     = $this->get_attachment_path( $attachment, $size, false );
+				array_push( $resources, $thumbnail_resource );
+				array_push( $attachments, array( 'size' => $size, 'save_path' => $thumbnail_path ) );
+			}
 
-			if ( ! empty( $remaining_thumbnails['normal'] ) ) {
-				foreach ( $remaining_thumbnails['normal'] as $size ) {
-					if ( ! $attachment_object->is_size_optimized( $size ) ) {
-						$thumbnail_resource = $this->get_attachment( $attachment, $size, false );
-						if ( ! empty( $thumbnail_resource ) ) {
-							$response = $this->optimizer->run( $thumbnail_resource, $request_params );
-							$result->add( $size, $response );
-							if ( $response->isError() ) {
-								megaoptim_log( $response->getErrors() );
-							} else {
-								$thumbnail_path = $this->get_attachment_path( $attachment, $size, false );
-								megaoptim_log( 'Thumbnail ' . $size . ' optimized successfully!' );
-								foreach ( $response->getOptimizedFiles() as $file ) {
-									// TODO: Maybe backup thumbnail?
-									$file->saveAsFile( $thumbnail_path );
+			$resource_chunks = array_chunk( $resources, 5 );
+
+			for ( $i = 0; $i < count( $resource_chunks ); $i ++ ) {
+				$resource_chunk = $resource_chunks[ $i ];
+
+				#var_dump($resource_chunk);
+				#die;
+
+				if ( count( $resource_chunk ) > 0 ) {
+					$attachment_object->set_params( $request_params );
+					$response = $this->optimizer->run( $resource_chunk, $request_params );
+					$result->add( 'chunk_' . ( $i + 1 ), $response );
+					if ( $response->isError() ) {
+						megaoptim_log( $response->getErrors() );
+					} else {
+
+						foreach ( $response->getOptimizedFiles() as $file ) {
+
+							foreach ( $attachments as $att ) {
+
+								if ( $file->getFileName() === basename( $att['save_path'] ) ) {
+
+									// Save data
+									$webp           = $file->getWebP();
+									$thumbnail_data = array(
+										'time'           => date( 'Y-m-d H:i:s' ),
+										'original_size'  => $file->getOriginalSize(),
+										'optimized_size' => $file->getOptimizedSize(),
+										'webp_size'      => isset( $webp->optimized_size ) ? $webp->optimized_size : 0,
+										'success'        => $file->getSavedPercent() > 5 ? 1 : 0
+									);
+
+									$attachment_object->set_thumbnail_data( $att['size'], $thumbnail_data );
+									$attachment_object->save();
+
+									// Save files
+									$file->saveAsFile( $att['save_path'] );
+									if(!is_null($webp)) {
+										$webp->saveAsFile( $att['save_path'] . '.webp' );
+									}
+
+									/**
+									 * Fired when attachment thumbnail was successfully optimized and saved.
+									 *
+									 * @param MGO_MediaAttachment $attachment_object - The media attachment that was optimized
+									 * @param string $path - The result of the optimization for this attachment
+									 * @param array $request_params - The api parameters
+									 * @param string $size - The thumbnail version
+									 *
+									 * @since 1.0.0
+									 */
+									do_action( 'megaoptim_attachment_optimized', $attachment_object, $att['save_path'], $att['size'], $request_params );
+									//break; // breaks the inner loop.
 								}
-								/**
-								 * Fired when attachment thumbnail was successfully optimized
-								 * Tip: Use instanceof $attachment_object to check what kind of attachment was optimized.
-								 * @since 1.0.0
-								 *
-								 * @param MGO_MediaAttachment $attachment_object - The media attachment. Useful to check with instanceof.
-								 * @param \MegaOptim\Responses\Response $response - The api request response
-								 * @param array $request_params - The api request parameters
-								 * @param string $size - The thumbnail version
-								 */
-								do_action( 'megaoptim_attachment_optimized', $attachment_object, $thumbnail_resource, $response, $request_params, $size );
-								$attachment_object->set_thumbnail_data( $size, $response, $request_params );
-								$attachment_object->save();
 							}
 						}
 					}
@@ -178,19 +191,15 @@ class MGO_MediaLibrary extends MGO_Library {
 			}
 
 			do_action( 'megaoptim_before_finish', $attachment_object, $request_params, $result );
-
-			$attachment_object->unlock();
-
+			//$attachment_object->unlock();
 			$attachment_object->save();
-
 			$attachment_object->refresh();
-
 			$result->set_attachment( $attachment_object );
 
 			return $result;
-
 		} catch ( Exception $e ) {
 			$attachment_object->unlock();
+			echo $e->getMessage();
 			throw new MGO_Exception( $e->getMessage() . ' in ' . $e->getFile() );
 		}
 	}

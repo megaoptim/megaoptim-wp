@@ -35,7 +35,7 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
 			<?php if ( $is_profile_valid ): ?>
                 <div id="megaoptim-folder-picker">
                     <div class="row text-center">
-                        <?php if( $tokens > 0 ): ?>
+                        <?php if( $tokens == -1 || $tokens > 0 ): ?>
                             <h3><?php _e('Optimize folders', 'megaoptim'); ?></h3>
                             <p><?php _e('On this screen you can optimize your folders that contain images and are outside of the WordPress Media Library or the NextGen Galleries.', 'megaoptim'); ?></p>
                             <p><?php _e(sprintf('Click on "Select custom folder" to choose a folder that contains images or optimize your current theme %s folder. (Recommended)', '<strong>'.wp_get_theme()->get( 'Name' ).'</strong>'), 'megaoptim'); ?></p>

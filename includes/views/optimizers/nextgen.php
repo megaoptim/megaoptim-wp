@@ -31,7 +31,7 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
 <div class="megaoptim-postbox">
 	<form class="content-wrapper" method="POST" id="megaoptim-report-export">
 		<div class="megaoptim-middle-content">
-			<?php if ( $is_profile_valid && $tokens > 0 ): ?>
+			<?php if ( $is_profile_valid && ($tokens == -1 || $tokens > 0) ): ?>
 				<div id="megaoptim-optimizer-scan" class="text-center">
 					<h3><?php _e( 'Scan for unoptimized images', 'megaoptim' ); ?></h3>
 					<P class="megaoptim-mb-20 megaoptim-mt-20"><?php _e( sprintf( 'Click on the button below to scan your %s for unoptimized images. If images are found you will be able to optimize them by clicking Start button.', '<strong>' . __( 'NextGen Galleries', 'megaoptim' ) . '</strong>' ), 'megaoptim' ); ?></P>
@@ -108,7 +108,7 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
 						</div>
 					</div>
 				</div>
-			<?php elseif ( $is_profile_valid && $tokens <= 0 ): ?>
+			<?php elseif ( $is_profile_valid && ($tokens != -1 && $tokens <= 0) ): ?>
 				<div id="megaoptim-error">
 					<div class="megaoptim-row">
 						<div class="megaoptim-col-12">

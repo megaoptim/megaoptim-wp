@@ -143,10 +143,24 @@ class MGO_Ajax extends MGO_BaseObject {
 		try {
 			$result     = MGO_MediaLibrary::instance()->optimize( $attachment_id );
 			$attachment = $result->get_attachment();
+
+			$user       = null;
+			$last_response   = $result->get_last_response();
+			if($last_response !== false) {
+				$user = $last_response->getUser();
+			}
+
+			if(!is_null($user)) {
+				$tokens = $user->getTokens();
+			} else {
+				$profile = new MGO_Profile();
+				$tokens = $profile->get_tokens_count();
+			}
+
 			if ( $attachment instanceof MGO_MediaAttachment ) {
 				$response['attachment'] = $attachment->get_optimization_stats();
 				$response['general']    = $result->get_optimization_info();
-				$response['tokens']     = $result->get_last_response()->getUser()->getTokens();
+				$response['tokens']     = $tokens;
 				wp_send_json_success( $response );
 			} else {
 				wp_send_json_error( array(
