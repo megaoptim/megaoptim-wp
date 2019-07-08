@@ -20,6 +20,9 @@
 
 namespace MegaOptim\Responses;
 
+use MegaOptim\Tools\FileSystem;
+use MegaOptim\Http\Client;
+
 class ResultWebP {
 	public $url;
 	public $optimized_size;
@@ -33,5 +36,25 @@ class ResultWebP {
 			$this->saved_bytes = $response->webp->saved_bytes;
 			$this->saved_percent = $response->webp->saved_percent;
 		}
+	}
+
+	/**
+	 * Save the optimized file to the full path
+	 *
+	 * @param $path
+	 *
+	 * @return mixed
+	 * @throws \Exception
+	 */
+	public function saveAsFile( $path ) {
+		if(is_null($this->url)) {
+			return false;
+		}
+		FileSystem::maybe_prepare_output_dir( $path );
+		if ( ! Client::download( $this->url, $path ) ) {
+			throw new \Exception( 'Unable to overwrite the local file.' );
+		}
+		return $path;
+
 	}
 }
