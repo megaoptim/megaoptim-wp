@@ -248,7 +248,8 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	 * @param $params
 	 */
 	public function set_data( $response, $params ) {
-		parent::set_data( $response, $params );
+		//parent::set_data( $response, $params );
+		_deprecated_function(__METHOD__, '1.3.0', 'set_attachment_data');
 	}
 
 	/**
@@ -259,12 +260,25 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	 * @param $params
 	 */
 	public function set_thumbnail_data( $size, $response, $params ) {
-		$thumbnail_data = megaoptim_generate_thumbnail_data( $response, $params );
-		if ( ! isset( $this->data['thumbs'] ) ) {
-			$this->data['thumbs'] = array();
-		}
-		if ( ! empty( $thumbnail_data ) ) {
-			$this->data['thumbs'][ $size ] = $thumbnail_data;
+		_deprecated_function(__METHOD__, '1.3.0', 'set_attachment_data');
+	}
+
+
+	/**
+	 * Set attachment data
+	 * @param $size
+	 * @param $params
+	 */
+	public function set_attachment_data($size, $params) {
+		if($size === 'full') {
+			$this->data = array_merge($this->data, $params);
+		} else {
+			if(!isset($this->data['thumbs'])) {
+				$this->data['thumbs'] = array();
+			}
+			if ( ! empty( $params ) ) {
+				$this->data['thumbs'][ $size ] = $params;
+			}
 		}
 	}
 
@@ -347,6 +361,8 @@ class MGO_MediaAttachment extends MGO_Attachment {
 			return false !== $path && isset( $this->data['thumbs'][ $size ]['status'] ) && ! empty( $this->data['thumbs'][ $size ]['status'] );
 		}
 	}
+
+
 
 	/**
 	 * Is image already optimized?

@@ -20,6 +20,11 @@
 
 class MGO_ResultBag {
 
+
+	public $total_full_size = 0;
+	public $total_thumbnails = 0;
+	public $total_saved_bytes = 0;
+
 	/**
 	 * @var MGO_Attachment|MGO_LocalFileAttachment|MGO_MediaAttachment|MGO_NextGenAttachment|null
 	 */
@@ -94,28 +99,12 @@ class MGO_ResultBag {
 	 * @return array
 	 */
 	public function get_optimization_info() {
-		$optimizations            = 0;
-		$optimizations_full_size  = 0;
-		$optimizations_thumbnails = 0;
-		$saved_bytes              = 0;
-		foreach ( $this->responses as $key => $response ) {
-			if ( strtolower($key) === 'full' ) {
-				$optimizations_full_size ++;
-			} else {
-				$optimizations_thumbnails ++;
-			}
-			$optimizations ++;
-			foreach ( $response->getResult() as $result ) {
-				$saved_bytes += $result->getSavedBytes();
-			}
-		}
-
 		return array(
-			'total'            => $optimizations,
-			'total_full_size'  => $optimizations_full_size,
-			'total_thumbnails' => $optimizations_thumbnails,
-			'saved_bytes'      => $saved_bytes,
-			'saved_megabytes'  => megaoptim_convert_bytes_to_specified( $saved_bytes, 'MB', 3 )
+			'total'            => $this->total_full_size + $this->total_full_size,
+			'total_full_size'  => $this->total_full_size,
+			'total_thumbnails' => $this->total_thumbnails,
+			'saved_bytes'      => $this->total_saved_bytes,
+			'saved_megabytes'  => megaoptim_convert_bytes_to_specified( $this->total_saved_bytes, 'MB', 3 )
 		);
 	}
 }

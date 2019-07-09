@@ -947,6 +947,29 @@ function megaoptim_generate_thumbnail_data( $response, $params ) {
 	return $thumb_object;
 }
 
+/**
+ * Generate data for specific optimization
+ *
+ * @param \MegaOptim\Responses\Result $file
+ * @param \MegaOptim\Responses\Response $response
+ * @param array $params
+ *
+ * @return array|mixed
+ */
+function megaoptim_generate_attachment_data($file, $response, $params) {
+	$webp = $file->getWebP();
+	$params['original_size'] = $file->getOriginalSize();
+	$params['optimized_size'] = $file->getOptimizedSize();
+	$params['saved_bytes'] = $file->getSavedBytes(); // Remove
+	$params['saved_percent'] = $file->getSavedPercent(); // Remove
+	$params['webp_size'] = !is_null($webp) ? $webp->optimized_size : 0;
+	$params['success'] = $file->isSuccessfullyOptimized() ? 1 : 0;
+	$params['status']  = $response->isSuccessful() ? 1 : 0;
+	$params['time'] = date('Y-m-d H:i:s');
+	$params['compression'] = isset($params['compression']) ? $params['compression'] : \MegaOptim\Optimizer::COMPRESSION_INTELLIGENT;
+	return $params;
+}
+
 
 /**
  * Fix incorrectly formatted url.

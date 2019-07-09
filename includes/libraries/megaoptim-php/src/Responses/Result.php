@@ -63,6 +63,12 @@ class Result implements IFile {
 	private $webp;
 
 	/**
+	 * If image optimization saved percent is equal or less than 5% it wont count so this will be 0.
+	 * @var int
+	 */
+	private $success;
+
+	/**
 	 * The local file
 	 * If this is not null it means a file by path was optimized and this is it's local path.
 	 * If this is null it means that url was optimized and there is no local path.
@@ -96,6 +102,9 @@ class Result implements IFile {
 		}
 		if ( isset( $result->url ) ) {
 			$this->url = $result->url;
+		}
+		if ( isset( $result->success ) ) {
+			$this->success = intval($result->success);
 		}
 		if ( isset( $result->webp ) ) {
 			$this->webp = new ResultWebP($result);
@@ -168,6 +177,21 @@ class Result implements IFile {
 		return $this->webp;
 	}
 
+	/**
+	 * Check if the attachment was optimized.
+	 * @return bool
+	 */
+	public function isSuccessfullyOptimized() {
+		return $this->success === 1;
+	}
+
+	/**
+	 * Check if the attachment was already optimized.
+	 * @return bool
+	 */
+	public function isAlreadyOptimized() {
+		return $this->success === 0;
+	}
 
 	/**
 	 * Overwrite the local file with the optimized file

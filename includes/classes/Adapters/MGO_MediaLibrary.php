@@ -36,6 +36,189 @@ class MGO_MediaLibrary extends MGO_Library {
 	 */
 	public function optimize( $attachment, $params = array() ) {
 
+		//@set_time_limit(0);
+
+		$result = new MGO_ResultBag();
+
+		//Don't go further if not connected
+		$profile = megaoptim_is_connected();
+		if ( ! $profile OR is_null( $this->optimizer ) ) {
+			throw new MGO_Exception( 'Please make sure you have set up MegaOptim.com API key' );
+		}
+
+		//Check if Attachment is image
+		$att_id = $attachment instanceof MGO_MediaAttachment ? $attachment->get_id() : $attachment;
+		if ( ! wp_attachment_is_image( $att_id ) ) {
+			throw new MGO_Exception( 'Attachment id is not valid image or pdf file' );
+		}
+
+		//Check the attachment object
+		if ( $attachment instanceof MGO_MediaAttachment ) {
+			$attachment_object = $attachment;
+			$attachment        = $attachment_object->get_id();
+		} else {
+			$attachment_object = new MGO_MediaAttachment( $attachment );
+		}
+
+		// Prevent
+		if ( $attachment_object->is_locked() ) {
+			throw new MGO_Attachment_Locked_Exception( 'The attachment is currently being optimized. No need to re-run the optimization.' );
+		}
+
+		// Bail if optimized!
+		if ( $attachment_object->is_optimized() ) {
+			throw new MGO_Attachment_Already_Optimized_Exception( 'The attachment is already fully optimized.' );
+		}
+
+		// Bail if no tokens left.
+		$tokens = $profile->get_tokens_count();
+		if ( $tokens != -1 && $tokens <= 0 ) {
+			throw new MGO_Exception( 'No tokens left. Please top up your account at https://megaoptim.com/dashboard in order to continue.' );
+		}
+
+		//Setup Request params
+		$request_params = $this->filter_params( $this->build_request_params(), $attachment_object );
+		if ( ! empty( $params ) ) {
+			$request_params = array_merge( $request_params, $params );
+		}
+
+		/**
+		 * Fired before the optimization of the attachment
+		 *
+		 * @param MGO_MediaAttachment $attachment_object
+		 * @param array $request_params
+		 *
+		 * @since 1.0
+		 *
+		 */
+		do_action( 'megaoptim_before_optimization', $attachment_object, $request_params );
+
+		//Get the file names
+		$original_resource = $this->get_attachment( $attachment, 'full', false );
+		$original_path     = $this->get_attachment_path( $attachment, 'full', false );
+		if ( ! file_exists( $original_path ) ) {
+			throw new MGO_Exception( __( 'Original image version does not exist on the server.', 'megaoptim' ) );
+		}
+
+		//Create Backup If Enabled
+		if ( $this->should_backup() ) {
+			$backup_path = $attachment_object->backup();
+			$attachment_object->set_backup_path( $backup_path );
+		}
+
+		// Optimize the original and the thumbnails
+		try {
+			$attachment_object->lock();
+			$resources   = array();
+			$attachments = array();
+
+			// Collect the full size one
+			if ( ! $attachment_object->is_size_optimized( 'full' ) ) {
+				array_push( $resources, $original_resource );
+				array_push( $attachments, array( 'size' => 'full', 'save_path' => $original_path ) );
+			}
+
+			// Collect the thumbnails
+			$attachment_object->maybe_set_metadata();
+			$remaining_thumbnails = $attachment_object->get_unoptimized_thumbnails();
+			foreach ( $remaining_thumbnails['normal'] as $size ) {
+				if ( $attachment_object->is_size_optimized( $size ) ) {
+					continue;
+				}
+				$thumbnail_resource = $this->get_attachment( $attachment, $size, false );
+				$thumbnail_path     = $this->get_attachment_path( $attachment, $size, false );
+				array_push( $resources, $thumbnail_resource );
+				array_push( $attachments, array( 'size' => $size, 'save_path' => $thumbnail_path ) );
+			}
+
+			$resource_chunks = array_chunk( $resources, 5 );
+
+			for ( $i = 0; $i < count( $resource_chunks ); $i ++ ) {
+				$resource_chunk = $resource_chunks[ $i ];
+
+				#var_dump($resource_chunk);
+				#die;
+
+				if ( count( $resource_chunk ) > 0 ) {
+					$response = $this->optimizer->run( $resource_chunk, $request_params );
+					$result->add( 'chunk_' . ( $i + 1 ), $response );
+					if ( $response->isError() ) {
+						megaoptim_log( $response->getErrors() );
+					} else {
+
+						foreach ( $response->getOptimizedFiles() as $file ) {
+
+							foreach ( $attachments as $att ) {
+
+								if ( $file->getFileName() === basename( $att['save_path'] ) ) {
+
+									// Save data
+									$data = megaoptim_generate_attachment_data($file, $response, $request_params);
+									$attachment_object->set_attachment_data( $att['size'], $data );
+									$attachment_object->save();
+
+									// Save files
+									$file->saveAsFile( $att['save_path'] );
+									$webp = $file->getWebP();
+									if(!is_null($webp)) {
+										$webp->saveAsFile( $att['save_path'] . '.webp' );
+									}
+
+									// Set Stats
+									if($att['size'] !== 'full') {
+										$result->total_thumbnails++;
+									} else {
+										$result->total_full_size++;
+									}
+									$result->total_saved_bytes += $file->getSavedBytes();
+
+
+									/**
+									 * Fired when attachment thumbnail was successfully optimized and saved.
+									 *
+									 * @param MGO_MediaAttachment $attachment_object - The media attachment that was optimized
+									 * @param string $path - The result of the optimization for this attachment
+									 * @param array $request_params - The api parameters
+									 * @param string $size - The thumbnail version
+									 *
+									 * @since 1.0.0
+									 */
+									do_action( 'megaoptim_attachment_optimized', $attachment_object, $att['save_path'], $response, $request_params, $att['size']);
+									//break; // breaks the inner loop.
+								}
+							}
+						}
+					}
+				}
+			}
+
+			do_action( 'megaoptim_before_finish', $attachment_object, $request_params, $result );
+			$attachment_object->unlock();
+			$attachment_object->save();
+			$attachment_object->refresh();
+			$result->set_attachment( $attachment_object );
+
+			return $result;
+		} catch ( Exception $e ) {
+			$attachment_object->unlock();
+			echo $e->getMessage();
+			throw new MGO_Exception( $e->getMessage() . ' in ' . $e->getFile() );
+		}
+	}
+
+
+	/**
+	 * Optimizes specific attachment
+	 *
+	 * @param int|MGO_MediaAttachment $attachment
+	 * @param array $params
+	 *
+	 * @return MGO_ResultBag
+	 * @throws MGO_Attachment_Already_Optimized_Exception
+	 * @throws MGO_Exception
+	 */
+	public function optimize_deprecated( $attachment, $params = array() ) {
+
 		$result = new MGO_ResultBag();
 
 		//Don't go further if not connected

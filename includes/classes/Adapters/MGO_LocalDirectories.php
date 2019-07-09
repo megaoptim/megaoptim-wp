@@ -88,6 +88,8 @@ class MGO_LocalDirectories extends MGO_Library {
 			} else {
 				foreach ( $response->getOptimizedFiles() as $file ) {
 					$file->saveAsFile( $attachment->path );
+					$result->total_full_size++;
+					$result->total_saved_bytes += $file->getSavedBytes();
 				}
 				$attachment_object->set_data( $response, $request_params );
 				$attachment_object->set( 'directory', $attachment->directory );
@@ -156,6 +158,12 @@ class MGO_LocalDirectories extends MGO_Library {
 		return $file_list;
 	}
 
+	/**
+	 * Returns all the images for specific directory
+	 * @param $directory
+	 *
+	 * @return array
+	 */
 	public function get_all_images( $directory ) {
 		return $this->get_images( $directory );
 	}

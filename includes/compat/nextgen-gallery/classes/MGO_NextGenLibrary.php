@@ -115,6 +115,8 @@ class MGO_NextGenLibrary extends MGO_Library {
 			} else {
 				foreach ( $response->getOptimizedFiles() as $file ) {
 					$file->saveAsFile( $attachment->path );
+					$result->total_full_size++;
+					$result->total_saved_bytes+=$file->getSavedBytes();
 				}
 				$attachment_object->set_data( $response, $request_params );
 				$attachment_object->update_ngg_meta();
