@@ -71,8 +71,8 @@ class MGO_ResultBag {
 	}
 
 	/**
-	 * Returns the last response
-	 * @return \MegaOptim\Responses\Response
+	 * Returns the last response from the api. For example if multiple batches are sent to the api.
+	 * @return \MegaOptim\Responses\Response|mixed
 	 */
 	public function get_last_response() {
 		return end( $this->responses );
@@ -100,7 +100,7 @@ class MGO_ResultBag {
 	 */
 	public function get_optimization_info() {
 		return array(
-			'total'            => $this->total_full_size + $this->total_full_size,
+			'total'            => $this->total_thumbnails + $this->total_full_size,
 			'total_full_size'  => $this->total_full_size,
 			'total_thumbnails' => $this->total_thumbnails,
 			'saved_bytes'      => $this->total_saved_bytes,

@@ -230,4 +230,19 @@ class Response implements HTTP {
 	public function getProcessId() {
 		return $this->process_id;
 	}
+
+	/**
+	 * Returns the result by file name
+	 * @param $file_name
+	 *
+	 * @return Result|mixed|null
+	 */
+	public function getResultByFileName($file_name) {
+		foreach($this->result as $result) {
+			if($result->getFileName() === $file_name) {
+				return $result;
+			}
+		}
+		return null;
+	}
 }
