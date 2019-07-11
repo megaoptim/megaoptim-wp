@@ -438,7 +438,8 @@ class MGO_Ajax extends MGO_BaseObject {
 		$name = 'megaoptim-report-' . time() . '.json';
 		header( 'Content-disposition: attachment; filename=' . $name );
 		header( 'Content-type: application/json' );
-		die( json_encode( megaoptim_get_debug_report() ) );
+		$debug = new MGO_Debug();
+		die( json_encode( $debug->generate_report() ) );
 	}
 
 	public function library_data() {
@@ -451,7 +452,7 @@ class MGO_Ajax extends MGO_BaseObject {
 		} else {
 			$context = $_REQUEST['context'];
 			switch ( $context ) {
-				case MGO_MediaAttachment::TYPE:
+				case MEGAOPTIM_TYPE_MEDIA_ATTACHMENT:
 					$stats = MGO_MediaLibrary::instance()->get_stats( true );
 					break;
 				default:
@@ -466,7 +467,9 @@ class MGO_Ajax extends MGO_BaseObject {
 		die;
 	}
 
-
+	/**
+	 * Generates directory tree for given directory
+	 */
 	public function directory_tree() {
 
 		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_DEFAULT ) ) {
@@ -582,10 +585,10 @@ class MGO_Ajax extends MGO_BaseObject {
 		}
 		$context = isset( $_REQUEST['context'] ) ? $_REQUEST['context'] : '';
 		switch ( $context ) {
-			case MGO_MediaAttachment::TYPE:
+			case MEGAOPTIM_TYPE_MEDIA_ATTACHMENT:
 				$dir = megaoptim_get_ml_backup_dir();
 				break;
-			case MGO_LocalFileAttachment::TYPE:
+			case MEGAOPTIM_TYPE_FILE_ATTACHMENT:
 				$dir = megaoptim_get_files_backup_dir();
 				break;
 			default:
@@ -621,7 +624,7 @@ class MGO_Ajax extends MGO_BaseObject {
 			wp_send_json_error();
 		} else {
 			switch ( $context ) {
-				case MGO_MediaAttachment::TYPE:
+				case MEGAOPTIM_TYPE_MEDIA_ATTACHMENT:
 					foreach ( $attachments as $attachment_id ) {
 						try {
 							$attachment                 = new MGO_MediaAttachment( $attachment_id );
@@ -629,7 +632,7 @@ class MGO_Ajax extends MGO_BaseObject {
 								'id'           => $attachment->get_id(),
 								'is_locked'    => $attachment->is_locked(),
 								'is_optimized' => $attachment->is_optimized(),
-								'html'         => megaoptim_get_attachment_buttons( $attachment )
+								'html'         => MGO_MediaLibrary::instance()->get_attachment_buttons( $attachment )
 							);
 
 						} catch ( MGO_Exception $e ) {
@@ -649,27 +652,6 @@ class MGO_Ajax extends MGO_BaseObject {
 			}
 		}
 	}
-
-	/*public function get_attachment_buttons() {
-		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_DEFAULT ) ) {
-			wp_send_json_error( __( 'Internal server error.', 'megaoptim' ) );
-		}
-		$attachment_id = isset( $_REQUEST['attachmentid'] ) ? $_REQUEST['attachmentid'] : '';
-		$context       = isset( $_REQUEST['context'] ) ? $_REQUEST['context'] : '';
-		$data          = '';
-		if ( ! empty( $attachment_id ) ) {
-			try {
-				$attachment = new MGO_MediaAttachment( $attachment_id );
-				$data       = megaoptim_get_attachment_buttons( $attachment );
-			} catch ( MGO_Exception $e ) {
-			}
-		}
-		if ( ! empty( $data ) ) {
-			wp_send_json_success( $data );
-		} else {
-			wp_send_json_error();
-		}
-	}*/
 
 	public function get_profile() {
 		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_DEFAULT ) ) {
@@ -695,7 +677,7 @@ class MGO_Ajax extends MGO_BaseObject {
 		}
 		if ( ! empty( $attachment_id ) ) {
 			switch ( $context ) {
-				case MGO_MediaAttachment::TYPE:
+				case MEGAOPTIM_TYPE_MEDIA_ATTACHMENT:
 					megaoptim_async_optimize_attachment( $attachment_id, array(), $additional_params );
 					break;
 				default:
@@ -715,11 +697,11 @@ class MGO_Ajax extends MGO_BaseObject {
 		$data          = false;
 		if ( ! empty( $attachment_id ) ) {
 			switch ( $context ) {
-				case MGO_MediaAttachment::TYPE:
+				case MEGAOPTIM_TYPE_MEDIA_ATTACHMENT:
 					try {
 						$attachment = new MGO_MediaAttachment( $attachment_id );
 						$attachment->restore();
-						$data = megaoptim_get_attachment_buttons( $attachment );
+						$data = MGO_MediaLibrary::instance()->get_attachment_buttons( $attachment );
 					} catch ( MGO_Exception $e ) {
 					}
 					break;

@@ -43,7 +43,7 @@ if ( ! function_exists( '_megaoptim_optimize_mediapress_attachment' ) ) {
 		 * @param int $post_id Attachment ID.
 		 * @param array $metadata An array of attachment meta data.
 		 */
-		$optimize = apply_filters( 'megaoptim_auto_optimize_mediapress_attachment', megaoptim_is_auto_optimize_enabled(), $attachment_id, $metadata );
+		$optimize = apply_filters( 'megaoptim_auto_optimize_mediapress_attachment', MGO_Settings::instance()->isAutoOptimizeEnabled(), $attachment_id, $metadata );
 
 		if ( ! $optimize ) {
 			return $metadata;

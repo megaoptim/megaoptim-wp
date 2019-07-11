@@ -25,8 +25,8 @@
  */
 function megaoptim_is_admin_page( $page = null ) {
 	$available_pages = array(
-		MGO_Admin_UI::PAGE_BULK_OPTIMIZER,
-		MGO_Admin_UI::PAGE_SETTINGS,
+		MEGAOPTIM_PAGE_BULK_OPTIMIZER,
+		MEGAOPTIM_PAGE_SETTINGS,
 	);
 	if ( isset( $_GET['page'] ) && in_array( $_GET['page'], $available_pages ) ) {
 		if ( is_null( $page ) ) {
@@ -47,11 +47,11 @@ function megaoptim_is_admin_page( $page = null ) {
  * @return bool
  */
 function megaoptim_is_optimizer_page( $optimizer ) {
-	if ( ! megaoptim_is_admin_page( MGO_Admin_UI::PAGE_BULK_OPTIMIZER ) ) {
+	if ( ! megaoptim_is_admin_page( MEGAOPTIM_PAGE_BULK_OPTIMIZER ) ) {
 		return false;
 	}
 	if ( ! isset( $_GET['module'] ) || empty( $_GET['module'] ) ) {
-		if ($optimizer !== MGO_MediaAttachment::TYPE ) {
+		if ($optimizer !== MEGAOPTIM_TYPE_MEDIA_ATTACHMENT ) {
 			return false;
 		}else {
 			return true;
@@ -59,9 +59,9 @@ function megaoptim_is_optimizer_page( $optimizer ) {
 
 	}
 	$module = $_GET['module'];
-	if ( $optimizer === MGO_MediaAttachment::TYPE ) {
+	if ( $optimizer === MEGAOPTIM_TYPE_MEDIA_ATTACHMENT ) {
 		return $module === 'wp-media-library';
-	} else if ( $optimizer === MGO_LocalFileAttachment::TYPE ) {
+	} else if ( $optimizer === MEGAOPTIM_TYPE_FILE_ATTACHMENT ) {
 		return $module === 'folders';
 	}
 	return apply_filters( 'megaoptim_is_optimizer_page', false, $optimizer, $module );

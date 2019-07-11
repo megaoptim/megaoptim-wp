@@ -24,9 +24,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class MGO_Admin_UI extends MGO_BaseObject {
 
-	const PAGE_BULK_OPTIMIZER = 'megaoptim_bulk_optimizer';
-	const PAGE_SETTINGS = 'megaoptim';
-
 	/**
 	 * MegaOptim_Admin_UI constructor.
 	 */
@@ -178,7 +175,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 	 * @return mixed
 	 */
 	public function manage_media_columns( $columns ) {
-		if ( megaoptim_is_connected() ) {
+		if ( MGO_Profile::_is_connected() ) {
 			$columns['megaoptim_media_attachment'] = __( 'MegaOptim', 'megaoptim' );
 		}
 
@@ -194,12 +191,12 @@ class MGO_Admin_UI extends MGO_BaseObject {
 	 * @throws MGO_Exception
 	 */
 	public function manage_media_custom_column( $column_name, $attachment_id ) {
-		if ( megaoptim_is_connected() ) {
+		if ( MGO_Profile::_is_connected() ) {
 			switch ( $column_name ) {
 				case 'megaoptim_media_attachment':
 					try {
 						$attachment = new MGO_MediaAttachment( $attachment_id );
-						echo megaoptim_get_attachment_buttons( $attachment );
+						echo MGO_MediaLibrary::instance()->get_attachment_buttons( $attachment );
 					} catch ( \Exception $e ) {
 						echo $e->getMessage();
 					}
@@ -227,11 +224,11 @@ class MGO_Admin_UI extends MGO_BaseObject {
 	 */
 	public function render_media_edit_buttons() {
 		$attachment_id = isset( $_GET['post'] ) ? $_GET['post'] : null;
-		if ( ! is_null( $attachment_id ) && 'attachment' === get_post_type( $attachment_id ) && megaoptim_is_connected() ) {
+		if ( ! is_null( $attachment_id ) && 'attachment' === get_post_type( $attachment_id ) && MGO_Profile::_is_connected() ) {
 			echo '<div class="megaoptim_media_attachment">';
 			try {
 				$attachment = new MGO_MediaAttachment( $attachment_id );
-				echo megaoptim_get_attachment_buttons( $attachment );
+				echo MGO_MediaLibrary::instance()->get_attachment_buttons( $attachment );
 			} catch ( \Exception $e ) {
 				echo $e->getMessage();
 			}
@@ -298,9 +295,9 @@ class MGO_Admin_UI extends MGO_BaseObject {
 					'profile_error'         => __( 'Error! We can not retrieve your profile. Please check if there is active internet connection or open a ticket in our dashboard area.', 'megaoptim' ),
 				),
 				'context'        => array(
-					'medialibrary' => MGO_MediaAttachment::TYPE,
+					'medialibrary' => MEGAOPTIM_TYPE_MEDIA_ATTACHMENT,
 					'nextgen'      => 'nextgenv2',
-					'files'        => MGO_LocalFileAttachment::TYPE,
+					'files'        => MEGAOPTIM_TYPE_FILE_ATTACHMENT,
 				),
 				'page'           => $current_screen->id,
 				'ticker'         => array(
@@ -327,7 +324,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 
 		// Bulk Processor
 		wp_register_script( 'megaoptim-processor', WP_MEGAOPTIM_ASSETS_URL . 'js/megaoptim-processor.js', array( 'jquery' ), time(), true );
-		if ( megaoptim_is_admin_page( MGO_Admin_UI::PAGE_BULK_OPTIMIZER ) ) {
+		if ( megaoptim_is_admin_page( MEGAOPTIM_PAGE_BULK_OPTIMIZER ) ) {
 			wp_enqueue_script( 'megaoptim-processor' );
 			wp_localize_script(
 				'megaoptim-processor', 'MGOProcessorData', array(
@@ -345,9 +342,9 @@ class MGO_Admin_UI extends MGO_BaseObject {
 						'loader_working_description' => __( 'Hiring ultrasonic optimizers...', 'megaoptim' ),
 					),
 					'context'         => array(
-						'media_library' => MGO_MediaAttachment::TYPE,
-						'local_folders' => MGO_LocalFileAttachment::TYPE,
-						'ngg'           => class_exists( 'MGO_NextGenAttachment' ) ? MGO_NextGenAttachment::TYPE : - 1,
+						'media_library' => MEGAOPTIM_TYPE_MEDIA_ATTACHMENT,
+						'local_folders' => MEGAOPTIM_TYPE_FILE_ATTACHMENT,
+						'ngg'           => class_exists( 'MGO_NextGenAttachment' ) ? MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT : - 1,
 					)
 				)
 			);
@@ -355,7 +352,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 
 		// Localfiles processor
 		wp_register_script( 'megaoptim-localfiles', WP_MEGAOPTIM_ASSETS_URL . 'js/megaoptim-localfiles.js', array( 'jquery' ), time(), true );
-		if ( megaoptim_is_optimizer_page( MGO_LocalFileAttachment::TYPE ) ) {
+		if ( megaoptim_is_optimizer_page( MEGAOPTIM_TYPE_FILE_ATTACHMENT ) ) {
 			wp_localize_script( 'megaoptim-localfiles', 'MGOLocalFiles', array(
 				'ajax_url'      => admin_url( 'admin-ajax.php' ),
 				'nonce_default' => wp_create_nonce( MGO_Ajax::NONCE_DEFAULT ),
@@ -374,9 +371,9 @@ class MGO_Admin_UI extends MGO_BaseObject {
 
 		// Library processor
 		wp_register_script( 'megaoptim-library', WP_MEGAOPTIM_ASSETS_URL . 'js/megaoptim-library.js', array( 'jquery' ), time(), true );
-		if ( megaoptim_is_optimizer_page( MGO_MediaAttachment::TYPE )
+		if ( megaoptim_is_optimizer_page( MEGAOPTIM_TYPE_MEDIA_ATTACHMENT )
 		     || ( class_exists( 'MGO_NextGenAttachment' )
-		          && megaoptim_is_optimizer_page( MGO_NextGenAttachment::TYPE ) ) ) {
+		          && megaoptim_is_optimizer_page( MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT ) ) ) {
 
 			wp_localize_script( 'megaoptim-library', 'MGOLibrary', array(
 				'ajax_url'      => admin_url( 'admin-ajax.php' ),

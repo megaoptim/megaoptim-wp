@@ -41,7 +41,7 @@ class MGO_MediaLibrary extends MGO_Library {
 		$result = new MGO_ResultBag();
 
 		//Don't go further if not connected
-		$profile = megaoptim_is_connected();
+		$profile = MGO_Profile::_is_connected();
 		if ( ! $profile OR is_null( $this->optimizer ) ) {
 			throw new MGO_Exception( 'Please make sure you have set up MegaOptim.com API key' );
 		}
@@ -397,7 +397,7 @@ class MGO_MediaLibrary extends MGO_Library {
 			} else {
 				$size_ext  = pathinfo( $url[0], PATHINFO_EXTENSION );
 				$size_name = pathinfo( $url[0], PATHINFO_FILENAME );
-				$dir       = smratoptim_strip_filename( $url[0] );
+				$dir       = megaoptim_strip_filename( $url[0] );
 
 				return $dir . '/' . $size_name . '@2x.' . $size_ext;
 			}
@@ -561,5 +561,16 @@ class MGO_MediaLibrary extends MGO_Library {
 		}
 
 		return $params;
+	}
+
+	/**
+	 * The attachment buttons?
+	 *
+	 * @param MGO_NextGenAttachment|MGO_MediaAttachment|MGO_LocalFileAttachment $attachment
+	 *
+	 * @return string
+	 */
+	public function get_attachment_buttons($attachment) {
+		return megaoptim_get_view( 'misc/buttons-ml', array( 'data' => $attachment ) );
 	}
 }

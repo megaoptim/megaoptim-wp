@@ -33,7 +33,7 @@ class MGO_LocalDirectories extends MGO_Library {
 		$result = new MGO_ResultBag();
 
 		//Dont go further if not connected
-		$profile = megaoptim_is_connected();
+		$profile = MGO_Profile::_is_connected();
 		if ( ! $profile OR is_null( $this->optimizer ) ) {
 			throw new MGO_Exception( 'Please make sure you have set up MegaOptim.com API key' );
 		}

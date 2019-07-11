@@ -50,7 +50,7 @@ class MGO_NextGenLibrary extends MGO_Library {
 		}
 
 		//Dont go further if not connected
-		$profile = megaoptim_is_connected();
+		$profile = MGO_Profile::_is_connected();
 		if ( ! $profile OR is_null( $this->optimizer ) ) {
 			throw new MGO_Exception( 'Please make sure you have set up MegaOptim.com API key' );
 		}
@@ -170,7 +170,7 @@ class MGO_NextGenLibrary extends MGO_Library {
 		global $wpdb;
 		$url     = get_site_url() . "/";
 		$path    = megaoptim_get_wp_root_path() . DIRECTORY_SEPARATOR;
-		$query   = $wpdb->prepare( "SELECT P.pid as ID, P.filename as title, CONCAT('%s',G.path,P.filename) as thumbnail,  CONCAT('%s',G.path,P.filename) as url, CONCAT('%s',G.path,P.filename) as path FROM {$wpdb->prefix}ngg_pictures P INNER JOIN {$wpdb->prefix}ngg_gallery G ON P.galleryid=G.gid LEFT JOIN {$wpdb->prefix}megaoptim_opt SOPT ON SOPT.object_id=P.pid AND SOPT.type='%s' WHERE SOPT.id IS NULL", $url, $url, $path, MGO_NextGenAttachment::TYPE );
+		$query   = $wpdb->prepare( "SELECT P.pid as ID, P.filename as title, CONCAT('%s',G.path,P.filename) as thumbnail,  CONCAT('%s',G.path,P.filename) as url, CONCAT('%s',G.path,P.filename) as path FROM {$wpdb->prefix}ngg_pictures P INNER JOIN {$wpdb->prefix}ngg_gallery G ON P.galleryid=G.gid LEFT JOIN {$wpdb->prefix}megaoptim_opt SOPT ON SOPT.object_id=P.pid AND SOPT.type='%s' WHERE SOPT.id IS NULL", $url, $url, $path, MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT );
 		$results = $wpdb->get_results( $query, ARRAY_A );
 
 		return $results;
@@ -187,8 +187,8 @@ class MGO_NextGenLibrary extends MGO_Library {
 		// TODO: Implement get_stats() method.
 		global $wpdb;
 		$total_images                            = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}ngg_pictures WHERE 1" );
-		$total_remaining                         = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->prefix}ngg_pictures P LEFT JOIN {$wpdb->prefix}megaoptim_opt SOPT ON SOPT.object_id=P.pid AND SOPT.type=%s WHERE SOPT.id IS NULL", MGO_NextGenAttachment::TYPE ) );
-		$total_saved_bytes                       = $wpdb->get_var( $wpdb->prepare( "SELECT SUM(SOPT.saved_bytes) FROM {$wpdb->prefix}ngg_pictures P LEFT JOIN {$wpdb->prefix}megaoptim_opt SOPT ON SOPT.object_id=P.pid AND SOPT.type=%s WHERE SOPT.id IS NOT NULL AND SOPT.saved_bytes > 0", MGO_NextGenAttachment::TYPE ) );
+		$total_remaining                         = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->prefix}ngg_pictures P LEFT JOIN {$wpdb->prefix}megaoptim_opt SOPT ON SOPT.object_id=P.pid AND SOPT.type=%s WHERE SOPT.id IS NULL", MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT ) );
+		$total_saved_bytes                       = $wpdb->get_var( $wpdb->prepare( "SELECT SUM(SOPT.saved_bytes) FROM {$wpdb->prefix}ngg_pictures P LEFT JOIN {$wpdb->prefix}megaoptim_opt SOPT ON SOPT.object_id=P.pid AND SOPT.type=%s WHERE SOPT.id IS NOT NULL AND SOPT.saved_bytes > 0", MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT ) );
 		$total_optimized                         = $total_images - $total_remaining;
 		$data                                    = new MGO_Stats();
 		$data->empty_gallery                     = ( $total_images <= 0 ) ? true : false;

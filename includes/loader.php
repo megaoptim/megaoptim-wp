@@ -22,23 +22,32 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( 'Direct access is not allowed.' );
 }
 
-// Load the MegaOptim PHP Client
-require_once( WP_MEGAOPTIM_LIBRARIES_PATH . 'megaoptim-php' . DIRECTORY_SEPARATOR . 'loadnoncomposer.php' );
+// Load the MegaOptim Bootstrapping functionality
+require_once(
+	WP_MEGAOPTIM_INC_PATH .
+	DIRECTORY_SEPARATOR .
+	'functions' .
+	DIRECTORY_SEPARATOR .
+	'bootstrap.php'
+);
 
-require_once( WP_MEGAOPTIM_INC_PATH . DIRECTORY_SEPARATOR . 'functions' . DIRECTORY_SEPARATOR . 'bootstrap.php' );
+// Load the MegaOptim Library
+megaoptim_prepare_optimizer();
 
 $includes = array(
 
-	'classes/MGO_BaseObject.php',
-	'classes/MGO_ResultBag.php',
-
-	// Cache Classes
-	'classes/MGO_Cache.php',
+	//Load Internal Functions
+	'constants.php',
+	'functions/compat.php',
+	'functions/database.php',
+	'functions/helpers.php',
+	'functions/admin.php',
 	'functions/cache.php',
 
-	//Load Internal Classes
+	// Classes
+	'classes/MGO_BaseObject.php',
+	'classes/MGO_ResultBag.php',
 	'migrations/MGO_Upgrader.php',
-
 	'classes/Models/MGO_Attachment.php',
 	'classes/Adapters/MGO_Library.php',
 	'classes/Exceptions/MGO_Exception.php',
@@ -48,21 +57,15 @@ $includes = array(
 	'classes/MGO_Stats.php',
 	'classes/MGO_Profile.php',
 	'classes/MGO_Settings.php',
+	'classes/MGO_Debug.php',
 	'classes/Models/MGO_MediaAttachment.php',
 	'classes/Adapters/MGO_MediaLibrary.php',
 	'classes/Models/MGO_LocalFileAttachment.php',
 	'classes/Adapters/MGO_LocalDirectories.php',
 	'compat/nextgen-gallery/classes/MGO_NextGenAttachment.php' => megaoptim_is_nextgen_active(),
 	'compat/nextgen-gallery/classes/MGO_NextGenLibrary.php'    => megaoptim_is_nextgen_active(),
-
-	// UI/AJAX
 	'classes/MGO_Ajax.php',
 	'classes/MGO_Admin_UI.php'                                 => is_admin(),
-
-	//Load Internal Functions
-	'functions/compat.php',
-	'functions/helpers.php',
-	'functions/admin.php',
 
 	//Load Internal Hooks
 	'hooks/tasks.php',
@@ -116,8 +119,4 @@ if( megaoptim_is_wpengine() ) {
 }
 
 megaoptim_include_files( $includes );
-
-global $wp_version;
-\MegaOptim\Http\BaseClient::$api_url = WP_MEGAOPTIM_API_BASE_URL;
-\MegaOptim\Http\BaseClient::set_user_agent('WordPress ' . $wp_version . ' / Plugin ' . WP_MEGAOPTIM_VER);
 

@@ -48,6 +48,16 @@ function megaoptim_include_files( $files ) {
 }
 
 /**
+ * Initializes the library
+ */
+function megaoptim_prepare_optimizer() {
+	global $wp_version;
+	require_once( WP_MEGAOPTIM_LIBRARIES_PATH . 'megaoptim-php' . DIRECTORY_SEPARATOR . 'loadnoncomposer.php' );
+	\MegaOptim\Http\BaseClient::$api_url = WP_MEGAOPTIM_API_BASE_URL;
+	\MegaOptim\Http\BaseClient::set_user_agent('WordPress ' . $wp_version . ' / Plugin ' . WP_MEGAOPTIM_VER);
+}
+
+/**
  * Check if nextgen is active
  * @return bool
  */

@@ -18,7 +18,8 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	die( 'Direct access is not allowed.' );
 }
-$report = megaoptim_get_debug_report();
+$debug = new MGO_Debug();
+$report = $debug->generate_report();
 ?>
 <div class="megaoptim-postbox">
     <form class="content-wrapper" method="POST" id="megaoptim-report-export">

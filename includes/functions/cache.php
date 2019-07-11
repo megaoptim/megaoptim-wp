@@ -22,6 +22,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( 'Direct access is not allowed.' );
 }
 
+function megaoptim_cache_create_key($key) {
+	return MEGAOPTIM_CACHE_PREFIX . '_' . $key;
+}
+
 /**
  * Set item to the persistent cahce
  *
@@ -32,7 +36,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return bool
  */
 function megaoptim_cache_set( $key, $value, $expiration ) {
-	return MGO_Cache::instance()->set( $key, $value, $expiration );
+	return set_transient( megaoptim_cache_create_key( $key ), $value, $expiration );
 }
 
 /**
@@ -43,7 +47,7 @@ function megaoptim_cache_set( $key, $value, $expiration ) {
  * @return bool|mixed
  */
 function megaoptim_cache_get( $key ) {
-	return MGO_Cache::instance()->get( $key );
+	return get_transient( megaoptim_cache_create_key( $key ) );
 }
 
 /**
@@ -54,7 +58,7 @@ function megaoptim_cache_get( $key ) {
  * @return bool
  */
 function megaoptim_cache_remove( $key ) {
-	return MGO_Cache::instance()->remove( $key );
+	return delete_transient( megaoptim_cache_create_key( $key ) );
 }
 
 /**
@@ -66,7 +70,7 @@ function megaoptim_cache_remove( $key ) {
  * @return bool
  */
 function megaoptim_memcache_set( $key, $value ) {
-	return MGO_Cache::instance()->mem_set( $key, $value );
+	return wp_cache_set( $key, $value, MEGAOPTIM_CACHE_PREFIX, 0 );
 }
 
 /**
@@ -77,7 +81,7 @@ function megaoptim_memcache_set( $key, $value ) {
  * @return mixed
  */
 function megaoptim_memcache_get( $key ) {
-	return MGO_Cache::instance()->mem_get( $key );
+	return wp_cache_get( $key, MEGAOPTIM_CACHE_PREFIX );
 }
 
 /**
@@ -88,5 +92,5 @@ function megaoptim_memcache_get( $key ) {
  * @return bool
  */
 function megaoptim_memcache_remove( $key ) {
-	return MGO_Cache::instance()->mem_remove( $key );
+	return wp_cache_delete( $key, MEGAOPTIM_CACHE_PREFIX );
 }

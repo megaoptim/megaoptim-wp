@@ -38,7 +38,7 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
                     <div id="megaoptim-control">
                         <div class="megaoptim-row">
                             <div class="megaoptim-col megaoptim-col-12 text-center">
-                                <button id="megaoptim-scan-library" class="button button-primary button-extra-large" data-context="<?php echo MGO_MediaAttachment::TYPE; ?>">
+                                <button id="megaoptim-scan-library" class="button button-primary button-extra-large" data-context="<?php echo MEGAOPTIM_TYPE_MEDIA_ATTACHMENT; ?>">
 									<?php _e( 'Start now', 'megaoptim' ); ?>
                             </div>
                         </div>
@@ -103,7 +103,7 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
                     <div id="megaoptim-control">
                         <div class="megaoptim-row">
                             <div class="megaoptim-col megaoptim-col-12 text-center">
-                                <button id="megaoptim-toggle-optimizer" data-action="megaoptim_optimize_attachment" data-context="<?php echo MGO_MediaAttachment::TYPE; ?>" data-next-state="start" data-stop-text="Stop Bulk Optimizer" data-start-text="Start Bulk Optimizer" class="button button-primary button-extra-large"><?php _e( 'Start Bulk Optimizer', 'megaoptim' ); ?></button>
+                                <button id="megaoptim-toggle-optimizer" data-action="megaoptim_optimize_attachment" data-context="<?php echo MEGAOPTIM_TYPE_MEDIA_ATTACHMENT; ?>" data-next-state="start" data-stop-text="Stop Bulk Optimizer" data-start-text="Start Bulk Optimizer" class="button button-primary button-extra-large"><?php _e( 'Start Bulk Optimizer', 'megaoptim' ); ?></button>
                             </div>
                         </div>
                     </div>

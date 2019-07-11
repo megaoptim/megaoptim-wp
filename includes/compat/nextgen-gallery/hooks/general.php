@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 function _megaoptim_ngg_backup_dir( $dir, $context ) {
-	if ( $context === MGO_NextGenAttachment::TYPE ) {
+	if ( $context === MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT ) {
 		$dir = megaoptim_get_nextgen_backup_dir();
 	}
 
@@ -33,7 +33,7 @@ add_filter( 'megaoptim_backup_dir', '_megaoptim_ngg_backup_dir', 10, 2 );
 
 
 function _megaoptim_ngg_optimize_single_attachment( $attachment_id, $context, $additional_params ) {
-	if ( $context === MGO_NextGenAttachment::TYPE ) {
+	if ( $context === MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT ) {
 		megaoptim_async_optimize_ngg_attachment( $attachment_id, $additional_params );
 	}
 }
@@ -95,7 +95,7 @@ add_filter( 'megaoptim_optimizer_params', '_megaoptim_ngg_optimizer_params', 10,
 
 
 function _megaoptim_ngg_is_optimizer_page($is_optimizer, $optimizer, $module) {
-	if( $optimizer === MGO_NextGenAttachment::TYPE ) {
+	if( $optimizer === MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT ) {
 		if( $module === 'nextgen' ) {
 			$is_optimizer = true;
 		}
@@ -106,7 +106,7 @@ add_filter('megaoptim_is_optimizer_page', '_megaoptim_ngg_is_optimizer_page', 10
 
 
 function _megaoptim_ngg_library_data($stats, $context) {
-	if( $context === MGO_NextGenAttachment::TYPE ) {
+	if( $context === MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT ) {
 		$stats = MGO_NextGenLibrary::instance()->get_stats(true);
 	}
 	return $stats;

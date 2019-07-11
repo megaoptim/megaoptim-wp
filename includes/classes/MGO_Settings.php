@@ -130,6 +130,15 @@ class MGO_Settings extends MGO_BaseObject {
 	}
 
 	/**
+	 * Is auto optimize enabled?
+	 * @return bool
+	 */
+	public function isAutoOptimizeEnabled(){
+		$auto_optimize = $this->get( self::AUTO_OPTIMIZE );
+		return $auto_optimize == 1;
+	}
+
+	/**
 	 * Updates data in the database
 	 *
 	 * @param $data

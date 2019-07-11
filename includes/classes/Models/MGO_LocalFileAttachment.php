@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class MGO_LocalFileAttachment extends MGO_Attachment {
-	const TYPE = 'localfiles';
+	const TYPE = MEGAOPTIM_TYPE_FILE_ATTACHMENT;
 	protected $path;
 	protected $db;
 	protected $table_name;

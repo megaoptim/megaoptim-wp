@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class MGO_MediaAttachment extends MGO_Attachment {
 
-	const TYPE = 'wp';
+	const TYPE = MEGAOPTIM_TYPE_MEDIA_ATTACHMENT;
 
 	const PM_DATA_KEY = '_megaoptim_data';
 

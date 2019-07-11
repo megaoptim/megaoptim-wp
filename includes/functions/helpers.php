@@ -23,21 +23,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Check if the WP instance is connected to the MegaOptim.com API
- *
- * @return bool|MGO_Profile
- */
-function megaoptim_is_connected() {
-	try {
-		$profile = new MGO_Profile();
-
-		return $profile->is_connected();
-	} catch ( MGO_Exception $e ) {
-		return false;
-	}
-}
-
-/**
  * Returns the megaoptim path
  * @return array|string
  */
@@ -240,87 +225,6 @@ function megaoptim_convert_bytes_to_specified( $bytes, $to, $decimal_places = 1 
 	return isset( $formulas[ $to ] ) ? $formulas[ $to ] : 0;
 }
 
-
-/**
- * Get debug report
- * @return array
- */
-function megaoptim_get_debug_report() {
-
-	global $wpdb, $wp_version;
-
-	$tokens = 0;
-	$valid  = 0;
-
-	try {
-		$profile = new MGO_Profile();
-		$tokens  = $profile->get_tokens_count();
-		$valid   = $profile->is_connected();
-	} catch ( MGO_Exception $e ) {
-
-	}
-
-	$uploads_dir  = wp_upload_dir();
-	$ini_settings = array(
-		'post_max_size',
-		'upload_max_filesize',
-		'memory_limit',
-		'max_execution_time',
-		'max_input_vars',
-	);
-
-	$theme_dir = get_template_directory();
-
-	// Cached size
-	$key                     = md5( $uploads_dir['basedir'] );
-	$wp_content_uploads_size = megaoptim_cache_get( $key );
-	if ( false === $wp_content_uploads_size ) {
-		$wp_content_uploads_size = megaoptim_get_dir_size( $uploads_dir['basedir'] );
-		megaoptim_cache_set( $key, $wp_content_uploads_size, 5 * 60 );
-	}
-
-	$curl_version = function_exists( 'curl_version' ) ? curl_version() : null;
-
-	if ( ! is_null( $curl_version ) ) {
-		$curl_info = 'Yes, cURL version: ' . $curl_version['version'];
-	} else {
-		$curl_info = 'No';
-	}
-
-	$report = array(
-		// MegaOptim
-		'API Status'                         => megaoptim_ping_api() ? 'Online' : 'Offline',
-		'API Key'                            => $valid ? 'Valid' : 'Invalid',
-		'API Balance'                        => $tokens == -1 ? 'Unlimited' : 0,
-		'API PHP Client Version'             => MegaOptim\Optimizer::VERSION,
-		'Plugin Version'                     => WP_MEGAOPTIM_VER,
-		// WP
-		'WordPress Debug'                    => defined( 'WP_DEBUG' ) ? ( WP_DEBUG ? 'Yes' : 'No' ) : 'No',
-		'WordPress Version'                  => $wp_version,
-		'WordPress Media Library Directory'  => wp_is_writable( $uploads_dir['basedir'] ) ? 'Writable' : 'Not Writable',
-		'WordPress Theme Directory'          => wp_is_writable( $theme_dir ) ? 'Writable' : 'Not Writable',
-		'WordPress Memory Limit'             => defined( 'WP_MEMORY_LIMIT' ) ? WP_MEMORY_LIMIT : 'Uknown',
-		'WordPress Multisite'                => is_multisite() ? 'Yes' : 'No',
-		'WordPress Language'                 => get_bloginfo( 'language' ),
-		'WordPress /wp-content/uploads size' => megaoptim_human_file_size( $wp_content_uploads_size ),
-		// Server
-		'Operating System'                   => php_uname(),
-		'Server Info'                        => isset( $_SERVER['SERVER_SOFTWARE'] ) ? $_SERVER['SERVER_SOFTWARE'] : 'Unknown',
-		'PHP Version'                        => phpversion(),
-		'MySQL Version'                      => $wpdb->db_version(),
-		'cURL Enabled'                       => $curl_info,
-		'Multibyte string'                   => ( extension_loaded( 'mbstring' ) ) ? 'Yes' : 'No',
-		'Default Timezone'                   => date_default_timezone_get()
-	);
-	foreach ( $ini_settings as $setting ) {
-		if ( ini_get( $setting ) ) {
-			$report[ ucfirst( $setting ) ] = ini_get( $setting );
-		}
-	}
-
-	return $report;
-}
-
 /**
  * Check if the url is internal one
  *
@@ -449,7 +353,7 @@ function megaoptim_get_backup_dir() {
  * @return string
  */
 function megaoptim_get_ml_backup_dir() {
-	$backup_dir = wp_normalize_path( megaoptim_get_backup_dir() . DIRECTORY_SEPARATOR . MGO_MediaAttachment::TYPE );
+	$backup_dir = wp_normalize_path( megaoptim_get_backup_dir() . DIRECTORY_SEPARATOR . MEGAOPTIM_TYPE_MEDIA_ATTACHMENT );
 
 	return apply_filters( 'megaoptim_ml_backup_dir', $backup_dir );
 }
@@ -460,7 +364,7 @@ function megaoptim_get_ml_backup_dir() {
  * @return string
  */
 function megaoptim_get_files_backup_dir() {
-	$backup_dir = wp_normalize_path( megaoptim_get_backup_dir() . DIRECTORY_SEPARATOR . MGO_LocalFileAttachment::TYPE );
+	$backup_dir = wp_normalize_path( megaoptim_get_backup_dir() . DIRECTORY_SEPARATOR . MEGAOPTIM_TYPE_FILE_ATTACHMENT );
 
 	return apply_filters( 'megaoptim_files_backup_dir', $backup_dir );
 }
@@ -812,18 +716,6 @@ function megaoptim_mb_basename( $path, $suffix = false ) {
 	return $Base;
 }
 
-
-/**
- * The attachment buttons?
- *
- * @param MGO_NextGenAttachment|MGO_MediaAttachment|MGO_LocalFileAttachment $attachment
- *
- * @return string
- */
-function megaoptim_get_attachment_buttons( $attachment ) {
-	return megaoptim_get_view( 'misc/buttons-ml', array( 'data' => $attachment ) );
-}
-
 /**
  * Optimizes media library attachment in background
  *
@@ -844,17 +736,6 @@ function megaoptim_async_optimize_attachment( $attachment_id, $metadata = array(
 	megaoptim_async_task( $params );
 }
 
-
-/**
- * Check if autoptimize is enabled.
- * @return bool
- */
-function megaoptim_is_auto_optimize_enabled() {
-	$auto_optimize = MGO_Settings::instance()->get( MGO_Settings::AUTO_OPTIMIZE );
-
-	return $auto_optimize == 1;
-}
-
 /**
  * Remove file name from url
  * eg. http://url.com/file.jpg becomes http://url.com/
@@ -863,7 +744,7 @@ function megaoptim_is_auto_optimize_enabled() {
  *
  * @return string
  */
-function smratoptim_strip_filename( $url ) {
+function megaoptim_strip_filename( $url ) {
 	$pieces = explode( "/", $url ); // split the URL by /
 	if ( count( $pieces ) < 4 ) {
 		return $url . "/";
@@ -904,47 +785,6 @@ function megaoptim_regenerate_thumbnails( $id, $path = null ) {
 	wp_update_attachment_metadata( $id, $meta );
 
 	return $meta;
-}
-
-
-/**
- * @param \MegaOptim\Responses\Response $response
- * @param array $params
- *
- * @return array|mixed
- */
-function megaoptim_generate_thumbnail_data( $response, $params ) {
-	$files        = $response->getOptimizedFiles();
-	$thumb_object = array();
-	if ( $response->isSuccessful() && ! empty( $files ) ) {
-		$raw          = $response->getRawResponse();
-		$data         = json_decode( $raw, true );
-		$thumb_object = array();
-		if ( is_array( $data['result'] ) ) {
-			$excluded = MGO_Attachment::excluded_params();
-			foreach ( $data['result'] as $optimization ) {
-				foreach ( $excluded as $exl ) {
-					unset( $optimization[ $exl ] );
-				}
-				$thumb_object = $optimization;
-				break;
-			}
-		}
-		if(isset($thumb_object['webp'])) {
-			$thumb_object['webp_size'] = isset($thumb_object['webp']['optimized_size']) ? $thumb_object['webp']['optimized_size'] : 0;
-			unset($thumb_object['webp']);
-		}
-		$thumb_object['status']     = (int) $response->isSuccessful();
-		$thumb_object['process_id'] = $response->getProcessId();
-		$thumb_object['time']       = date( 'Y-m-d H:i:s', time() );
-		foreach ( megaoptim_get_allowed_query_parameters() as $parameter ) {
-			if ( isset( $params[ $parameter ] ) ) {
-				$thumb_object[ $parameter ] = $params[ $parameter ];
-			}
-		}
-	}
-
-	return $thumb_object;
 }
 
 /**
@@ -1016,53 +856,4 @@ function megaoptim_get_validation_email() {
 	$email      = get_option( 'megaoptim_registration_email' );
 	$is_pending = megaoptim_validate_email( $email );
 	return $is_pending ? $email : false;
-}
-
-/**
- * Returns true if table exist.
- * @param $table_name
- *
- * @return bool
- */
-function megaoptim_table_exists($table_name) {
-	global $wpdb;
-	if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) != $table_name ) {
-		return false;
-	} else {
-		return true;
-	}
-}
-
-/**
- * Check if column exists
- * @param $table_name
- * @param $column_name
- *
- * @return bool
- */
-function megaoptim_column_exists($table_name, $column_name) {
-	global $wpdb;
-	$query = $wpdb->prepare("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name='%s' AND column_name='%s'", $table_name, $column_name);
-	$row = $wpdb->get_results($query);
-	if(empty($row)) {
-		return false;
-	} else {
-		return true;
-	}
-}
-
-/**
- * Set database version
- * @param $version
- */
-function megaoptim_set_db_version($version) {
-	update_option('megaoptim_db_version', $version);
-}
-
-/**
- * Returns the db version
- * @return mixed|int
- */
-function megaoptim_get_db_version() {
-	return get_option('megaoptim_db_version');
 }

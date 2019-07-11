@@ -164,7 +164,7 @@ class MGO_Profile {
 
 	/**
 	 * Check if connection is successful ?
-	 * @return bool
+	 * @return bool|MGO_Profile
 	 */
 	public function is_connected() {
 
@@ -174,7 +174,6 @@ class MGO_Profile {
 		if ( ! isset( $this->data['valid'] ) || $this->data['valid'] !== 1 ) {
 			return false;
 		}
-
 		return $this;
 	}
 
@@ -281,6 +280,20 @@ class MGO_Profile {
 		}
 
 		return $profile;
+	}
+
+	/**
+	 * Check if the WP instance is connected to the MegaOptim.com API
+	 *
+	 * @return bool|MGO_Profile
+	 */
+	public static function _is_connected() {
+		try {
+			$profile = new MGO_Profile();
+			return $profile->is_connected();
+		} catch ( MGO_Exception $e ) {
+			return false;
+		}
 	}
 
 }

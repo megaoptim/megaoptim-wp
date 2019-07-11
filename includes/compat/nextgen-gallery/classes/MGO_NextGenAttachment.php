@@ -30,7 +30,7 @@ class MGO_NextGenAttachment extends MGO_Attachment {
 	private $db;
 	private $megaoptim_result_id;
 	private $table_name;
-	const TYPE = "nextgenv2";
+	const TYPE = MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT;
 
 	/**
 	 * MGO_NextGenAttachment constructor.

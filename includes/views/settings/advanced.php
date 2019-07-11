@@ -200,7 +200,7 @@ $cf_email   = $settings->get( MGO_Settings::CLOUDFLARE_EMAIL );
                             <div class="megaoptim-subrow">
                                 <p><strong><?php _e( 'Media Library Backups', 'megaoptim-image-optimizer' ); ?></strong></p>
                                 <p>
-                                    <button <?php disabled( true, $medialibrary_backup_dir_size <= 0 ); ?> type="button" data-context="<?php echo MGO_MediaAttachment::TYPE; ?>" class="button megaoptim-button-small megaoptim-remove-backups"><?php _e( 'Clean', 'megaoptim-image-optimizer' ); ?> <?php echo $medialibrary_backup_dir_size > 0 ? megaoptim_human_file_size( $medialibrary_backup_dir_size ) : ''; ?></button>
+                                    <button <?php disabled( true, $medialibrary_backup_dir_size <= 0 ); ?> type="button" data-context="<?php echo MEGAOPTIM_TYPE_MEDIA_ATTACHMENT; ?>" class="button megaoptim-button-small megaoptim-remove-backups"><?php _e( 'Clean', 'megaoptim-image-optimizer' ); ?> <?php echo $medialibrary_backup_dir_size > 0 ? megaoptim_human_file_size( $medialibrary_backup_dir_size ) : ''; ?></button>
                                 </p>
                             </div>
                         </div>
@@ -209,7 +209,7 @@ $cf_email   = $settings->get( MGO_Settings::CLOUDFLARE_EMAIL );
                                 <div class="megaoptim-subrow">
                                     <p><strong>Nextgen Galleries Backups</strong></p>
                                     <p>
-                                        <button <?php disabled( true, $nextgen_backup_dir_size <= 0 ); ?> type="button" data-context="<?php echo MGO_NextGenAttachment::TYPE; ?>" class="button megaoptim-button-small megaoptim-remove-backups"><?php _e( 'Clean', 'megaoptim-image-optimizer' ); ?> <?php echo $nextgen_backup_dir_size > 0 ? megaoptim_human_file_size( $nextgen_backup_dir_size ) : ''; ?></button>
+                                        <button <?php disabled( true, $nextgen_backup_dir_size <= 0 ); ?> type="button" data-context="<?php echo MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT; ?>" class="button megaoptim-button-small megaoptim-remove-backups"><?php _e( 'Clean', 'megaoptim-image-optimizer' ); ?> <?php echo $nextgen_backup_dir_size > 0 ? megaoptim_human_file_size( $nextgen_backup_dir_size ) : ''; ?></button>
                                     </p>
                                 </div>
                             </div>
@@ -218,7 +218,7 @@ $cf_email   = $settings->get( MGO_Settings::CLOUDFLARE_EMAIL );
                             <div class="megaoptim-subrow">
                                 <p><strong>Custom Files Backups</strong></p>
                                 <p>
-                                    <button <?php disabled( true, $localfiles_backup_dir_size <= 0 ); ?> type="button" data-context="<?php echo MGO_LocalFileAttachment::TYPE; ?>" class="button megaoptim-button-small megaoptim-remove-backups"><?php _e( 'Clean', 'megaoptim-image-optimizer' ); ?> <?php echo $localfiles_backup_dir_size > 0 ? megaoptim_human_file_size( $localfiles_backup_dir_size ) : ''; ?></button>
+                                    <button <?php disabled( true, $localfiles_backup_dir_size <= 0 ); ?> type="button" data-context="<?php echo MEGAOPTIM_TYPE_FILE_ATTACHMENT; ?>" class="button megaoptim-button-small megaoptim-remove-backups"><?php _e( 'Clean', 'megaoptim-image-optimizer' ); ?> <?php echo $localfiles_backup_dir_size > 0 ? megaoptim_human_file_size( $localfiles_backup_dir_size ) : ''; ?></button>
                                 </p>
                             </div>
                         </div>

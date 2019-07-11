@@ -86,7 +86,7 @@ function megaoptim_get_ngg_attachment_buttons( $attachment ) {
  * @return string
  */
 function megaoptim_get_nextgen_backup_dir() {
-	$backup_dir = megaoptim_get_backup_dir() . DIRECTORY_SEPARATOR . MGO_NextGenAttachment::TYPE;
+	$backup_dir = megaoptim_get_backup_dir() . DIRECTORY_SEPARATOR . MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT;
 
 	return apply_filters( 'megaoptim_nextgen_backup_dir', $backup_dir );
 }

@@ -45,7 +45,7 @@ $http_pass     = MGO_Settings::instance()->get(MGO_Settings::HTTP_PASS );
                     <label class="megaoptim-option-label" for="<?php echo MGO_Settings::API_KEY; ?>"><?php _e( 'MegaOptim API Key', 'megaoptim' ); ?></label>
                 </div>
                 <div class="megaoptim-field-wrap">
-                    <input type="text" name="<?php echo MGO_Settings::API_KEY; ?>" value="<?php echo $api_key; ?>" class="option-control form-control" placeholder="<?php _e( 'Enter API Key', 'megaoptim' ); ?>"/> <?php echo megaoptim_is_connected() ? sprintf( '%s', '<strong>' . __( 'Your API Key is valid!', 'megaoptim' ) . '</strong>' ) : ''; ?>
+                    <input type="text" name="<?php echo MGO_Settings::API_KEY; ?>" value="<?php echo $api_key; ?>" class="option-control form-control" placeholder="<?php _e( 'Enter API Key', 'megaoptim' ); ?>"/> <?php echo MGO_Profile::_is_connected() ? sprintf( '%s', '<strong>' . __( 'Your API Key is valid!', 'megaoptim' ) . '</strong>' ) : ''; ?>
                     <p class="megaoptim-field-desc">
 						<?php echo sprintf( __( 'Enter the api key. Do not have it yet? Register %s here for %s', 'megaoptim' ), '<a target="_blank" href="https://megaoptim.com/register">' . __( 'here', 'megaoptim' ) . '</a>', '<strong>' . __( 'free!' ) . '</strong>' ); ?>
                     </p>

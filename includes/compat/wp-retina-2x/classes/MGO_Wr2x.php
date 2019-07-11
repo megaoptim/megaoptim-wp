@@ -158,7 +158,7 @@ class MGO_Wr2x extends MGO_BaseObject {
 			$attachment->destroy();
 
 			// is autoptimize?
-			$is_auto_optimize = apply_filters( 'megaoptim_auto_optimize_media_attachment', megaoptim_is_auto_optimize_enabled(), $attachment->get_id(), $attachment->get_metadata() );
+			$is_auto_optimize = apply_filters( 'megaoptim_auto_optimize_media_attachment', MGO_Settings::instance()->isAutoOptimizeEnabled(), $attachment->get_id(), $attachment->get_metadata() );
 
 			// Remove auto upload filter
 			add_filter( 'megaoptim_auto_optimize_media_attachment', array(
@@ -224,7 +224,7 @@ class MGO_Wr2x extends MGO_BaseObject {
 
 			// Is autooptimize?
 			$attachment       = new MGO_MediaAttachment( $attachmentId );
-			$is_auto_optimize = apply_filters( 'megaoptim_auto_optimize_media_attachment', megaoptim_is_auto_optimize_enabled(), $attachment->get_id(), $attachment->get_metadata() );
+			$is_auto_optimize = apply_filters( 'megaoptim_auto_optimize_media_attachment', MGO_Settings::instance()->isAutoOptimizeEnabled(), $attachment->get_id(), $attachment->get_metadata() );
 			megaoptim_retina_remove_full_attachment_data( $attachment );
 			if ( $is_auto_optimize ) {
 				megaoptim_async_optimize_attachment( $attachment->get_id() );

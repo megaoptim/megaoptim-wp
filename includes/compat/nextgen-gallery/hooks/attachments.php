@@ -50,7 +50,7 @@ function _megaoptim_auto_optimize_ngg_attachment( $gallery_id, $image_ids ) {
 		 * @param int $post_id Attachment ID.
 		 * @param array $metadata An array of attachment meta data.
 		 */
-		$optimize = apply_filters( 'megaoptim_auto_optimize_ngg_attachment', megaoptim_is_auto_optimize_enabled(), $image_id, $gallery_id );
+		$optimize = apply_filters( 'megaoptim_auto_optimize_ngg_attachment', MGO_Settings::instance()->isAutoOptimizeEnabled(), $image_id, $gallery_id );
 
 		if ( ! $optimize ) {
 			continue;
@@ -78,7 +78,7 @@ function _megaoptim_ngg_medialibrary_imported_image( $image, $ml_attachment ) {
 		$media_library_attachment = new MGO_MediaAttachment( $ml_attachment->ID );
 		if ( $media_library_attachment->is_optimized() ) {
 			$ngg_attachment->set( 'object_id', $image->pid );
-			$ngg_attachment->set( 'type', MGO_NextGenAttachment::TYPE );
+			$ngg_attachment->set( 'type', MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT );
 			$ngg_attachment->set( 'file_path', $ngg_megaoptim_file->path );
 			$optimization_details = array(
 				'status',
@@ -153,7 +153,7 @@ function _megaoptim_ngg_delete_gallery( $gallery ) {
 		global $wpdb;
 		$wpdb->delete( $wpdb->prefix . 'megaoptim_opt', array(
 			'gallery_id' => $gallery,
-			'type'       => MGO_NextGenAttachment::TYPE
+			'type'       => MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT
 		) );
 	}
 }
