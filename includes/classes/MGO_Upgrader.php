@@ -34,9 +34,9 @@ class MGO_Upgrader extends MGO_BaseObject {
 	 * MGO_DB_Upgrader constructor.
 	 */
 	public function __construct() {
-		require_once 'revisions/MGO_Rev.php';
-		require_once 'revisions/MGO_Rev_1000.php';
-		require_once 'revisions/MGO_Rev_1001.php';
+		megaoptim_include_file('includes/migrations/revisions/MGO_Rev.php');
+		megaoptim_include_file('includes/migrations/revisions/MGO_Rev_1000.php');
+		megaoptim_include_file('includes/migrations/revisions/MGO_Rev_1001.php');
 		array_push($this->revisions, new MGO_Rev_1000());
 		array_push($this->revisions, new MGO_Rev_1001());
 	}

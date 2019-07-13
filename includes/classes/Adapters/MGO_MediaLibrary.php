@@ -25,6 +25,35 @@ if ( ! defined( 'ABSPATH' ) ) {
 class MGO_MediaLibrary extends MGO_Library {
 
 	/**
+	 * If it is public environment?
+	 * @var bool
+	 */
+	private $is_public_environment;
+
+	/**
+	 * The background process instance
+	 * @var MGO_MediaLibrary_Process
+	 */
+	protected $background_process = null;
+
+	/**
+	 * MGO_MediaLibrary constructor.
+	 */
+	public function __construct() {
+		parent::__construct();
+		$this->is_public_environment = megaoptim_is_wp_accessible_from_public();
+		add_action( 'plugins_loaded', array( $this, 'initialize' ) );
+	}
+
+
+	/**
+	 * Initializes the background process queue for processing.
+	 */
+	public function initialize() {
+		$this->background_process = new MGO_MediaLibrary_Process();
+	}
+
+	/**
 	 * Optimizes specific attachment
 	 *
 	 * @param int|MGO_MediaAttachment $attachment
@@ -108,7 +137,6 @@ class MGO_MediaLibrary extends MGO_Library {
 
 		// Optimize the original and the thumbnails
 		try {
-			$attachment_object->lock();
 			$resources   = array();
 			$attachments = array();
 
@@ -207,11 +235,121 @@ class MGO_MediaLibrary extends MGO_Library {
 	 * Starts async optimization task for $attachment
 	 *
 	 * @param int|string $attachment
+	 * @param array $params
 	 *
 	 * @return void
+	 * @throws MGO_Attachment_Already_Optimized_Exception
+	 * @throws MGO_Attachment_Locked_Exception
+	 * @throws MGO_Exception
 	 */
-	public function optimize_async( $attachment ) {
+	public function optimize_async( $attachment, $params = array() ) {
 
+		if ( is_null( $this->background_process ) ) {
+			_doing_it_wrong( __METHOD__, 'Called too early. Please make sure WordPress is loaded and then call this method.', WP_MEGAOPTIM_VER );
+			return;
+		}
+
+
+		//Don't go further if not connected
+		$profile = MGO_Profile::_is_connected();
+		if ( ! $profile OR is_null( $this->optimizer ) ) {
+			throw new MGO_Exception( 'Please make sure you have set up MegaOptim.com API key' );
+		}
+
+		//Check if Attachment is image
+		$att_id = $attachment instanceof MGO_MediaAttachment ? $attachment->get_id() : $attachment;
+		if ( ! wp_attachment_is_image( $att_id ) ) {
+			throw new MGO_Exception( 'Attachment id is not valid image or pdf file' );
+		}
+
+		//Check the attachment object
+		if ( $attachment instanceof MGO_MediaAttachment ) {
+			$attachment_object = $attachment;
+			$attachment        = $attachment_object->get_id();
+		} else {
+			$attachment_object = new MGO_MediaAttachment( $attachment );
+		}
+
+		// Prevent
+		if ( $attachment_object->is_locked() ) {
+			throw new MGO_Attachment_Locked_Exception( 'The attachment is currently being optimized. No need to re-run the optimization.' );
+		}
+
+		// Bail if optimized!
+		if ( $attachment_object->is_optimized() ) {
+			throw new MGO_Attachment_Already_Optimized_Exception( 'The attachment is already fully optimized.' );
+		}
+
+		// Bail if no tokens left.
+		$tokens = $profile->get_tokens_count();
+		if ( $tokens != - 1 && $tokens <= 0 ) {
+			throw new MGO_Exception( 'No tokens left. Please top up your account at https://megaoptim.com/dashboard in order to continue.' );
+		}
+
+		//Setup Request params
+		$request_params = $this->filter_params( $this->build_request_params(), $attachment_object );
+		if ( ! empty( $params ) ) {
+			$request_params = array_merge( $request_params, $params );
+		}
+
+		/**
+		 * Fired before the optimization of the attachment
+		 *
+		 * @param MGO_MediaAttachment $attachment_object
+		 * @param array $request_params
+		 *
+		 * @since 1.0
+		 *
+		 */
+		do_action( 'megaoptim_before_optimization', $attachment_object, $request_params );
+
+		//Get the file names
+		$original_path     = $this->get_attachment_path( $attachment, 'full', false );
+		if ( ! file_exists( $original_path ) ) {
+			throw new MGO_Exception( __( 'Original image version does not exist on the server.', 'megaoptim' ) );
+		}
+
+		//Create Backup If Enabled
+		if ( $this->should_backup() ) {
+			$backup_path = $attachment_object->backup();
+			$attachment_object->set_backup_path( $backup_path );
+		}
+
+		$sizes = array();
+		// Collect the full size one
+		if ( ! $attachment_object->is_size_optimized( 'full' ) ) {
+			array_push( $sizes, 'full' );
+
+		}
+		// Collect the thumbnails
+		$unoptimized = $attachment_object->get_unoptimized_thumbnails();
+		foreach ( $unoptimized['normal'] as $size ) {
+			array_push( $sizes, $size );
+		}
+
+		$sizes = apply_filters( 'megaoptim_attachment_optimization_sizes', $sizes, $attachment_object );
+
+		// Create item objects
+		$items = array();
+		foreach ( $sizes as $size ) {
+			$item = array(
+				'attachment_id'         => $attachment_object->get_id(),
+				'attachment_size'       => $size,
+				'attachment_resource'   => $this->get_attachment( $attachment_object->get_id(), 'full', false ),
+				'attachment_local_path' => $this->get_attachment_path( $attachment_object->get_id(), 'full', false ),
+				'params'                => $request_params,
+			);
+			array_push($items, $item);
+		}
+
+		// Chunk and Dispatch
+		if(count($sizes)) {
+			$chunks = array_chunk( $items, 5 );
+			foreach ( $chunks as $chunk ) {
+				$this->background_process->push_to_queue( $chunk );
+			}
+			$this->background_process->save()->dispatch();
+		}
 	}
 
 	/**
@@ -418,7 +556,7 @@ class MGO_MediaLibrary extends MGO_Library {
 	 * @return string|false
 	 */
 	public function get_attachment( $attachment_id, $wp_image_size, $retina = false ) {
-		if ( megaoptim_is_wp_accessible_from_public() ) {
+		if ( $this->is_public_environment ) {
 			$file = $this->get_attachment_url( $attachment_id, $wp_image_size, $retina );
 		} else {
 			$file = $this->get_attachment_path( $attachment_id, $wp_image_size, $retina );

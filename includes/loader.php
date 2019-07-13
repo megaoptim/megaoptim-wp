@@ -44,10 +44,14 @@ $includes = array(
 	'functions/admin.php',
 	'functions/cache.php',
 
+	// Dependencies
+	'libraries/wp-background-processing/wp-async-request.php',
+	'libraries/wp-background-processing/wp-background-process.php',
+
 	// Classes
 	'classes/MGO_BaseObject.php',
 	'classes/MGO_ResultBag.php',
-	'migrations/MGO_Upgrader.php',
+	'classes/MGO_Upgrader.php',
 	'classes/Models/MGO_Attachment.php',
 	'classes/Adapters/MGO_Library.php',
 	'classes/Exceptions/MGO_Exception.php',
@@ -66,6 +70,10 @@ $includes = array(
 	'compat/nextgen-gallery/classes/MGO_NextGenLibrary.php'    => megaoptim_is_nextgen_active(),
 	'classes/MGO_Ajax.php',
 	'classes/MGO_Admin_UI.php'                                 => is_admin(),
+
+	// Jobs
+	'classes/Jobs/MGO_Background_Process.php',
+	'classes/Jobs/MGO_MediaLibrary_Process.php',
 
 	//Load Internal Hooks
 	'hooks/tasks.php',
@@ -119,4 +127,8 @@ if( megaoptim_is_wpengine() ) {
 }
 
 megaoptim_include_files( $includes );
+
+// Load
+MGO_MediaLibrary::instance();
+MGO_Ajax::instance();
 

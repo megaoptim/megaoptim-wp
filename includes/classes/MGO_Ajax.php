@@ -678,7 +678,15 @@ class MGO_Ajax extends MGO_BaseObject {
 		if ( ! empty( $attachment_id ) ) {
 			switch ( $context ) {
 				case MEGAOPTIM_TYPE_MEDIA_ATTACHMENT:
-					megaoptim_async_optimize_attachment( $attachment_id, array(), $additional_params );
+					try {
+						MGO_MediaLibrary::instance()->optimize_async($attachment_id, $possible_additional_data);
+
+					} catch(\Exception $e) {
+						wp_send_json_error(array(
+							'message' => $e->getMessage()
+						));
+						exit;
+					}
 					break;
 				default:
 					do_action( 'megaoptim_optimize_single_attachment', $attachment_id, $context, $additional_params );
@@ -717,5 +725,3 @@ class MGO_Ajax extends MGO_BaseObject {
 		}
 	}
 }
-
-MGO_Ajax::instance();

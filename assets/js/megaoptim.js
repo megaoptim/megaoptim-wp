@@ -407,25 +407,44 @@
 
         var spinner = '<span class="megaoptim-spinner"></span>';
 
-        var optimize_single_attachment = function ($self, url) {
+        var optimize_single_attachment = function ($self) {
+            var url = MegaOptim.ajax_url + '?action=megaoptim_optimize_single_attachment&nonce=' + MegaOptim.nonce_default;
             var context = $self.closest('.megaoptim-optimize').data('context');
             var attachment_id = $self.closest('.megaoptim-optimize').data('attachmentid');
             var compression = $self.data('compression');
+            var $dropdown = $self.closest('.megaoptim-dropdown');
+            var $button = $dropdown.find('label');
             $.ajax({
                 url: url,
                 type: "POST",
                 data: {attachmentid: attachment_id, context: context, compression: compression},
+                beforeSend: function () {
+                    $button.click();
+                    $self.addClass('megaoptim-optimizing');
+                    $button.removeClass('button-primary').addClass('button disabled').html(spinner + ' ' + MegaOptim.strings.optimizing);
+                },
                 success: function (response) {
-                    if (MegaOptim.ticker.enabled) {
-                        // No need anything, ticker handles it all.
+
+                    if(response.success) {
+
                     } else {
-                        // TODO: Implement some ideas for this for later.
+                        $button.addClass('button-primary').removeClass('button').removeClass('disabled').html(MegaOptim.strings.optimize);
+                        $self.removeClass('megaoptim-optimizing');
+                        alert(MegaOptim.strings.profile_error);
                     }
+                },
+                error:function () {
+                    $button.addClass('button-primary').removeClass('button').removeClass('disabled').html(MegaOptim.strings.optimize);
+                    $self.removeClass('megaoptim-optimizing');
+                    alert(MegaOptim.strings.profile_error);
                 }
             });
-        }
-        var attachment_id = $self.closest('.megaoptim-optimize').data('attachmentid');
-        if (attachment_id) {
+        };
+
+        optimize_single_attachment($self);
+
+        //var attachment_id = $self.closest('.megaoptim-optimize').data('attachmentid');
+        /*if (attachment_id) {
             var url_optimize = MegaOptim.ajax_url + '?action=megaoptim_optimize_single_attachment&nonce=' + MegaOptim.nonce_default;
             var url_tokens = MegaOptim.ajax_url + '?action=megaoptim_get_profile&nonce=' + MegaOptim.nonce_default;
             var $dropdown = $self.closest('.megaoptim-dropdown');
@@ -456,7 +475,7 @@
                     }
                 }
             })
-        }
+        } */
     })
 })(jQuery);
 

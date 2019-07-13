@@ -48,6 +48,21 @@ function megaoptim_include_files( $files ) {
 }
 
 /**
+ * Include file from megaoptim plugin
+ * @param $path
+ * @param $require
+ */
+function megaoptim_include_file($path, $require = true) {
+	$path = str_replace('/', DIRECTORY_SEPARATOR, $path);
+	$full_path = WP_MEGAOPTIM_PATH . DIRECTORY_SEPARATOR . $path;
+	if($require) {
+		require_once $full_path;
+	} else {
+		include_once $full_path;
+	}
+}
+
+/**
  * Initializes the library
  */
 function megaoptim_prepare_optimizer() {

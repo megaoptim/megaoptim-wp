@@ -73,10 +73,11 @@ abstract class MGO_Library extends MGO_BaseObject {
 	 * Starts async optimization task for $attachment
 	 *
 	 * @param int|string $attachment
+	 * @param array $params
 	 *
 	 * @return void
 	 */
-	abstract public function optimize_async( $attachment );
+	abstract public function optimize_async( $attachment, $params = array() );
 
 	/**
 	 * Returns array of the remaining images

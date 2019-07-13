@@ -154,10 +154,11 @@ class MGO_NextGenLibrary extends MGO_Library {
 	 * Starts async optimization task for $attachment
 	 *
 	 * @param int|string $attachment
+	 * @param array $params
 	 *
 	 * @return void
 	 */
-	public function optimize_async( $attachment ) {
+	public function optimize_async( $attachment, $params = array() ) {
 		// TODO: Implement optimize_async() method.
 	}
 

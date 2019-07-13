@@ -22,6 +22,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( 'Direct access is not allowed.' );
 }
 
+function megaoptim_get_optimizer() {
+	$optimizer = new \MegaOptim\Optimizer();
+}
+
 /**
  * Returns the megaoptim path
  * @return array|string
