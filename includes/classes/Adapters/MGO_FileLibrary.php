@@ -124,10 +124,11 @@ class MGO_FileLibrary extends MGO_Library {
 	 *
 	 * @param int|string $attachment
 	 * @param array $params
+	 * @param string $type
 	 *
 	 * @return void
 	 */
-	public function optimize_async( $attachment, $params = array() ) {
+	public function optimize_async( $attachment, $params = array(), $type = 'any') {
 		// TODO: Implement optimize_async() method.
 	}
 

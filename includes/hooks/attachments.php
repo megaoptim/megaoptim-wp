@@ -74,6 +74,7 @@ function _megaoptim_optimize_media_attachment( $metadata, $attachment_id ) {
 	try {
 		$attachment = new MGO_MediaAttachment( $attachment_id );
 		$attachment->set_metadata( $metadata );
+		$attachment->maybe_set_metadata();
 		MGO_MediaLibrary::instance()->optimize_async( $attachment );
 	} catch ( MGO_Exception $e ) {
 		megaoptim_log( $e->getMessage() );

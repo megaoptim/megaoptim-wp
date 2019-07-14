@@ -22,3 +22,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( 'Direct access is not allowed.' );
 }
 
+/**
+ * Auto optimize retinas once they are added.
+ *
+ * @param $id
+ */
+function megaoptim_wr2x_generate_retina( $id ) {
+	$optimize = apply_filters( 'megaoptim_auto_optimize_media_attachment_retina', MGO_Settings::instance()->isAutoOptimizeEnabled(), $id );
+	if($optimize) {
+		try {
+			MGO_MediaLibrary::instance()->optimize_async( $id );
+		} catch ( \Exception $e ) {
+			megaoptim_log( '--- Retina Auto Optimize Failed: ' . $e->getMessage() );
+		}
+	}
+}
+add_action( 'wr2x_generate_retina', 'megaoptim_wr2x_generate_retina', 150, 1 );

@@ -176,13 +176,14 @@ class MGO_NGGLibrary extends MGO_Library {
 	 *
 	 * @param MGO_File|int $attachment
 	 * @param array $params
+	 * @param string $type
 	 *
 	 * @return void
 	 * @throws MGO_Attachment_Already_Optimized_Exception
 	 * @throws MGO_Attachment_Locked_Exception
 	 * @throws MGO_Exception
 	 */
-	public function optimize_async( $attachment, $params = array() ) {
+	public function optimize_async( $attachment, $params = array(), $type = 'any' ) {
 
 		if ( is_null( $this->background_process ) ) {
 			_doing_it_wrong( __METHOD__, 'Called too early. Please make sure WordPress is loaded and then call this method.', WP_MEGAOPTIM_VER );

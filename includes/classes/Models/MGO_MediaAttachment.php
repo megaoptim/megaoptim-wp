@@ -495,6 +495,18 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	}
 
 	/**
+	 * Returns the normal object
+	 * @return array
+	 */
+	public function get_normal() {
+		$data = $this->data;
+		if(isset($data['retina'])) {
+			unset($data['retina']);
+		}
+		return $data;
+	}
+
+	/**
 	 * Returns number of thumbnails count
 	 * @return int
 	 */

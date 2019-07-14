@@ -144,8 +144,8 @@ class MGO_MediaLibrary extends MGO_Library {
 
 			$attachment_object->maybe_set_metadata();
 			$remaining_thumbnails = $attachment_object->get_remaining_thumbnails();
-			foreach(array('normal', 'retina') as $type) {
-				$is_retina = $type === 'retina';
+			foreach(array('normal', 'retina') as $_type) {
+				$is_retina = $_type === 'retina';
 
 				// Collect the full size ones
 				if ( ! $attachment_object->is_size_processed( 'full', $is_retina ) ) {
@@ -158,7 +158,7 @@ class MGO_MediaLibrary extends MGO_Library {
 				}
 
 				// Collect the thumbnails
-				foreach ( $remaining_thumbnails[$type] as $size ) {
+				foreach ( $remaining_thumbnails[$_type] as $size ) {
 					if ( $attachment_object->is_size_processed( $size, $is_retina ) ) {
 						continue;
 					}
@@ -235,12 +235,13 @@ class MGO_MediaLibrary extends MGO_Library {
 	 *
 	 * @param int|string $attachment
 	 * @param array $params
+	 * @param string $needed_type
 	 *
 	 * @return void
 	 * @throws MGO_Attachment_Locked_Exception
 	 * @throws MGO_Exception
 	 */
-	public function optimize_async( $attachment, $params = array() ) {
+	public function optimize_async( $attachment, $params = array(), $needed_type = '') {
 
 		if ( is_null( $this->background_process ) ) {
 			_doing_it_wrong( __METHOD__, 'Called too early. Please make sure WordPress is loaded and then call this method.', WP_MEGAOPTIM_VER );
@@ -311,9 +312,9 @@ class MGO_MediaLibrary extends MGO_Library {
 
 		// Collect the thumbnails
 		$remaining_thumbs = $attachment_object->get_remaining_thumbnails();
-		foreach ( array( 'normal', 'retina' ) as $type ) {
+		foreach (array( 'normal', 'retina' )  as $_type ) {
 			// Collect the full size ones
-			$is_retina = $type === 'retina';
+			$is_retina = $_type === 'retina';
 			if ( ! $attachment_object->is_size_processed( 'full', $is_retina ) ) {
 				$full_resource = $this->get_attachment( $attachment_object->get_id(), 'full', $is_retina );
 				$full_local_path = $this->get_attachment_path( $attachment_object->get_id(), 'full', $is_retina );
@@ -324,22 +325,24 @@ class MGO_MediaLibrary extends MGO_Library {
 						'attachment_resource'   => $full_resource,
 						'attachment_local_path' => $full_local_path,
 						'params'                => $request_params,
-						'type'                  => $type
+						'type'                  => $_type
 					);
 					array_push( $items, $item );
 				}
 			}
 			// Collect the thumbnails
-			foreach ( $remaining_thumbs[ $type ] as $size ) {
-				$item = array(
-					'attachment_id'         => $attachment_object->get_id(),
-					'attachment_size'       => $size,
-					'attachment_resource'   => $this->get_attachment( $attachment_object->get_id(), $size, $is_retina ),
-					'attachment_local_path' => $this->get_attachment_path( $attachment_object->get_id(), $size, $is_retina ),
-					'params'                => $request_params,
-					'type'                  => $type
-				);
-				array_push( $items, $item );
+			if(isset($remaining_thumbs[ $_type ])) {
+				foreach ( $remaining_thumbs[ $_type ] as $size ) {
+					$item = array(
+						'attachment_id'         => $attachment_object->get_id(),
+						'attachment_size'       => $size,
+						'attachment_resource'   => $this->get_attachment( $attachment_object->get_id(), $size, $is_retina ),
+						'attachment_local_path' => $this->get_attachment_path( $attachment_object->get_id(), $size, $is_retina ),
+						'params'                => $request_params,
+						'type'                  => $_type
+					);
+					array_push( $items, $item );
+				}
 			}
 		}
 

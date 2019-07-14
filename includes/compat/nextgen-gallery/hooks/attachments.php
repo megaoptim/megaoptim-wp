@@ -27,6 +27,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @param int $gallery_id
  * @param array $image_ids
+ *
+ * @throws MGO_Attachment_Already_Optimized_Exception
+ * @throws MGO_Attachment_Locked_Exception
+ * @throws MGO_Exception
  */
 function _megaoptim_auto_optimize_ngg_attachment( $gallery_id, $image_ids ) {
 
@@ -38,8 +42,6 @@ function _megaoptim_auto_optimize_ngg_attachment( $gallery_id, $image_ids ) {
 			}
 		}
 	}
-
-	megaoptim_log( 'autoptimizing ngg attachment: ' . implode( ',', $image_ids ) );
 
 	foreach ( $image_ids as $image_id ) {
 		/**

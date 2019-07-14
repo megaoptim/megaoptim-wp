@@ -85,6 +85,7 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 
 						// Save data
 						$data = megaoptim_generate_attachment_data( $file, $response, $request_params );
+						$attachment->refresh();
 						$attachment->set_attachment_data( $size, $data, $is_retina );
 						$attachment->save();
 

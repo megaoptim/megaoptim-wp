@@ -102,7 +102,6 @@ $includes = array(
 if ( megaoptim_is_wr2x_active() ) {
 	$includes = array_merge( $includes, array(
 		// -- WP Retina 2x
-		'compat/wp-retina-2x/helpers.php',
 		'compat/wp-retina-2x/hooks/general.php',
 	) );
 }
@@ -127,9 +126,9 @@ if ( megaoptim_is_wpengine() ) {
 megaoptim_include_files( $includes );
 
 // Load
+MGO_Ajax::instance();
 MGO_MediaLibrary::instance();
 if ( megaoptim_is_nextgen_active() ) {
 	MGO_NGGLibrary::instance();
 }
-MGO_Ajax::instance();
 
