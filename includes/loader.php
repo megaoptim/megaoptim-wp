@@ -78,7 +78,6 @@ $includes = array(
 
 
 	//Load Internal Hooks
-	'hooks/tasks.php',
 	'hooks/general.php',
 	'hooks/internal.php',
 	'hooks/attachments.php',
@@ -103,8 +102,6 @@ $includes = array(
 if ( megaoptim_is_wr2x_active() ) {
 	$includes = array_merge( $includes, array(
 		// -- WP Retina 2x
-		'compat/wp-retina-2x/classes/MGO_Wr2x_Core.php',
-		'compat/wp-retina-2x/classes/MGO_Wr2x.php',
 		'compat/wp-retina-2x/helpers.php',
 		'compat/wp-retina-2x/hooks/general.php',
 	) );

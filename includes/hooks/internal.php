@@ -56,6 +56,8 @@ add_action( 'admin_footer', '_megaoptim_admin_footer' );
  * Check and run database upgrade if needed.
  */
 function _megaoptim_database_upgrade() {
-	MGO_Upgrader::instance()->maybe_upgrade();
+	if ( is_admin() ) {
+		MGO_Upgrader::instance()->maybe_upgrade();
+	}
 }
-add_action('plugins_loaded', '_megaoptim_database_upgrade', 100);
+add_action( 'plugins_loaded', '_megaoptim_database_upgrade', 100 );

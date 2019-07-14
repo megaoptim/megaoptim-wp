@@ -598,29 +598,6 @@ function megaoptim_view( $file, $data = array(), $extension = '' ) {
 
 
 /**
- * Initiates async task
- *
- * @param $data
- */
-function megaoptim_async_task( $data ) {
-	$args = array(
-		'timeout'   => 3,
-		'blocking'  => false,
-		'body'      => $data,
-		'cookies'   => isset( $_COOKIE ) && is_array( $_COOKIE ) ? $_COOKIE : array(),
-		'sslverify' => apply_filters( 'https_local_ssl_verify', false ),
-	);
-	/**
-	 * Filter the arguments for the non-blocking request.
-	 *
-	 * @param array $args
-	 */
-	$args = apply_filters( 'megaoptim_async_task_args', $args );
-	wp_remote_post( admin_url( 'admin-ajax.php' ), $args );
-}
-
-
-/**
  * Raise the WP Memory limit.
  */
 function megaoptim_raise_memory_limit() {
@@ -718,26 +695,6 @@ function megaoptim_mb_basename( $path, $suffix = false ) {
 	$Base   = str_replace( $Separator, "", $Base );
 
 	return $Base;
-}
-
-/**
- * Optimizes media library attachment in background
- *
- * @param $attachment_id
- * @param array $metadata
- * @param array $params
- */
-function megaoptim_async_optimize_attachment( $attachment_id, $metadata = array(), $params = array() ) {
-	$params = array(
-		'action'        => 'megaoptim_async_optimize_ml_attachment',
-		'_nonce'        => wp_create_nonce( 'megaoptim_async_optimize_ml_attachment' . '_' . $attachment_id ),
-		'attachment_id' => $attachment_id,
-		'params'        => $params
-	);
-	if ( is_array( $metadata ) && ! empty( $metadata ) ) {
-		$params['metadata'] = $metadata;
-	}
-	megaoptim_async_task( $params );
 }
 
 /**

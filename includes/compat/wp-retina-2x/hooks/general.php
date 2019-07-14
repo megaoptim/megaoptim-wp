@@ -150,7 +150,6 @@ function _megaoptim_wr2x_ml_attachment_unoptimized_thumbnails( $thumbnails, $att
 
 	return $thumbnails;
 }
-
 add_filter( 'megaoptim_ml_attachment_unoptimized_thumbnails', '_megaoptim_wr2x_ml_attachment_unoptimized_thumbnails', 10, 2 );
 
 /**
