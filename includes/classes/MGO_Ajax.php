@@ -181,9 +181,9 @@ class MGO_Ajax extends MGO_BaseObject {
 			wp_send_json_error( array( 'error' => __( 'No attachment provided.', 'megaoptim' ) ) );
 		}
 		try {
-			$result     = MGO_LocalDirectories::instance()->optimize( new MGO_File( $_REQUEST['attachment'] ) );
+			$result     = MGO_FileLibrary::instance()->optimize( new MGO_File( $_REQUEST['attachment'] ) );
 			$attachment = $result->get_attachment();
-			if ( $attachment instanceof MGO_LocalFileAttachment ) {
+			if ( $attachment instanceof MGO_FileAttachment ) {
 				$response['attachment'] = $attachment->get_optimization_stats();
 				$response['general']    = $result->get_optimization_info();
 				$response['tokens']     = $result->get_last_response()->getUser()->getTokens();
@@ -572,7 +572,7 @@ class MGO_Ajax extends MGO_BaseObject {
 			} else {
 				$additional_data['recursive'] = 0;
 			}
-			$stats = MGO_LocalDirectories::instance()->get_stats( $directory, $additional_data );
+			$stats = MGO_FileLibrary::instance()->get_stats( $directory, $additional_data );
 			megaoptim_log( $stats );
 			wp_send_json_success( $stats );
 		}
@@ -631,7 +631,7 @@ class MGO_Ajax extends MGO_BaseObject {
 							$response[ $attachment_id ] = array(
 								'id'           => $attachment->get_id(),
 								'is_locked'    => $attachment->is_locked(),
-								'is_optimized' => $attachment->is_optimized(),
+								'is_optimized' => $attachment->is_processed(),
 								'html'         => MGO_MediaLibrary::instance()->get_attachment_buttons( $attachment )
 							);
 
@@ -679,7 +679,7 @@ class MGO_Ajax extends MGO_BaseObject {
 			switch ( $context ) {
 				case MEGAOPTIM_TYPE_MEDIA_ATTACHMENT:
 					try {
-						MGO_MediaLibrary::instance()->optimize_async($attachment_id, $possible_additional_data);
+						MGO_MediaLibrary::instance()->optimize_async($attachment_id, $additional_params);
 
 					} catch(\Exception $e) {
 						wp_send_json_error(array(

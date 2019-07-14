@@ -23,9 +23,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class MGO_NextGenAttachment
+ * Class MGO_NGGAttachment
  */
-class MGO_NextGenAttachment extends MGO_Attachment {
+class MGO_NGGAttachment extends MGO_Attachment {
 
 	private $db;
 	private $megaoptim_result_id;
@@ -33,7 +33,7 @@ class MGO_NextGenAttachment extends MGO_Attachment {
 	const TYPE = MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT;
 
 	/**
-	 * MGO_NextGenAttachment constructor.
+	 * MGO_NGGAttachment constructor.
 	 *
 	 * @param $id
 	 */
@@ -57,8 +57,8 @@ class MGO_NextGenAttachment extends MGO_Attachment {
 			$filename                  = $entry['filename'];
 			$gallery_id                = $entry['gid'];
 			unset( $entry['id'] );
-			unset( $entry['path'] );
 			unset( $entry['filename'] );
+			unset( $entry['path'] );
 			unset( $entry['gid'] );
 			unset( $entry['object_id'] );
 			$this->data               = $entry;
@@ -98,16 +98,18 @@ class MGO_NextGenAttachment extends MGO_Attachment {
 		if ( ( isset( $this->data['webp_size'] ) && is_null( $this->data['webp_size'] ) ) || !isset($this->data['webp_size']) ) {
 			$this->data['webp_size'] = 0;
 		}
+
 		if ( $this->has_result() ) {
 			$result = $this->db->update( $this->table_name, $this->data, array( 'id' => $this->megaoptim_result_id ) );
-
+			$method = 'update';
 		} else {
 			$result = $this->db->insert( $this->table_name, $this->data );
+			$method = 'insert';
 			$this->__load();
 		}
 
 		$is_success = false !== $result && $result > 0;
-		if ( ! $is_success ) {
+		if ( ! $is_success && $method === 'insert' ) {
 			megaoptim_log( 'Error while saving ' . __CLASS__ . ' object: ' . $this->db->last_error );
 		}
 
@@ -181,7 +183,7 @@ class MGO_NextGenAttachment extends MGO_Attachment {
 	 * If this is once optimized?
 	 * @return bool
 	 */
-	public function is_optimized() {
+	public function is_processed() {
 		return isset( $this->data['success'] ) && $this->data['success'] == 1;
 	}
 

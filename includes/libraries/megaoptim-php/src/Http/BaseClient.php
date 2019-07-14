@@ -141,6 +141,7 @@ abstract class BaseClient {
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
 		curl_setopt( $ch, CURLOPT_BINARYTRANSFER, 1 );
 		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
+		curl_setopt( $ch, CURLOPT_HTTPHEADER, array( "Accept" => "application/json" ) );
 		$response = curl_exec( $ch );
 		if ( false === $response ) {
 			$curl_error = curl_error( $ch );
@@ -184,6 +185,7 @@ abstract class BaseClient {
 
 	/**
 	 * Set the user agent
+	 *
 	 * @param $user_agent
 	 */
 	public static function set_user_agent( $user_agent ) {

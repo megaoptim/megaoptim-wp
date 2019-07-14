@@ -39,7 +39,7 @@ class MGO_Wr2X_Core {
 
 		if ( $attachment instanceof MGO_MediaAttachment ) {
 			$optimized_file_path = false;
-			if ( $attachment->is_size_optimized( 'full' ) && $attachment->has_backup() ) {
+			if ( $attachment->is_size_processed( 'full' ) && $attachment->has_backup() ) {
 				$optimized_file_path = $this->try_restore_original( $attachment );
 			}
 			// Create retina images.

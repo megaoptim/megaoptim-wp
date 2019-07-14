@@ -35,7 +35,7 @@ function _megaoptim_wr2x_before_finish( $attachment_object, $request_params, $re
 		// Optimize the original retina?
 
 		$exists       = megaoptim_retina_size_exists( $attachment_object, 'full' );
-		$is_optimized = megaoptim_retina_is_size_optimized( $attachment_object, 'full' );
+		$is_optimized = megaoptim_retina_is_size_processed( $attachment_object, 'full' );
 
 		if ( $exists && ! $is_optimized ) {
 			megaoptim_log( 'Found main retina image, optimizing...' );
@@ -69,12 +69,12 @@ function _megaoptim_wr2x_before_finish( $attachment_object, $request_params, $re
 			}
 		}
 
-		$remaining_thumbnails = $attachment_object->get_unoptimized_thumbnails();
+		$remaining_thumbnails = $attachment_object->get_remaining_thumbnails();
 		if ( ! empty( $remaining_thumbnails['retina'] ) ) {
 			megaoptim_log( 'Found retina ' . count( $remaining_thumbnails['retina'] ) . ' thumbnails, optimizing them now.' );
 			foreach ( $remaining_thumbnails['retina'] as $size ) {
 				$exists       = megaoptim_retina_size_exists( $attachment_object, $size );
-				$is_optimized = megaoptim_retina_is_size_optimized( $attachment_object, $size );
+				$is_optimized = megaoptim_retina_is_size_processed( $attachment_object, $size );
 
 				if ( $exists && ! $is_optimized ) {
 					$thumbnail_resource = MGO_MediaLibrary::instance()->get_attachment( $attachment_object->get_id(), $size, true );
@@ -143,7 +143,7 @@ function _megaoptim_wr2x_ml_attachment_unoptimized_thumbnails( $thumbnails, $att
 		if ( ! in_array( $key, $alloed_sizes ) ) {
 			continue;
 		}
-		if ( megaoptim_retina_size_exists( $attachment, $key ) && ! megaoptim_retina_is_size_optimized( $attachment, $key ) ) {
+		if ( megaoptim_retina_size_exists( $attachment, $key ) && ! megaoptim_retina_is_size_processed( $attachment, $key ) ) {
 			array_push( $thumbnails['retina'], $key );
 		}
 	}
@@ -166,9 +166,9 @@ function _megaoptim_wr2x_ml_attachment_optimized_thumbnails( $thumbnails, $attac
 	if ( ! isset( $megaoptim_data['retina']['thumbs'] ) || ! is_array( $megaoptim_data['retina']['thumbs'] ) ) {
 		return $thumbnails;
 	}
-	foreach ( $megaoptim_data['retina']['thumbs'] as $thumb ) {
+	foreach ( $megaoptim_data['retina']['thumbs'] as $key => $thumb ) {
 		if ( isset( $thumb['status'] ) && intval( $thumb['status'] ) == 1 ) {
-			array_push( $thumbnails['retina'], $thumb );
+			$thumbnails['retina'][$key] = $thumb;
 		}
 	}
 
@@ -189,7 +189,7 @@ add_filter( 'megaoptim_ml_attachment_optimized_thumbnails', '_megaoptim_wr2x_ml_
 function _megaoptim_wr2x_ml_is_optimized( $status, $attachment ) {
 
 	$data                   = $attachment->get_raw_data();
-	$unoptimized_thumbnails = $attachment->get_unoptimized_thumbnails();
+	$unoptimized_thumbnails = $attachment->get_remaining_thumbnails();
 	$total_unoptimized      = isset( $unoptimized_thumbnails['retina'] ) ? count( $unoptimized_thumbnails['retina'] ) : 0;
 
 	$is_full_optimized = isset( $data['retina']['full']['status'] ) && ! empty( $data['retina']['full']['status'] );

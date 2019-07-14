@@ -1,5 +1,5 @@
 <?php
-/* @var MGO_NextGenAttachment $data */
+/* @var MGO_NGGAttachment $data */
 $context = $data::TYPE;
 ?>
 
@@ -8,7 +8,7 @@ $context = $data::TYPE;
         <p>
 			<?php echo '<strong>' . __( 'Full size image already optimized, no further optimization needed!', 'megaoptim' ) . '</strong>'; ?>
         </p>
-	<?php elseif ( $data->is_optimized() ): ?>
+	<?php elseif ( $data->is_processed() ): ?>
         <p>
 			<?php $method = sprintf( __( 'Success! Image is optimized successfully with %s method.', 'megaoptim' ), '<strong>' . $data->get( 'compression' ) . '</strong>' ); ?>
 

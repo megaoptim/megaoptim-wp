@@ -37,11 +37,12 @@ if ( ! function_exists( '_megaoptim_optimize_mediapress_attachment' ) ) {
 		/**
 		 * Hook to optimize the media attachment or not.
 		 *
-		 * @since  1.0.0
-		 *
 		 * @param bool $optimize True to optimize, false otherwise.
 		 * @param int $post_id Attachment ID.
 		 * @param array $metadata An array of attachment meta data.
+		 *
+		 * @since  1.0.0
+		 *
 		 */
 		$optimize = apply_filters( 'megaoptim_auto_optimize_mediapress_attachment', MGO_Settings::instance()->isAutoOptimizeEnabled(), $attachment_id, $metadata );
 
@@ -49,11 +50,14 @@ if ( ! function_exists( '_megaoptim_optimize_mediapress_attachment' ) ) {
 			return $metadata;
 		}
 
-		megaoptim_async_optimize_attachment( $attachment_id, $metadata );
+		try {
+			$attachment = new MGO_MediaAttachment( $attachment_id );
+			$attachment->set_metadata( $metadata );
+			MGO_MediaLibrary::instance()->optimize_async( $attachment->get_id() );
+		} catch ( MGO_Exception $e ) {}
 
 		return $metadata;
 	}
-
 	add_filter( 'mpp_generate_metadata', '_megaoptim_optimize_mediapress_attachment', WP_MEGAOPTIM_INT_MAX, 2 );
 }
 

@@ -43,7 +43,6 @@ abstract class MGO_Attachment {
 	 */
 	abstract protected function __load();
 
-
 	/**
 	 * Implements the saving meta functionality
 	 */
@@ -141,7 +140,7 @@ abstract class MGO_Attachment {
 	 * If this is once optimized?
 	 * @return bool
 	 */
-	abstract public function is_optimized();
+	abstract public function is_processed();
 
 	/**
 	 * Is image already optimized?
@@ -497,7 +496,7 @@ abstract class MGO_Attachment {
 	public function lock() {
 		$lock = $this->get_lock_key();
 
-		return megaoptim_cache_set( $lock, time(), MEGAOPTIM_TEN_MINUTES_IN_SECONDS );
+		return megaoptim_cache_set( $lock, time(), MEGAOPTIM_FIVE_MINUTES_IN_SECONDS );
 	}
 
 	/**

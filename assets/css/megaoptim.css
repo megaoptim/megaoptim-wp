@@ -1097,3 +1097,27 @@ UL.jqueryFileTree A {
     display: inline-block;
     margin-bottom: 3px;
 }
+
+.megaoptim-attachment-stats thead th {
+    font-weight: 500;
+}
+
+.megaoptim-attachment-stats table {
+    background: #fff;
+    border: 1px solid #f0f0f0;
+}
+.megaoptim-attachment-buttons > p, #megaoptim_media_attachment {
+    text-align: center;
+}
+.megaoptim-attachment-buttons {
+    text-align: center;
+}
+.megaoptim-attachment-thumbnail-stats {
+    text-align: left;
+}
+.megaoptim-attachment-info-row {
+    margin-bottom: 12px !important;
+}
+.megaoptim-attachment-info-row p {
+    margin-bottom: 3px !important;
+}

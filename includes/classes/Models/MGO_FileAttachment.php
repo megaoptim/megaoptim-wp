@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( 'Direct access is not allowed.' );
 }
 
-class MGO_LocalFileAttachment extends MGO_Attachment {
+class MGO_FileAttachment extends MGO_Attachment {
 	const TYPE = MEGAOPTIM_TYPE_FILE_ATTACHMENT;
 	protected $path;
 	protected $db;
@@ -172,7 +172,7 @@ class MGO_LocalFileAttachment extends MGO_Attachment {
 	 * If this is once optimized?
 	 * @return bool
 	 */
-	public function is_optimized() {
+	public function is_processed() {
 		return isset( $this->data['success'] ) && $this->data['success'] == 1;
 	}
 

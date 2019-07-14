@@ -59,18 +59,25 @@ function _megaoptim_optimize_media_attachment( $metadata, $attachment_id ) {
 	/**
 	 * Hook to optimize the media attachment or not.
 	 *
-	 * @since  1.0.0
-	 *
 	 * @param bool $optimize True to optimize, false otherwise.
 	 * @param int $post_id Attachment ID.
 	 * @param array $metadata An array of attachment meta data.
+	 *
+	 * @since  1.0.0
+	 *
 	 */
 	$optimize = apply_filters( 'megaoptim_auto_optimize_media_attachment', MGO_Settings::instance()->isAutoOptimizeEnabled(), $attachment_id, $metadata );
 
 	if ( ! $optimize ) {
 		return $metadata;
 	}
-	megaoptim_async_optimize_attachment( $attachment_id, $metadata );
+	try {
+		$attachment = new MGO_MediaAttachment( $attachment_id );
+		$attachment->set_metadata( $metadata );
+		MGO_MediaLibrary::instance()->optimize_async( $attachment );
+	} catch ( MGO_Exception $e ) {
+		megaoptim_log( $e->getMessage() );
+	}
 
 	return $metadata;
 }

@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! function_exists( '_megaoptim_cloudflare_purge' ) ) {
 	/**
-	 * @param MGO_MediaAttachment|MGO_LocalFileAttachment|MGO_NextGenLibrary $attachment
+	 * @param MGO_MediaAttachment|MGO_FileAttachment|MGO_NGGLibrary $attachment
 	 * @param string $resource
 	 * @param \MegaOptim\Responses\Response $response
 	 * @param array $params
@@ -41,7 +41,7 @@ if ( ! function_exists( '_megaoptim_cloudflare_purge' ) ) {
 				if ( ! empty( $url_data ) ) {
 					array_push( $urls_to_purge, $url_data[0] );
 				}
-			} else if ( $attachment instanceof MGO_NextGenAttachment || $attachment instanceof MGO_LocalFileAttachment ) {
+			} else if ( $attachment instanceof MGO_NGGAttachment || $attachment instanceof MGO_FileAttachment ) {
 				// If $resource is url it means that the website is public and probably uses cloudflare.
 				if ( megaoptim_is_url( $resource ) ) {
 					array_push( $urls_to_purge, $response );

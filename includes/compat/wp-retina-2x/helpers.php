@@ -83,7 +83,7 @@ function megaoptim_retina_remove_full_attachment_data( $attachment ) {
  *
  * @return bool
  */
-function megaoptim_retina_is_size_optimized( $attachment, $size ) {
+function megaoptim_retina_is_size_processed( $attachment, $size ) {
 	$data = $attachment->get_raw_data();
 	if ( $size === 'full' ) {
 		return isset( $data['retina']['full']['status'] ) && ! empty( $data['retina']['full']['status'] );

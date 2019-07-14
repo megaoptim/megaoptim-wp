@@ -220,7 +220,6 @@ class MGO_Admin_UI extends MGO_BaseObject {
 
 	/**
 	 * Prints the attachment stats modal to the footer.
-	 * @throws MGO_Exception
 	 */
 	public function render_media_edit_buttons() {
 		$attachment_id = isset( $_GET['post'] ) ? $_GET['post'] : null;
@@ -236,7 +235,12 @@ class MGO_Admin_UI extends MGO_BaseObject {
 		}
 	}
 
-
+	/**
+	 * Add the settings link
+	 * @param $links
+	 *
+	 * @return array
+	 */
 	public function add_settings_link( $links ) {
 		$custom_links = array(
 			'<a href="admin.php?page=megaoptim_settings">' . __( 'Settings' ) . '</a>'
@@ -293,6 +297,8 @@ class MGO_Admin_UI extends MGO_BaseObject {
 					'working'               => __( 'Working...', 'megaoptim' ),
 					'no_tokens'             => __( 'No enough tokens left. You can always top up your account at https://megaoptim.com/dashboard/', 'megaoptim' ),
 					'profile_error'         => __( 'Error! We can not retrieve your profile. Please check if there is active internet connection or open a ticket in our dashboard area.', 'megaoptim' ),
+					'show_thumbnail_info'   => __( 'Show More Info', 'megaoptim' ),
+					'hide_thumbnail_info'   => __( 'Hide More Info', 'megaoptim' ),
 				),
 				'context'        => array(
 					'medialibrary' => MEGAOPTIM_TYPE_MEDIA_ATTACHMENT,
@@ -344,7 +350,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 					'context'         => array(
 						'media_library' => MEGAOPTIM_TYPE_MEDIA_ATTACHMENT,
 						'local_folders' => MEGAOPTIM_TYPE_FILE_ATTACHMENT,
-						'ngg'           => class_exists( 'MGO_NextGenAttachment' ) ? MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT : - 1,
+						'ngg'           => class_exists( 'MGO_NGGAttachment' ) ? MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT : - 1,
 					)
 				)
 			);
@@ -372,7 +378,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 		// Library processor
 		wp_register_script( 'megaoptim-library', WP_MEGAOPTIM_ASSETS_URL . 'js/megaoptim-library.js', array( 'jquery' ), time(), true );
 		if ( megaoptim_is_optimizer_page( MEGAOPTIM_TYPE_MEDIA_ATTACHMENT )
-		     || ( class_exists( 'MGO_NextGenAttachment' )
+		     || ( class_exists( 'MGO_NGGAttachment' )
 		          && megaoptim_is_optimizer_page( MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT ) ) ) {
 
 			wp_localize_script( 'megaoptim-library', 'MGOLibrary', array(

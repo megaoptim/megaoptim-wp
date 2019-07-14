@@ -64,16 +64,18 @@ $includes = array(
 	'classes/MGO_Debug.php',
 	'classes/Models/MGO_MediaAttachment.php',
 	'classes/Adapters/MGO_MediaLibrary.php',
-	'classes/Models/MGO_LocalFileAttachment.php',
-	'classes/Adapters/MGO_LocalDirectories.php',
-	'compat/nextgen-gallery/classes/MGO_NextGenAttachment.php' => megaoptim_is_nextgen_active(),
-	'compat/nextgen-gallery/classes/MGO_NextGenLibrary.php'    => megaoptim_is_nextgen_active(),
+	'classes/Models/MGO_FileAttachment.php',
+	'classes/Adapters/MGO_FileLibrary.php',
+	'compat/nextgen-gallery/classes/MGO_NGGAttachment.php' => megaoptim_is_nextgen_active(),
+	'compat/nextgen-gallery/classes/MGO_NGGLibrary.php'    => megaoptim_is_nextgen_active(),
 	'classes/MGO_Ajax.php',
 	'classes/MGO_Admin_UI.php'                                 => is_admin(),
 
 	// Jobs
 	'classes/Jobs/MGO_Background_Process.php',
 	'classes/Jobs/MGO_MediaLibrary_Process.php',
+	'compat/nextgen-gallery/classes/MGO_NGGProcess.php'    => megaoptim_is_nextgen_active(),
+
 
 	//Load Internal Hooks
 	'hooks/tasks.php',
@@ -112,23 +114,25 @@ if ( megaoptim_is_nextgen_active() ) {
 		// -- Nextgen Library
 		'compat/nextgen-gallery/helpers.php',
 		'compat/nextgen-gallery/hooks/ajax.php',
+		'compat/nextgen-gallery/hooks/attachments.php',
 		'compat/nextgen-gallery/hooks/general.php',
 		'compat/nextgen-gallery/hooks/list.php',
-		'compat/nextgen-gallery/hooks/tasks.php',
-		'compat/nextgen-gallery/hooks/attachments.php',
 	) );
 }
 
-if( megaoptim_is_wpengine() ) {
-	$includes = array_merge($includes, array(
+if ( megaoptim_is_wpengine() ) {
+	$includes = array_merge( $includes, array(
 		// -- WPEngine
 		'compat/hosting/wpengine/hooks.php'
-	));
+	) );
 }
 
 megaoptim_include_files( $includes );
 
 // Load
 MGO_MediaLibrary::instance();
+if( megaoptim_is_nextgen_active()) {
+	MGO_NGGLibrary::instance();
+}
 MGO_Ajax::instance();
 

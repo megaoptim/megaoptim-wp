@@ -25,18 +25,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! function_exists( '_megaoptim_wpengine_purge' ) ) {
 	/**
 	 * Purges wpengine cdn cache once attachment is optimized.
-	 * @param MGO_MediaAttachment|MGO_LocalFileAttachment|MGO_NextGenLibrary $attachment
-	 * @param string $resource
-	 * @param \MegaOptim\Responses\Response $response
-	 * @param array $params
-	 * @param array $size
 	 */
-	function _megaoptim_wpengine_purge( $attachment, $resource, $response, $params, $size ) {
+	function _megaoptim_wpengine_purge() {
 		if ( class_exists( 'WpeCommon' ) ) {
 			if ( method_exists( 'WpeCommon', 'clear_maxcdn_cache' ) ) {
 				WpeCommon::clear_maxcdn_cache();
 			}
 		}
 	}
-	add_action( 'megaoptim_attachment_optimized', '_megaoptim_wpengine_purge', 10, 5 );
+	add_action( 'megaoptim_attachment_optimized', '_megaoptim_wpengine_purge', 10, 0 );
 }

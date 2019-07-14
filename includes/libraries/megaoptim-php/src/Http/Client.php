@@ -79,13 +79,13 @@ class Client extends BaseClient {
 		curl_setopt( $ch, CURLOPT_FAILONERROR, 0 );
 		curl_setopt( $ch, CURLOPT_TIMEOUT, self::TIMEOUT );
 		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
+
+		// Setup headers
+		$headers = array( 'Accept: application/json' );
 		if ( ! is_null( $api_key ) ) {
-			curl_setopt(
-				$ch, CURLOPT_HTTPHEADER, array(
-					self::AUTH_HEADER . ': ' . $api_key
-				)
-			);
+			array_push( $headers, self::AUTH_HEADER . ': ' . $api_key );
 		}
+		curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
 
 		$response = curl_exec( $ch );
 		curl_close( $ch );
@@ -127,13 +127,14 @@ class Client extends BaseClient {
 		curl_setopt( $ch, CURLOPT_FAILONERROR, 0 );
 		curl_setopt( $ch, CURLOPT_TIMEOUT, self::TIMEOUT );
 		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
+
+		// Setup headers
+		$headers = array( 'Accept: application/json' );
 		if ( ! is_null( $api_key ) ) {
-			curl_setopt(
-				$ch, CURLOPT_HTTPHEADER, array(
-					self::AUTH_HEADER . ': ' . $api_key
-				)
-			);
+			array_push( $headers, self::AUTH_HEADER . ': ' . $api_key );
 		}
+		curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
+
 		$response = curl_exec( $ch );
 		if ( false === $response ) {
 			$curl_error = curl_error( $ch );

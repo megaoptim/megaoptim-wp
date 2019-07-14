@@ -1,4 +1,4 @@
-<?php
+<?Php
 /********************************************************************
  * Copyright (C) 2018 MegaOptim (https://megaoptim.com)
  *
@@ -18,36 +18,19 @@
  * along with MegaOptim Image Optimizer. If not, see <https://www.gnu.org/licenses/>.
  **********************************************************************/
 
-if ( ! defined( 'ABSPATH' ) ) {
-	die( 'Direct access is not allowed.' );
-}
-
-/**
- * Created by PhpStorm.
- * User: dg
- * Date: 26.8.2018
- * Time: 14:28
- */
-class MGO_NextGenLibrary extends MGO_Library {
+class MGO_FileLibrary extends MGO_Library {
 
 	/**
-	 * Optimizes specific attachment
-	 *
-	 * @param $attachment
+	 * @param MGO_File $attachment
 	 * @param array $params
 	 *
-	 * @return MGO_ResultBag|mixed
+	 * @return MGO_ResultBag
 	 * @throws MGO_Attachment_Already_Optimized_Exception
-	 * @throws MGO_Attachment_Locked_Exception
 	 * @throws MGO_Exception
 	 */
 	public function optimize( $attachment, $params = array() ) {
 
 		$result = new MGO_ResultBag();
-
-		if ( is_numeric( $attachment ) ) {
-			$attachment = megaoptim_get_ngg_attachment( $attachment );
-		}
 
 		//Dont go further if not connected
 		$profile = MGO_Profile::_is_connected();
@@ -55,15 +38,10 @@ class MGO_NextGenLibrary extends MGO_Library {
 			throw new MGO_Exception( 'Please make sure you have set up MegaOptim.com API key' );
 		}
 		//Check if attachment is optimized
-		$attachment_object = new MGO_NextGenAttachment( $attachment->ID );
-
-		// Prevent
-		if ( $attachment_object->is_locked() ) {
-			throw new MGO_Attachment_Locked_Exception( 'The attachment is currently being optimized. No need to re-run the optimization.' );
-		}
+		$attachment_object = new MGO_FileAttachment( $attachment->path );
 
 		// Bail if optimized!
-		if ( $attachment_object->is_optimized() ) {
+		if ( $attachment_object->is_processed() ) {
 			throw new MGO_Attachment_Already_Optimized_Exception( 'The attachment is already fully optimized.' );
 		}
 
@@ -83,7 +61,7 @@ class MGO_NextGenLibrary extends MGO_Library {
 		 * Fired before the optimization of the attachment
 		 * @since 1.0
 		 *
-		 * @param MGO_NextGenAttachment $attachment_object
+		 * @param MGO_FileAttachment $attachment_object
 		 * @param array $request_params
 		 */
 		do_action( 'megaoptim_before_optimization', $attachment_object, $request_params );
@@ -95,18 +73,13 @@ class MGO_NextGenLibrary extends MGO_Library {
 		}
 
 		// Check if image exist
-		megaoptim_log( 'Next gen attachment path: ' );
-		megaoptim_log( $attachment->path );
 		if ( ! file_exists( $attachment->path ) ) {
 			throw new MGO_Exception( __( 'Original image version does not exist on the server.', 'megaoptim' ) );
 		}
 
 		try {
-			// Optimize the original
-			$attachment_object->lock();
 			// Grab the resource
 			$resource = $this->get_attachment_path( $attachment );
-
 			// Optimize the original
 			$response = $this->optimizer->run( $resource, $request_params );
 			$result->add( 'full', $response );
@@ -116,10 +89,10 @@ class MGO_NextGenLibrary extends MGO_Library {
 				foreach ( $response->getOptimizedFiles() as $file ) {
 					$file->saveAsFile( $attachment->path );
 					$result->total_full_size++;
-					$result->total_saved_bytes+=$file->getSavedBytes();
+					$result->total_saved_bytes += $file->getSavedBytes();
 				}
 				$attachment_object->set_data( $response, $request_params );
-				$attachment_object->update_ngg_meta();
+				$attachment_object->set( 'directory', $attachment->directory );
 				$attachment_object->save();
 				// No need to backup attachments that are already optimized!
 				if ( $attachment_object->is_already_optimized() ) {
@@ -128,10 +101,10 @@ class MGO_NextGenLibrary extends MGO_Library {
 				/**
 				 * Fired when attachment is successfully optimized.
 				 * Tip: Use instanceof $attachment_object to check what kind of attachment was optimized.
-				 * Attachemnt object get_id() method returns  the ID of the nextgen picture that was optimized.
+				 * Attachemnt object get_id() returns md5 hash of the file path. The get_path() method returns the path.
 				 * @since 1.0.0
 				 *
-				 * @param MGO_LocalFileAttachment $attachment_object - The media attachment. Useful to check with instanceof.
+				 * @param MGO_FileAttachment $attachment_object - The media attachment. Useful to check with instanceof.
 				 * @param \MegaOptim\Responses\Response $response - The api request response
 				 * @param array $request_params - The api request parameters
 				 * @param string $size
@@ -139,13 +112,9 @@ class MGO_NextGenLibrary extends MGO_Library {
 				do_action( 'megaoptim_attachment_optimized', $attachment_object, $resource, $response, $request_params, $size = 'full' );
 			}
 
-			$attachment_object->unlock();
-
 			$result->set_attachment( $attachment_object );
-
 			return $result;
 		} catch ( Exception $e ) {
-			$attachment_object->unlock();
 			throw new MGO_Exception( $e->getMessage() . ' in ' . $e->getFile() );
 		}
 	}
@@ -163,64 +132,142 @@ class MGO_NextGenLibrary extends MGO_Library {
 	}
 
 	/**
+	 * @param $directory
+	 *
+	 * @return array
+	 */
+	public function get_images( $directory ) {
+		$types     = array_keys( \MegaOptim\Tools\PATH::accepted_types() );
+		$file_list = array();
+		foreach ( $types as $ext ) {
+			$found_files = glob( $directory . "*." . $ext );
+			foreach ( $found_files as $file ) {
+				$file_id = md5( $file );
+				$url     = get_site_url() . '/' . str_replace( megaoptim_get_wp_root_path() . '/', '', $file );
+				array_push( $file_list, array(
+					'ID'        => $file_id,
+					'title'     => megaoptim_basename( $file ),
+					'thumbnail' => $url,
+					'directory' => $directory,
+					'path'      => $file,
+					'url'       => $url,
+				) );
+			}
+			array_merge( $file_list, $found_files );
+		}
+
+		return $file_list;
+	}
+
+	/**
+	 * Returns all the images for specific directory
+	 * @param $directory
+	 *
+	 * @return array
+	 */
+	public function get_all_images( $directory ) {
+		return $this->get_images( $directory );
+	}
+
+	/**
 	 * Returns array of the remaining images
 	 *
-	 * @return mixed
+	 * @param null $directory
+	 *
+	 * @return array|mixed
 	 */
-	public function get_remaining_images() {
-		global $wpdb;
-		$url     = get_site_url() . "/";
-		$path    = megaoptim_get_wp_root_path() . DIRECTORY_SEPARATOR;
-		$query   = $wpdb->prepare( "SELECT P.pid as ID, P.filename as title, CONCAT('%s',G.path,P.filename) as thumbnail,  CONCAT('%s',G.path,P.filename) as url, CONCAT('%s',G.path,P.filename) as path FROM {$wpdb->prefix}ngg_pictures P INNER JOIN {$wpdb->prefix}ngg_gallery G ON P.galleryid=G.gid LEFT JOIN {$wpdb->prefix}megaoptim_opt SOPT ON SOPT.object_id=P.pid AND SOPT.type='%s' WHERE SOPT.id IS NULL", $url, $url, $path, MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT );
-		$results = $wpdb->get_results( $query, ARRAY_A );
+	public function get_remaining_images( $directory = null ) {
 
-		return $results;
+		if ( is_null( $directory ) ) {
+			return array();
+		}
+		$images = $this->get_images( $directory );
+		global $wpdb;
+		foreach ( $images as $key => $image ) {
+			$query = $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->prefix}megaoptim_opt SOPT WHERE SOPT.object_id=%s and SOPT.type=%s", $image['ID'], 'localfiles' );
+			$r     = $wpdb->get_var( $query );
+			if ( $r > 0 ) {
+				unset( $images[ $key ] );
+			}
+		}
+
+		return $images;
+	}
+
+
+	public function get_saved_bytes( $directory ) {
+		global $wpdb;
+
+		return $wpdb->get_var( $wpdb->prepare( "SELECT SUM(SOPT.saved_bytes) FROM {$wpdb->prefix}megaoptim_opt SOPT WHERE SOPT.directory=%s AND SOPT.saved_bytes > 0 and SOPT.type=%s", $directory, 'localfiles' ) );
 	}
 
 	/**
 	 * Return stats about the library
 	 *
-	 * @param $include_remaining
+	 * @param string $directory
+	 * @param array $additional_data
 	 *
-	 * @return mixed
+	 * @return bool|mixed|MGO_Stats
 	 */
-	public function get_stats( $include_remaining = false ) {
-		// TODO: Implement get_stats() method.
-		global $wpdb;
-		$total_images                            = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}ngg_pictures WHERE 1" );
-		$total_remaining                         = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->prefix}ngg_pictures P LEFT JOIN {$wpdb->prefix}megaoptim_opt SOPT ON SOPT.object_id=P.pid AND SOPT.type=%s WHERE SOPT.id IS NULL", MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT ) );
-		$total_saved_bytes                       = $wpdb->get_var( $wpdb->prepare( "SELECT SUM(SOPT.saved_bytes) FROM {$wpdb->prefix}ngg_pictures P LEFT JOIN {$wpdb->prefix}megaoptim_opt SOPT ON SOPT.object_id=P.pid AND SOPT.type=%s WHERE SOPT.id IS NOT NULL AND SOPT.saved_bytes > 0", MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT ) );
-		$total_optimized                         = $total_images - $total_remaining;
-		$data                                    = new MGO_Stats();
-		$data->empty_gallery                     = ( $total_images <= 0 ) ? true : false;
-		$data->total_images                      = $total_images;
-		$data->total_remaining                   = $total_remaining;
-		$data->total_optimized_mixed             = $total_optimized;
-		$data->total_fully_optimized_attachments = $total_optimized;
-		$data->total_thumbnails_optimized        = 0; // No thumbnails in this gallery
-		$data->total_saved_bytes                 = $total_saved_bytes;
+	public function get_stats( $directory = '', $additional_data = array() ) {
 
-		if ( $include_remaining ) {
-			$data->set_remaining( $this->get_remaining_images() );
+		if ( isset( $additional_data['recursive'] ) && $additional_data['recursive'] == 1 ) {
+			$stats       = new MGO_Stats();
+			$directories = array();
+			$files       = megaoptim_find_images( $directory );
+			foreach ( $files as $file ) {
+				array_push( $directories, dirname( $file ) . DIRECTORY_SEPARATOR );
+			}
+			$directories = array_unique( $directories );
+			foreach ( $directories as $dir ) {
+				$dir_stats = $this->get_dir_stats( $dir );
+				$stats->add( $dir_stats );
+			}
+			$stats->setup();
+		} else {
+			$stats = $this->get_dir_stats( $directory );
 		}
 
+		return $stats;
+
+	}
+
+	/**
+	 * Returns data about current dir
+	 *
+	 * @param $directory
+	 *
+	 * @return MGO_Stats
+	 */
+	public function get_dir_stats( $directory ) {
+		$data                                    = new MGO_Stats();
+		$all_images                              = $this->get_all_images( $directory );
+		$remaining_images                        = $this->get_remaining_images( $directory );
+		$total_saved_bytes                       = $this->get_saved_bytes( $directory );
+		$total_remaining                         = count( $remaining_images );
+		$data->empty_gallery                     = count( $remaining_images ) === 0;
+		$data->total_images                      = count( $all_images );
+		$data->total_optimized_mixed             = $data->total_images - $total_remaining;
+		$data->total_fully_optimized_attachments = $data->total_images - $total_remaining;
+		$data->total_thumbnails_optimized        = 0;
+		$data->total_saved_bytes                 = is_null( $total_saved_bytes ) ? 0 : $total_saved_bytes;
+		$data->total_remaining                   = $total_remaining;
+		$data->set_remaining( $remaining_images );
 		$data->setup();
 
 		return $data;
 	}
 
 	/**
-	 * Returns the attachment path.
+	 * Returns the attachment path
 	 *
 	 * @param MGO_File $attachment
-	 *
-	 * @return bool|string
 	 */
-	public function get_attachment_path( $attachment ) {
-		if ( ! megaoptim_is_wp_accessible_from_public() ) {
-			return $attachment->path;
-		} else {
+	public function get_attachment_path( MGO_File $attachment ) {
+		if ( megaoptim_is_wp_accessible_from_public() ) {
 			return $attachment->url;
+		} else {
+			return $attachment->path;
 		}
 	}
 
@@ -229,7 +276,7 @@ class MGO_NextGenLibrary extends MGO_Library {
 	 * @return bool
 	 */
 	public function should_backup() {
-		$r = MGO_Settings::instance()->get( MGO_Settings::BACKUP_NEXTGEN_ATTACHMENTS );
+		$r = MGO_Settings::instance()->get( MGO_Settings::BACKUP_FOLDER_FILES );
 
 		return $r == 1;
 	}

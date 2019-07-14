@@ -861,3 +861,17 @@ function megaoptim_get_validation_email() {
 	$is_pending = megaoptim_validate_email( $email );
 	return $is_pending ? $email : false;
 }
+
+/**
+ * Used to prevent auto optimization
+ */
+function megaoptim_prevent_auto_optimization() {
+	add_filter('megaoptim_auto_optimize_media_attachment', '__return_false');
+}
+
+/**
+ * Used to restore auto optimization
+ */
+function megaoptim_restore_auto_optimization() {
+	remove_filter('megaoptim_auto_optimize_media_attachment', '__return_false');
+}

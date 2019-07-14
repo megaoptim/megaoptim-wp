@@ -55,24 +55,9 @@ function megaoptim_get_ngg_attachment( $id ) {
 }
 
 /**
- * Initiate async optimization request.
- *
- * @param $image_id
- * @param array $params
- */
-function megaoptim_async_optimize_ngg_attachment( $image_id, $params = array() ) {
-	megaoptim_async_task( array(
-		'action'        => 'megaoptim_async_optimize_ngg_attachment',
-		'_nonce'        => wp_create_nonce( 'megaoptim_async_optimize_ngg_attachment' . '_' . $image_id ),
-		'attachment_id' => $image_id,
-		'params'        => $params
-	) );
-}
-
-/**
  * The attachment buttons?
  *
- * @param MGO_NextGenAttachment
+ * @param MGO_NGGAttachment
  *
  * @return string
  */

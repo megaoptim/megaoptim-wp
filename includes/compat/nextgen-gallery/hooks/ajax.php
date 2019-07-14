@@ -30,9 +30,9 @@ function _megaoptim_megaoptim_optimize_ngg_attachment() {
 		wp_send_json_error( array( 'error' => __( 'No attachment provided.', 'megaoptim' ) ) );
 	}
 	try {
-		$result = MGO_NextGenLibrary::instance()->optimize( new MGO_File( $_REQUEST['attachment'] ) );
+		$result = MGO_NGGLibrary::instance()->optimize( new MGO_File( $_REQUEST['attachment'] ) );
 		$attachment = $result->get_attachment();
-		if ( $attachment instanceof MGO_NextGenAttachment ) {
+		if ( $attachment instanceof MGO_NGGAttachment ) {
 			$response['attachment'] = $attachment->get_optimization_stats();
 			$response['general']    = $result->get_optimization_info();
 			$response['tokens']     = $result->get_last_response()->getUser()->getTokens();

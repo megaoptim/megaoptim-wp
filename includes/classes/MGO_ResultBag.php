@@ -26,7 +26,7 @@ class MGO_ResultBag {
 	public $total_saved_bytes = 0;
 
 	/**
-	 * @var MGO_Attachment|MGO_LocalFileAttachment|MGO_MediaAttachment|MGO_NextGenAttachment|null
+	 * @var MGO_Attachment|MGO_FileAttachment|MGO_MediaAttachment|MGO_NGGAttachment|null
 	 */
 	private $attachment = null;
 
@@ -45,7 +45,7 @@ class MGO_ResultBag {
 	/**
 	 * Set the attachment
 	 *
-	 * @param MGO_Attachment|MGO_MediaAttachment|MGO_LocalFileAttachment|MGO_NextGenAttachment $attachment
+	 * @param MGO_Attachment|MGO_MediaAttachment|MGO_FileAttachment|MGO_NGGAttachment $attachment
 	 */
 	public function set_attachment( $attachment ) {
 		$this->attachment = $attachment;
@@ -88,7 +88,7 @@ class MGO_ResultBag {
 
 	/**
 	 * Returns the attachment
-	 * @return MGO_Attachment|MGO_LocalFileAttachment|MGO_MediaAttachment|MGO_NextGenAttachment|null
+	 * @return MGO_Attachment|MGO_FileAttachment|MGO_MediaAttachment|MGO_NGGAttachment|null
 	 */
 	public function get_attachment() {
 		return $this->attachment;

@@ -204,7 +204,7 @@ $cf_email   = $settings->get( MGO_Settings::CLOUDFLARE_EMAIL );
                                 </p>
                             </div>
                         </div>
-						<?php if ( class_exists( 'MGO_NextGenAttachment' ) ): ?>
+						<?php if ( class_exists( 'MGO_NGGAttachment' ) ): ?>
                             <div class="megaoptim-col-4">
                                 <div class="megaoptim-subrow">
                                     <p><strong>Nextgen Galleries Backups</strong></p>

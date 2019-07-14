@@ -95,7 +95,7 @@ class MGO_MediaLibrary extends MGO_Library {
 		}
 
 		// Bail if optimized!
-		if ( $attachment_object->is_optimized() ) {
+		if ( $attachment_object->is_processed() ) {
 			throw new MGO_Attachment_Already_Optimized_Exception( 'The attachment is already fully optimized.' );
 		}
 
@@ -137,20 +137,20 @@ class MGO_MediaLibrary extends MGO_Library {
 
 		// Optimize the original and the thumbnails
 		try {
+			megaoptim_log( 'Optimizing MediaLibrary attachment with id ' . $attachment_object->get_id() );
+
 			$resources   = array();
 			$attachments = array();
-
 			// Collect the full size one
-			if ( ! $attachment_object->is_size_optimized( 'full' ) ) {
+			if ( ! $attachment_object->is_size_processed( 'full' ) ) {
 				array_push( $resources, $original_resource );
 				array_push( $attachments, array( 'size' => 'full', 'save_path' => $original_path ) );
 			}
-
 			// Collect the thumbnails
 			$attachment_object->maybe_set_metadata();
-			$remaining_thumbnails = $attachment_object->get_unoptimized_thumbnails();
+			$remaining_thumbnails = $attachment_object->get_remaining_thumbnails();
 			foreach ( $remaining_thumbnails['normal'] as $size ) {
-				if ( $attachment_object->is_size_optimized( $size ) ) {
+				if ( $attachment_object->is_size_processed( $size ) ) {
 					continue;
 				}
 				$thumbnail_resource = $this->get_attachment( $attachment, $size, false );
@@ -158,38 +158,29 @@ class MGO_MediaLibrary extends MGO_Library {
 				array_push( $resources, $thumbnail_resource );
 				array_push( $attachments, array( 'size' => $size, 'save_path' => $thumbnail_path ) );
 			}
-
 			$resource_chunks = array_chunk( $resources, 5 );
-
 			for ( $i = 0; $i < count( $resource_chunks ); $i ++ ) {
-
 				$resource_chunk = $resource_chunks[ $i ];
-
 				if ( count( $resource_chunk ) > 0 ) {
 					$response = $this->optimizer->run( $resource_chunk, $request_params );
 					$result->add( 'chunk_' . ( $i + 1 ), $response );
 					if ( $response->isError() ) {
-						megaoptim_log( $response->getErrors() );
+						megaoptim_log( '--- API Errors: ' . json_encode($response->getErrors()) );
 					} else {
-
+						megaoptim_log( '--- Response: ' . $response->getRawResponse() );
 						foreach($attachments as $att) {
-
 							$file = $response->getResultByFileName(basename( $att['save_path'] ));
-
 							if(!is_null($file)) {
-
 								// Save data
 								$data = megaoptim_generate_attachment_data($file, $response, $request_params);
 								$attachment_object->set_attachment_data( $att['size'], $data );
 								$attachment_object->save();
-
 								// Save files
 								$file->saveAsFile( $att['save_path'] );
 								$webp = $file->getWebP();
 								if(!is_null($webp)) {
 									$webp->saveAsFile( $att['save_path'] . '.webp' );
 								}
-
 								// Set Stats
 								if($att['size'] !== 'full') {
 									$result->total_thumbnails = $result->total_thumbnails + 1;
@@ -197,8 +188,6 @@ class MGO_MediaLibrary extends MGO_Library {
 									$result->total_full_size = $result->total_full_size + 1;
 								}
 								$result->total_saved_bytes = $result->total_saved_bytes + $file->getSavedBytes();
-
-
 								/**
 								 * Fired when attachment thumbnail was successfully optimized and saved.
 								 *
@@ -210,13 +199,11 @@ class MGO_MediaLibrary extends MGO_Library {
 								 * @since 1.0.0
 								 */
 								do_action( 'megaoptim_attachment_optimized', $attachment_object, $att['save_path'], $response, $request_params, $att['size']);
-								//break; // breaks the inner loop.
 							}
 						}
 					}
 				}
 			}
-
 			do_action( 'megaoptim_before_finish', $attachment_object, $request_params, $result );
 			$attachment_object->unlock();
 			$attachment_object->save();
@@ -226,7 +213,7 @@ class MGO_MediaLibrary extends MGO_Library {
 			return $result;
 		} catch ( Exception $e ) {
 			$attachment_object->unlock();
-			echo $e->getMessage();
+			megaoptim_log( '--- Optimizer Exception: ' . $e->getMessage() );
 			throw new MGO_Exception( $e->getMessage() . ' in ' . $e->getFile() );
 		}
 	}
@@ -238,7 +225,6 @@ class MGO_MediaLibrary extends MGO_Library {
 	 * @param array $params
 	 *
 	 * @return void
-	 * @throws MGO_Attachment_Already_Optimized_Exception
 	 * @throws MGO_Attachment_Locked_Exception
 	 * @throws MGO_Exception
 	 */
@@ -248,7 +234,6 @@ class MGO_MediaLibrary extends MGO_Library {
 			_doing_it_wrong( __METHOD__, 'Called too early. Please make sure WordPress is loaded and then call this method.', WP_MEGAOPTIM_VER );
 			return;
 		}
-
 
 		//Don't go further if not connected
 		$profile = MGO_Profile::_is_connected();
@@ -273,11 +258,6 @@ class MGO_MediaLibrary extends MGO_Library {
 		// Prevent
 		if ( $attachment_object->is_locked() ) {
 			throw new MGO_Attachment_Locked_Exception( 'The attachment is currently being optimized. No need to re-run the optimization.' );
-		}
-
-		// Bail if optimized!
-		if ( $attachment_object->is_optimized() ) {
-			throw new MGO_Attachment_Already_Optimized_Exception( 'The attachment is already fully optimized.' );
 		}
 
 		// Bail if no tokens left.
@@ -317,12 +297,12 @@ class MGO_MediaLibrary extends MGO_Library {
 
 		$sizes = array();
 		// Collect the full size one
-		if ( ! $attachment_object->is_size_optimized( 'full' ) ) {
+		if ( ! $attachment_object->is_size_processed( 'full' ) ) {
 			array_push( $sizes, 'full' );
 
 		}
 		// Collect the thumbnails
-		$unoptimized = $attachment_object->get_unoptimized_thumbnails();
+		$unoptimized = $attachment_object->get_remaining_thumbnails();
 		foreach ( $unoptimized['normal'] as $size ) {
 			array_push( $sizes, $size );
 		}
@@ -335,8 +315,8 @@ class MGO_MediaLibrary extends MGO_Library {
 			$item = array(
 				'attachment_id'         => $attachment_object->get_id(),
 				'attachment_size'       => $size,
-				'attachment_resource'   => $this->get_attachment( $attachment_object->get_id(), 'full', false ),
-				'attachment_local_path' => $this->get_attachment_path( $attachment_object->get_id(), 'full', false ),
+				'attachment_resource'   => $this->get_attachment( $attachment_object->get_id(), $size, false ),
+				'attachment_local_path' => $this->get_attachment_path( $attachment_object->get_id(), $size, false ),
 				'params'                => $request_params,
 			);
 			array_push($items, $item);
@@ -403,7 +383,7 @@ class MGO_MediaLibrary extends MGO_Library {
 					$optimized_thumbnails       += $optimized_thumbnails_count;
 					$images_total               += $optimized_thumbnails_count;
 					$saved_bytes                += $attachment->get_total_saved_bytes( false, true );
-					if ( $attachment->is_optimized() ) {
+					if ( $attachment->is_processed() ) {
 						$optimized_fully ++;
 					} else {
 						//$original_opt = false;
@@ -411,7 +391,7 @@ class MGO_MediaLibrary extends MGO_Library {
 							//$original_opt = true;
 							$remaining_total ++;
 						}
-						$remaining_thumbnails       = $attachment->get_unoptimized_thumbnails();
+						$remaining_thumbnails       = $attachment->get_remaining_thumbnails();
 						$remaining_thumbnails_count = count( $remaining_thumbnails['normal'] ) + count( $remaining_thumbnails['retina'] );
 						$remaining_total            += $remaining_thumbnails_count;
 						$images_total               += $remaining_thumbnails_count;
@@ -595,6 +575,28 @@ class MGO_MediaLibrary extends MGO_Library {
 	}
 
 	/**
+	 * Returns the size name
+	 *
+	 * @param $include_retina
+	 *
+	 * @return array
+	 */
+	public static function get_size_keys($include_retina = false) {
+		$sizes = MGO_MediaLibrary::get_image_sizes();
+		$thumbs = array('full');
+		foreach($sizes as $_key => $val) {
+			array_push($thumbs, $_key) ;
+		}
+		if($include_retina) {
+			array_push($thumbs, "full@2x") ;
+			foreach($sizes as $_key => $val) {
+				array_push($thumbs, "{$_key}@2x") ;
+			}
+		}
+		return $thumbs;
+	}
+
+	/**
 	 * Get size information for a specific image size.
 	 *
 	 * @uses   get_image_sizes()
@@ -704,7 +706,7 @@ class MGO_MediaLibrary extends MGO_Library {
 	/**
 	 * The attachment buttons?
 	 *
-	 * @param MGO_NextGenAttachment|MGO_MediaAttachment|MGO_LocalFileAttachment $attachment
+	 * @param MGO_NGGAttachment|MGO_MediaAttachment|MGO_FileAttachment $attachment
 	 *
 	 * @return string
 	 */

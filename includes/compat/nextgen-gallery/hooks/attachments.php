@@ -55,7 +55,7 @@ function _megaoptim_auto_optimize_ngg_attachment( $gallery_id, $image_ids ) {
 		if ( ! $optimize ) {
 			continue;
 		}
-		megaoptim_async_optimize_ngg_attachment( $image_id );
+		MGO_NGGLibrary::instance()->optimize_async($image_id);
 	}
 }
 
@@ -74,9 +74,9 @@ function _megaoptim_ngg_medialibrary_imported_image( $image, $ml_attachment ) {
 
 	try {
 		$ngg_megaoptim_file = megaoptim_get_ngg_attachment( $image->pid );
-		$ngg_attachment = new MGO_NextGenAttachment( $image->pid );
+		$ngg_attachment = new MGO_NGGAttachment( $image->pid );
 		$media_library_attachment = new MGO_MediaAttachment( $ml_attachment->ID );
-		if ( $media_library_attachment->is_optimized() ) {
+		if ( $media_library_attachment->is_processed() ) {
 			$ngg_attachment->set( 'object_id', $image->pid );
 			$ngg_attachment->set( 'type', MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT );
 			$ngg_attachment->set( 'file_path', $ngg_megaoptim_file->path );
@@ -132,7 +132,7 @@ add_action( 'ngg_generated_image', '_megaoptim_ngg_generated_image', WP_MEGAOPTI
  * @param $id
  */
 function _megaoptim_ngg_delete_picture( $id ) {
-	$attachment = new MGO_NextGenAttachment( $id );
+	$attachment = new MGO_NGGAttachment( $id );
 	// Delete Backup if exist.
 	if ( $attachment->has_backup() ) {
 		$attachment->delete_backup();

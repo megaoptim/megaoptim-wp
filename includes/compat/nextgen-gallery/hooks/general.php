@@ -34,7 +34,7 @@ add_filter( 'megaoptim_backup_dir', '_megaoptim_ngg_backup_dir', 10, 2 );
 
 function _megaoptim_ngg_optimize_single_attachment( $attachment_id, $context, $additional_params ) {
 	if ( $context === MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT ) {
-		megaoptim_async_optimize_ngg_attachment( $attachment_id, $additional_params );
+		MGO_NGGLibrary::instance()->optimize_async($attachment_id, $additional_params);
 	}
 }
 add_action( 'megaoptim_optimize_single_attachment', '_megaoptim_ngg_optimize_single_attachment', 10, 3 );
@@ -42,7 +42,7 @@ add_action( 'megaoptim_optimize_single_attachment', '_megaoptim_ngg_optimize_sin
 
 function _megaoptim_ngg_restore_single_attachment( $data, $attachment_id, $context ) {
 	try {
-		$attachment = new MGO_NextGenAttachment( $attachment_id );
+		$attachment = new MGO_NGGAttachment( $attachment_id );
 		$attachment->restore();
 		$data = megaoptim_get_ngg_attachment_buttons( $attachment );
 	} catch ( MGO_Exception $e ) {
@@ -60,11 +60,11 @@ function _megaoptim_ngg_upload_ticker( $response, $context, $attachments ) {
 	}
 	foreach ( $attachments as $attachment_id ) {
 		try {
-			$attachment                 = new MGO_NextGenAttachment( $attachment_id );
+			$attachment                 = new MGO_NGGAttachment( $attachment_id );
 			$response[ $attachment_id ] = array(
 				'id'           => $attachment->get_id(),
 				'is_locked'    => $attachment->is_locked(),
-				'is_optimized' => $attachment->is_optimized(),
+				'is_optimized' => $attachment->is_processed(),
 				'html'         => megaoptim_get_ngg_attachment_buttons( $attachment )
 			);
 
@@ -85,7 +85,7 @@ add_filter( 'megaoptim_optimizer_view', '_megaoptim_ngg_optimizer_view', 10, 3 )
 
 function _megaoptim_ngg_optimizer_params( $params, $optimizer, $module, $menu ) {
 	return array(
-		'stats'   => MGO_NextGenLibrary::instance()->get_stats( true ),
+		'stats'   => MGO_NGGLibrary::instance()->get_stats( true ),
 		'menu'    => $menu,
 		'module'  => $module,
 		'profile' => MGO_Profile::get_profile()
@@ -107,7 +107,7 @@ add_filter('megaoptim_is_optimizer_page', '_megaoptim_ngg_is_optimizer_page', 10
 
 function _megaoptim_ngg_library_data($stats, $context) {
 	if( $context === MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT ) {
-		$stats = MGO_NextGenLibrary::instance()->get_stats(true);
+		$stats = MGO_NGGLibrary::instance()->get_stats(true);
 	}
 	return $stats;
 }

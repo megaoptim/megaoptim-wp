@@ -58,7 +58,7 @@ function _megaoptim_ngg_manage_images_column_header() {
 function _megaoptim_ngg_manage_images_column_content( $output, $image ) {
 
 	$id         = $image->pid;
-	$attachment = new MGO_NextGenAttachment( $id );
+	$attachment = new MGO_NGGAttachment( $id );
 
 	$output = '<div class="megaoptim_nextgen_attachment" id="megaoptim-galleryimage-id-' . $id . '" data-attachmentid="' . $id . '">';
 	$output .= megaoptim_get_ngg_attachment_buttons( $attachment );

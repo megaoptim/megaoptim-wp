@@ -252,7 +252,7 @@ class Optimizer {
 			case Optimizer::RESOURCE_URLS:
 				$index = 0;
 				foreach ( $resource as $url ) {
-					if ( $index === self::MAX_ALLOWED_RESOURCES - 1 ) {
+					if ( $index === self::MAX_ALLOWED_RESOURCES ) {
 						break;
 					}
 					$args[ 'url' . ( $index + 1 ) ] = $url;
@@ -262,7 +262,7 @@ class Optimizer {
 			case Optimizer::RESOURCE_FILES:
 				$index = 0;
 				foreach ( $resource as $path ) {
-					if ( $index === self::MAX_ALLOWED_RESOURCES - 1 ) {
+					if ( $index === self::MAX_ALLOWED_RESOURCES ) {
 						break;
 					}
 					$files[ 'file' . ( $index + 1 ) ] = $path;

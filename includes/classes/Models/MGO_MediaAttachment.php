@@ -185,9 +185,13 @@ class MGO_MediaAttachment extends MGO_Attachment {
 			throw new MGO_Exception( "Directory is not writable!" );
 		}
 		if ( @rename( $backup_path, $attachment_path ) ) {
-			$meta_data      = megaoptim_regenerate_thumbnails( $this->get_id(), $attachment_path );
+			// This must be called here because the megaoptim_regenerate_thumbnails() triggers action which autoptimizes the thumbnails.
+			megaoptim_prevent_auto_optimization();
+			$meta_data = megaoptim_regenerate_thumbnails( $this->get_id(), $attachment_path );
+			megaoptim_restore_auto_optimization();
 			$this->metadata = $meta_data;
 			$this->destroy();
+			$this->save();
 			do_action( 'megaoptim_after_restore_attachment', $this );
 		}
 
@@ -249,7 +253,7 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	 */
 	public function set_data( $response, $params ) {
 		//parent::set_data( $response, $params );
-		_deprecated_function(__METHOD__, '1.3.0', 'set_attachment_data');
+		_deprecated_function( __METHOD__, '1.3.0', 'set_attachment_data' );
 	}
 
 	/**
@@ -260,20 +264,21 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	 * @param $params
 	 */
 	public function set_thumbnail_data( $size, $response, $params ) {
-		_deprecated_function(__METHOD__, '1.3.0', 'set_attachment_data');
+		_deprecated_function( __METHOD__, '1.3.0', 'set_attachment_data' );
 	}
 
 
 	/**
 	 * Set attachment data
+	 *
 	 * @param $size
 	 * @param $params
 	 */
-	public function set_attachment_data($size, $params) {
-		if($size === 'full') {
-			$this->data = array_merge($this->data, $params);
+	public function set_attachment_data( $size, $params ) {
+		if ( $size === 'full' ) {
+			$this->data = array_merge( $this->data, $params );
 		} else {
-			if(!isset($this->data['thumbs'])) {
+			if ( ! isset( $this->data['thumbs'] ) ) {
 				$this->data['thumbs'] = array();
 			}
 			if ( ! empty( $params ) ) {
@@ -282,6 +287,22 @@ class MGO_MediaAttachment extends MGO_Attachment {
 		}
 	}
 
+	/**
+	 * Returns specific result property
+	 *
+	 * @param $size
+	 * @param $property
+	 * @param null $default
+	 *
+	 * @return array|null
+	 */
+	public function get_result_property( $size, $property, $default = null ) {
+		if ( $size === 'full' ) {
+			return isset( $this->data[ $property ] ) ? $this->data[ $property ] : $default;
+		} else {
+			return isset( $this->data[ $size ][ $property ] ) ? $this->data[ $size ][ $property ] : $default;
+		}
+	}
 
 	/**
 	 * Returns associative array of data
@@ -308,12 +329,12 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	 * Only return true if the image is fully optimized
 	 * @return bool
 	 */
-	public function is_optimized() {
-		if ( $this->get_optimized_status() !== 1 ) {
+	public function is_processed() {
+		if ( ! isset( $this->data['status'] ) || ! isset( $this->data['thumbs'] ) ) {
 			return false;
 		}
-		$unoptimized_thumbnails = $this->get_unoptimized_thumbnails();
-		$is_optimized           = isset( $unoptimized_thumbnails['normal'] ) ? count( $unoptimized_thumbnails['normal'] ) === 0 : 0;
+		$remaining_thumbs = $this->get_remaining_thumbnails();
+		$is_optimized     = isset( $remaining_thumbs['normal'] ) ? count( $remaining_thumbs['normal'] ) === 0 : 0;
 
 		return apply_filters( 'megaoptim_ml_attachmed_is_optimized', $is_optimized, $this );
 	}
@@ -332,28 +353,13 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	}
 
 	/**
-	 * Is thumbnail optimized ?
-	 *
-	 * @param $size
-	 *
-	 * @return bool
-	 */
-	public function is_thumbnail_optimized( $size ) {
-		if ( ! isset( $this->data['thumbs'][ $size ] ) || ! isset( $this->data['thumbs'][ $size ]['status'] ) || $this->data['thumbs'][ $size ]['status'] != 1 ) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	/**
 	 * Is specific size optimized?
 	 *
 	 * @param $size
 	 *
 	 * @return bool
 	 */
-	public function is_size_optimized( $size ) {
+	public function is_size_processed( $size ) {
 		$path = MGO_MediaLibrary::instance()->get_attachment_path( $this->get_id(), $size, false );
 		if ( $size === 'full' ) {
 			return false !== $path && isset( $this->data['status'] ) && ! empty( $this->data['status'] );
@@ -361,7 +367,6 @@ class MGO_MediaAttachment extends MGO_Attachment {
 			return false !== $path && isset( $this->data['thumbs'][ $size ]['status'] ) && ! empty( $this->data['thumbs'][ $size ]['status'] );
 		}
 	}
-
 
 
 	/**
@@ -377,7 +382,7 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	 * Returns array of the unoptimized thumbnails
 	 * @return array
 	 */
-	public function get_unoptimized_thumbnails() {
+	public function get_remaining_thumbnails() {
 		$allowed_sizes        = MGO_Settings::instance()->get( MGO_Settings::IMAGE_SIZES );
 		$thumbnails           = array();
 		$thumbnails['normal'] = array();
@@ -385,11 +390,11 @@ class MGO_MediaAttachment extends MGO_Attachment {
 		if ( isset( $this->metadata['sizes'] ) && ! empty( $this->metadata['sizes'] ) ) {
 			if ( is_array( $allowed_sizes ) ) {
 				foreach ( $this->metadata['sizes'] as $key => $size ) {
-					if ( ! in_array( $key, $allowed_sizes ) ) {
+					if ( ! in_array( $key, $allowed_sizes ) || ! $this->thumbnail_exists( $key ) ) {
 						continue;
 					}
-					// Iff the size doesn't exist, or exist but the status doesn't exist, or size and status exist but they aren't
-					if ( $this->thumbnail_exists( $key ) && ! $this->is_thumbnail_optimized( $key ) ) {
+					// If the size isn't processed push it for processing.
+					if ( ! $this->is_size_processed( $key ) ) {
 						array_push( $thumbnails['normal'], $key );
 					}
 				}
@@ -408,9 +413,9 @@ class MGO_MediaAttachment extends MGO_Attachment {
 		$thumbnails['normal'] = array();
 		$thumbnails['retina'] = array();
 		if ( isset( $this->data['thumbs'] ) && is_array( $this->data['thumbs'] ) ) {
-			foreach ( $this->data['thumbs'] as $thumb ) {
+			foreach ( $this->data['thumbs'] as $key => $thumb ) {
 				if ( isset( $thumb['status'] ) && intval( $thumb['status'] ) === 1 ) {
-					array_push( $thumbnails['normal'], $thumb );
+					$thumbnails['normal'][ $key ] = $thumb;
 				}
 			}
 		}
@@ -637,7 +642,7 @@ class MGO_MediaAttachment extends MGO_Attachment {
 		if ( ! empty( $full_webp_path ) && file_exists( $full_webp_path ) ) {
 			@unlink( $full_webp_path );
 		}
-		if ( isset($this->metadata['sizes']) && is_array( $this->metadata['sizes'] ) ) {
+		if ( isset( $this->metadata['sizes'] ) && is_array( $this->metadata['sizes'] ) ) {
 			foreach ( $this->metadata['sizes'] as $key => $thumb ) {
 				$thumbnail_path      = MGO_MediaLibrary::instance()->get_attachment_path( $this->get_id(), $key, false );
 				$thumbnail_path_webp = $thumbnail_path . '.webp';
