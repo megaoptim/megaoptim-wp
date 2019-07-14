@@ -203,15 +203,20 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	 *
 	 * @param bool $formatted
 	 * @param bool $include_thumbnails
+	 * @param bool $include_retina
 	 *
 	 * @return float|int|string
 	 */
-	public function get_total_saved_bytes( $formatted = false, $include_thumbnails = false ) {
+	public function get_total_saved_bytes( $formatted = false, $include_thumbnails = false, $include_retina = true ) {
+		// Sum 'Full' size attachment saved bytes
 		$bytes = $this->get_saved_bytes();
+		// Sum 'Full' size retina attachment saved bytes
+		$bytes += isset( $this->data['retina']['saved_bytes'] ) ? $this->data['retina']['saved_bytes'] : 0;
+		// Sum Thumbnails saved bytes (normal or normal + retina)
 		if ( $include_thumbnails ) {
-			$bytes += $this->get_total_saved_bytes_thumbnails( false );
+			$bytes += $this->get_total_saved_bytes_thumbnails( false, $include_retina );
 		}
-		$bytes = apply_filters( 'megaoptim_ml_total_saved_bytes', $bytes, $this );
+		// Format?
 		if ( $formatted ) {
 			$bytes = megaoptim_human_file_size( $bytes );
 		}
@@ -224,9 +229,11 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	 *
 	 * @param bool $formatted
 	 *
+	 * @param bool $include_retina
+	 *
 	 * @return float|int|string
 	 */
-	public function get_total_saved_bytes_thumbnails( $formatted = false ) {
+	public function get_total_saved_bytes_thumbnails( $formatted = false, $include_retina = true ) {
 		$bytes = 0;
 		if ( isset( $this->data['thumbs'] ) && is_array( $this->data['thumbs'] ) ) {
 			foreach ( $this->data['thumbs'] as $thumb ) {
@@ -235,9 +242,13 @@ class MGO_MediaAttachment extends MGO_Attachment {
 				}
 			}
 		}
-
-		$bytes = apply_filters( 'megaoptim_ml_total_saved_bytes_thumbnails', $bytes, $this );
-
+		if ( $include_retina && isset($this->data['retina']['thumbs']) ) {
+			foreach ( $this->data['retina']['thumbs'] as $thumb ) {
+				if ( $thumb['saved_bytes'] > 0 ) {
+					$bytes += (float) $thumb['saved_bytes'];
+				}
+			}
+		}
 		if ( $formatted ) {
 			$bytes = megaoptim_human_file_size( $bytes );
 		}
@@ -273,35 +284,36 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	 *
 	 * @param $size
 	 * @param $params
+	 * @param bool $retina
 	 */
-	public function set_attachment_data( $size, $params ) {
-		if ( $size === 'full' ) {
-			$this->data = array_merge( $this->data, $params );
-		} else {
-			if ( ! isset( $this->data['thumbs'] ) ) {
-				$this->data['thumbs'] = array();
+	public function set_attachment_data( $size, $params, $retina = false ) {
+		if ( ! $retina ) {
+			if ( $size === 'full' ) {
+				$this->data = array_merge( $this->data, $params );
+			} else {
+				if ( ! isset( $this->data['thumbs'] ) ) {
+					$this->data['thumbs'] = array();
+				}
+				if ( ! empty( $params ) ) {
+					$this->data['thumbs'][ $size ] = $params;
+				}
 			}
-			if ( ! empty( $params ) ) {
-				$this->data['thumbs'][ $size ] = $params;
+		} else {
+			if ( ! isset( $this->data['retina'] ) || ! is_array( $this->data['retina'] ) ) {
+				$this->data['retina'] = array();
+			}
+			if ( $size === 'full' ) {
+				$this->data['retina'] = array_merge( $this->data['retina'], $params );
+			} else {
+				if ( ! isset( $this->data['retina']['thumbs'] ) ) {
+					$this->data['retina']['thumbs'] = array();
+				}
+				if ( ! empty( $params ) ) {
+					$this->data['retina']['thumbs'][ $size ] = $params;
+				}
 			}
 		}
-	}
 
-	/**
-	 * Returns specific result property
-	 *
-	 * @param $size
-	 * @param $property
-	 * @param null $default
-	 *
-	 * @return array|null
-	 */
-	public function get_result_property( $size, $property, $default = null ) {
-		if ( $size === 'full' ) {
-			return isset( $this->data[ $property ] ) ? $this->data[ $property ] : $default;
-		} else {
-			return isset( $this->data[ $size ][ $property ] ) ? $this->data[ $size ][ $property ] : $default;
-		}
 	}
 
 	/**
@@ -310,7 +322,7 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	 */
 	public function get_optimization_stats() {
 
-		$optimized_thumbnails = $this->get_optimized_thumbnails();
+		$optimized_thumbnails = $this->get_processed_thumbnails();
 
 		$row                            = array();
 		$row['ID']                      = $this->ID;
@@ -320,7 +332,8 @@ class MGO_MediaAttachment extends MGO_Attachment {
 		$row['saved_percent']           = megaoptim_round( $this->get_saved_percent(), 2 );
 		$row['optimized_thumbs']        = count( $optimized_thumbnails['normal'] );
 		$row['optimized_thumbs_retina'] = count( $optimized_thumbnails['retina'] );
-		$row['saved_thumbs']            = $this->get_total_saved_bytes_thumbnails( true );
+		$row['saved_thumbs']            = $this->get_total_saved_bytes_thumbnails( true, false );
+		$row['saved_thumbs_retina']     = $this->get_total_saved_bytes_thumbnails( true, true );;
 
 		return apply_filters( 'megaoptim_attachment_optimization_stats', $row, $this );
 	}
@@ -330,13 +343,26 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	 * @return bool
 	 */
 	public function is_processed() {
+
+		// Check if full size normal is processed
 		if ( ! isset( $this->data['status'] ) || ! isset( $this->data['thumbs'] ) ) {
 			return false;
 		}
-		$remaining_thumbs = $this->get_remaining_thumbnails();
-		$is_optimized     = isset( $remaining_thumbs['normal'] ) ? count( $remaining_thumbs['normal'] ) === 0 : 0;
 
-		return apply_filters( 'megaoptim_ml_attachmed_is_optimized', $is_optimized, $this );
+		// Check if full size retina is processed.
+		$full_retina_found = $this->thumbnail_exists( 'full', true );
+		if ( $full_retina_found ) {
+			if ( ! isset( $this->data['retina']['status'] ) || ! isset( $this->data['retina']['thumbs'] ) ) {
+				return false;
+			}
+		}
+
+		// Check thumbnails
+		$remaining_thumbs = $this->get_remaining_thumbnails();
+		$normal_processed = isset( $remaining_thumbs['normal'] ) ? count( $remaining_thumbs['normal'] ) === 0 : 0;
+		$retina_processed = isset( $remaining_thumbs['retina'] ) ? count( $remaining_thumbs['retina'] ) === 0 : 0;
+
+		return $normal_processed && $retina_processed;
 	}
 
 	/**
@@ -344,10 +370,12 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	 *
 	 * @param $size
 	 *
+	 * @param bool $retina
+	 *
 	 * @return bool
 	 */
-	public function thumbnail_exists( $size ) {
-		$path = MGO_MediaLibrary::instance()->get_attachment_path( $this->get_id(), $size, false );
+	public function thumbnail_exists( $size, $retina = false ) {
+		$path = MGO_MediaLibrary::instance()->get_attachment_path( $this->get_id(), $size, $retina );
 
 		return file_exists( $path );
 	}
@@ -357,14 +385,28 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	 *
 	 * @param $size
 	 *
+	 * @param bool $retina
+	 *
 	 * @return bool
 	 */
-	public function is_size_processed( $size ) {
-		$path = MGO_MediaLibrary::instance()->get_attachment_path( $this->get_id(), $size, false );
-		if ( $size === 'full' ) {
-			return false !== $path && isset( $this->data['status'] ) && ! empty( $this->data['status'] );
+	public function is_size_processed( $size, $retina = false ) {
+		$path = MGO_MediaLibrary::instance()->get_attachment_path( $this->get_id(), $size, $retina );
+		if ( ! $retina ) {
+			if ( $size === 'full' ) {
+				return false !== $path && isset( $this->data['status'] )
+				       && in_array( $this->data['status'], array( 0, 1 ) );
+			} else {
+				return false !== $path && isset( $this->data['thumbs'][ $size ]['status'] )
+				       && in_array( $this->data['thumbs'][ $size ]['status'], array( 0, 1 ) );
+			}
 		} else {
-			return false !== $path && isset( $this->data['thumbs'][ $size ]['status'] ) && ! empty( $this->data['thumbs'][ $size ]['status'] );
+			if ( $size === 'full' ) {
+				return false !== $path && isset( $this->data['retina']['status'] )
+				       && in_array( $this->data['retina']['status'], array( 0, 1 ) );
+			} else {
+				return false !== $path && isset( $this->data['retina']['thumbs'][ $size ]['status'] )
+				       && in_array( $this->data['retina']['thumbs'][ $size ]['status'], array( 0, 1 ) );
+			}
 		}
 	}
 
@@ -383,35 +425,48 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	 * @return array
 	 */
 	public function get_remaining_thumbnails() {
-		$allowed_sizes        = MGO_Settings::instance()->get( MGO_Settings::IMAGE_SIZES );
+		$allowed_sizes        = MGO_Settings::instance()->get( MGO_Settings::IMAGE_SIZES, array() );
+		$allowed_sizes_r      = MGO_Settings::instance()->get( MGO_Settings::RETINA_IMAGE_SIZES, array() );
 		$thumbnails           = array();
 		$thumbnails['normal'] = array();
 		$thumbnails['retina'] = array();
 		if ( isset( $this->metadata['sizes'] ) && ! empty( $this->metadata['sizes'] ) ) {
-			if ( is_array( $allowed_sizes ) ) {
+			// Collect normal files
+			foreach ( $this->metadata['sizes'] as $key => $size ) {
+				if ( ! in_array( $key, $allowed_sizes ) || ! $this->thumbnail_exists( $key ) ) {
+					continue;
+				}
+				// If the size isn't processed push it for processing.
+				if ( ! $this->is_size_processed( $key ) ) {
+					array_push( $thumbnails['normal'], $key );
+				}
+			}
+			// Collect retinas
+			if ( is_array( $allowed_sizes_r ) ) {
 				foreach ( $this->metadata['sizes'] as $key => $size ) {
-					if ( ! in_array( $key, $allowed_sizes ) || ! $this->thumbnail_exists( $key ) ) {
+					if ( ! in_array( $key, $allowed_sizes_r ) || ! $this->thumbnail_exists( $key, true ) ) {
 						continue;
 					}
 					// If the size isn't processed push it for processing.
-					if ( ! $this->is_size_processed( $key ) ) {
-						array_push( $thumbnails['normal'], $key );
+					if ( ! $this->is_size_processed( $key, true ) ) {
+						array_push( $thumbnails['retina'], $key );
 					}
 				}
 			}
 		}
 
-		return apply_filters( 'megaoptim_ml_attachment_unoptimized_thumbnails', $thumbnails, $this );
+		return $thumbnails;
 	}
 
 	/**
 	 * Return the thumbnail count
 	 * @return array
 	 */
-	public function get_optimized_thumbnails() {
+	public function get_processed_thumbnails() {
 		$thumbnails           = array();
 		$thumbnails['normal'] = array();
 		$thumbnails['retina'] = array();
+		// Collect normal thumbs
 		if ( isset( $this->data['thumbs'] ) && is_array( $this->data['thumbs'] ) ) {
 			foreach ( $this->data['thumbs'] as $key => $thumb ) {
 				if ( isset( $thumb['status'] ) && intval( $thumb['status'] ) === 1 ) {
@@ -419,8 +474,24 @@ class MGO_MediaAttachment extends MGO_Attachment {
 				}
 			}
 		}
+		// Collect retina thumbs
+		if ( isset( $this->data['retina']['thumbs'] ) && is_array( $this->data['retina']['thumbs'] ) ) {
+			foreach ( $this->data['retina']['thumbs'] as $key => $thumb ) {
+				if ( isset( $thumb['status'] ) && intval( $thumb['status'] ) === 1 ) {
+					$thumbnails['retina'][ $key ] = $thumb;
+				}
+			}
+		}
 
-		return apply_filters( 'megaoptim_ml_attachment_optimized_thumbnails', $thumbnails, $this );
+		return $thumbnails;
+	}
+
+	/**
+	 * Returns the retina object
+	 * @return array
+	 */
+	public function get_retina() {
+		return isset($this->data['retina']) ? $this->data['retina'] : array();
 	}
 
 	/**
@@ -555,35 +626,6 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	 */
 	public function get_metadata() {
 		return $this->metadata;
-	}
-
-	/**
-	 * Return WebP
-	 *
-	 * @param string $size
-	 *
-	 * @return \MegaOptim\Responses\ResultWebP|null
-	 */
-	public function get_webp( $size = 'full' ) {
-		$fields = array( 'url', 'optimized_size', 'saved_bytes', 'saved_percent' );
-		if ( $size === 'full' ) {
-			$webp = isset( $this->metadata['webp'] ) ? $this->metadata['webp'] : null;
-		} else {
-			$webp = isset( $this->metadata['thumbs'][ $size ]['webp'] ) ? $this->metadata['thumbs'][ $size ]['webp'] : null;
-		}
-		if ( is_array( $webp ) ) {
-			$result = new \MegaOptim\Responses\ResultWebP();
-			foreach ( $fields as $field ) {
-				if ( isset( $webp[ $field ] ) ) {
-					$result->$field = $webp[ $field ];
-				}
-			}
-
-			return $result;
-		} else {
-			return null;
-		}
-
 	}
 
 	/**

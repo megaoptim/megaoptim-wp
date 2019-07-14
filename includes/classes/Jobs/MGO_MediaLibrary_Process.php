@@ -29,6 +29,8 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 	 */
 	protected function task( $item ) {
 
+		@set_time_limit(460);
+
 		if ( count( $item ) == 0 ) {
 			return false;
 		}
@@ -75,6 +77,7 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 					$size       = $_itm['attachment_size'];
 					$resource   = $_itm['attachment_resource'];
 					$local_path = $_itm['attachment_local_path'];
+					$is_retina  = $_itm['type'] === 'retina';
 
 					$file = $response->getResultByFileName( basename( $resource ) );
 
@@ -82,7 +85,7 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 
 						// Save data
 						$data = megaoptim_generate_attachment_data( $file, $response, $request_params );
-						$attachment->set_attachment_data( $size, $data );
+						$attachment->set_attachment_data( $size, $data, $is_retina );
 						$attachment->save();
 
 						// Save files
@@ -91,6 +94,8 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 						if ( ! is_null( $webp ) ) {
 							$webp->saveAsFile( $local_path . '.webp' );
 						}
+
+						$size = $is_retina ? $size . '@2x' : $size;
 
 						/**
 						 * Fired when attachment thumbnail was successfully optimized and saved.
@@ -107,7 +112,7 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 				}
 
 			} catch ( \Exception $e ) {
-				megaoptim_log( '--- Optimizer Exception: ' . $e->getMessage() );
+				megaoptim_log( '--- Optimizer Exception: ' . $e->getMessage() . '. ('.json_encode($resources).')' );
 			}
 		}
 

@@ -101,7 +101,7 @@ class MGO_MediaLibrary extends MGO_Library {
 
 		// Bail if no tokens left.
 		$tokens = $profile->get_tokens_count();
-		if ( $tokens != -1 && $tokens <= 0 ) {
+		if ( $tokens != - 1 && $tokens <= 0 ) {
 			throw new MGO_Exception( 'No tokens left. Please top up your account at https://megaoptim.com/dashboard in order to continue.' );
 		}
 
@@ -123,7 +123,7 @@ class MGO_MediaLibrary extends MGO_Library {
 		do_action( 'megaoptim_before_optimization', $attachment_object, $request_params );
 
 		//Get the file names
-		$original_resource = $this->get_attachment( $attachment, 'full', false );
+		//$original_resource = $this->get_attachment( $attachment, 'full', false );
 		$original_path     = $this->get_attachment_path( $attachment, 'full', false );
 		if ( ! file_exists( $original_path ) ) {
 			throw new MGO_Exception( __( 'Original image version does not exist on the server.', 'megaoptim' ) );
@@ -141,23 +141,34 @@ class MGO_MediaLibrary extends MGO_Library {
 
 			$resources   = array();
 			$attachments = array();
-			// Collect the full size one
-			if ( ! $attachment_object->is_size_processed( 'full' ) ) {
-				array_push( $resources, $original_resource );
-				array_push( $attachments, array( 'size' => 'full', 'save_path' => $original_path ) );
-			}
-			// Collect the thumbnails
+
 			$attachment_object->maybe_set_metadata();
 			$remaining_thumbnails = $attachment_object->get_remaining_thumbnails();
-			foreach ( $remaining_thumbnails['normal'] as $size ) {
-				if ( $attachment_object->is_size_processed( $size ) ) {
-					continue;
+			foreach(array('normal', 'retina') as $type) {
+				$is_retina = $type === 'retina';
+
+				// Collect the full size ones
+				if ( ! $attachment_object->is_size_processed( 'full', $is_retina ) ) {
+					$full_resource    =  $this->get_attachment( $attachment, 'full', $is_retina );
+					$full_local_path  = $this->get_attachment_path( $attachment, 'full', $is_retina );
+					if(false !== $full_local_path && false !== $full_resource) {
+						array_push( $resources, $full_resource );
+						array_push( $attachments, array( 'size' => 'full', 'save_path' => $full_local_path, 'is_retina' => $is_retina ) );
+					}
 				}
-				$thumbnail_resource = $this->get_attachment( $attachment, $size, false );
-				$thumbnail_path     = $this->get_attachment_path( $attachment, $size, false );
-				array_push( $resources, $thumbnail_resource );
-				array_push( $attachments, array( 'size' => $size, 'save_path' => $thumbnail_path ) );
+
+				// Collect the thumbnails
+				foreach ( $remaining_thumbnails[$type] as $size ) {
+					if ( $attachment_object->is_size_processed( $size, $is_retina ) ) {
+						continue;
+					}
+					$thumbnail_resource = $this->get_attachment( $attachment, $size, $is_retina );
+					$thumbnail_path     = $this->get_attachment_path( $attachment, $size, $is_retina );
+					array_push( $resources, $thumbnail_resource );
+					array_push( $attachments, array( 'size' => $size, 'save_path' => $thumbnail_path, 'is_retina' => $is_retina ) );
+				}
 			}
+
 			$resource_chunks = array_chunk( $resources, 5 );
 			for ( $i = 0; $i < count( $resource_chunks ); $i ++ ) {
 				$resource_chunk = $resource_chunks[ $i ];
@@ -165,29 +176,30 @@ class MGO_MediaLibrary extends MGO_Library {
 					$response = $this->optimizer->run( $resource_chunk, $request_params );
 					$result->add( 'chunk_' . ( $i + 1 ), $response );
 					if ( $response->isError() ) {
-						megaoptim_log( '--- API Errors: ' . json_encode($response->getErrors()) );
+						megaoptim_log( '--- API Errors: ' . json_encode( $response->getErrors() ) );
 					} else {
 						megaoptim_log( '--- Response: ' . $response->getRawResponse() );
-						foreach($attachments as $att) {
-							$file = $response->getResultByFileName(basename( $att['save_path'] ));
-							if(!is_null($file)) {
+						foreach ( $attachments as $att ) {
+							$file = $response->getResultByFileName( basename( $att['save_path'] ) );
+							if ( ! is_null( $file ) ) {
 								// Save data
-								$data = megaoptim_generate_attachment_data($file, $response, $request_params);
-								$attachment_object->set_attachment_data( $att['size'], $data );
+								$data = megaoptim_generate_attachment_data( $file, $response, $request_params );
+								$attachment_object->set_attachment_data( $att['size'], $data, $att['is_retina'] );
 								$attachment_object->save();
 								// Save files
 								$file->saveAsFile( $att['save_path'] );
 								$webp = $file->getWebP();
-								if(!is_null($webp)) {
+								if ( ! is_null( $webp ) ) {
 									$webp->saveAsFile( $att['save_path'] . '.webp' );
 								}
 								// Set Stats
-								if($att['size'] !== 'full') {
+								if ( $att['size'] !== 'full' ) {
 									$result->total_thumbnails = $result->total_thumbnails + 1;
 								} else {
 									$result->total_full_size = $result->total_full_size + 1;
 								}
 								$result->total_saved_bytes = $result->total_saved_bytes + $file->getSavedBytes();
+								$size = $att['is_retina'] ? $att['size'] . '@2x' : $att['size'];
 								/**
 								 * Fired when attachment thumbnail was successfully optimized and saved.
 								 *
@@ -198,7 +210,7 @@ class MGO_MediaLibrary extends MGO_Library {
 								 *
 								 * @since 1.0.0
 								 */
-								do_action( 'megaoptim_attachment_optimized', $attachment_object, $att['save_path'], $response, $request_params, $att['size']);
+								do_action( 'megaoptim_attachment_optimized', $attachment_object, $att['save_path'], $response, $request_params, $size );
 							}
 						}
 					}
@@ -284,7 +296,7 @@ class MGO_MediaLibrary extends MGO_Library {
 		do_action( 'megaoptim_before_optimization', $attachment_object, $request_params );
 
 		//Get the file names
-		$original_path     = $this->get_attachment_path( $attachment, 'full', false );
+		$original_path = $this->get_attachment_path( $attachment, 'full', false );
 		if ( ! file_exists( $original_path ) ) {
 			throw new MGO_Exception( __( 'Original image version does not exist on the server.', 'megaoptim' ) );
 		}
@@ -295,35 +307,44 @@ class MGO_MediaLibrary extends MGO_Library {
 			$attachment_object->set_backup_path( $backup_path );
 		}
 
-		$sizes = array();
-		// Collect the full size one
-		if ( ! $attachment_object->is_size_processed( 'full' ) ) {
-			array_push( $sizes, 'full' );
-
-		}
-		// Collect the thumbnails
-		$unoptimized = $attachment_object->get_remaining_thumbnails();
-		foreach ( $unoptimized['normal'] as $size ) {
-			array_push( $sizes, $size );
-		}
-
-		$sizes = apply_filters( 'megaoptim_attachment_optimization_sizes', $sizes, $attachment_object );
-
-		// Create item objects
 		$items = array();
-		foreach ( $sizes as $size ) {
-			$item = array(
-				'attachment_id'         => $attachment_object->get_id(),
-				'attachment_size'       => $size,
-				'attachment_resource'   => $this->get_attachment( $attachment_object->get_id(), $size, false ),
-				'attachment_local_path' => $this->get_attachment_path( $attachment_object->get_id(), $size, false ),
-				'params'                => $request_params,
-			);
-			array_push($items, $item);
+
+		// Collect the thumbnails
+		$remaining_thumbs = $attachment_object->get_remaining_thumbnails();
+		foreach ( array( 'normal', 'retina' ) as $type ) {
+			// Collect the full size ones
+			$is_retina = $type === 'retina';
+			if ( ! $attachment_object->is_size_processed( 'full', $is_retina ) ) {
+				$full_resource = $this->get_attachment( $attachment_object->get_id(), 'full', $is_retina );
+				$full_local_path = $this->get_attachment_path( $attachment_object->get_id(), 'full', $is_retina );
+				if(false !== $full_local_path && false !== $full_resource) {
+					$item = array(
+						'attachment_id'         => $attachment_object->get_id(),
+						'attachment_size'       => 'full',
+						'attachment_resource'   => $full_resource,
+						'attachment_local_path' => $full_local_path,
+						'params'                => $request_params,
+						'type'                  => $type
+					);
+					array_push( $items, $item );
+				}
+			}
+			// Collect the thumbnails
+			foreach ( $remaining_thumbs[ $type ] as $size ) {
+				$item = array(
+					'attachment_id'         => $attachment_object->get_id(),
+					'attachment_size'       => $size,
+					'attachment_resource'   => $this->get_attachment( $attachment_object->get_id(), $size, $is_retina ),
+					'attachment_local_path' => $this->get_attachment_path( $attachment_object->get_id(), $size, $is_retina ),
+					'params'                => $request_params,
+					'type'                  => $type
+				);
+				array_push( $items, $item );
+			}
 		}
 
 		// Chunk and Dispatch
-		if(count($sizes)) {
+		if ( count( $items ) ) {
 			$chunks = array_chunk( $items, 5 );
 			foreach ( $chunks as $chunk ) {
 				$this->background_process->push_to_queue( $chunk );
@@ -354,7 +375,7 @@ class MGO_MediaLibrary extends MGO_Library {
 	 * @return mixed|MGO_Stats
 	 */
 	public function get_stats( $include_remaining = false ) {
-		@set_time_limit(0);
+		@set_time_limit( 0 );
 		$images_total         = 0;
 		$optimized_total      = 0;
 		$optimized_thumbnails = 0;
@@ -375,7 +396,7 @@ class MGO_MediaLibrary extends MGO_Library {
 					if ( $attachment->get_optimized_status() == 1 ) {
 						$optimized_total ++;
 					}
-					$optimized_thumbnails_arr = $attachment->get_optimized_thumbnails();
+					$optimized_thumbnails_arr = $attachment->get_processed_thumbnails();
 
 					$images_total ++;
 					$optimized_thumbnails_count = count( $optimized_thumbnails_arr['normal'] ) + count( $optimized_thumbnails_arr['retina'] );
@@ -548,9 +569,9 @@ class MGO_MediaLibrary extends MGO_Library {
 	/**
 	 * Get size information for all currently-registered image sizes.
 	 *
-	 * @global $_wp_additional_image_sizes
-	 * @uses   get_intermediate_image_sizes()
 	 * @return array $sizes Data for all currently-registered image sizes.
+	 * @uses   get_intermediate_image_sizes()
+	 * @global $_wp_additional_image_sizes
 	 */
 	public static function get_image_sizes() {
 		global $_wp_additional_image_sizes;
@@ -581,29 +602,30 @@ class MGO_MediaLibrary extends MGO_Library {
 	 *
 	 * @return array
 	 */
-	public static function get_size_keys($include_retina = false) {
-		$sizes = MGO_MediaLibrary::get_image_sizes();
-		$thumbs = array('full');
-		foreach($sizes as $_key => $val) {
-			array_push($thumbs, $_key) ;
+	public static function get_size_keys( $include_retina = false ) {
+		$sizes  = MGO_MediaLibrary::get_image_sizes();
+		$thumbs = array( 'full' );
+		foreach ( $sizes as $_key => $val ) {
+			array_push( $thumbs, $_key );
 		}
-		if($include_retina) {
-			array_push($thumbs, "full@2x") ;
-			foreach($sizes as $_key => $val) {
-				array_push($thumbs, "{$_key}@2x") ;
+		if ( $include_retina ) {
+			array_push( $thumbs, "full@2x" );
+			foreach ( $sizes as $_key => $val ) {
+				array_push( $thumbs, "{$_key}@2x" );
 			}
 		}
+
 		return $thumbs;
 	}
 
 	/**
 	 * Get size information for a specific image size.
 	 *
-	 * @uses   get_image_sizes()
-	 *
-	 * @param  string $size The image size for which to retrieve data.
+	 * @param string $size The image size for which to retrieve data.
 	 *
 	 * @return bool|array $size Size data about an image size or false if the size doesn't exist.
+	 * @uses   get_image_sizes()
+	 *
 	 */
 	public static function get_image_size( $size ) {
 		$sizes = static::get_image_sizes();
@@ -618,11 +640,11 @@ class MGO_MediaLibrary extends MGO_Library {
 	/**
 	 * Get the width of a specific image size.
 	 *
-	 * @uses   get_image_size()
-	 *
-	 * @param  string $size The image size for which to retrieve data.
+	 * @param string $size The image size for which to retrieve data.
 	 *
 	 * @return bool|string $size Width of an image size or false if the size doesn't exist.
+	 * @uses   get_image_size()
+	 *
 	 */
 	public static function get_image_width( $size ) {
 		if ( ! $size = static::get_image_size( $size ) ) {
@@ -639,11 +661,11 @@ class MGO_MediaLibrary extends MGO_Library {
 	/**
 	 * Get the height of a specific image size.
 	 *
-	 * @uses   get_image_size()
-	 *
-	 * @param  string $size The image size for which to retrieve data.
+	 * @param string $size The image size for which to retrieve data.
 	 *
 	 * @return bool|string $size Height of an image size or false if the size doesn't exist.
+	 * @uses   get_image_size()
+	 *
 	 */
 	public static function get_image_height( $size ) {
 		if ( ! $size = static::get_image_size( $size ) ) {
@@ -710,7 +732,7 @@ class MGO_MediaLibrary extends MGO_Library {
 	 *
 	 * @return string
 	 */
-	public function get_attachment_buttons($attachment) {
+	public function get_attachment_buttons( $attachment ) {
 		return megaoptim_get_view( 'misc/buttons-ml', array( 'data' => $attachment ) );
 	}
 }
