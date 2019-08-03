@@ -22,6 +22,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( 'Direct access is not allowed.' );
 }
 
+// Load the constants configuration
+require_once 'constants.php';
+
 // Load the MegaOptim Bootstrapping functionality
 require_once(
 	WP_MEGAOPTIM_INC_PATH .
@@ -36,8 +39,10 @@ megaoptim_prepare_optimizer();
 
 $includes = array(
 
+	// Activation/Deactivation
+	'hooks/activation.php',
+
 	//Load Internal Functions
-	'constants.php',
 	'functions/compat.php',
 	'functions/database.php',
 	'functions/helpers.php',

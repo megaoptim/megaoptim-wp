@@ -36,16 +36,18 @@ class MGO_Profile {
 	 *
 	 * @param null $api_key
 	 *
+	 * @param bool $forceReload
+	 *
 	 * @throws MGO_Exception
 	 */
-	public function __construct( $api_key = null ) {
+	public function __construct( $api_key = null, $forceReload = false ) {
 		if ( is_null( $api_key ) ) {
 			$this->_api_key = MGO_Settings::instance()->getApiKey();
 		} else {
 			$this->_api_key = $api_key;
 		}
 		$this->_cache_key = 'profile_' . $this->_api_key;
-		if ( $this->__load() ) {
+		if ( $this->__load( $forceReload ) ) {
 			$this->fresh = true;
 		}
 	}
@@ -69,7 +71,7 @@ class MGO_Profile {
 						$this->data          = $response['result'];
 						$this->data['valid'] = 1;
 					}
-					megaoptim_cache_set( $this->_cache_key, $this->data, $this->_cache_key );
+					megaoptim_cache_set( $this->_cache_key, $this->data, MEGAOPTIM_ONE_MINUTE_IN_SECONDS );
 
 					return true;
 				}
@@ -174,6 +176,7 @@ class MGO_Profile {
 		if ( ! isset( $this->data['valid'] ) || $this->data['valid'] !== 1 ) {
 			return false;
 		}
+
 		return $this;
 	}
 
@@ -232,7 +235,7 @@ class MGO_Profile {
 	 **/
 	public static function flushCaches( $new_api_key = null ) {
 		try {
-			new self( $new_api_key );
+			new self( $new_api_key, true );
 		} catch ( MGO_Exception $e ) {
 
 		}
@@ -290,6 +293,7 @@ class MGO_Profile {
 	public static function _is_connected() {
 		try {
 			$profile = new MGO_Profile();
+
 			return $profile->is_connected();
 		} catch ( MGO_Exception $e ) {
 			return false;

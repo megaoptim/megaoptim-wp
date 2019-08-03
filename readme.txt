@@ -13,17 +13,17 @@ Compress your images to speed up your site and boost your SEO. Compatible with a
 == Description ==
 **MegaOptim is image optimization plugin/service and that is easy to use, stable and actively maintained by dedicated team behind.**
 
-The plugin uses minimal resources on your server and all the heavy lifting is done by our API service in the cloud. No binaries will be installed on your server to resize or compress images directly on it unlike some other plugins.
+The plugin uses minimal resources on your server and all the heavy lifting is done by our API service in the cloud. No binaries will be ever installed on your server.
 
-= What is image optimization / compression? =
+= What is image optimization / compression and why it is important? =
 
-Image Optimization is delivering the high-quality images in the right format, dimension, size, and resolution while keeping the smallest possible size. This will increase your page load speed and boost your SEO.
+Image Optimization is delivering the high-quality images in the right format, dimension, size, and resolution while keeping the smallest possible size.
 
 = How much does MegaOptim cost? =
 
-The service comes with **500 FREE images/tokens per month for everyone**. Additional tokens can be purchased starting from $4.99 for 6000 tokens. Check out our prices <a href="https://megaoptim.com/pricing" target="_blank">here</a>.
+The service comes with **500 FREE images/tokens per month for everyone**. We also have unlimited plan and creating sub-accounts for your clients. Check out our prices <a href="https://megaoptim.com/pricing" target="_blank">here</a>.
 
-Want more tokens for free? Help us spread MegaOptim and earn 120 tokens per sign up and 300 tokens once customer becomes paid customer. Our Referral program can be found in the <a target="_blank" href="https://megaoptim.com/dashboard">dashboard area</a>.
+Want more tokens for free? Help us spread MegaOptim and earn 120 tokens per sign up and 300 tokens once customer becomes paid customer. Our Referral program can be found in the <a target="_blank" href="https://app.megaoptim.com/">dashboard area</a>.
 
 = What features does MegaOptim offer? =
 
@@ -31,28 +31,23 @@ Want more tokens for free? Help us spread MegaOptim and earn 120 tokens per sign
 - Bulk optimization for the Media Library, NextGen Libaries, MediaPress, Envira and other
 - Bulk optimization of Custom folders by your choice in your hosting account
 - Auto-optimization for the Media Library, NextGen Libraries, MediaPress, Envira and other
-- WebP Support - Convert images to WebP upon optimization and automatically replace the content images with WebP version if available
-- Option to choose thumbnail sizes you want to be optimized for both regular and retina thumbnails
-- Option to choose what to backup automatically
-- Auto-backups for the optimized images. If you don't want the results you can always restore the image from backup with a single click
-- Button to remove all the backups to free up the space if you don't plan to restore the images
-- Supports large images, no filesize limit
+- WebP Management (Enable/Disable WebP. Convert images to WebP upon optimization and automatically replace the content images with WebP version if available)
+- Thumbnail Management (select which thumbnail versions to be optimized for both regular and retina)
+- Backup Management (easily enable/disable backup for specific module or remove backups that you don't need.)
 - Supports WordPress Multisite, setup the plugin separately on the sites you want.
-- Integrates with Media Library and NextGen Galleries screens and adds buttons for optimization/restoration of specific image
-- Integrates with WP Retina 2x(Free and Pro). It will optimize all the retina images too
-- Supports Cloudflare, if you are connected to CF with plugins or you enter your credentials in the setup page it will purge the image automatically from CloudFlare cache after it is optimized
+- Integrates with WP Retina 2x(Free and Pro). It will optimize all the retina images too.
+- Supports Cloudflare, if you are using it with plugins or you enter your CF credentials in the setup page it will purge the image automatically from CloudFlare cache after it is optimized
 - Option to enable/disable auto conversion from CMYK to RGB (A better color profile for web)
 - Option to preserve EXIF data(location, time, camera model) or remove it upon the optimization
 - Option to specify maximum dimensions of optimized images. You may not need plugins like Imansity
 - Supports both HTTP and HTTPS
-- Supports localhost and non-public sites. If your site is not accessible by our server, you can still optimize images as long as you have internet access
+- Supports public, local and password protected sites. Huge benefits for developers with local environments.
 - Supports Basic HTTP authentication, if your site is protected with .htpasswd
 - Uses progressive JPEG for the larger images to display them faster in the browser
-- Single api key for multiple sites
 - Compatible with WP Engine, SiteGround and other hosting providers
 - Compatible with Windows/UNIX(Linux, OSx) hosting environments
-- Images that are optimized and the total saved size is less than 5% are free, no tokens are deducted
-- Optimization stats available at the <a target="_blank" href="https://megaoptim.com/dashboard">dashboard area</a>
+- Images that are optimized and the total saved size is less than 5% are free, no tokens are charged
+- Optimization stats available at the <a target="_blank" href="https://app.megaoptim.com/dashboard">dashboard area</a>
 - Dedicated support team ready to help you 24/7.
 
 = Have a question? Contact us! =
@@ -142,13 +137,18 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
 == Changelog ==
 
 = 1.3.0 =
-- Support for Unlimited plan
+- Added Support for the Unlimited plan
+- Added Support for sub accounts
+- Revamped media library optimizer
+- Revamped nextgen library optimizer
+- Revamped retina support & WP Retina @2x integration
+- Improved optimization speed by at least 50%
 - Improved WebP support
 - Improved Settings pages
 - Improved WPEngine compatibility
 - Fixed Cloudflare purge compatibility
 - Fixed problem when auto-optimizing nextgen gallery images
-- Added info below the 'Optimize' button when the attachment is not fully optimized
+- Improved stats display when optimizing single attachment in Media Library table
 - Added detection for the child theme folder in 'Local Folders' optimizer
 
 = 1.2.1 =
