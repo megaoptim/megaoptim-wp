@@ -60,7 +60,7 @@ class MGO_Debug {
 			// MegaOptim
 			'API Status'                         => megaoptim_ping_api() ? 'Online' : 'Offline',
 			'API Key'                            => $valid ? 'Valid' : 'Invalid',
-			'API Balance'                        => $tokens == -1 ? 'Unlimited' : 0,
+			'API Balance'                        => $tokens == -1 ? 'Unlimited' : $tokens,
 			'API PHP Client Version'             => MegaOptim\Optimizer::VERSION,
 			'Plugin Version'                     => WP_MEGAOPTIM_VER,
 			// WP

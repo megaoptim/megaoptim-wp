@@ -20,7 +20,7 @@ define( 'MEGAOPTIM_CACHE_PREFIX', 'megaoptim' );
 define( 'WP_MEGAOPTIM_REGISTER_URL', 'https://megaoptim.com/register' );
 define( 'WP_MEGAOPTIM_DASHBOARD_URL', 'https://megaoptim.com/dashboard' );
 define( 'WP_MEGAOPTIM_REGISTER_API_URL', 'https://megaoptim.com/api/register' );
-define( 'WP_MEGAOPTIM_API_BASE_URL', 'http://api.megaoptim.test' );
+define( 'WP_MEGAOPTIM_API_BASE_URL', 'https://api.megaoptim.com' );
 define( 'WP_MEGAOPTIM_API_VERSION', 'v1' );
 define( 'WP_MEGAOPTIM_API_URL', WP_MEGAOPTIM_API_BASE_URL . '/' . WP_MEGAOPTIM_API_VERSION );
 define( 'WP_MEGAOPTIM_API_PROFILE', WP_MEGAOPTIM_API_URL . '/users/info' );
