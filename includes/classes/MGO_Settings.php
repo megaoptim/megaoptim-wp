@@ -65,7 +65,6 @@ class MGO_Settings extends MGO_BaseObject {
 			$defaults = self::defaults();
 			$this->update( $defaults );
 		}
-		$this->maybe_remove_unregistered_sizes();
 	}
 
 	/**
@@ -79,7 +78,13 @@ class MGO_Settings extends MGO_BaseObject {
 	 */
 
 	public function get( $key = null, $default = null ) {
-		$this->settings = get_option( self::OPTIONS_KEY );
+
+		// Attempt to clean up unregistered settings from the sizes array
+		if ( in_array( $key, array( self::IMAGE_SIZES, self::RETINA_IMAGE_SIZES ) ) ) {
+			$this->remove_unregistered_sizes();
+		}
+
+		$this->settings = $this->get_settings();
 		if ( false === $this->settings ) {
 			return false;
 		}
@@ -88,6 +93,16 @@ class MGO_Settings extends MGO_BaseObject {
 		} else {
 			return $this->settings;
 		}
+	}
+
+	/**
+	 * Returns megaoptim settings
+	 * @return array|bool
+	 */
+	public function get_settings() {
+		$settings = get_option( self::OPTIONS_KEY );
+
+		return $settings;
 	}
 
 
@@ -242,9 +257,10 @@ class MGO_Settings extends MGO_BaseObject {
 	/**
 	 * Removes the sizes that are still saved in the sizes array but were unregistered.
 	 */
-	public function maybe_remove_unregistered_sizes() {
-		$sizes_normal  = $this->get( self::IMAGE_SIZES, array() );
-		$sizes_retina  = $this->get( self::RETINA_IMAGE_SIZES, array() );
+	public function remove_unregistered_sizes() {
+		$settings      = $this->get_settings();
+		$sizes_normal  = isset( $settings[ self::IMAGE_SIZES ] ) ? $settings[ self::IMAGE_SIZES ] : array();
+		$sizes_retina  = isset( $settings[ self::RETINA_IMAGE_SIZES ] ) ? $settings[ self::RETINA_IMAGE_SIZES ] : array();
 		$sizes_current = MGO_MediaLibrary::get_image_sizes();
 		$is_updated    = false;
 		foreach ( $sizes_normal as $key => $size ) {
