@@ -1121,3 +1121,7 @@ UL.jqueryFileTree A {
 .megaoptim-attachment-info-row p {
     margin-bottom: 3px !important;
 }
+
+.megaoptim_notice h2 {
+    margin-bottom: 0;
+}

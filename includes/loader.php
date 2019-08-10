@@ -79,6 +79,7 @@ $includes = array(
 	'compat/nextgen-gallery/classes/MGO_NGGLibrary.php'    => megaoptim_is_nextgen_active(),
 	'classes/MGO_Ajax.php',
 	'classes/MGO_Admin_UI.php'                             => is_admin(),
+	'classes/MGO_Admin_Notices.php'                        => is_admin(),
 
 	// Jobs
 	'classes/Jobs/MGO_Background_Process.php',
@@ -90,6 +91,7 @@ $includes = array(
 	'hooks/general.php',
 	'hooks/internal.php',
 	'hooks/attachments.php',
+	'hooks/notices.php',
 
 	// Webp Support
 	'functions/webp.php',

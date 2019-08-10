@@ -17,9 +17,9 @@ define( 'MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT', 'nextgenv2' );
 define( 'MEGAOPTIM_CACHE_PREFIX', 'megaoptim' );
 
 #API Config
-define( 'WP_MEGAOPTIM_REGISTER_URL', 'https://megaoptim.com/register' );
-define( 'WP_MEGAOPTIM_DASHBOARD_URL', 'https://megaoptim.com/dashboard' );
-define( 'WP_MEGAOPTIM_REGISTER_API_URL', 'https://megaoptim.com/api/register' );
+define( 'WP_MEGAOPTIM_REGISTER_URL', 'https://app.megaoptim.com/register' );
+define( 'WP_MEGAOPTIM_DASHBOARD_URL', 'https://app.megaoptim.com/' );
+define( 'WP_MEGAOPTIM_REGISTER_API_URL', 'https://app.megaoptim.com/api/register' );
 define( 'WP_MEGAOPTIM_API_BASE_URL', 'https://api.megaoptim.com' );
 define( 'WP_MEGAOPTIM_API_VERSION', 'v1' );
 define( 'WP_MEGAOPTIM_API_URL', WP_MEGAOPTIM_API_BASE_URL . '/' . WP_MEGAOPTIM_API_VERSION );
