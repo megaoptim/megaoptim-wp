@@ -7,7 +7,6 @@ function _megaoptim_notice_user_balance() {
 	try {
 		$profile = new MGO_Profile();
 		$tokens_count = $profile->get_tokens_count();
-		$tokens_count = 0;
 		if( intval($tokens_count) === 0) {
 			$message = sprintf(
 				'%s %s %s %s.',
@@ -22,4 +21,4 @@ function _megaoptim_notice_user_balance() {
 
 	}
 }
-add_action('init', '_megaoptim_notice_user_balance');
+add_action('init', '_megaoptim_notice_user_balance', 1000);
