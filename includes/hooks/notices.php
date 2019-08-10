@@ -16,7 +16,7 @@ function _megaoptim_notice_user_balance() {
 				__('please top up your account'),
 				'<a href="'.WP_MEGAOPTIM_DASHBOARD_URL.'">'.__('here', 'megaoptim').'</a>'
 			);
-			MGO_Admin_Notices::instance()->warning($message, 1);
+			MGO_Admin_Notices::instance()->warning('insufficient_balance', $message, 1);
 		}
 	} catch (\Exception $exception) {
 

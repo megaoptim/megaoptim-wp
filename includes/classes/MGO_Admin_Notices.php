@@ -2,7 +2,7 @@
 
 class MGO_Admin_Notices {
 
-    private $title = 'MegaOptim Image Optimizer';
+	private $title = 'MegaOptim Image Optimizer';
 
 	private $prefix = 'megaoptim_';
 
@@ -41,9 +41,10 @@ class MGO_Admin_Notices {
 	 * Admin init
 	 */
 	public function admin_init() {
+		$notice_id      = filter_input( INPUT_GET, $this->prefix . 'notice_id', FILTER_SANITIZE_STRING );
 		$dismiss_option = filter_input( INPUT_GET, $this->prefix . 'dismiss', FILTER_SANITIZE_STRING );
-		if ( is_string( $dismiss_option ) ) {
-			set_transient( $this->prefix . "dismissed_$dismiss_option", true, $this->expiry );
+		if ( ! empty( $notice_id ) && is_string( $dismiss_option ) ) {
+			set_transient( $this->get_notice_key( $notice_id ), 'd', $this->expiry );
 			wp_die();
 		}
 	}
@@ -81,19 +82,22 @@ class MGO_Admin_Notices {
 		foreach ( explode( ',', self::TYPES ) as $type ) {
 			foreach ( $this->admin_notices->{$type} as $admin_notice ) {
 				$dismiss_url = add_query_arg( array(
-					$this->prefix . 'dismiss' => $admin_notice->dismiss_option
+					$this->prefix . 'dismiss'   => $admin_notice->dismiss_option,
+					$this->prefix . 'notice_id' => $admin_notice->id,
 				), admin_url() );
 
-				if ( ! get_transient( $this->prefix . "dismissed_{$admin_notice->dismiss_option}" ) ) {
+				$value = get_transient( $this->get_notice_key( $admin_notice->id ) );
+
+				if ( ! $value || $value !== 'd' ) {
 					?>
                     <div class="notice <?php echo $this->prefix; ?>notice notice-<?php echo $type;
-						if ( $admin_notice->dismiss_option ) {
-							echo ' is-dismissible" data-dismiss-url="' . esc_url( $dismiss_url );
-						} ?>">
-                    <h2><?php echo "$this->title $type"; ?></h2>
-                    <p><?php echo $admin_notice->message; ?></p>
+					if ( $admin_notice->dismiss_option ) {
+						echo ' is-dismissible" data-dismiss-url="' . esc_url( $dismiss_url );
+					} ?>">
+                        <h2><?php echo "$this->title $type"; ?></h2>
+                        <p><?php echo $admin_notice->message; ?></p>
                     </div>
-                    <?php
+					<?php
 				}
 			}
 		}
@@ -102,55 +106,72 @@ class MGO_Admin_Notices {
 	/**
 	 * Add error notification message.
 	 *
+	 * @param $id
 	 * @param $message
-	 * @param bool $dismiss_option
+	 * @param $dismiss_option
 	 */
-	public function error( $message, $dismiss_option = false ) {
-		$this->notice( 'error', $message, $dismiss_option );
+	public function error( $id, $message, $dismiss_option = false ) {
+		$this->notice( 'error', $id, $message, $dismiss_option );
 	}
 
 	/**
 	 * Add warning notification message.
 	 *
+	 * @param $id
 	 * @param $message
-	 * @param bool $dismiss_option
+	 * @param $dismiss_option
 	 */
-	public function warning( $message, $dismiss_option = false ) {
-		$this->notice( 'warning', $message, $dismiss_option );
+	public function warning( $id, $message, $dismiss_option = false ) {
+		$this->notice( 'warning', $id, $message, $dismiss_option );
 	}
 
 	/**
 	 * Add success notification message.
 	 *
+	 * @param $id
 	 * @param $message
-	 * @param bool $dismiss_option
+	 * @param $dismiss_option
 	 */
-	public function success( $message, $dismiss_option = false ) {
-		$this->notice( 'success', $message, $dismiss_option );
+	public function success( $id, $message, $dismiss_option = false ) {
+		$this->notice( 'success', $id, $message, $dismiss_option );
 	}
 
 	/**
 	 * Add info notification message.
 	 *
+	 * @param $id
 	 * @param $message
-	 * @param bool $dismiss_option
+	 * @param $dismiss_option
 	 */
-	public function info( $message, $dismiss_option = false ) {
-		$this->notice( 'info', $message, $dismiss_option );
+	public function info( $id, $message, $dismiss_option = false ) {
+		$this->notice( 'info', $id, $message, $dismiss_option );
 	}
 
 	/**
 	 * Add notice
 	 *
 	 * @param $type
+	 * @param $id
 	 * @param $message
 	 * @param $dismiss_option
 	 */
-	private function notice( $type, $message, $dismiss_option ) {
+	private function notice( $type, $id, $message, $dismiss_option ) {
 		$notice                 = new stdClass();
+		$notice->id             = $id;
 		$notice->message        = $message;
 		$notice->dismiss_option = $dismiss_option;
 
 		$this->admin_notices->{$type}[] = $notice;
+	}
+
+	/**
+	 * Returns the notice database key
+	 *
+	 * @param $id
+	 *
+	 * @return string
+	 */
+	private function get_notice_key( $id ) {
+		return $this->prefix . 'dismissed_' . $id;
 	}
 }
