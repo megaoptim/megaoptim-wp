@@ -48,6 +48,21 @@ function megaoptim_include_files( $files ) {
 }
 
 /**
+ * Prints out update nag
+ */
+function megaoptim_update_nag() {
+	?>
+	<div class="update-nag">
+		<?php echo sprintf('%s %s.', __('Update your PHP version if you want to run', 'megaoptim'), '<strong>'.__('MegaOptim Image Optimizer', 'megaoptim') . '</strong>'); ?> <br/>
+		<?php _e( 'Your actual version is:', 'megaoptim' ) ?>
+		<strong><?php echo phpversion(); ?></strong>, <?php _e( 'required is', 'megaoptim' ) ?>
+		<strong><?php echo WP_MEGAOPTIM_PHP_MINIMUM; ?></strong>
+		<?php _e( '. Please contact your hosting or MegaOptim support for further assistence.', 'megaoptim' ) ?>
+	</div>
+	<?php
+}
+
+/**
  * Include file from megaoptim plugin
  * @param $path
  * @param $require
@@ -98,4 +113,11 @@ function megaoptim_is_wr2x_active() {
  */
 function megaoptim_is_wpengine() {
 	return function_exists('is_wpe') && is_wpe();
+}
+
+/**
+ * Is the current PHP version compatible?
+ */
+function megaoptim_is_php_version_compatible() {
+	return version_compare(phpversion(), WP_MEGAOPTIM_PHP_MINIMUM, '>=');
 }

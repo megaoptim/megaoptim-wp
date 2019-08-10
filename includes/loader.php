@@ -34,13 +34,17 @@ require_once(
 	'bootstrap.php'
 );
 
+// Check if the PHP version requirements are met.
+if(!megaoptim_is_php_version_compatible()) {
+	add_action('admin_notices', 'megaoptim_update_nag');
+	return;
+}
+
+
 // Load the MegaOptim Library
 megaoptim_prepare_optimizer();
 
 $includes = array(
-
-	// Activation/Deactivation
-	'hooks/activation.php',
 
 	//Load Internal Functions
 	'functions/compat.php',
