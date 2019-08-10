@@ -65,6 +65,7 @@ class MGO_Settings extends MGO_BaseObject {
 			$defaults = self::defaults();
 			$this->update( $defaults );
 		}
+		$this->maybe_remove_unregistered_sizes();
 	}
 
 	/**
@@ -133,8 +134,9 @@ class MGO_Settings extends MGO_BaseObject {
 	 * Is auto optimize enabled?
 	 * @return bool
 	 */
-	public function isAutoOptimizeEnabled(){
+	public function isAutoOptimizeEnabled() {
 		$auto_optimize = $this->get( self::AUTO_OPTIMIZE );
+
 		return $auto_optimize == 1;
 	}
 
@@ -234,6 +236,35 @@ class MGO_Settings extends MGO_BaseObject {
 			return true;
 		} else {
 			return false;
+		}
+	}
+
+	/**
+	 * Removes the sizes that are still saved in the sizes array but were unregistered.
+	 */
+	public function maybe_remove_unregistered_sizes() {
+		$sizes_normal  = $this->get( self::IMAGE_SIZES, array() );
+		$sizes_retina  = $this->get( self::RETINA_IMAGE_SIZES, array() );
+		$sizes_current = MGO_MediaLibrary::get_image_sizes();
+		$is_updated    = false;
+		foreach ( $sizes_normal as $key => $size ) {
+			// Is it missing in the current sizes?
+			if ( ! isset( $sizes_current[ $size ] ) ) {
+				// If so, Unset the size that is no longer registered.
+				unset( $sizes_normal[ $key ] );
+				// If so, Unset the retina size that is no longer registered.
+				// Note: Retina sizes are stored the same without @2x appended.
+				if ( isset( $sizes_retina[ $key ] ) ) {
+					unset( $sizes_retina[ $key ] );
+				}
+				$is_updated = true;
+			}
+		}
+		if ( $is_updated ) {
+			$this->update( array(
+				self::IMAGE_SIZES        => $sizes_normal,
+				self::RETINA_IMAGE_SIZES => $sizes_retina,
+			) );
 		}
 	}
 }
