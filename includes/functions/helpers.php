@@ -44,14 +44,14 @@ function megaoptim_get_tmp_path() {
  * @param $contents string
  * @param string $force_flag
  */
-function megaoptim_write($file, $contents, $force_flag = '') {
+function megaoptim_write( $file, $contents, $force_flag = '' ) {
 	if ( file_exists( $file ) ) {
 		$flag = $force_flag !== '' ? $force_flag : 'a';
-		$fp = fopen( $file, $flag );
+		$fp   = fopen( $file, $flag );
 		fwrite( $fp, $contents . "\n" );
 	} else {
 		$flag = $force_flag !== '' ? $force_flag : 'w';
-		$fp = fopen( $file, $flag );
+		$fp   = fopen( $file, $flag );
 		fwrite( $fp, $contents . "\n" );
 	}
 	fclose( $fp );
@@ -59,28 +59,29 @@ function megaoptim_write($file, $contents, $force_flag = '') {
 
 /**
  * Makes specific dir secure.
+ *
  * @param $dir
  * @param bool $noindex
  */
-function megaoptim_protect_dir($dir, $noindex = true) {
-	if(!is_dir($dir)) {
-		@mkdir($dir);
+function megaoptim_protect_dir( $dir, $noindex = true ) {
+	if ( ! is_dir( $dir ) ) {
+		@mkdir( $dir );
 	}
 	// Create empty index file
-	if(is_dir($dir)) {
+	if ( is_dir( $dir ) ) {
 		$index_path = $dir . DIRECTORY_SEPARATOR . 'index.html';
-		if(!file_exists($index_path)) {
-			@touch($index_path);
+		if ( ! file_exists( $index_path ) ) {
+			@touch( $index_path );
 		}
 	}
 	// Create noindex to the directory for some hosting environemnts.
-	if($noindex) {
+	if ( $noindex ) {
 		$htaccess_path = $dir . DIRECTORY_SEPARATOR . '.htaccess';
-		if(!file_exists($htaccess_path)) {
+		if ( ! file_exists( $htaccess_path ) ) {
 			$contents = '<IfModule headers_module>
 Header set X-Robots-Tag "noindex"
 </IfModule>';
-			megaoptim_write($htaccess_path, $contents);
+			megaoptim_write( $htaccess_path, $contents );
 		}
 	}
 }
@@ -93,15 +94,15 @@ Header set X-Robots-Tag "noindex"
  */
 function megaoptim_log( $message, $filename = "debug.log" ) {
 	$log_file_dir = megaoptim_get_tmp_path();
-	megaoptim_protect_dir($log_file_dir);
+	megaoptim_protect_dir( $log_file_dir );
 	if ( ! file_exists( $log_file_dir ) ) {
 		@mkdir( $log_file_dir );
 	}
 	$log_file_path = $log_file_dir . DIRECTORY_SEPARATOR . $filename;
 	// TODO: Remove after some time
 	$old_file_path = $log_file_dir . DIRECTORY_SEPARATOR . 'debug.txt';
-	if(file_exists($old_file_path)) {
-		@rename($old_file_path, $log_file_path);
+	if ( file_exists( $old_file_path ) ) {
+		@rename( $old_file_path, $log_file_path );
 	}
 	// END TODO
 	if ( ! is_string( $message ) && ! is_numeric( $message ) ) {
@@ -109,7 +110,7 @@ function megaoptim_log( $message, $filename = "debug.log" ) {
 		megaoptim_dump( $message );
 		$message = ob_get_clean();
 	}
-	megaoptim_write($log_file_path, $message);
+	megaoptim_write( $log_file_path, $message );
 }
 
 /**
@@ -272,16 +273,17 @@ function megaoptim_contains( $str, $substring ) {
  *
  * @return mixed
  */
-function megaoptim_remove_between($beginning, $end, $string) {
-	$beginning_pos = strpos($string, $beginning);
-	$end_pos = strpos($string, $end);
-	if ($beginning_pos === false || $end_pos === false) {
+function megaoptim_remove_between( $beginning, $end, $string ) {
+	$beginning_pos = strpos( $string, $beginning );
+	$end_pos       = strpos( $string, $end );
+	if ( $beginning_pos === false || $end_pos === false ) {
 		return $string;
 	}
-	$text = substr($string, $beginning_pos, ($end_pos + strlen($end)) - $beginning_pos);
-	$text = str_replace($text, '', $string);
-	$text = str_replace($beginning, '', $text);
-	$text = str_replace($end, '', $text);
+	$text = substr( $string, $beginning_pos, ( $end_pos + strlen( $end ) ) - $beginning_pos );
+	$text = str_replace( $text, '', $string );
+	$text = str_replace( $beginning, '', $text );
+	$text = str_replace( $end, '', $text );
+
 	return $text;
 }
 
@@ -539,7 +541,7 @@ function megaoptim_is_excluded( $dir ) {
  * @return bool
  */
 function megaoptim_is_url( $url ) {
-	return \MegaOptim\Tools\URL::validate($url);
+	return \MegaOptim\Tools\URL::validate( $url );
 }
 
 /**
@@ -673,6 +675,7 @@ function megaoptim_basename( $str, $suffix = '' ) {
 
 /**
  * Multibyte Basename support
+ *
  * @param $path
  * @param bool $suffix
  *
@@ -757,17 +760,18 @@ function megaoptim_regenerate_thumbnails( $id, $path = null ) {
  *
  * @return array|mixed
  */
-function megaoptim_generate_attachment_data($file, $response, $params) {
-	$webp = $file->getWebP();
-	$params['original_size'] = $file->getOriginalSize();
+function megaoptim_generate_attachment_data( $file, $response, $params ) {
+	$webp                     = $file->getWebP();
+	$params['original_size']  = $file->getOriginalSize();
 	$params['optimized_size'] = $file->getOptimizedSize();
-	$params['saved_bytes'] = $file->getSavedBytes(); // Remove
-	$params['saved_percent'] = $file->getSavedPercent(); // Remove
-	$params['webp_size'] = !is_null($webp) ? $webp->optimized_size : 0;
-	$params['success'] = $file->isSuccessfullyOptimized() ? 1 : 0;
-	$params['status']  = $response->isSuccessful() ? 1 : 0;
-	$params['time'] = date('Y-m-d H:i:s');
-	$params['compression'] = isset($params['compression']) ? $params['compression'] : \MegaOptim\Optimizer::COMPRESSION_INTELLIGENT;
+	$params['saved_bytes']    = $file->getSavedBytes(); // Remove
+	$params['saved_percent']  = $file->getSavedPercent(); // Remove
+	$params['webp_size']      = ! is_null( $webp ) ? $webp->optimized_size : 0;
+	$params['success']        = $file->isSuccessfullyOptimized() ? 1 : 0;
+	$params['status']         = $response->isSuccessful() ? 1 : 0;
+	$params['time']           = date( 'Y-m-d H:i:s' );
+	$params['compression']    = isset( $params['compression'] ) ? $params['compression'] : \MegaOptim\Optimizer::COMPRESSION_INTELLIGENT;
+
 	return $params;
 }
 
@@ -806,6 +810,7 @@ function megaoptim_validate_email( $email = '' ) {
  */
 function megaoptim_is_registration_pending() {
 	$is_pending = megaoptim_validate_email( get_option( 'megaoptim_registration_email' ) );
+
 	return $is_pending;
 }
 
@@ -816,6 +821,7 @@ function megaoptim_is_registration_pending() {
 function megaoptim_get_validation_email() {
 	$email      = get_option( 'megaoptim_registration_email' );
 	$is_pending = megaoptim_validate_email( $email );
+
 	return $is_pending ? $email : false;
 }
 
@@ -823,12 +829,67 @@ function megaoptim_get_validation_email() {
  * Used to prevent auto optimization
  */
 function megaoptim_prevent_auto_optimization() {
-	add_filter('megaoptim_auto_optimize_media_attachment', '__return_false');
+	add_filter( 'megaoptim_auto_optimize_media_attachment', '__return_false' );
 }
 
 /**
  * Used to restore auto optimization
  */
 function megaoptim_restore_auto_optimization() {
-	remove_filter('megaoptim_auto_optimize_media_attachment', '__return_false');
+	remove_filter( 'megaoptim_auto_optimize_media_attachment', '__return_false' );
+}
+
+/**
+ * Returns list of active conflicting plugins
+ * @return array
+ */
+function megaoptim_get_conflicting_plugins() {
+	$active  = array();
+	$plugins = array(
+		'ShortPixel Image Optimizer'        => array(
+			'basename' => 'shortpixel-image-optimiser/wp-shortpixel.php',
+		),
+		'WP Smush - Image Optimization'        => array(
+			'basename' => 'wp-smushit/wp-smush.php',
+		),
+		'Imagify Image Optimizer'              => array(
+			'basename' => 'imagify/imagify.php',
+		),
+		'Compress JPEG & PNG images (TinyPNG)' => array(
+			'basename' => 'tiny-compress-images/tiny-compress-images.php',
+		),
+		'Kraken.io Image Optimizer'            => array(
+			'basename' => 'kraken-image-optimizer/kraken.php',
+		),
+		'Optimus - WordPress Image Optimizer'  => array(
+			'basename' => 'optimus/optimus.php',
+		),
+		'EWWW Image Optimizer'                 => array(
+			'basename' => 'ewww-image-optimizer/ewww-image-optimizer.php',
+		),
+		'EWWW Image Optimizer Cloud'           => array(
+			'basename' => 'ewww-image-optimizer-cloud/ewww-image-optimizer-cloud.php',
+		),
+		'ImageRecycle pdf & image compression' => array(
+			'basename' => 'imagerecycle-pdf-image-compression/wp-image-recycle.php',
+		),
+		'CheetahO Image Optimizer'             => array(
+			'basename' => 'cheetaho-image-optimizer/cheetaho.php',
+		),
+		'Zara 4 Image Compression'             => array(
+			'basename' => 'zara-4/zara-4.php',
+		),
+		'CW Image Optimizer'                   => array(
+			'basename' => 'cw-image-optimizer/cw-image-optimizer.php',
+		),
+		'Simple Image Sizes'                   => array(
+			'basename' => 'simple-image-sizes/simple_image_sizes.php'
+		),
+	);
+	foreach($plugins as $key => $plugin) {
+		if(is_plugin_active($plugin['basename'])) {
+			$active[$key] = $plugin;
+		}
+	}
+	return $active;
 }

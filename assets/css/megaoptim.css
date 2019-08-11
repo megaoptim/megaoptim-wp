@@ -1125,3 +1125,8 @@ UL.jqueryFileTree A {
 .megaoptim_notice h2 {
     margin-bottom: 0;
 }
+.megaoptim_notice ul {
+    list-style: disc !important;
+    margin-left: 31px !important;
+    padding-left: inherit;
+}
