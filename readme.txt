@@ -2,7 +2,7 @@
 Contributors: megaoptim, darkog
 Tags: image optimizer, image compression, pagespeed, lighthouse, optimize images, image optimiser, image compressor, optimize images, optimize jpg, compress jpg, compress png, compress retina
 Requires at least: 3.6
-Tested up to: 5.2.0
+Tested up to: 5.2.2
 Requires PHP: 5.3.0
 Stable tag: 1.3.0
 License: GPLv2 or later
@@ -75,7 +75,10 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
     One API token is one image. Please note that WordPress generates multiple thumbnails per one image. You will be charged one token for each thumbnail. If the total saved size per image is less than %5 you will not be charged.
 
 = Can i use the same API Key on multiple websites? =
-    Absolutely. You can use your API key on as many websites as you want.
+    Absolutely. You can use your API key on as many websites as you want or you can also create sub accounts for each of the sites you manage if you want to keep the things separate or bill your clients separate.
+
+= Can i manage multiple sites separately with sub-accounts?
+    You can create sub-account for your client and transfer tokens to the sub-account balance. This way your client will have separate account and api key and you will be managing it. You have the option to add or remove api tokens from it.
 
 = Which compression level should i use? =
      For most of the websites **intelligent** method is enough, it auto determines the level of compression of the image that works best for the human eye. The **ultra** mode is similar to **intelligent** but goes a bit further to save more space. If you are willing to sacrifice small bits of the image quality then this mode is the way to go. Finally, with the lossless method the service attempts to optimize the images without touching the image quality. It is not recommended method if you are looking for google pagespeed score or page load speed.
@@ -95,14 +98,14 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
 = What image formats can be optimized? =
     MegaOptim supports JPEG, PNG, GIF (animated or non animated)
 
-= Does the plugin optimizes the images in cloud or in my website's hosting? =
-    MegaOptim send each image to our cloud service and each image is optimized and then downloaded and replaced with the original, if you have backups enabled the image will be backed up additionally.
+= Does the plugin optimizes the images in cloud or in my website's server? =
+    No. The plugin will send every image to our API service and all the processing is done by our powerful servers. You won't notice any slowdown while the optimizer is running.
 
 = Do i need separate tokens for WebP Images?
     No, WebP versions are free of charge!
 
 = What payment methods do you support? =
-    We support both PayPal and Credit Card via Paddle
+    We support both PayPal and Credit Card via Paddle. The payments can be recurring or onetime.
 
 = What happens if i stop using or deactivate MegaOptim plugin? =
     Nothing, your images will remain optimized, if you used the WebP feature the site won't serve WebP any longer.
@@ -120,7 +123,7 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
     Yes! You need to use the CloudFlare plugin with correct credentials or setup credentials in the Settings > Advanced menu. If the credentials are setup correctly, the plugin will automatically purge from the CloudFlare cached images when they are optimized with MegaOptim.
 
 = I have problem, the plugin won't work. =
-   Please <a target="_blank" href="https://megaoptim.com/contact">contact us</a> as soon as possible and we can assist you!
+   Please <a target="_blank" href="https://megaoptim.com/contact">contact us</a> as soon as possible and we can assist you. We even have a live chat.
 
 
 == Screenshots ==
@@ -151,6 +154,7 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
 - Fixed problem when auto-optimizing nextgen gallery images
 - Improved stats display when optimizing single attachment in Media Library table
 - Added detection for the child theme folder in 'Local Folders' optimizer
+- Fixed several typos
 
 = 1.2.1 =
 - Improved Admin pages
