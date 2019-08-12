@@ -32,8 +32,9 @@ Want more tokens for free? Help us spread MegaOptim and earn 120 tokens per sign
 - Bulk optimization of Custom folders by your choice in your hosting account
 - Auto-optimization for the Media Library, NextGen Libraries, MediaPress, Envira and other
 - WebP Management (Enable/Disable WebP. Convert images to WebP upon optimization and automatically replace the content images with WebP version if available)
-- Thumbnail Management (select which thumbnail versions to be optimized for both regular and retina)
-- Backup Management (easily enable/disable backup for specific module or remove backups that you don't need.)
+- Thumbnail Management (Select which thumbnail versions to be optimized for both regular and retina)
+- Backup Management (Enable/disable backup for specific module or remove backups that you don't need.)
+- Subaccount Management (Manage your client sites and have separate statistics and subaccount/api key for each. Transfer tokens from onetime or monthly balances between accounts.)
 - Supports WordPress Multisite, setup the plugin separately on the sites you want.
 - Integrates with WP Retina 2x(Free and Pro). It will optimize all the retina images too.
 - Supports Cloudflare, if you are using it with plugins or you enter your CF credentials in the setup page it will purge the image automatically from CloudFlare cache after it is optimized
