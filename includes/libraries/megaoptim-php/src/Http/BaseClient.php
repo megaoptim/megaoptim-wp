@@ -142,6 +142,7 @@ abstract class BaseClient {
 		curl_setopt( $ch, CURLOPT_BINARYTRANSFER, 1 );
 		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
 		curl_setopt( $ch, CURLOPT_HTTPHEADER, array( "Accept" => "application/json" ) );
+		curl_setopt( $ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1 );
 		$response = curl_exec( $ch );
 		if ( false === $response ) {
 			$curl_error = curl_error( $ch );

@@ -79,6 +79,7 @@ class Client extends BaseClient {
 		curl_setopt( $ch, CURLOPT_FAILONERROR, 0 );
 		curl_setopt( $ch, CURLOPT_TIMEOUT, self::TIMEOUT );
 		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
+		curl_setopt( $ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1 );
 
 		// Setup headers
 		$headers = array( 'Accept: application/json' );
@@ -127,6 +128,7 @@ class Client extends BaseClient {
 		curl_setopt( $ch, CURLOPT_FAILONERROR, 0 );
 		curl_setopt( $ch, CURLOPT_TIMEOUT, self::TIMEOUT );
 		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
+		curl_setopt( $ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1 );
 
 		// Setup headers
 		$headers = array( 'Accept: application/json' );

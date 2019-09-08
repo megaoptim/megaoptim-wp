@@ -187,11 +187,16 @@ class MGO_MediaLibrary extends MGO_Library {
 								$attachment_object->set_attachment_data( $att['size'], $data, $att['is_retina'] );
 								$attachment_object->save();
 								// Save files
-								$file->saveAsFile( $att['save_path'] );
+								if($file->getSavedBytes() > 0 && $file->isSuccessfullyOptimized()) {
+									$file->saveAsFile( $att['save_path'] );
+								}
 								$webp = $file->getWebP();
 								if ( ! is_null( $webp ) ) {
-									$webp->saveAsFile( $att['save_path'] . '.webp' );
+									if($webp->getSavedBytes() > 0 ) {
+										$webp->saveAsFile( $att['save_path'] . '.webp' );
+									}
 								}
+
 								// Set Stats
 								if ( $att['size'] !== 'full' ) {
 									$result->total_thumbnails = $result->total_thumbnails + 1;

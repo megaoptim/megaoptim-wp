@@ -2,9 +2,9 @@
 Contributors: megaoptim, darkog
 Tags: image optimizer, image compression, pagespeed, lighthouse, optimize images, image optimiser, image compressor, optimize images, optimize jpg, compress jpg, compress png, compress retina
 Requires at least: 3.6
-Tested up to: 5.2.2
+Tested up to: 5.2.3
 Requires PHP: 5.3.0
-Stable tag: 1.3.0
+Stable tag: 1.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -139,6 +139,13 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
 10. NextGen Galleries: Gallery table screen buttons Integration
 
 == Changelog ==
+
+= 1.3.2 =
+- Add detection to skip corrupted/unoptimized files in some unique cases of environments
+- Force HTTP 1.1 for now because of problems with some web servers.
+
+= 1.3.1 =
+- Fix svn problem
 
 = 1.3.0 =
 - Added Support for the Unlimited plan

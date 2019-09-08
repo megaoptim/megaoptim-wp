@@ -21,6 +21,20 @@
 class MGO_FileLibrary extends MGO_Library {
 
 	/**
+	 * Is the site public?
+	 * @var bool
+	 */
+	protected $is_public_environment;
+
+	/**
+	 * MGO_FileLibrary constructor.
+	 */
+	public function __construct() {
+		parent::__construct();
+		$this->is_public_environment = megaoptim_is_wp_accessible_from_public();
+	}
+
+	/**
 	 * @param MGO_File $attachment
 	 * @param array $params
 	 *
@@ -87,7 +101,9 @@ class MGO_FileLibrary extends MGO_Library {
 				megaoptim_log( $response->getErrors() );
 			} else {
 				foreach ( $response->getOptimizedFiles() as $file ) {
-					$file->saveAsFile( $attachment->path );
+					if($file->getSavedBytes() > 0 && $file->isSuccessfullyOptimized()) {
+						$file->saveAsFile( $attachment->path );
+					}
 					$result->total_full_size++;
 					$result->total_saved_bytes += $file->getSavedBytes();
 				}
@@ -265,7 +281,7 @@ class MGO_FileLibrary extends MGO_Library {
 	 * @param MGO_File $attachment
 	 */
 	public function get_attachment_path( MGO_File $attachment ) {
-		if ( megaoptim_is_wp_accessible_from_public() ) {
+		if ( $this->is_public_environment ) {
 			return $attachment->url;
 		} else {
 			return $attachment->path;

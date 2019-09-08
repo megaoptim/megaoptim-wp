@@ -90,10 +90,15 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 						$attachment->save();
 
 						// Save files
-						$file->saveAsFile( $local_path );
+						if($file->getSavedBytes() > 0 && $file->isSuccessfullyOptimized()) {
+							$file->saveAsFile( $local_path );
+						}
 						$webp = $file->getWebP();
 						if ( ! is_null( $webp ) ) {
-							$webp->saveAsFile( $local_path . '.webp' );
+							if($webp->getSavedBytes() > 0) {
+								$webp->saveAsFile( $local_path . '.webp' );
+							}
+
 						}
 
 						$size = $is_retina ? $size . '@2x' : $size;

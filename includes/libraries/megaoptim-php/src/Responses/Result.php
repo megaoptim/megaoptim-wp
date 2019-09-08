@@ -182,7 +182,7 @@ class Result implements IFile {
 	 * @return bool
 	 */
 	public function isSuccessfullyOptimized() {
-		return $this->success === 1;
+		return $this->success == 1;
 	}
 
 	/**
@@ -190,7 +190,7 @@ class Result implements IFile {
 	 * @return bool
 	 */
 	public function isAlreadyOptimized() {
-		return $this->success === 0;
+		return $this->success == 0;
 	}
 
 	/**

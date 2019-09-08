@@ -31,6 +31,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 class MGO_NGGLibrary extends MGO_Library {
 
 	/**
+	 * Is the site public?
+	 * @var bool
+	 */
+	protected $is_public_environment;
+
+	/**
 	 * The background process instance
 	 * @var MGO_NGGProcess
 	 */
@@ -41,6 +47,7 @@ class MGO_NGGLibrary extends MGO_Library {
 	 */
 	public function __construct() {
 		parent::__construct();
+		$this->is_public_environment = megaoptim_is_wp_accessible_from_public();
 		add_action('plugins_loaded', array($this, 'initialize'));
 	}
 
@@ -134,7 +141,9 @@ class MGO_NGGLibrary extends MGO_Library {
 			} else {
 				megaoptim_log( '--- Response: ' . $response->getRawResponse() );
 				foreach ( $response->getOptimizedFiles() as $file ) {
-					$file->saveAsFile( $attachment->path );
+					if($file->getSavedBytes() > 0 && $file->isSuccessfullyOptimized()) {
+						$file->saveAsFile( $attachment->path );
+					}
 					$result->total_full_size++;
 					$result->total_saved_bytes+=$file->getSavedBytes();
 				}
@@ -310,10 +319,10 @@ class MGO_NGGLibrary extends MGO_Library {
 	 * @return bool|string
 	 */
 	public function get_attachment_path( $attachment ) {
-		if ( ! megaoptim_is_wp_accessible_from_public() ) {
-			return $attachment->path;
-		} else {
+		if ( $this->is_public_environment ) {
 			return $attachment->url;
+		} else {
+			return $attachment->path;
 		}
 	}
 

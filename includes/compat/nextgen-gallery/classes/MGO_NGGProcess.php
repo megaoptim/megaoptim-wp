@@ -45,10 +45,15 @@ class MGO_NGGProcess extends MGO_Background_Process {
 			} else {
 				megaoptim_log( '--- Response: ' . $response->getRawResponse() );
 				foreach ( $response->getOptimizedFiles() as $file ) {
-					$file->saveAsFile( $local_path );
+					if($file->getSavedBytes() > 0 && $file->isSuccessfullyOptimized()) {
+						$file->saveAsFile( $local_path );
+					}
 					$webp = $file->getWebP();
 					if ( ! is_null( $webp ) ) {
-						$webp->saveAsFile( $local_path . '.webp' );
+						if($webp->getSavedBytes() > 0) {
+							$webp->saveAsFile( $local_path . '.webp' );
+						}
+
 					}
 				}
 				$attachment->set_data( $response, $request_params );

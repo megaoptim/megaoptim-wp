@@ -57,4 +57,12 @@ class ResultWebP {
 		return $path;
 
 	}
+
+	/**
+	 * Return the saved bytes
+	 * @return mixed
+	 */
+	public function getSavedBytes() {
+		return $this->saved_bytes;
+	}
 }
