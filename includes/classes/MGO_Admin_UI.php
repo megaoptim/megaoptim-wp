@@ -47,7 +47,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 		add_media_page(
 			__( 'MegaOptim Bulk Optimizer', 'megaoptim' ),
 			__( 'Bulk MegaOptim', 'megaoptim' ),
-			'manage_options',
+			'upload_files',
 			'megaoptim_bulk_optimizer',
 			array(
 				$this,
