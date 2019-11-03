@@ -4,7 +4,7 @@ Tags: image optimizer, image compression, pagespeed, lighthouse, optimize images
 Requires at least: 3.6
 Tested up to: 5.2.3
 Requires PHP: 5.3.0
-Stable tag: 1.3.2
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -139,6 +139,9 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
 10. NextGen Galleries: Gallery table screen buttons Integration
 
 == Changelog ==
+
+= 1.4.0 =
+- Security Improvements
 
 = 1.3.2 =
 - Add detection to skip corrupted/unoptimized files in some unique cases of environments

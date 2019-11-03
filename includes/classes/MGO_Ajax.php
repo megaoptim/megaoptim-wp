@@ -63,8 +63,13 @@ class MGO_Ajax extends MGO_BaseObject {
 	 * Handles registration via popup
 	 */
 	public function api_register() {
+
 		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], MGO_Ajax::NONCE_DEFAULT ) ) {
 			wp_send_json_error( array( 'error' => __( 'Internal server error.', 'megaoptim' ) ) );
+		}
+
+		if ( ! is_user_logged_in() ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
 		$step = isset( $_REQUEST['step'] ) ? $_REQUEST['step'] : 0;
@@ -136,6 +141,11 @@ class MGO_Ajax extends MGO_BaseObject {
 		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], MGO_Ajax::NONCE_OPTIMIZER ) ) {
 			wp_send_json_error( array( 'error' => __( 'Internal server error.', 'megaoptim' ) ) );
 		}
+
+		if ( ! is_user_logged_in() ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+		}
+
 		if ( ! isset( $_REQUEST['attachment'] ) ) {
 			wp_send_json_error( array( 'error' => __( 'No attachment provided.', 'megaoptim' ) ) );
 		}
@@ -144,17 +154,17 @@ class MGO_Ajax extends MGO_BaseObject {
 			$result     = MGO_MediaLibrary::instance()->optimize( $attachment_id );
 			$attachment = $result->get_attachment();
 
-			$user       = null;
-			$last_response   = $result->get_last_response();
-			if($last_response !== false) {
+			$user          = null;
+			$last_response = $result->get_last_response();
+			if ( $last_response !== false ) {
 				$user = $last_response->getUser();
 			}
 
-			if(!is_null($user)) {
+			if ( ! is_null( $user ) ) {
 				$tokens = $user->getTokens();
 			} else {
 				$profile = new MGO_Profile();
-				$tokens = $profile->get_tokens_count();
+				$tokens  = $profile->get_tokens_count();
 			}
 
 			if ( $attachment instanceof MGO_MediaAttachment ) {
@@ -173,10 +183,18 @@ class MGO_Ajax extends MGO_BaseObject {
 		}
 	}
 
+	/**
+	 * Optimize Local Directories Attachment
+	 */
 	public function optimize_ld_attachment() {
 		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], MGO_Ajax::NONCE_OPTIMIZER ) ) {
 			wp_send_json_error( array( 'error' => __( 'Internal server error.', 'megaoptim' ) ) );
 		}
+
+		if ( ! is_user_logged_in() ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+		}
+
 		if ( ! isset( $_REQUEST['attachment'] ) ) {
 			wp_send_json_error( array( 'error' => __( 'No attachment provided.', 'megaoptim' ) ) );
 		}
@@ -207,6 +225,11 @@ class MGO_Ajax extends MGO_BaseObject {
 		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_DEFAULT ) ) {
 			wp_send_json_error( array( 'error' => __( 'Internal server error.', 'megaoptim' ), 'data' => $_REQUEST ) );
 		}
+
+		if ( ! is_user_logged_in() ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+		}
+
 		$errors = array();
 		if ( ! isset( $_REQUEST['apikey'] ) || strlen( trim( $_REQUEST['apikey'] ) ) != 32 ) {
 			array_push( $errors, __( 'Please provide valid MegaOptim API key.', 'megaoptim' ) );
@@ -246,6 +269,10 @@ class MGO_Ajax extends MGO_BaseObject {
 			wp_send_json_error( __( 'Internal server error.', 'megaoptim' ) );
 		}
 
+		if ( ! is_user_logged_in() ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+		}
+
 		if ( isset( $_REQUEST['dismiss_instructions'] ) && is_numeric( $_REQUEST['dismiss_instructions'] ) ) {
 			if ( 1 === intval( $_REQUEST['dismiss_instructions'] ) ) {
 				update_option( 'megaoptim_instructions_hide', '1' );
@@ -263,6 +290,11 @@ class MGO_Ajax extends MGO_BaseObject {
 		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_SETTINGS ) ) {
 			wp_send_json_error( __( 'Internal server error.', 'megaoptim' ) );
 		}
+
+		if ( ! is_user_logged_in() ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+		}
+
 		$data   = array();
 		$errors = array();
 
@@ -346,10 +378,18 @@ class MGO_Ajax extends MGO_BaseObject {
 		die( json_encode( $data ) );
 	}
 
+	/**
+	 * Saves the advanced settings tab
+	 */
 	public function save_advanced_settings() {
 		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_SETTINGS ) ) {
 			wp_send_json_error( __( 'Internal server error.', 'megaoptim' ) );
 		}
+
+		if ( ! is_user_logged_in() ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+		}
+
 		$data   = array();
 		$errors = array();
 
@@ -435,6 +475,11 @@ class MGO_Ajax extends MGO_BaseObject {
 		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_SETTINGS ) ) {
 			wp_send_json_error( __( 'Internal server error.', 'megaoptim' ) );
 		}
+
+		if ( ! is_user_logged_in() ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+		}
+
 		$name = 'megaoptim-report-' . time() . '.json';
 		header( 'Content-disposition: attachment; filename=' . $name );
 		header( 'Content-type: application/json' );
@@ -442,9 +487,16 @@ class MGO_Ajax extends MGO_BaseObject {
 		die( json_encode( $debug->generate_report() ) );
 	}
 
+	/**
+	 * Generates library data
+	 */
 	public function library_data() {
 		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_DEFAULT ) ) {
 			wp_send_json_error( __( 'Internal server error.', 'megaoptim' ) );
+		}
+
+		if ( ! is_user_logged_in() ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
 		if ( ! isset( $_REQUEST['context'] ) ) {
@@ -473,6 +525,10 @@ class MGO_Ajax extends MGO_BaseObject {
 	public function directory_tree() {
 
 		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_DEFAULT ) ) {
+			die;
+		}
+
+		if ( ! is_user_logged_in() ) {
 			die;
 		}
 
@@ -553,10 +609,18 @@ class MGO_Ajax extends MGO_BaseObject {
 		die;
 	}
 
+	/**
+	 * Generates directory data
+	 */
 	public function directory_data() {
 		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_DEFAULT ) ) {
 			wp_send_json_error( __( 'Internal server error.', 'megaoptim' ) );
 		}
+
+		if ( ! is_user_logged_in() ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+		}
+
 		$directory = isset( $_REQUEST['dir'] ) ? $_REQUEST['dir'] : '';
 		if ( ! file_exists( $directory ) ) {
 			// dir is still ones inside wordpress dir. without the /home/user/htdocs/ path.
@@ -579,10 +643,18 @@ class MGO_Ajax extends MGO_BaseObject {
 		die;
 	}
 
+	/**
+	 * Removes files from the backup dir
+	 */
 	public function empty_backup_dir() {
 		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_DEFAULT ) ) {
 			wp_send_json_error( __( 'Internal server error.', 'megaoptim' ) );
 		}
+
+		if ( ! is_user_logged_in() ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+		}
+
 		$context = isset( $_REQUEST['context'] ) ? $_REQUEST['context'] : '';
 		switch ( $context ) {
 			case MEGAOPTIM_TYPE_MEDIA_ATTACHMENT:
@@ -613,10 +685,18 @@ class MGO_Ajax extends MGO_BaseObject {
 	}
 
 
+	/**
+	 * Upload ticker
+	 */
 	public function ticker_upload() {
 		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_DEFAULT ) ) {
 			wp_send_json_error( __( 'Internal server error.', 'megaoptim' ) );
 		}
+
+		if ( ! is_user_logged_in() ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+		}
+
 		$attachments = isset( $_REQUEST['processing'] ) && ! empty( $_REQUEST['processing'] ) ? $_REQUEST['processing'] : array();
 		$context     = isset( $_REQUEST['context'] ) ? $_REQUEST['context'] : '';
 		$response    = array();
@@ -653,10 +733,19 @@ class MGO_Ajax extends MGO_BaseObject {
 		}
 	}
 
+	/**
+	 * Returns profile
+	 * @throws MGO_Exception
+	 */
 	public function get_profile() {
 		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_DEFAULT ) ) {
 			wp_send_json_error( __( 'Internal server error.', 'megaoptim' ) );
 		}
+
+		if ( ! is_user_logged_in() ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+		}
+
 		$profile = new MGO_Profile();
 		$tokens  = $profile->get_tokens_count();
 		wp_send_json_success( array( 'tokens' => $tokens ) );
@@ -666,6 +755,11 @@ class MGO_Ajax extends MGO_BaseObject {
 		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_DEFAULT ) ) {
 			wp_send_json_error( __( 'Internal server error.', 'megaoptim' ) );
 		}
+
+		if ( ! is_user_logged_in() ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+		}
+
 		$attachment_id            = isset( $_REQUEST['attachmentid'] ) ? $_REQUEST['attachmentid'] : '';
 		$context                  = isset( $_REQUEST['context'] ) ? $_REQUEST['context'] : '';
 		$possible_additional_data = array( 'compression' );
@@ -679,12 +773,12 @@ class MGO_Ajax extends MGO_BaseObject {
 			switch ( $context ) {
 				case MEGAOPTIM_TYPE_MEDIA_ATTACHMENT:
 					try {
-						MGO_MediaLibrary::instance()->optimize_async($attachment_id, $additional_params);
+						MGO_MediaLibrary::instance()->optimize_async( $attachment_id, $additional_params );
 
-					} catch(\Exception $e) {
-						wp_send_json_error(array(
+					} catch ( \Exception $e ) {
+						wp_send_json_error( array(
 							'message' => $e->getMessage()
-						));
+						) );
 						exit;
 					}
 					break;
@@ -696,10 +790,17 @@ class MGO_Ajax extends MGO_BaseObject {
 
 	}
 
+	/**
+	 * Restore single attachment
+	 */
 	public function restore_single_attachment() {
 		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_DEFAULT ) ) {
 			wp_send_json_error( __( 'Internal server error.', 'megaoptim' ) );
 		}
+		if ( ! is_user_logged_in() ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+		}
+
 		$attachment_id = isset( $_REQUEST['attachmentid'] ) ? $_REQUEST['attachmentid'] : '';
 		$context       = isset( $_REQUEST['context'] ) ? $_REQUEST['context'] : '';
 		$data          = false;
