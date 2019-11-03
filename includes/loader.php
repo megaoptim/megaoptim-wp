@@ -86,6 +86,9 @@ $includes = array(
 	'classes/Jobs/MGO_MediaLibrary_Process.php',
 	'compat/nextgen-gallery/classes/MGO_NGGProcess.php'    => megaoptim_is_nextgen_active(),
 
+	// CLI
+	'classes/MGO_CLI.php' => class_exists('WP_CLI'),
+
 
 	//Load Internal Hooks
 	'hooks/general.php',

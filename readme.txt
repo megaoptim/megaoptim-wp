@@ -1,8 +1,8 @@
 === MegaOptim Image Optimizer ===
 Contributors: megaoptim, darkog
-Tags: image optimizer, image compression, pagespeed, lighthouse, optimize images, image optimiser, image compressor, optimize images, optimize jpg, compress jpg, compress png, compress retina
+Tags: image optimizer, image compression, pagespeed, compress, optimize images, image optimiser, image compressor, optimize images, optimize jpg, compress jpg, compress png, compress retina
 Requires at least: 3.6
-Tested up to: 5.2.3
+Tested up to: 5.2.4
 Requires PHP: 5.3.0
 Stable tag: 1.4.0
 License: GPLv2 or later
@@ -11,9 +11,10 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Compress your images to speed up your site and boost your SEO. Compatible with any gallery or slider.
 
 == Description ==
+
 **MegaOptim is image optimization plugin/service and that is easy to use, stable and actively maintained by dedicated team behind.**
 
-The plugin uses minimal resources on your server and all the heavy lifting is done by our API service in the cloud. No binaries will be ever installed on your server.
+The plugin uses minimal resources on your server and all the heavy lifting is done by our API service on our servers. No binaries will be ever installed on your server that will slowdown your site.
 
 = What is image optimization / compression and why it is important? =
 
@@ -21,29 +22,26 @@ Image Optimization is delivering the high-quality images in the right format, di
 
 = How much does MegaOptim cost? =
 
-The service comes with **500 FREE images/tokens per month for everyone**. We also have unlimited plan and creating sub-accounts for your clients. Check out our prices <a href="https://megaoptim.com/pricing" target="_blank">here</a>.
+The service comes with **500 FREE images/tokens per month for everyone**. We also have <strong>unlimited plan</strong> at only $9.99 that will help us maintain the service. Check our pricing <a href="https://megaoptim.com/pricing" target="_blank">here</a>.
 
 Want more tokens for free? Help us spread MegaOptim and earn 120 tokens per sign up and 300 tokens once customer becomes paid customer. Our Referral program can be found in the <a target="_blank" href="https://app.megaoptim.com/">dashboard area</a>.
 
 = What features does MegaOptim offer? =
 
-- Three different optimization levels (ultra, intelligent, lossless)
 - Bulk optimization for the Media Library, NextGen Libaries, MediaPress, Envira and other
 - Bulk optimization of Custom folders by your choice in your hosting account
-- Auto-optimization for the Media Library, NextGen Libraries, MediaPress, Envira and other
-- WebP Management (Enable/Disable WebP. Convert images to WebP upon optimization and automatically replace the content images with WebP version if available)
-- Thumbnail Management (Select which thumbnail versions to be optimized for both regular and retina)
-- Backup Management (Enable/disable backup for specific module or remove backups that you don't need.)
-- Subaccount Management (Manage your client sites and have separate statistics and subaccount/api key for each. Transfer tokens from onetime or monthly balances between accounts.)
-- Supports WordPress Multisite, setup the plugin separately on the sites you want.
-- Integrates with WP Retina 2x(Free and Pro). It will optimize all the retina images too.
-- Supports Cloudflare, if you are using it with plugins or you enter your CF credentials in the setup page it will purge the image automatically from CloudFlare cache after it is optimized
+- WP CLI Support for optimization and restore (either bulk or single attachment)
+- WebP Support (Enable/Disable WebP. Convert images to WebP upon optimization and automatically replace the content images with WebP version if available)
+- Backups & Restore Support. Select which attachment to backup
+- Sub Accounts Support (Manage your client sites and have separate statistics and subaccount/api key for each. Transfer tokens from onetime or monthly balances between accounts.)
+- WordPress Multisite Support. Setup the plugin separately on the sites you want
+- Integrates with WP Retina 2x(Free and Pro). It will optimize all the retina images too
+- Integrates with CloudFlare. Purges CloudFlare image cache once specific image is optimized
+- Option to select which thumbnails to optimize
 - Option to enable/disable auto conversion from CMYK to RGB (A better color profile for web)
 - Option to preserve EXIF data(location, time, camera model) or remove it upon the optimization
-- Option to specify maximum dimensions of optimized images. You may not need plugins like Imansity
-- Supports both HTTP and HTTPS
-- Supports public, local and password protected sites. Huge benefits for developers with local environments.
-- Supports Basic HTTP authentication, if your site is protected with .htpasswd
+- Option to specify maximum dimensions of optimized images. You may not need plugins like Imansity anymore
+- Works fine on Public, Localhost or Password Protected via htpasswd
 - Uses progressive JPEG for the larger images to display them faster in the browser
 - Compatible with WP Engine, SiteGround and other hosting providers
 - Compatible with Windows/UNIX(Linux, OSx) hosting environments
@@ -59,7 +57,7 @@ Want more tokens for free? Help us spread MegaOptim and earn 120 tokens per sign
 
 = Are you a developer? =
 
-Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here</a> to read more about the actions and filters that are available.
+Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> to read more about our WP CLI integration and the actions and filters that are available.
 
 == Installation ==
 1.) Sign up for api key at https://megaoptim.com/register
@@ -80,29 +78,23 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
 = Can i manage multiple sites separately with sub-accounts?
     You can create sub-account for your client and transfer tokens to the sub-account balance. This way your client will have separate account and api key and you will be managing it. You have the option to add or remove api tokens from it.
 
-= Which compression level should i use? =
-     For most of the websites **intelligent** method is enough, it auto determines the level of compression of the image that works best for the human eye. The **ultra** mode is similar to **intelligent** but goes a bit further to save more space. If you are willing to sacrifice small bits of the image quality then this mode is the way to go. Finally, with the lossless method the service attempts to optimize the images without touching the image quality. It is not recommended method if you are looking for google pagespeed score or page load speed.
-
-= I am using PHP 5.2 but want to still use the plugin? =
-    MegaOptim plugin supports PHP 5.3 or newer, but no worries. We offer up to one hour support to upgrade your hosting account with newer PHP version if you have access to do so.
-
-= Is the plugin compatible with WP offload S3 and WP Stateless? =
-    Not fully compatible, but we are already working and testing this feature. It will be released soon.
-
 = Can i optimize the WordPress Media Library =
-    Sure, just go to MegaOptim > Optimizer and in the top right select \"WP Media Library\" and start the process!
+    Sure, just go to Media > MegaOptim and in the top right select \"WP Media Library\" and start the process!
 
 = Can i backup and restore the images? =
     Yes, MegaOptim have option to backup the images and it is enabled by default. You can alawys restore the original images if there is backup.
 
 = What image formats can be optimized? =
-    MegaOptim supports JPEG, PNG, GIF (animated or non animated)
-
-= Does the plugin optimizes the images in cloud or in my website's server? =
-    No. The plugin will send every image to our API service and all the processing is done by our powerful servers. You won't notice any slowdown while the optimizer is running.
+    MegaOptim supports JPEG, PNG, GIF (animated or non animated) and WebP
 
 = Do i need separate tokens for WebP Images?
     No, WebP versions are free of charge!
+
+= Is there WP CLI commands to run MegaOptim optimizer or restore?
+    Yes, Please check the <a href="https://megaoptim.com/tools/wordpress/">documentation</a>.
+
+= Does the plugin optimizes the images on the site server and drains resources? =
+    The plugin does not install libraries for compression. Each image is sent to our servers and optimized by them to avoid resource drain on the website server.
 
 = What payment methods do you support? =
     We support both PayPal and Credit Card via Paddle. The payments can be recurring or onetime.
@@ -122,25 +114,32 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress#hooks">here
 = Will MegaOptim work with CloudFlare? =
     Yes! You need to use the CloudFlare plugin with correct credentials or setup credentials in the Settings > Advanced menu. If the credentials are setup correctly, the plugin will automatically purge from the CloudFlare cached images when they are optimized with MegaOptim.
 
+= Is the plugin compatible with WP offload S3 and WP Stateless? =
+    Not fully compatible at this time, but we are already working and testing this feature. It will be released soon.
+
 = I have problem, the plugin won't work. =
    Please <a target="_blank" href="https://megaoptim.com/contact">contact us</a> as soon as possible and we can assist you. We even have a live chat.
 
 
 == Screenshots ==
-1. General Settings
-2. Advanced Settings
-3. Debug Page
-4. Media Library: Optimizer
-5. Media Library: Table screen buttons integration
-6. Media Library: Edit attachment screen buttons integration
-7. Custom Folders: Folder select dialog
-8. Custom Folders: Optimizer
-9. NextGen Galleries: Optimizer
-10. NextGen Galleries: Gallery table screen buttons Integration
+1. Media Library Optimizer
+2. Media Library Table List
+3. General Settings
+4. Advanced Settings
+5. Debug Page
+6. NextGen Library Optimizer
+7. Media Library Single Attachment Page
+8. WP CLI - All commands
+9. WP CLI - Bulk Optimize command
+10.WP CLI - Bulk Restore command
 
 == Changelog ==
 
 = 1.4.0 =
+- Added WP CLI command for optimizing images eg. `wp megaoptim optimize <ID> [--force] [--level=<option>]`
+- Added WP CLI command for restoring images eg. `wp megaoptim restore <IDorAll>`
+- Added WP CLI command for setting api key. eg. `wp megaoptim set_api_key <api_key>`
+- Added WP CLI command for querying api tokens eg. `wp megaoptim info`
 - Security Improvements
 
 = 1.3.2 =

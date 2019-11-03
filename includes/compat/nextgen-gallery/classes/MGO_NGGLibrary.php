@@ -282,11 +282,13 @@ class MGO_NGGLibrary extends MGO_Library {
 	/**
 	 * Return stats about the library
 	 *
-	 * @param $include_remaining
+	 * @param bool $include_remaining
+	 * @param array $args
 	 *
 	 * @return mixed
 	 */
-	public function get_stats( $include_remaining = false ) {
+	public function get_stats( $include_remaining = false, $args = array() ) {
+
 		// TODO: Implement get_stats() method.
 		global $wpdb;
 		$total_images                            = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}ngg_pictures WHERE 1" );

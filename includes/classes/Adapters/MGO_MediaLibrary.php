@@ -124,7 +124,7 @@ class MGO_MediaLibrary extends MGO_Library {
 
 		//Get the file names
 		//$original_resource = $this->get_attachment( $attachment, 'full', false );
-		$original_path     = $this->get_attachment_path( $attachment, 'full', false );
+		$original_path = $this->get_attachment_path( $attachment, 'full', false );
 		if ( ! file_exists( $original_path ) ) {
 			throw new MGO_Exception( __( 'Original image version does not exist on the server.', 'megaoptim' ) );
 		}
@@ -144,28 +144,36 @@ class MGO_MediaLibrary extends MGO_Library {
 
 			$attachment_object->maybe_set_metadata();
 			$remaining_thumbnails = $attachment_object->get_remaining_thumbnails();
-			foreach(array('normal', 'retina') as $_type) {
+			foreach ( array( 'normal', 'retina' ) as $_type ) {
 				$is_retina = $_type === 'retina';
 
 				// Collect the full size ones
 				if ( ! $attachment_object->is_size_processed( 'full', $is_retina ) ) {
-					$full_resource    =  $this->get_attachment( $attachment, 'full', $is_retina );
-					$full_local_path  = $this->get_attachment_path( $attachment, 'full', $is_retina );
-					if(false !== $full_local_path && false !== $full_resource) {
+					$full_resource   = $this->get_attachment( $attachment, 'full', $is_retina );
+					$full_local_path = $this->get_attachment_path( $attachment, 'full', $is_retina );
+					if ( false !== $full_local_path && false !== $full_resource ) {
 						array_push( $resources, $full_resource );
-						array_push( $attachments, array( 'size' => 'full', 'save_path' => $full_local_path, 'is_retina' => $is_retina ) );
+						array_push( $attachments, array(
+							'size'      => 'full',
+							'save_path' => $full_local_path,
+							'is_retina' => $is_retina
+						) );
 					}
 				}
 
 				// Collect the thumbnails
-				foreach ( $remaining_thumbnails[$_type] as $size ) {
+				foreach ( $remaining_thumbnails[ $_type ] as $size ) {
 					if ( $attachment_object->is_size_processed( $size, $is_retina ) ) {
 						continue;
 					}
 					$thumbnail_resource = $this->get_attachment( $attachment, $size, $is_retina );
 					$thumbnail_path     = $this->get_attachment_path( $attachment, $size, $is_retina );
 					array_push( $resources, $thumbnail_resource );
-					array_push( $attachments, array( 'size' => $size, 'save_path' => $thumbnail_path, 'is_retina' => $is_retina ) );
+					array_push( $attachments, array(
+						'size'      => $size,
+						'save_path' => $thumbnail_path,
+						'is_retina' => $is_retina
+					) );
 				}
 			}
 
@@ -187,12 +195,12 @@ class MGO_MediaLibrary extends MGO_Library {
 								$attachment_object->set_attachment_data( $att['size'], $data, $att['is_retina'] );
 								$attachment_object->save();
 								// Save files
-								if($file->getSavedBytes() > 0 && $file->isSuccessfullyOptimized()) {
+								if ( $file->getSavedBytes() > 0 && $file->isSuccessfullyOptimized() ) {
 									$file->saveAsFile( $att['save_path'] );
 								}
 								$webp = $file->getWebP();
 								if ( ! is_null( $webp ) ) {
-									if($webp->getSavedBytes() > 0 ) {
+									if ( $webp->getSavedBytes() > 0 ) {
 										$webp->saveAsFile( $att['save_path'] . '.webp' );
 									}
 								}
@@ -204,7 +212,7 @@ class MGO_MediaLibrary extends MGO_Library {
 									$result->total_full_size = $result->total_full_size + 1;
 								}
 								$result->total_saved_bytes = $result->total_saved_bytes + $file->getSavedBytes();
-								$size = $att['is_retina'] ? $att['size'] . '@2x' : $att['size'];
+								$size                      = $att['is_retina'] ? $att['size'] . '@2x' : $att['size'];
 								/**
 								 * Fired when attachment thumbnail was successfully optimized and saved.
 								 *
@@ -246,10 +254,11 @@ class MGO_MediaLibrary extends MGO_Library {
 	 * @throws MGO_Attachment_Locked_Exception
 	 * @throws MGO_Exception
 	 */
-	public function optimize_async( $attachment, $params = array(), $needed_type = '') {
+	public function optimize_async( $attachment, $params = array(), $needed_type = '' ) {
 
 		if ( is_null( $this->background_process ) ) {
 			_doing_it_wrong( __METHOD__, 'Called too early. Please make sure WordPress is loaded and then call this method.', WP_MEGAOPTIM_VER );
+
 			return;
 		}
 
@@ -317,13 +326,13 @@ class MGO_MediaLibrary extends MGO_Library {
 
 		// Collect the thumbnails
 		$remaining_thumbs = $attachment_object->get_remaining_thumbnails();
-		foreach (array( 'normal', 'retina' )  as $_type ) {
+		foreach ( array( 'normal', 'retina' ) as $_type ) {
 			// Collect the full size ones
 			$is_retina = $_type === 'retina';
 			if ( ! $attachment_object->is_size_processed( 'full', $is_retina ) ) {
-				$full_resource = $this->get_attachment( $attachment_object->get_id(), 'full', $is_retina );
+				$full_resource   = $this->get_attachment( $attachment_object->get_id(), 'full', $is_retina );
 				$full_local_path = $this->get_attachment_path( $attachment_object->get_id(), 'full', $is_retina );
-				if(false !== $full_local_path && false !== $full_resource) {
+				if ( false !== $full_local_path && false !== $full_resource ) {
 					$item = array(
 						'attachment_id'         => $attachment_object->get_id(),
 						'attachment_size'       => 'full',
@@ -336,7 +345,7 @@ class MGO_MediaLibrary extends MGO_Library {
 				}
 			}
 			// Collect the thumbnails
-			if(isset($remaining_thumbs[ $_type ])) {
+			if ( isset( $remaining_thumbs[ $_type ] ) ) {
 				foreach ( $remaining_thumbs[ $_type ] as $size ) {
 					$item = array(
 						'attachment_id'         => $attachment_object->get_id(),
@@ -363,14 +372,39 @@ class MGO_MediaLibrary extends MGO_Library {
 
 	/**
 	 * Returns all the available media attachments.
+	 *
+	 * @param array $args
+	 *
 	 * @return array|null|object
 	 */
-	public function get_images() {
+	public function get_images( $args = array() ) {
 		global $wpdb;
 		//$query  = $wpdb->prepare( "SELECT P.ID, P.post_title FROM $wpdb->posts P WHERE P.post_type='attachment' AND P.post_mime_type LIKE %s", "%image%" );
 
-		$query  = "SELECT P.ID, P.post_title, PM1.meta_value as metadata, PM2.meta_value as megaoptim FROM {$wpdb->posts} P INNER JOIN {$wpdb->postmeta} PM1 ON PM1.post_id=P.ID AND PM1.meta_key='_wp_attachment_metadata' LEFT JOIN {$wpdb->postmeta} PM2 ON PM2.post_id=P.ID AND PM2.meta_key='_megaoptim_data' WHERE P.post_type='attachment' AND P.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif') ORDER BY P.post_date DESC";
-		$result = $wpdb->get_results( $query, ARRAY_A );
+		if ( is_array( $args ) && count( $args ) > 0 ) {
+
+			$prepare_params = array();
+			$query_str      = "SELECT P.ID, P.post_title, PM1.meta_value as metadata, PM2.meta_value as megaoptim FROM {$wpdb->posts} P INNER JOIN {$wpdb->postmeta} PM1 ON PM1.post_id=P.ID AND PM1.meta_key='_wp_attachment_metadata' LEFT JOIN {$wpdb->postmeta} PM2 ON PM2.post_id=P.ID AND PM2.meta_key='_megaoptim_data' WHERE P.post_type='attachment' AND P.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')";
+
+			// Add dates
+			if ( isset( $args['date_from'] ) && $args['date_to'] ) {
+				$query_str .= ' AND (P.post_date BETWEEN %s AND %s)';
+				array_push( $prepare_params, $args['date_from'] );
+				array_push( $prepare_params, $args['date_to'] );
+			}
+
+			// Add author
+			if ( isset( $args['author'] ) && ! empty( $args['author'] ) ) {
+				$query_str .= ' AND P.post_author=%d';
+				array_push( $prepare_params, $args['author'] );
+			}
+			$query_str .= " ORDER BY P.post_date DESC";
+			$query_str = $wpdb->prepare( $query_str, $args );
+
+		} else {
+			$query_str = "SELECT P.ID, P.post_title, PM1.meta_value as metadata, PM2.meta_value as megaoptim FROM {$wpdb->posts} P INNER JOIN {$wpdb->postmeta} PM1 ON PM1.post_id=P.ID AND PM1.meta_key='_wp_attachment_metadata' LEFT JOIN {$wpdb->postmeta} PM2 ON PM2.post_id=P.ID AND PM2.meta_key='_megaoptim_data' WHERE P.post_type='attachment' AND P.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif') ORDER BY P.post_date DESC";
+		}
+		$result = $wpdb->get_results( $query_str, ARRAY_A );
 
 		return $result;
 	}
@@ -379,10 +413,14 @@ class MGO_MediaLibrary extends MGO_Library {
 	 * Returns stats of optimization
 	 *
 	 * @param bool $include_remaining
+	 * @param array $args eg: (date_from => 'Y-m-d', date_to => 'Y-m-d', 'author' => 1)
 	 *
 	 * @return mixed|MGO_Stats
 	 */
-	public function get_stats( $include_remaining = false ) {
+	public function get_stats( $include_remaining = false, $args = array() ) {
+
+		//$sql_filters = megaoptim_array_except($args, array('include_remaining'));
+
 		@set_time_limit( 0 );
 		$images_total         = 0;
 		$optimized_total      = 0;
@@ -391,7 +429,7 @@ class MGO_MediaLibrary extends MGO_Library {
 		$saved_bytes          = 0;
 		$remaining_list       = array();
 		$remaining_total      = 0;
-		$images               = $this->get_images();
+		$images               = $this->get_images( $args );
 		$empty_gallery        = true;
 		if ( ! empty( $images ) && count( $images ) > 0 ) {
 			$empty_gallery = false;

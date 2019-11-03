@@ -305,4 +305,19 @@ class Optimizer {
 		return $this->service->get_user_info();
 	}
 
+
+	/**
+	 * Is valid compression level?
+	 *
+	 * @param $level
+	 *
+	 * @return bool
+	 */
+	public static function valid_compression_level($level) {
+		return in_array($level, array(
+			self::COMPRESSION_LOSSLESS,
+			self::COMPRESSION_INTELLIGENT,
+			self::COMPRESSION_ULTRA,
+		));
+	}
 }

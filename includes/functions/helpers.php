@@ -476,9 +476,11 @@ function megaoptim_get_htaccess_path() {
  */
 function megaoptim_array_except( $arr, $keys ) {
 	$new = array();
-	foreach ( $arr as $key => $value ) {
-		if ( ! in_array( $key, $keys ) ) {
-			$new[ $key ] = $value;
+	if ( count( $arr ) > 0 ) {
+		foreach ( $arr as $key => $value ) {
+			if ( ! in_array( $key, $keys ) ) {
+				$new[ $key ] = $value;
+			}
 		}
 	}
 
@@ -846,7 +848,7 @@ function megaoptim_restore_auto_optimization() {
 function megaoptim_get_conflicting_plugins() {
 	$active  = array();
 	$plugins = array(
-		'ShortPixel Image Optimizer'        => array(
+		'ShortPixel Image Optimizer'           => array(
 			'basename' => 'shortpixel-image-optimiser/wp-shortpixel.php',
 		),
 		'WP Smush - Image Optimization'        => array(
@@ -886,10 +888,30 @@ function megaoptim_get_conflicting_plugins() {
 			'basename' => 'simple-image-sizes/simple_image_sizes.php'
 		),
 	);
-	foreach($plugins as $key => $plugin) {
-		if(is_plugin_active($plugin['basename'])) {
-			$active[$key] = $plugin;
+	foreach ( $plugins as $key => $plugin ) {
+		if ( is_plugin_active( $plugin['basename'] ) ) {
+			$active[ $key ] = $plugin;
 		}
 	}
+
 	return $active;
+}
+
+/**
+ * USed to create and validate datetime object.
+ *
+ * @param $value
+ * @param string $format
+ *
+ * @return bool|DateTime
+ */
+function megaoptim_create_datetime( $value, $format = 'Y-m-d' ) {
+	$dt = DateTime::createFromFormat( $format, $value );
+
+	$is_valid = ( $dt !== false && ! array_sum( $dt::getLastErrors() ) );
+	if ( ! $is_valid ) {
+		return false;
+	} else {
+		return $dt;
+	}
 }

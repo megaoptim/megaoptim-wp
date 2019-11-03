@@ -107,7 +107,7 @@ add_filter('megaoptim_is_optimizer_page', '_megaoptim_ngg_is_optimizer_page', 10
 
 function _megaoptim_ngg_library_data($stats, $context) {
 	if( $context === MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT ) {
-		$stats = MGO_NGGLibrary::instance()->get_stats(true);
+		$stats = MGO_NGGLibrary::instance()->get_stats(true );
 	}
 	return $stats;
 }

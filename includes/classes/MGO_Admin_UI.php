@@ -82,7 +82,6 @@ class MGO_Admin_UI extends MGO_BaseObject {
 
 			$optimizer = 'optimizers/media-library';
 			$params    = array(
-				//'stats'   => MGO_MediaLibrary::instance()->get_stats( true ),
 				'menu'    => $menu,
 				'module'  => $module,
 				'profile' => MGO_Profile::get_profile()
