@@ -22,15 +22,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( 'Direct access is not allowed.' );
 }
 
-function _megaoptim_megaoptim_optimize_ngg_attachment() {
-	if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], MGO_Ajax::NONCE_OPTIMIZER ) ) {
-		wp_send_json_error( array( 'error' => __( 'Internal server error.', 'megaoptim' ) ) );
+function _megaoptim_optimize_ngg_attachment() {
+	if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_OPTIMIZER, 'nonce' ) ) {
+		wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 	}
+
+	if ( ! is_user_logged_in() || ! current_user_can( 'upload_files' ) ) {
+		wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+	}
+
 	if ( ! isset( $_REQUEST['attachment'] ) ) {
 		wp_send_json_error( array( 'error' => __( 'No attachment provided.', 'megaoptim' ) ) );
 	}
 	try {
-		$result = MGO_NGGLibrary::instance()->optimize( new MGO_File( $_REQUEST['attachment'] ) );
+		$result     = MGO_NGGLibrary::instance()->optimize( new MGO_File( $_REQUEST['attachment'] ) );
 		$attachment = $result->get_attachment();
 		if ( $attachment instanceof MGO_NGGAttachment ) {
 			$response['attachment'] = $attachment->get_optimization_stats();
@@ -38,11 +43,12 @@ function _megaoptim_megaoptim_optimize_ngg_attachment() {
 			$response['tokens']     = $result->get_last_response()->getUser()->getTokens();
 			wp_send_json_success( $response );
 		} else {
-			wp_send_json_error( array( 'error' => __( 'Attachment was not optimized.', 'megaoptim' ), 'can_continue' => 1 ) );
+			wp_send_json_error( array( 'error'        => __( 'Attachment was not optimized.', 'megaoptim' ),
+			                           'can_continue' => 1
+			) );
 		}
 	} catch ( MGO_Exception $e ) {
 		wp_send_json_error( array( 'error' => $e->getMessage(), 'can_continue' => 1 ) );
 	}
 }
-
-add_action( 'wp_ajax_megaoptim_ngg_optimize_attachment', '_megaoptim_megaoptim_optimize_ngg_attachment' );
+add_action( 'wp_ajax_megaoptim_ngg_optimize_attachment', '_megaoptim_optimize_ngg_attachment' );

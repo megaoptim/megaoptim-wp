@@ -915,3 +915,14 @@ function megaoptim_create_datetime( $value, $format = 'Y-m-d' ) {
 		return $dt;
 	}
 }
+
+/**
+ * Check the ajax referer
+ * @param $nonce_name
+ * @param $query_parameter_key
+ *
+ * @return bool|int
+ */
+function megaoptim_check_referer( $nonce_name, $query_parameter_key ) {
+	return check_ajax_referer( $nonce_name, $query_parameter_key, false );
+}

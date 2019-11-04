@@ -42,7 +42,7 @@ class MGO_Ajax extends MGO_BaseObject {
 
 		// Optimizer
 		add_action( 'wp_ajax_megaoptim_optimize_attachment', array( $this, 'optimize_attachment' ) );
-		add_action( 'wp_ajax_megaoptim_optimize_ld_attachment', array( $this, 'optimize_ld_attachment' ) );
+		add_action( 'wp_ajax_megaoptim_optimize_ld_attachment', array( $this, 'optimize_local_directory_attachment' ) );
 
 		add_action( 'wp_ajax_megaoptim_directory_tree', array( $this, 'directory_tree' ) );
 		add_action( 'wp_ajax_megaoptim_directory_data', array( $this, 'directory_data' ) );
@@ -64,11 +64,11 @@ class MGO_Ajax extends MGO_BaseObject {
 	 */
 	public function api_register() {
 
-		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], MGO_Ajax::NONCE_DEFAULT ) ) {
-			wp_send_json_error( array( 'error' => __( 'Internal server error.', 'megaoptim' ) ) );
+		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_DEFAULT, 'nonce' ) ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
-		if ( ! is_user_logged_in() ) {
+		if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
@@ -138,11 +138,11 @@ class MGO_Ajax extends MGO_BaseObject {
 	 */
 	public function optimize_attachment() {
 
-		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], MGO_Ajax::NONCE_OPTIMIZER ) ) {
-			wp_send_json_error( array( 'error' => __( 'Internal server error.', 'megaoptim' ) ) );
+		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_OPTIMIZER, 'nonce' ) ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
-		if ( ! is_user_logged_in() ) {
+		if ( ! is_user_logged_in() || ! current_user_can( 'upload_files' ) ) {
 			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
@@ -184,14 +184,15 @@ class MGO_Ajax extends MGO_BaseObject {
 	}
 
 	/**
-	 * Optimize Local Directories Attachment
+	 * Optimize Local Directory Attachment
 	 */
-	public function optimize_ld_attachment() {
-		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], MGO_Ajax::NONCE_OPTIMIZER ) ) {
-			wp_send_json_error( array( 'error' => __( 'Internal server error.', 'megaoptim' ) ) );
+	public function optimize_local_directory_attachment() {
+
+		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_OPTIMIZER, 'nonce' ) ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
-		if ( ! is_user_logged_in() ) {
+		if ( ! is_user_logged_in() || ! current_user_can( 'upload_files' ) ) {
 			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
@@ -222,11 +223,11 @@ class MGO_Ajax extends MGO_BaseObject {
 	 */
 	public function set_api_key() {
 
-		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_DEFAULT ) ) {
-			wp_send_json_error( array( 'error' => __( 'Internal server error.', 'megaoptim' ), 'data' => $_REQUEST ) );
+		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_DEFAULT, 'nonce' ) ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
-		if ( ! is_user_logged_in() ) {
+		if ( ! is_user_logged_in() || ! current_user_can( 'upload_files' ) ) {
 			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
@@ -265,8 +266,9 @@ class MGO_Ajax extends MGO_BaseObject {
 	 * Saves the state of the instruction message once dismissed.
 	 */
 	public function dismiss_instructions() {
-		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_DEFAULT ) ) {
-			wp_send_json_error( __( 'Internal server error.', 'megaoptim' ) );
+
+		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_DEFAULT, 'nonce' ) ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
 		if ( ! is_user_logged_in() ) {
@@ -287,11 +289,12 @@ class MGO_Ajax extends MGO_BaseObject {
 	 * Saves the Settings page in the database
 	 */
 	public function save_settings() {
-		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_SETTINGS ) ) {
-			wp_send_json_error( __( 'Internal server error.', 'megaoptim' ) );
+
+		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_SETTINGS, 'nonce' ) ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
-		if ( ! is_user_logged_in() ) {
+		if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
@@ -382,11 +385,12 @@ class MGO_Ajax extends MGO_BaseObject {
 	 * Saves the advanced settings tab
 	 */
 	public function save_advanced_settings() {
-		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_SETTINGS ) ) {
-			wp_send_json_error( __( 'Internal server error.', 'megaoptim' ) );
+
+		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_SETTINGS, 'nonce' ) ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
-		if ( ! is_user_logged_in() ) {
+		if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
@@ -472,11 +476,12 @@ class MGO_Ajax extends MGO_BaseObject {
 	 * Convert array to csv
 	 */
 	public function export_report() {
-		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_SETTINGS ) ) {
-			wp_send_json_error( __( 'Internal server error.', 'megaoptim' ) );
+
+		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_SETTINGS, 'nonce' ) ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
-		if ( ! is_user_logged_in() ) {
+		if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
@@ -491,11 +496,12 @@ class MGO_Ajax extends MGO_BaseObject {
 	 * Generates library data
 	 */
 	public function library_data() {
-		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_DEFAULT ) ) {
-			wp_send_json_error( __( 'Internal server error.', 'megaoptim' ) );
+
+		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_DEFAULT, 'nonce' ) ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
-		if ( ! is_user_logged_in() ) {
+		if ( ! is_user_logged_in() || ! current_user_can( 'upload_files' ) ) {
 			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
@@ -524,11 +530,11 @@ class MGO_Ajax extends MGO_BaseObject {
 	 */
 	public function directory_tree() {
 
-		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_DEFAULT ) ) {
-			die;
+		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_DEFAULT, 'nonce' ) ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
-		if ( ! is_user_logged_in() ) {
+		if ( ! is_user_logged_in() || ! current_user_can( 'upload_files' ) ) {
 			die;
 		}
 
@@ -613,11 +619,12 @@ class MGO_Ajax extends MGO_BaseObject {
 	 * Generates directory data
 	 */
 	public function directory_data() {
-		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_DEFAULT ) ) {
-			wp_send_json_error( __( 'Internal server error.', 'megaoptim' ) );
+
+		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_DEFAULT, 'nonce' ) ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
-		if ( ! is_user_logged_in() ) {
+		if ( ! is_user_logged_in() || ! current_user_can( 'upload_files' ) ) {
 			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
@@ -637,7 +644,6 @@ class MGO_Ajax extends MGO_BaseObject {
 				$additional_data['recursive'] = 0;
 			}
 			$stats = MGO_FileLibrary::instance()->get_stats( $directory, $additional_data );
-			megaoptim_log( $stats );
 			wp_send_json_success( $stats );
 		}
 		die;
@@ -647,11 +653,12 @@ class MGO_Ajax extends MGO_BaseObject {
 	 * Removes files from the backup dir
 	 */
 	public function empty_backup_dir() {
-		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_DEFAULT ) ) {
-			wp_send_json_error( __( 'Internal server error.', 'megaoptim' ) );
+
+		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_DEFAULT, 'nonce' ) ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
-		if ( ! is_user_logged_in() ) {
+		if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
@@ -689,11 +696,12 @@ class MGO_Ajax extends MGO_BaseObject {
 	 * Upload ticker
 	 */
 	public function ticker_upload() {
-		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_DEFAULT ) ) {
-			wp_send_json_error( __( 'Internal server error.', 'megaoptim' ) );
+
+		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_DEFAULT, 'nonce' ) ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
-		if ( ! is_user_logged_in() ) {
+		if ( ! is_user_logged_in() || ! current_user_can( 'upload_files' ) ) {
 			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
@@ -738,8 +746,9 @@ class MGO_Ajax extends MGO_BaseObject {
 	 * @throws MGO_Exception
 	 */
 	public function get_profile() {
-		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_DEFAULT ) ) {
-			wp_send_json_error( __( 'Internal server error.', 'megaoptim' ) );
+
+		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_DEFAULT, 'nonce' ) ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
 		if ( ! is_user_logged_in() ) {
@@ -751,12 +760,16 @@ class MGO_Ajax extends MGO_BaseObject {
 		wp_send_json_success( array( 'tokens' => $tokens ) );
 	}
 
+	/**
+	 * Optimizes single attachment
+	 */
 	public function optimize_single_attachment() {
-		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_DEFAULT ) ) {
-			wp_send_json_error( __( 'Internal server error.', 'megaoptim' ) );
+
+		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_DEFAULT, 'nonce' ) ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
-		if ( ! is_user_logged_in() ) {
+		if ( ! is_user_logged_in() || ! current_user_can( 'upload_files' ) ) {
 			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 
@@ -794,10 +807,12 @@ class MGO_Ajax extends MGO_BaseObject {
 	 * Restore single attachment
 	 */
 	public function restore_single_attachment() {
-		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], self::NONCE_DEFAULT ) ) {
-			wp_send_json_error( __( 'Internal server error.', 'megaoptim' ) );
+
+		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_DEFAULT, 'nonce' ) ) {
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
-		if ( ! is_user_logged_in() ) {
+
+		if ( ! is_user_logged_in() || ! current_user_can( 'upload_files' ) ) {
 			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 

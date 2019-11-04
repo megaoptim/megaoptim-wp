@@ -153,6 +153,9 @@ class MGO_Admin_UI extends MGO_BaseObject {
 	 * @return void
 	 */
 	public function activation_guide() {
+		if ( ! current_user_can( 'install_plugins' ) ) {
+			return;
+		}
 		include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 		if ( is_plugin_active( WP_MEGAOPTIM_BASENAME ) ) {
 			$instructions_hidden = get_option( 'megaoptim_instructions_hide' );
@@ -236,6 +239,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 
 	/**
 	 * Add the settings link
+	 *
 	 * @param $links
 	 *
 	 * @return array

@@ -4,7 +4,7 @@ Tags: image optimizer, image compression, pagespeed, compress, optimize images, 
 Requires at least: 3.6
 Tested up to: 5.2.4
 Requires PHP: 5.3.0
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -134,6 +134,11 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 10.WP CLI - Bulk Restore command
 
 == Changelog ==
+
+= 1.4.1 =
+
+- 
+- More security hardening
 
 = 1.4.0 =
 - Added WP CLI command for optimizing images eg. `wp megaoptim optimize <ID> [--force] [--level=<option>]`
