@@ -6,6 +6,8 @@ Description: Compress and optimize your WordPress images and save bandwidth, dis
 Author: MegaOptim
 Author URI: https://megaoptim.com
 Version: 1.4.1
+Text Domain: megaoptim-image-optimizer
+Domain Path: /languages
 */
 
 if ( ! defined( 'ABSPATH' ) ) {

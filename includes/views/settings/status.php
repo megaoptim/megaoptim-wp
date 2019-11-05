@@ -38,7 +38,7 @@ $report = $debug->generate_report();
         <div class="megaoptim-form-actions">
             <div class="options-save">
                 <button class="megaoptim-export-table button-primary button-large" type="submit">
-                    <?php _e('Export', 'megaoptim'); ?>
+                    <?php _e('Export', 'megaoptim-image-optimizer'); ?>
                 </button>
             </div>
         </div>

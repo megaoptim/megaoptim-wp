@@ -14,10 +14,10 @@ function _megaoptim_notice_user_balance() {
 		if ( !empty($api_key) && intval( $tokens_count ) === 0 ) {
 			$message = sprintf(
 				'%s %s %s %s.',
-				__( 'Your image tokens balance is 0. To continue using', 'megaoptim' ),
-				'<strong>' . __( 'MegaOptim Image Optimizer', 'megaoptim' ) . '</strong>',
+				__( 'Your image tokens balance is 0. To continue using', 'megaoptim-image-optimizer' ),
+				'<strong>' . __( 'MegaOptim Image Optimizer', 'megaoptim-image-optimizer' ) . '</strong>',
 				__( 'please top up your account' ),
-				'<a href="' . WP_MEGAOPTIM_DASHBOARD_URL . '">' . __( 'here', 'megaoptim' ) . '</a>'
+				'<a href="' . WP_MEGAOPTIM_DASHBOARD_URL . '">' . __( 'here', 'megaoptim-image-optimizer' ) . '</a>'
 			);
 			MGO_Admin_Notices::instance()->warning( 'insufficient_balance', $message, 1 );
 		}
@@ -41,7 +41,7 @@ function _megaoptim_notice_conflicting_plugins() {
 	if ( is_array( $active_plugins ) && count( $active_plugins ) ) {
 		$message = sprintf(
 			'%s %s:',
-			__( 'The following plugins will likely conflict with', 'megaoptim' ),
+			__( 'The following plugins will likely conflict with', 'megaoptim-image-optimizer' ),
 			'<strong>' . __( 'MegaOptim Image Optimizer' ) . '</strong>'
 		);
 		$message = '<p>' . $message . '</p>';
@@ -50,7 +50,7 @@ function _megaoptim_notice_conflicting_plugins() {
 			$message .= '<li>' . $name . '</li>';
 		}
 		$message .= '</ul>';
-		$message .= __( 'Please consider deactivating those plugins to ensure better integration with MegaOptim. Only leave those plugins active if you know what you are doing.', 'megaoptim' );
+		$message .= __( 'Please consider deactivating those plugins to ensure better integration with MegaOptim. Only leave those plugins active if you know what you are doing.', 'megaoptim-image-optimizer' );
 
 		MGO_Admin_Notices::instance()->warning( 'conflicting_plugins', $message, 1 );
 	}

@@ -157,12 +157,12 @@ class MGO_MediaAttachment extends MGO_Attachment {
 
 				return $backup_path;
 			} else {
-				megaoptim_log( sprintf( __( 'Backup can not be created. Path to %s does not exists or is not writable.', 'megaoptim' ), $dir_path ) );
+				megaoptim_log('Backup can not be created. Path to %s does not exists or is not writable.', $dir_path );
 
 				return false;
 			}
 		} else {
-			megaoptim_log( sprintf( __( 'Backup can not be created. Directory %s does not exists or is not writable.', 'megaoptim' ), $dir_path ) );
+			megaoptim_log( sprintf( 'Backup can not be created. Directory %s does not exists or is not writable.', $dir_path ) );
 		}
 
 		return false;

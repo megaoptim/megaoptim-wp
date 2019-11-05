@@ -36,19 +36,19 @@ class MGO_CLI {
 
 			$user_name           = $profile->get_name();
 			$tokens_count        = $profile->get_tokens_count();
-			$tokens_count_string = $tokens_count == - 1 ? __( 'Unlimited', 'megaoptim' ) : $tokens_count;
+			$tokens_count_string = $tokens_count == - 1 ? __( 'Unlimited', 'megaoptim-image-optimizer' ) : $tokens_count;
 
-			$str_user = __( 'User', 'megaoptim' );
+			$str_user = __( 'User', 'megaoptim-image-optimizer' );
 			WP_CLI::line( WP_CLI::colorize( "%G[{$str_user}]%n: $user_name" ) );
 
-			$str_rt = __( 'Remaining tokens', 'megaoptim' );
+			$str_rt = __( 'Remaining tokens', 'megaoptim-image-optimizer' );
 			WP_CLI::line( WP_CLI::colorize( "%G[{$str_rt}]%n: $tokens_count_string" ) );
 
 
 		} else {
 
-			WP_CLI::error( __( 'Not connected. To set your api key type: wp megaoptim set_api_key=your-api-key', 'megaoptim' ), false );
-			WP_CLI::error( __( 'If you do not have api key. Please sign up at https://megaoptim.com/register' ) );
+			WP_CLI::error( __( 'Not connected. To set your api key type: wp megaoptim set_api_key=your-api-key', 'megaoptim-image-optimizer' ), false );
+			WP_CLI::error( __( 'If you do not have api key. Please sign up at https://megaoptim.com/register', 'megaoptim-image-optimizer' ) );
 
 		}
 
@@ -113,7 +113,7 @@ class MGO_CLI {
 		if ( isset( $args2['level'] ) ) {
 			$level = $args2['level'];
 			if ( ! \MegaOptim\Optimizer::valid_compression_level( $level ) ) {
-				WP_CLI::error( __( 'The level parameter should be one of the following: ultra, intelligent, lossless', 'megaoptim' ) );
+				WP_CLI::error( __( 'The level parameter should be one of the following: ultra, intelligent, lossless', 'megaoptim-image-optimizer' ) );
 
 				return;
 			}
@@ -138,13 +138,13 @@ class MGO_CLI {
 
 			// Optimize now
 			$result  = MGO_MediaLibrary::instance()->optimize( $attachment, $params );
-			$message = sprintf( __( 'Attachment %s optimized. Total thumbnails %s, Total saved %s', 'megaoptim' ), $ID, $result->total_thumbnails, megaoptim_human_file_size( $result->total_saved_bytes ) );
+			$message = sprintf( __( 'Attachment %s optimized. Total thumbnails %s, Total saved %s', 'megaoptim-image-optimizer' ), $ID, $result->total_thumbnails, megaoptim_human_file_size( $result->total_saved_bytes ) );
 			\WP_CLI::success( $message );
 		} catch ( MGO_Attachment_Already_Optimized_Exception $e ) {
-			$message = sprintf( __( 'Attachment already %s optimized. No further optimization needed.', 'megaoptim' ), $ID );
+			$message = sprintf( __( 'Attachment already %s optimized. No further optimization needed.', 'megaoptim-image-optimizer' ), $ID );
 			\WP_CLI::success( $message );
 		} catch ( \Exception $e ) {
-			$message = sprintf( __( 'Attachment %s not optimized. Reason: %s', 'megaoptim' ), $ID, $e->getMessage() );
+			$message = sprintf( __( 'Attachment %s not optimized. Reason: %s', 'megaoptim-image-optimizer' ), $ID, $e->getMessage() );
 			\WP_CLI::warning( $message );
 		}
 	}
@@ -221,7 +221,7 @@ class MGO_CLI {
 		$images = is_array( $results->remaining ) ? $results->remaining : array();
 
 		if ( count( $images ) === 0 ) {
-			\WP_CLI::warning( __( 'No images found for your query.', 'megaoptim' ) );
+			\WP_CLI::warning( __( 'No images found for your query.', 'megaoptim-image-optimizer' ) );
 		} else {
 			// Run
 			$total_saved     = 0;
@@ -237,21 +237,21 @@ class MGO_CLI {
 					$total_optimized += $result->total_thumbnails + $result->total_full_size;
 
 					if ( $result->total_saved_bytes == 0 ) {
-						$message = sprintf( __( 'Attachment already %s optimized. No further optimization needed.', 'megaoptim' ), $image['ID'] );
+						$message = sprintf( __( 'Attachment already %s optimized. No further optimization needed.', 'megaoptim-image-optimizer' ), $image['ID'] );
 					} else {
-						$message = sprintf( __( 'Attachment %s optimized. Total thumbnails %s, Total saved %s', 'megaoptim' ), $image['ID'], $result->total_thumbnails, megaoptim_human_file_size( $result->total_saved_bytes ) );
+						$message = sprintf( __( 'Attachment %s optimized. Total thumbnails %s, Total saved %s', 'megaoptim-image-optimizer' ), $image['ID'], $result->total_thumbnails, megaoptim_human_file_size( $result->total_saved_bytes ) );
 					}
 					\WP_CLI::success( $message );
 				} catch ( MGO_Attachment_Already_Optimized_Exception $e ) {
-					$message = sprintf( __( 'Attachment already %s optimized. No further optimization needed.', 'megaoptim' ), $image['ID'] );
+					$message = sprintf( __( 'Attachment already %s optimized. No further optimization needed.', 'megaoptim-image-optimizer' ), $image['ID'] );
 					\WP_CLI::success( $message );
 				} catch ( MGO_Exception $e ) {
-					$message = sprintf( __( 'Attachment %s not optimized. Reason: %s', 'megaoptim' ), $image['ID'], $e->getMessage() );
+					$message = sprintf( __( 'Attachment %s not optimized. Reason: %s', 'megaoptim-image-optimizer' ), $image['ID'], $e->getMessage() );
 					\WP_CLI::warning( $message );
 				}
 			}
 			$time_elapsed_secs = microtime( true ) - $time_start;
-			WP_CLI::success( sprintf( __( 'Process finished in %s seconds. Total optimized %s, Totaal saved %s', 'megaoptim' ), $time_elapsed_secs, $total_optimized, $total_saved ) );
+			WP_CLI::success( sprintf( __( 'Process finished in %s seconds. Total optimized %s, Totaal saved %s', 'megaoptim-image-optimizer' ), $time_elapsed_secs, $total_optimized, $total_saved ) );
 		}
 	}
 
@@ -283,12 +283,12 @@ class MGO_CLI {
 				$attachment = new MGO_MediaAttachment( $ID_OR_ALL );
 				if ( $attachment->has_backup() ) {
 					$attachment->restore();
-					WP_CLI::success( sprintf( __( 'Attachment %s successfully restored.' ), $attachment->get_id() ) );
+					WP_CLI::success( sprintf( __( 'Attachment %s successfully restored.', 'megaoptim-image-optimizer' ), $attachment->get_id() ) );
 				} else {
-					WP_CLI::warning( sprintf( __( 'Attachment %s not restored. Reason: Missing Backup.' ), $attachment->get_id() ) );
+					WP_CLI::warning( sprintf( __( 'Attachment %s not restored. Reason: Missing Backup.', 'megaoptim-image-optimizer' ), $attachment->get_id() ) );
 				}
 			} catch ( MGO_Exception $e ) {
-				WP_CLI::error( sprintf( __( 'Failed to restore attachment %s. Reason: %s' ), $attachment->get_id(), $e->getMessage() ) );
+				WP_CLI::error( sprintf( __( 'Failed to restore attachment %s. Reason: %s', 'megaoptim-image-optimizer' ), $attachment->get_id(), $e->getMessage() ) );
 			}
 		} else if ( strtolower( $ID_OR_ALL ) === 'all' ) {
 
@@ -298,7 +298,7 @@ class MGO_CLI {
 			$optimized_attachments              = $wpdb->get_results( $query );
 			$optimized_attachments_with_backups = array();
 			if ( empty( $optimized_attachments ) ) {
-				WP_CLI::error( __( 'No optimized attachments found.' ) );
+				WP_CLI::error( __( 'No optimized attachments found.', 'megaoptim-image-optimizer' ) );
 
 				return;
 			} else {
@@ -322,10 +322,10 @@ class MGO_CLI {
 			$total_with_backups = count( $optimized_attachments_with_backups );
 
 			if ( $total_with_backups <= 0 ) {
-				WP_CLI::error( __( 'No optimized attachments with valid backups found.' ) );
+				WP_CLI::error( __( 'No optimized attachments with valid backups found.', 'megaoptim-image-optimizer' ) );
 			} else {
 
-				WP_CLI::confirm( sprintf( __( 'We are about tore restore %d attachments. Are you sure you want to continue?', 'megaoptim' ), $total_with_backups ) );
+				WP_CLI::confirm( sprintf( __( 'We are about tore restore %d attachments. Are you sure you want to continue?', 'megaoptim-image-optimizer' ), $total_with_backups ) );
 
 				$total_restored = 0;
 
@@ -337,23 +337,23 @@ class MGO_CLI {
 					$attachment_backup_path = $optimized_attachment_with_backups['backup_path'];
 					$attachment_dir         = dirname( $attachment_path );
 					if ( ! is_writable( $attachment_dir ) ) {
-						WP_CLI::warning( sprintf( __( 'Failed to restore attachment %s. Reason: %s' ), $attachment_ID, __( 'Directory not writable', 'megaoptim' ) ) );
+						WP_CLI::warning( sprintf( __( 'Failed to restore attachment %s. Reason: %s', 'megaoptim-image-optimizer' ), $attachment_ID, __( 'Directory not writable', 'megaoptim-image-optimizer' ) ) );
 						continue;
 					}
 					if ( @rename( $attachment_backup_path, $attachment_path ) ) {
 						megaoptim_regenerate_thumbnails( $attachment_ID, $attachment_path );
 						delete_post_meta( $attachment_ID, '_megaoptim_data' );
 						do_action( 'megaoptim_after_restore_attachment', $attachment_ID );
-						WP_CLI::success( sprintf( __( 'Attachment %s successfully restored.' ), $attachment_ID ) );
+						WP_CLI::success( sprintf( __( 'Attachment %s successfully restored.', 'megaoptim-image-optimizer' ), $attachment_ID ) );
 						$total_restored ++;
 					} else {
-						WP_CLI::warning( sprintf( __( 'Failed to restore attachment %s. Reason: %s' ), $attachment_ID, __( 'File not writable', 'megaoptim' ) ) );
+						WP_CLI::warning( sprintf( __( 'Failed to restore attachment %s. Reason: %s', 'megaoptim-image-optimizer' ), $attachment_ID, __( 'File not writable', 'megaoptim-image-optimizer' ) ) );
 					}
 				}
 				megaoptim_restore_auto_optimization();
 
 				$time_elapsed_secs = microtime( true ) - $time_start;
-				WP_CLI::success( sprintf( __( 'Process finished in %s seconds. Total restored %s attachments.', 'megaoptim' ), $time_elapsed_secs, $total_restored ) );
+				WP_CLI::success( sprintf( __( 'Process finished in %s seconds. Total restored %s attachments.', 'megaoptim-image-optimizer' ), $time_elapsed_secs, $total_restored ) );
 			}
 
 		} else {

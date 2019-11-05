@@ -52,8 +52,8 @@ function megaoptim_current_screen() {
 		$mode = get_user_option( 'media_library_mode', get_current_user_id() ) ? get_user_option( 'media_library_mode', get_current_user_id() ) : 'grid';
 		if ( $mode === 'grid' ) {
 			$url = admin_url( 'upload.php?mode=list' );
-			$list_mode_url  = '<a href="' . $url . '">' . __( 'Click here', 'megaoptim' ) . '</a>';
-			$list_mode_text = '<strong>' . __( 'list', 'megaoptim' ) . '</strong>';
+			$list_mode_url  = '<a href="' . $url . '">' . __( 'Click here', 'megaoptim-image-optimizer' ) . '</a>';
+			$list_mode_text = '<strong>' . __( 'list', 'megaoptim-image-optimizer' ) . '</strong>';
 			$message        = sprintf( __( 'MegaOptim provides optimization buttons in the list mode where you can optimize or restore sinle attachments. %s to switch to %s mode.' ), $list_mode_url, $list_mode_text );
 			MGO_Admin_Notices::instance()->info( 'notify_media_list_features', $message, 1 );
 		}

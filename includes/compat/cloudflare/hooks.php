@@ -50,7 +50,7 @@ if ( ! function_exists( '_megaoptim_cloudflare_purge' ) ) {
 			// If urls found, purge them.
 			if ( ! empty( $urls_to_purge ) && count($urls_to_purge) > 0 ) {
 				if ( ! $cloudflare->purge_files( $urls_to_purge ) ) {
-					megaoptim_log( __( 'Warning: Failed to purge the cloudflare urls.', 'megaoptim' ) );
+					megaoptim_log( 'Warning: Failed to purge the cloudflare urls.' );
 				}
 			}
 		}

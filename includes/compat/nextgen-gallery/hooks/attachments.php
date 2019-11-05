@@ -108,7 +108,7 @@ function _megaoptim_ngg_medialibrary_imported_image( $image, $ml_attachment ) {
 			}
 		}
 	} catch ( MGO_Exception $e ) {
-		megaoptim_log( __( 'Error transfering megaoptim data from media library to nextgen. Process failed with message: ' . $e->getMessage() ) );
+		megaoptim_log('Error transfering megaoptim data from media library to nextgen. Process failed with message: ' . $e->getMessage() );
 	}
 
 	return $image;

@@ -22,17 +22,17 @@ if ( ! is_null( $module ) ) {
                     <ul class="megaoptim-menu">
                         <li class="megaoptim-menu-item <?php echo ( is_null( $section ) && $page === 'megaoptim_settings' ) ? 'active' : ''; ?>">
                             <a href="<?php echo admin_url( "options-general.php?page=megaoptim_settings" ); ?>">
-								<?php _e( 'General', 'megaoptim' ); ?>
+								<?php _e( 'General', 'megaoptim-image-optimizer' ); ?>
                             </a>
                         </li>
                         <li class="megaoptim-menu-item <?php echo ( $page === 'megaoptim_settings' && $section === 'advanced' ) ? 'active' : ''; ?>">
                             <a href="<?php echo admin_url( "options-general.php?page=megaoptim_settings&section=advanced" ); ?>">
-								<?php _e( 'Advanced', 'megaoptim' ); ?>
+								<?php _e( 'Advanced', 'megaoptim-image-optimizer' ); ?>
                             </a>
                         </li>
                         <li class="megaoptim-menu-item <?php echo ( $page === 'megaoptim_settings' && $section === 'status' ) ? 'active' : ''; ?>">
                             <a href="<?php echo admin_url( "options-general.php?page=megaoptim_settings&section=status" ); ?>">
-								<?php _e( 'Debug', 'megaoptim' ); ?>
+								<?php _e( 'Debug', 'megaoptim-image-optimizer' ); ?>
                             </a>
                         </li>
                     </ul>

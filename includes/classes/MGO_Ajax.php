@@ -65,11 +65,11 @@ class MGO_Ajax extends MGO_BaseObject {
 	public function api_register() {
 
 		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_DEFAULT, 'nonce' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		$step = isset( $_REQUEST['step'] ) ? $_REQUEST['step'] : 0;
@@ -118,7 +118,7 @@ class MGO_Ajax extends MGO_BaseObject {
 							) );
 							wp_send_json_success();
 						} else {
-							wp_send_json_error( __( 'Invalid API key.' ), 'megaoptim' );
+							wp_send_json_error( __( 'Invalid API key.' ), 'megaoptim-image-optimizer' );
 						}
 					} catch ( MGO_Exception $e ) {
 						wp_send_json_error( $e->getMessage() );
@@ -139,15 +139,15 @@ class MGO_Ajax extends MGO_BaseObject {
 	public function optimize_attachment() {
 
 		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_OPTIMIZER, 'nonce' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		if ( ! is_user_logged_in() || ! current_user_can( 'upload_files' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		if ( ! isset( $_REQUEST['attachment'] ) ) {
-			wp_send_json_error( array( 'error' => __( 'No attachment provided.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'No attachment provided.', 'megaoptim-image-optimizer' ) ) );
 		}
 		$attachment_id = $_REQUEST['attachment']['ID'];
 		try {
@@ -174,7 +174,7 @@ class MGO_Ajax extends MGO_BaseObject {
 				wp_send_json_success( $response );
 			} else {
 				wp_send_json_error( array(
-					'error'        => __( 'Attachment was not optimized.', 'megaoptim' ),
+					'error'        => __( 'Attachment was not optimized.', 'megaoptim-image-optimizer' ),
 					'can_continue' => 1
 				) );
 			}
@@ -189,15 +189,15 @@ class MGO_Ajax extends MGO_BaseObject {
 	public function optimize_local_directory_attachment() {
 
 		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_OPTIMIZER, 'nonce' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		if ( ! is_user_logged_in() || ! current_user_can( 'upload_files' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		if ( ! isset( $_REQUEST['attachment'] ) ) {
-			wp_send_json_error( array( 'error' => __( 'No attachment provided.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'No attachment provided.', 'megaoptim-image-optimizer' ) ) );
 		}
 		try {
 			$result     = MGO_FileLibrary::instance()->optimize( new MGO_File( $_REQUEST['attachment'] ) );
@@ -209,7 +209,7 @@ class MGO_Ajax extends MGO_BaseObject {
 				wp_send_json_success( $response );
 			} else {
 				wp_send_json_error( array(
-					'error'        => __( 'File was not optimized.', 'megaoptim' ),
+					'error'        => __( 'File was not optimized.', 'megaoptim-image-optimizer' ),
 					'can_continue' => 1
 				) );
 			}
@@ -224,25 +224,25 @@ class MGO_Ajax extends MGO_BaseObject {
 	public function set_api_key() {
 
 		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_SETTINGS, 'nonce' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		if ( ! is_user_logged_in() || ! current_user_can( 'upload_files' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		$errors = array();
 		if ( ! isset( $_REQUEST['apikey'] ) || strlen( trim( $_REQUEST['apikey'] ) ) != 32 ) {
-			array_push( $errors, __( 'Please provide valid MegaOptim API key.', 'megaoptim' ) );
+			array_push( $errors, __( 'Please provide valid MegaOptim API key.', 'megaoptim-image-optimizer' ) );
 		} else {
 			try {
 				$response = MGO_Profile::get_user_by_api_key( $_REQUEST['apikey'] );
 				if ( $response === false ) {
-					array_push( $errors, __( 'The MegaOptim api can not be reached. Please contact support.', 'megaoptim' ) );
+					array_push( $errors, __( 'The MegaOptim api can not be reached. Please contact support.', 'megaoptim-image-optimizer' ) );
 				} else if ( ! isset( $response['status'] ) ) {
-					array_push( $errors, __( 'Invalid results received. Please contact support.', 'megaoptim' ) );
+					array_push( $errors, __( 'Invalid results received. Please contact support.', 'megaoptim-image-optimizer' ) );
 				} else if ( $response['status'] != 'ok' ) {
-					array_push( $errors, __( 'Your API key is invalid. Please make sure you use correct API issued by MegaOptim.com', 'megaoptim' ) );
+					array_push( $errors, __( 'Your API key is invalid. Please make sure you use correct API issued by MegaOptim.com', 'megaoptim-image-optimizer' ) );
 				}
 			} catch ( MGO_Exception $e ) {
 				array_push( $errors, $e->getMessage() );
@@ -252,7 +252,7 @@ class MGO_Ajax extends MGO_BaseObject {
 			MGO_Settings::setApiKey( $_REQUEST['apikey'] );
 			try {
 				new MGO_Profile( $_REQUEST['apikey'] );
-				wp_send_json_success( array( 'message' => __( 'Your API key is now set up, you can configure your settings on the plugin Settings page. Redirecting to settings page', 'megaoptim' ) ) );
+				wp_send_json_success( array( 'message' => __( 'Your API key is now set up, you can configure your settings on the plugin Settings page. Redirecting to settings page', 'megaoptim-image-optimizer' ) ) );
 			} catch ( MGO_Exception $e ) {
 				wp_send_json_error( array( 'error' => $e->getMessage() ) );
 			}
@@ -268,20 +268,20 @@ class MGO_Ajax extends MGO_BaseObject {
 	public function dismiss_instructions() {
 
 		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_DEFAULT, 'nonce' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		if ( ! is_user_logged_in() ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		if ( isset( $_REQUEST['dismiss_instructions'] ) && is_numeric( $_REQUEST['dismiss_instructions'] ) ) {
 			if ( 1 === intval( $_REQUEST['dismiss_instructions'] ) ) {
 				update_option( 'megaoptim_instructions_hide', '1' );
-				wp_send_json_success( __( 'Done. Instructions will be hidden.', 'megaoptim' ) );
+				wp_send_json_success( __( 'Done. Instructions will be hidden.', 'megaoptim-image-optimizer' ) );
 			}
 		}
-		wp_send_json_success( __( 'Error, invalid data supplied.', 'megaoptim' ) );
+		wp_send_json_success( __( 'Error, invalid data supplied.', 'megaoptim-image-optimizer' ) );
 	}
 
 
@@ -291,11 +291,11 @@ class MGO_Ajax extends MGO_BaseObject {
 	public function save_settings() {
 
 		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_SETTINGS, 'nonce' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		$data   = array();
@@ -306,11 +306,11 @@ class MGO_Ajax extends MGO_BaseObject {
 			try {
 				$response = MGO_Profile::get_user_by_api_key( $_REQUEST['megaoptimpt_api_key'] );
 				if ( $response === false ) {
-					array_push( $errors, __( 'Could not verify your API key. The API can not be reached. Please contact support.', 'megaoptim' ) );
+					array_push( $errors, __( 'Could not verify your API key. The API can not be reached. Please contact support.', 'megaoptim-image-optimizer' ) );
 				} else if ( ! isset( $response['status'] ) ) {
-					array_push( $errors, __( 'We received invalid response trying to authenticate your api key. Please contact support.', 'megaoptim' ) );
+					array_push( $errors, __( 'We received invalid response trying to authenticate your api key. Please contact support.', 'megaoptim-image-optimizer' ) );
 				} else if ( $response['status'] != 'ok' ) {
-					array_push( $errors, __( 'Your API key is invalid. Please make sure you use correct API issued by MegaOptim.com', 'megaoptim' ) );
+					array_push( $errors, __( 'Your API key is invalid. Please make sure you use correct API issued by MegaOptim.com', 'megaoptim-image-optimizer' ) );
 				}
 			} catch ( MGO_Exception $e ) {
 				array_push( $errors, $e->getMessage() );
@@ -337,13 +337,13 @@ class MGO_Ajax extends MGO_BaseObject {
 
 		if ( $megaoptimpt_resize_large_images ) {
 			if ( ! isset( $_REQUEST[ MGO_Settings::MAX_WIDTH ] ) && ! isset( $_REQUEST[ MGO_Settings::MAX_HEIGHT ] ) ) {
-				array_push( $errors, __( 'If you enabled the option for mimimum image size, you need to set at least one of the fields with correct number greater than 100.', 'megaoptim' ) );
+				array_push( $errors, __( 'If you enabled the option for mimimum image size, you need to set at least one of the fields with correct number greater than 100.', 'megaoptim-image-optimizer' ) );
 			} else {
 				if ( isset( $_REQUEST[ MGO_Settings::MAX_WIDTH ] ) && is_numeric( $_REQUEST[ MGO_Settings::MAX_WIDTH ] ) && $_REQUEST[ MGO_Settings::MAX_WIDTH ] <= 100 ) {
-					array_push( $errors, __( 'Image maximum width should be greater than 100.', 'megaoptim' ) );
+					array_push( $errors, __( 'Image maximum width should be greater than 100.', 'megaoptim-image-optimizer' ) );
 				}
 				if ( isset( $_REQUEST[ MGO_Settings::MAX_HEIGHT ] ) && is_numeric( $_REQUEST[ MGO_Settings::MAX_HEIGHT ] ) && $_REQUEST[ MGO_Settings::MAX_HEIGHT ] <= 100 ) {
-					array_push( $errors, __( 'Image maximum height should be greater than 100.', 'megaoptim' ) );
+					array_push( $errors, __( 'Image maximum height should be greater than 100.', 'megaoptim-image-optimizer' ) );
 				}
 			}
 		}
@@ -372,10 +372,10 @@ class MGO_Ajax extends MGO_BaseObject {
 			MGO_Settings::instance()->update( $data );
 			// Return response
 			$data['success'] = true;
-			$data['message'] = __( 'Settings updated successfully!', 'megaoptim' );
+			$data['message'] = __( 'Settings updated successfully!', 'megaoptim-image-optimizer' );
 		} else {
 			$data['success'] = false;
-			$data['message'] = __( 'Please fix the following errors:', 'megaoptim' );
+			$data['message'] = __( 'Please fix the following errors:', 'megaoptim-image-optimizer' );
 			$data['errors']  = $errors;
 		}
 		die( json_encode( $data ) );
@@ -387,11 +387,11 @@ class MGO_Ajax extends MGO_BaseObject {
 	public function save_advanced_settings() {
 
 		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_SETTINGS, 'nonce' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		$data   = array();
@@ -401,7 +401,7 @@ class MGO_Ajax extends MGO_BaseObject {
 		if ( ! isset( $_REQUEST[ MGO_Settings::IMAGE_SIZES ] ) OR ! is_array( $_REQUEST[ MGO_Settings::IMAGE_SIZES ] )
 		     OR count( $_REQUEST[ MGO_Settings::IMAGE_SIZES ] ) === 0
 		) {
-			array_push( $errors, __( 'No image sizes selected. Please select some!', 'megaoptim' ) );
+			array_push( $errors, __( 'No image sizes selected. Please select some!', 'megaoptim-image-optimizer' ) );
 		}
 
 		// Cloud flare
@@ -410,13 +410,13 @@ class MGO_Ajax extends MGO_BaseObject {
 		$has_cf_zone   = isset( $_REQUEST[ MGO_Settings::CLOUDFLARE_ZONE ] ) && ! empty( $_REQUEST[ MGO_Settings::CLOUDFLARE_ZONE ] );
 		if ( $has_cf_email || $has_cf_apikey || $has_cf_zone ) {
 			if ( ! $has_cf_email ) {
-				array_push( $errors, __( 'You are missing CloudFlare Email. In order to use the feature you need to set all the fields.', 'megaoptim' ) );
+				array_push( $errors, __( 'You are missing CloudFlare Email. In order to use the feature you need to set all the fields.', 'megaoptim-image-optimizer' ) );
 			}
 			if ( ! $has_cf_apikey ) {
-				array_push( $errors, __( 'You are missing CloudFlare Api Key. In order to use the feature you need to set all the fields.', 'megaoptim' ) );
+				array_push( $errors, __( 'You are missing CloudFlare Api Key. In order to use the feature you need to set all the fields.', 'megaoptim-image-optimizer' ) );
 			}
 			if ( ! $has_cf_zone ) {
-				array_push( $errors, __( 'You are missing CloudFlare Zone ID. In order to use the feature you need to set all the fields.', 'megaoptim' ) );
+				array_push( $errors, __( 'You are missing CloudFlare Zone ID. In order to use the feature you need to set all the fields.', 'megaoptim-image-optimizer' ) );
 			}
 		}
 
@@ -463,10 +463,10 @@ class MGO_Ajax extends MGO_BaseObject {
 			MGO_Settings::instance()->update( $data );
 			// Return response
 			$data['success'] = true;
-			$data['message'] = __( 'Settings updated successfully!', 'megaoptim' );
+			$data['message'] = __( 'Settings updated successfully!', 'megaoptim-image-optimizer' );
 		} else {
 			$data['success'] = false;
-			$data['message'] = __( 'Please fix the following errors:', 'megaoptim' );
+			$data['message'] = __( 'Please fix the following errors:', 'megaoptim-image-optimizer' );
 			$data['errors']  = $errors;
 		}
 		die( json_encode( $data ) );
@@ -478,11 +478,11 @@ class MGO_Ajax extends MGO_BaseObject {
 	public function export_report() {
 
 		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_SETTINGS, 'nonce' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		$name = 'megaoptim-report-' . time() . '.json';
@@ -498,15 +498,15 @@ class MGO_Ajax extends MGO_BaseObject {
 	public function library_data() {
 
 		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_DEFAULT, 'nonce' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		if ( ! is_user_logged_in() || ! current_user_can( 'upload_files' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		if ( ! isset( $_REQUEST['context'] ) ) {
-			wp_send_json_error( __( 'Invalid context.', 'megaoptim' ) );
+			wp_send_json_error( __( 'Invalid context.', 'megaoptim-image-optimizer' ) );
 		} else {
 			$context = $_REQUEST['context'];
 			switch ( $context ) {
@@ -519,7 +519,7 @@ class MGO_Ajax extends MGO_BaseObject {
 			if ( ! is_null( $stats ) ) {
 				wp_send_json_success( $stats );
 			} else {
-				wp_send_json_error( 'Unsupported context.', 'megaoptim' );
+				wp_send_json_error( __('Unsupported context.', 'megaoptim-image-optimizer') );
 			}
 		}
 		die;
@@ -531,7 +531,7 @@ class MGO_Ajax extends MGO_BaseObject {
 	public function directory_tree() {
 
 		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_DEFAULT, 'nonce' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			die;
 		}
 
 		if ( ! is_user_logged_in() || ! current_user_can( 'upload_files' ) ) {
@@ -621,11 +621,11 @@ class MGO_Ajax extends MGO_BaseObject {
 	public function directory_data() {
 
 		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_DEFAULT, 'nonce' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		if ( ! is_user_logged_in() || ! current_user_can( 'upload_files' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		$directory = isset( $_REQUEST['dir'] ) ? $_REQUEST['dir'] : '';
@@ -655,11 +655,11 @@ class MGO_Ajax extends MGO_BaseObject {
 	public function empty_backup_dir() {
 
 		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_DEFAULT, 'nonce' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		$context = isset( $_REQUEST['context'] ) ? $_REQUEST['context'] : '';
@@ -698,11 +698,11 @@ class MGO_Ajax extends MGO_BaseObject {
 	public function ticker_upload() {
 
 		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_DEFAULT, 'nonce' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		if ( ! is_user_logged_in() || ! current_user_can( 'upload_files' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		$attachments = isset( $_REQUEST['processing'] ) && ! empty( $_REQUEST['processing'] ) ? $_REQUEST['processing'] : array();
@@ -748,11 +748,11 @@ class MGO_Ajax extends MGO_BaseObject {
 	public function get_profile() {
 
 		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_DEFAULT, 'nonce' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		if ( ! is_user_logged_in() ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		$profile = new MGO_Profile();
@@ -766,11 +766,11 @@ class MGO_Ajax extends MGO_BaseObject {
 	public function optimize_single_attachment() {
 
 		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_DEFAULT, 'nonce' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		if ( ! is_user_logged_in() || ! current_user_can( 'upload_files' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		$attachment_id            = isset( $_REQUEST['attachmentid'] ) ? $_REQUEST['attachmentid'] : '';
@@ -809,11 +809,11 @@ class MGO_Ajax extends MGO_BaseObject {
 	public function restore_single_attachment() {
 
 		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_DEFAULT, 'nonce' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		if ( ! is_user_logged_in() || ! current_user_can( 'upload_files' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 		}
 
 		$attachment_id = isset( $_REQUEST['attachmentid'] ) ? $_REQUEST['attachmentid'] : '';

@@ -24,15 +24,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 function _megaoptim_optimize_ngg_attachment() {
 	if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_OPTIMIZER, 'nonce' ) ) {
-		wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+		wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 	}
 
 	if ( ! is_user_logged_in() || ! current_user_can( 'upload_files' ) ) {
-		wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
+		wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
 	}
 
 	if ( ! isset( $_REQUEST['attachment'] ) ) {
-		wp_send_json_error( array( 'error' => __( 'No attachment provided.', 'megaoptim' ) ) );
+		wp_send_json_error( array( 'error' => __( 'No attachment provided.', 'megaoptim-image-optimizer' ) ) );
 	}
 	try {
 		$result     = MGO_NGGLibrary::instance()->optimize( new MGO_File( $_REQUEST['attachment'] ) );
@@ -43,7 +43,7 @@ function _megaoptim_optimize_ngg_attachment() {
 			$response['tokens']     = $result->get_last_response()->getUser()->getTokens();
 			wp_send_json_success( $response );
 		} else {
-			wp_send_json_error( array( 'error'        => __( 'Attachment was not optimized.', 'megaoptim' ),
+			wp_send_json_error( array( 'error'        => __( 'Attachment was not optimized.', 'megaoptim-image-optimizer' ),
 			                           'can_continue' => 1
 			) );
 		}

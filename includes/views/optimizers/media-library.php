@@ -33,13 +33,13 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
         <div class="megaoptim-middle-content">
 			<?php if ( $is_profile_valid && ($tokens == -1 || $tokens > 0) ): ?>
                 <div id="megaoptim-optimizer-scan" class="text-center">
-                    <h3><?php _e( 'Scan for unoptimized images', 'megaoptim' ); ?></h3>
-                    <P class="megaoptim-mb-20 megaoptim-mt-20"><?php _e( sprintf( 'Click on the button below to scan your %s for unoptimized images. If images are found you will be able to optimize them by clicking Start button.', '<strong>' . __( 'WordPress Media Library', 'megaoptim' ) . '</strong>' ), 'megaoptim' ); ?></P>
+                    <h3><?php _e( 'Scan for unoptimized images', 'megaoptim-image-optimizer' ); ?></h3>
+                    <P class="megaoptim-mb-20 megaoptim-mt-20"><?php _e( sprintf( 'Click on the button below to scan your %s for unoptimized images. If images are found you will be able to optimize them by clicking Start button.', '<strong>' . __( 'WordPress Media Library', 'megaoptim-image-optimizer' ) . '</strong>' ), 'megaoptim' ); ?></P>
                     <div id="megaoptim-control">
                         <div class="megaoptim-row">
                             <div class="megaoptim-col megaoptim-col-12 text-center">
                                 <button id="megaoptim-scan-library" class="button button-primary button-extra-large" data-context="<?php echo MEGAOPTIM_TYPE_MEDIA_ATTACHMENT; ?>">
-									<?php _e( 'Start now', 'megaoptim' ); ?>
+									<?php _e( 'Start now', 'megaoptim-image-optimizer' ); ?>
                             </div>
                         </div>
                     </div>
@@ -53,7 +53,7 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
                                         0
                                     </div>
                                     <div class="megaoptim-stats-label">
-										<?php _e( 'Images Optimized', 'megaoptim' ); ?>
+										<?php _e( 'Images Optimized', 'megaoptim-image-optimizer' ); ?>
                                     </div>
                                 </div>
                             </div>
@@ -63,7 +63,7 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
                                         0
                                     </div>
                                     <div class="megaoptim-stats-label">
-										<?php _e( 'Remaining Images', 'megaoptim' ); ?>
+										<?php _e( 'Remaining Images', 'megaoptim-image-optimizer' ); ?>
                                     </div>
                                 </div>
                             </div>
@@ -73,7 +73,7 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
                                         0
                                     </div>
                                     <div class="megaoptim-stats-label">
-										<?Php _e( 'Total saved MB', 'megaoptim' ); ?>
+										<?Php _e( 'Total saved MB', 'megaoptim-image-optimizer' ); ?>
                                     </div>
                                 </div>
                             </div>
@@ -84,10 +84,10 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
                             <div class="megaoptim-col megaoptim-col-12">
                                 <div class="megaoptim-info">
                                     <p>
-                                        <strong><?php _e( 'Important:', 'megaoptim' ); ?></strong> <?php _e( sprintf( 'In order to keep the optimizer running, you need to keep the tab open, you can always open a %s and continue in that tab.', '<a href="' . admin_url() . '" target="_blank">new tab</a>' ), 'megaoptim' ); ?>
+                                        <strong><?php _e( 'Important:', 'megaoptim-image-optimizer' ); ?></strong> <?php _e( sprintf( 'In order to keep the optimizer running, you need to keep the tab open, you can always open a %s and continue in that tab.', '<a href="' . admin_url() . '" target="_blank">new tab</a>' ), 'megaoptim' ); ?>
                                     </p>
                                     <p>
-                                        <?php _e('If you stop/close the optimizer you can continue later from where you stopped.', 'megaoptim'); ?>
+                                        <?php _e('If you stop/close the optimizer you can continue later from where you stopped.', 'megaoptim-image-optimizer'); ?>
                                     </p>
                                 </div>
                                 <div id="megaoptim-running-spinner" class="text-center" style="display: none;">
@@ -103,7 +103,7 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
                     <div id="megaoptim-control">
                         <div class="megaoptim-row">
                             <div class="megaoptim-col megaoptim-col-12 text-center">
-                                <button id="megaoptim-toggle-optimizer" data-action="megaoptim_optimize_attachment" data-context="<?php echo MEGAOPTIM_TYPE_MEDIA_ATTACHMENT; ?>" data-next-state="start" data-stop-text="Stop Bulk Optimizer" data-start-text="Start Bulk Optimizer" class="button button-primary button-extra-large"><?php _e( 'Start Bulk Optimizer', 'megaoptim' ); ?></button>
+                                <button id="megaoptim-toggle-optimizer" data-action="megaoptim_optimize_attachment" data-context="<?php echo MEGAOPTIM_TYPE_MEDIA_ATTACHMENT; ?>" data-next-state="start" data-stop-text="Stop Bulk Optimizer" data-start-text="Start Bulk Optimizer" class="button button-primary button-extra-large"><?php _e( 'Start Bulk Optimizer', 'megaoptim-image-optimizer' ); ?></button>
                             </div>
                         </div>
                     </div>
@@ -134,13 +134,13 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
         <thead>
         <tr>
             <th class="thumbnail"></th>
-            <th class="column-primary"><?php _e( 'Name', 'megaoptim' ); ?></th>
-            <th class="column"><?php _e( 'Original Size', 'megaoptim' ); ?></th>
-            <th class="column"><?php _e( 'After Compression', 'megaoptim' ); ?></th>
-            <th class="column"><?php _e( 'Reduced By', 'megaoptim' ); ?></th>
-            <th class="column"><?php _e( 'Savings', 'megaoptim' ); ?></th>
-            <th class="column"><?php _e( 'Thumbnails', 'megaoptim' ); ?></th>
-            <th class="column"><?php _e( 'Status', 'megaoptim' ); ?></th>
+            <th class="column-primary"><?php _e( 'Name', 'megaoptim-image-optimizer' ); ?></th>
+            <th class="column"><?php _e( 'Original Size', 'megaoptim-image-optimizer' ); ?></th>
+            <th class="column"><?php _e( 'After Compression', 'megaoptim-image-optimizer' ); ?></th>
+            <th class="column"><?php _e( 'Reduced By', 'megaoptim-image-optimizer' ); ?></th>
+            <th class="column"><?php _e( 'Savings', 'megaoptim-image-optimizer' ); ?></th>
+            <th class="column"><?php _e( 'Thumbnails', 'megaoptim-image-optimizer' ); ?></th>
+            <th class="column"><?php _e( 'Status', 'megaoptim-image-optimizer' ); ?></th>
         </tr>
         </thead>
         <tbody>

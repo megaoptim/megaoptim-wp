@@ -124,7 +124,7 @@ class MGO_NGGLibrary extends MGO_Library {
 
 		// Check if image exist
 		if ( ! file_exists( $attachment->path ) ) {
-			throw new MGO_Exception( __( 'Original image version does not exist on the server.', 'megaoptim' ) );
+			throw new MGO_Exception( __( 'Original image version does not exist on the server.', 'megaoptim-image-optimizer' ) );
 		}
 
 		try {
@@ -250,7 +250,7 @@ class MGO_NGGLibrary extends MGO_Library {
 
 		// Check if image exist
 		if ( ! file_exists( $attachment->path ) ) {
-			throw new MGO_Exception( __( 'Original image version does not exist on the server.', 'megaoptim' ) );
+			throw new MGO_Exception( __( 'Original image version does not exist on the server.', 'megaoptim-image-optimizer' ) );
 		}
 
 		// Run optimization

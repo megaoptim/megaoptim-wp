@@ -97,7 +97,7 @@ abstract class MGO_Attachment {
 					if ( ! is_null( $last ) ) {
 						throw new MGO_Exception( $last['message'] );
 					} else {
-						throw new MGO_Exception( __( 'Error while trying to restore attachment.', 'megaoptim' ) );
+						throw new MGO_Exception( __( 'Error while trying to restore attachment.', 'megaoptim-image-optimizer' ) );
 					}
 
 				}

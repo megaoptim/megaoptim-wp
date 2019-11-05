@@ -45,8 +45,8 @@ class MGO_Admin_UI extends MGO_BaseObject {
 	public function register_ui_pages() {
 
 		add_media_page(
-			__( 'MegaOptim Bulk Optimizer', 'megaoptim' ),
-			__( 'Bulk MegaOptim', 'megaoptim' ),
+			__( 'MegaOptim Bulk Optimizer', 'megaoptim-image-optimizer' ),
+			__( 'Bulk MegaOptim', 'megaoptim-image-optimizer' ),
 			'upload_files',
 			'megaoptim_bulk_optimizer',
 			array(
@@ -56,8 +56,8 @@ class MGO_Admin_UI extends MGO_BaseObject {
 		);
 
 		add_options_page(
-			__( 'MegaOptim Settings' ),
-			__( 'MegaOptim', 'megaoptim' ),
+			__( 'MegaOptim Settings', 'megaoptim-image-optimizer' ),
+			__( 'MegaOptim', 'megaoptim-image-optimizer' ),
 			'manage_options',
 			'megaoptim_settings',
 			array(
@@ -178,7 +178,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 	 */
 	public function manage_media_columns( $columns ) {
 		if ( MGO_Profile::_is_connected() ) {
-			$columns['megaoptim_media_attachment'] = __( 'MegaOptim', 'megaoptim' );
+			$columns['megaoptim_media_attachment'] = __( 'MegaOptim', 'megaoptim-image-optimizer' );
 		}
 
 		return $columns;
@@ -212,7 +212,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 		if ( isset( $_GET['post'] ) && 'attachment' === get_post_type( $_GET['post'] ) ) {
 			add_meta_box(
 				'megaoptim_info_metabox',
-				__( 'MegaOptim', 'megaoptim' ),
+				__( 'MegaOptim', 'megaoptim-image-optimizer' ),
 				array( &$this, 'render_media_edit_buttons' ),
 				null,
 				'side'
@@ -293,15 +293,15 @@ class MGO_Admin_UI extends MGO_BaseObject {
 				'nonce_settings' => wp_create_nonce( MGO_Ajax::NONCE_SETTINGS ),
 				'root_path'      => megaoptim_get_wp_root_path(),
 				'strings'        => array(
-					'clean'                 => __( 'Clean', 'megaoptim' ),
-					'backup_delete_confirm' => __( 'Are you sure you want to delete your backups? This action can not be reversed!', 'megaoptim' ),
-					'optimize'              => __( 'Optimize', 'megaoptim' ),
-					'optimizing'            => __( 'Optimizing...', 'megaoptim' ),
-					'working'               => __( 'Working...', 'megaoptim' ),
-					'no_tokens'             => __( 'No enough tokens left. You can always top up your account at https://megaoptim.com/dashboard/', 'megaoptim' ),
-					'profile_error'         => __( 'Error! We can not retrieve your profile. Please check if there is active internet connection or open a ticket in our dashboard area.', 'megaoptim' ),
-					'show_thumbnail_info'   => __( 'Show More Info', 'megaoptim' ),
-					'hide_thumbnail_info'   => __( 'Hide More Info', 'megaoptim' ),
+					'clean'                 => __( 'Clean', 'megaoptim-image-optimizer' ),
+					'backup_delete_confirm' => __( 'Are you sure you want to delete your backups? This action can not be reversed!', 'megaoptim-image-optimizer' ),
+					'optimize'              => __( 'Optimize', 'megaoptim-image-optimizer' ),
+					'optimizing'            => __( 'Optimizing...', 'megaoptim-image-optimizer' ),
+					'working'               => __( 'Working...', 'megaoptim-image-optimizer' ),
+					'no_tokens'             => __( 'No enough tokens left. You can always top up your account at https://megaoptim.com/dashboard/', 'megaoptim-image-optimizer' ),
+					'profile_error'         => __( 'Error! We can not retrieve your profile. Please check if there is active internet connection or open a ticket in our dashboard area.', 'megaoptim-image-optimizer' ),
+					'show_thumbnail_info'   => __( 'Show More Info', 'megaoptim-image-optimizer' ),
+					'hide_thumbnail_info'   => __( 'Hide More Info', 'megaoptim-image-optimizer' ),
 				),
 				'context'        => array(
 					'medialibrary' => MEGAOPTIM_TYPE_MEDIA_ATTACHMENT,
@@ -340,15 +340,15 @@ class MGO_Admin_UI extends MGO_BaseObject {
 					'ajax_url'        => admin_url( 'admin-ajax.php' ),
 					'nonce_optimizer' => wp_create_nonce( MGO_Ajax::NONCE_OPTIMIZER ),
 					'strings'         => array(
-						'finished'                   => __( 'Finished', 'megaoptim' ),
-						'waiting'                    => __( 'In queue', 'megaoptim' ),
-						'optimizing'                 => __( 'Optimizing', 'megaoptim' ),
-						'failed'                     => __( 'Failed', 'megaoptim' ),
-						'error'                      => __( 'Error', 'megaoptim' ),
-						'cancelling'                 => __( 'Cancelling', 'megaoptim' ),
-						'already_optimized'          => __( 'Already Optimized', 'megaoptim' ),
-						'loader_working_title'       => __( 'Preparing...', 'megaoptim' ),
-						'loader_working_description' => __( 'Hiring ultrasonic optimizers...', 'megaoptim' ),
+						'finished'                   => __( 'Finished', 'megaoptim-image-optimizer' ),
+						'waiting'                    => __( 'In queue', 'megaoptim-image-optimizer' ),
+						'optimizing'                 => __( 'Optimizing', 'megaoptim-image-optimizer' ),
+						'failed'                     => __( 'Failed', 'megaoptim-image-optimizer' ),
+						'error'                      => __( 'Error', 'megaoptim-image-optimizer' ),
+						'cancelling'                 => __( 'Cancelling', 'megaoptim-image-optimizer' ),
+						'already_optimized'          => __( 'Already Optimized', 'megaoptim-image-optimizer' ),
+						'loader_working_title'       => __( 'Preparing...', 'megaoptim-image-optimizer' ),
+						'loader_working_description' => __( 'Hiring ultrasonic optimizers...', 'megaoptim-image-optimizer' ),
 					),
 					'context'         => array(
 						'media_library' => MEGAOPTIM_TYPE_MEDIA_ATTACHMENT,
@@ -367,12 +367,12 @@ class MGO_Admin_UI extends MGO_BaseObject {
 				'nonce_default' => wp_create_nonce( MGO_Ajax::NONCE_DEFAULT ),
 				'root_path'     => megaoptim_get_wp_root_path(),
 				'strings'       => array(
-					'alert_select_files'  => __( 'Please select a folder you want to optimize from the list.', 'megaoptim' ),
-					'info_optimized'      => '<p>' . __( 'Congratulations! This folder is fully optimized. Come back later when there are more images.', 'megaoptim' ) . '</p>',
-					'info_not_optimized'  => '<p>' . sprintf( '%: ', __( 'In order the plugin to work, you need to keep the tab open, you can always open a %s and continue in that tab. If you close this tab the optimizer will stop but don\'t worry, you can always continue later from where you stopped.', 'megaoptim' ), '<strong>' . __( 'Important', 'megaoptim' ) . '</strong>', '<a href="' . admin_url() . '" target="_blank">new tab</a>' ) . '</p>',
-					'selected_folder'     => __( 'Selected Folder', 'megaoptim' ),
-					'loading_title'       => __( 'Scanning...', 'megaoptim' ),
-					'loading_description' => __( 'We are currently scanning the selected folder for unoptimized images. Once finished if any unoptimized images are found you will be able to start optimizing.', 'megaoptim' )
+					'alert_select_files'  => __( 'Please select a folder you want to optimize from the list.', 'megaoptim-image-optimizer' ),
+					'info_optimized'      => '<p>' . __( 'Congratulations! This folder is fully optimized. Come back later when there are more images.', 'megaoptim-image-optimizer' ) . '</p>',
+					'info_not_optimized'  => '<p>' . sprintf( '%s: ', __( 'In order the plugin to work, you need to keep the tab open, you can always open a %s and continue in that tab. If you close this tab the optimizer will stop but don\'t worry, you can always continue later from where you stopped.', 'megaoptim-image-optimizer' ) ) . '</p>',
+					'selected_folder'     => __( 'Selected Folder', 'megaoptim-image-optimizer' ),
+					'loading_title'       => __( 'Scanning...', 'megaoptim-image-optimizer' ),
+					'loading_description' => __( 'We are currently scanning the selected folder for unoptimized images. Once finished if any unoptimized images are found you will be able to start optimizing.', 'megaoptim-image-optimizer' )
 				)
 			) );
 			wp_enqueue_script( 'megaoptim-localfiles' );
@@ -389,8 +389,8 @@ class MGO_Admin_UI extends MGO_BaseObject {
 				'nonce_default' => wp_create_nonce( MGO_Ajax::NONCE_DEFAULT ),
 				'root_path'     => megaoptim_get_wp_root_path(),
 				'strings'       => array(
-					'loading_title'       => __( 'Scanning...', 'megaoptim' ),
-					'loading_description' => __( 'We are currently scanning for unoptimized images... Once finished if any unoptimized images are found you will be able to start optimizing.', 'megaoptim' )
+					'loading_title'       => __( 'Scanning...', 'megaoptim-image-optimizer' ),
+					'loading_description' => __( 'We are currently scanning for unoptimized images... Once finished if any unoptimized images are found you will be able to start optimizing.', 'megaoptim-image-optimizer' )
 				)
 			) );
 			wp_enqueue_script( 'megaoptim-library' );

@@ -22,7 +22,7 @@ $success_icon = '<img src="' . WP_MEGAOPTIM_ASSETS_URL . '/img/check.png" alt="S
             <p>
 				<?php
 				if ( $data->get_saved_bytes() > 0 ) {
-					$message = sprintf( __( '%s Optimization %s with the %s method.', 'megaoptim' ), $success_icon, '<strong>success</strong>', '<u>' . $data->get( 'compression' ) . '</u>' );
+					$message = sprintf( __( '%s Optimization %s with the %s method.', 'megaoptim-image-optimizer' ), $success_icon, '<strong>success</strong>', '<u>' . $data->get( 'compression' ) . '</u>' );
 				} else {
 					$message = __( 'Great Job! Attachment is already optimized.' );
 				}
@@ -34,24 +34,24 @@ $success_icon = '<img src="' . WP_MEGAOPTIM_ASSETS_URL . '/img/check.png" alt="S
 			<?php
 			$message = '';
 			if ( $data->get_saved_bytes() > 0 ) {
-				$message = sprintf( '<p>' . __( 'Original Size: %s', 'megaoptim' ) . '</p>', $data->get_original_size( true ) );
-				$message .= sprintf( '<p>' . __( 'Optimized Size: %s', 'megaoptim' ) . '</p>', $data->get_optimized_size( true ) );
-				$message .= sprintf( '<p>' . __( 'Percentage: %s', 'megaoptim' ) . '</p>', $data->get_saved_percent( true ) );
+				$message = sprintf( '<p>' . __( 'Original Size: %s', 'megaoptim-image-optimizer' ) . '</p>', $data->get_original_size( true ) );
+				$message .= sprintf( '<p>' . __( 'Optimized Size: %s', 'megaoptim-image-optimizer' ) . '</p>', $data->get_optimized_size( true ) );
+				$message .= sprintf( '<p>' . __( 'Percentage: %s', 'megaoptim-image-optimizer' ) . '</p>', $data->get_saved_percent( true ) );
 			} else {
-				$message .= '<p>' . __( 'No further optimization needed.' ) . '</p>';
+				$message .= '<p>' . __( 'No further optimization needed.', 'megaoptim-image-optimizer' ) . '</p>';
 			}
 			if ( $data->get( 'webp_size' ) > 0 ) {
-				$message .= sprintf( __( 'WebP Size: %s', 'megaoptim' ), megaoptim_human_file_size( $data->get( 'webp_size' ) ) );
+				$message .= sprintf( __( 'WebP Size: %s', 'megaoptim-image-optimizer' ), megaoptim_human_file_size( $data->get( 'webp_size' ) ) );
 			}
 			echo $message;
 			?>
         </div>
         <div class="megaoptim-attachment-info-row megaoptim-attachment-actions">
             <p>
-                <a href="#" class="button megaoptim-see-stats"><?php _e( 'Show More Info', 'megaoptim' ); ?></a>
+                <a href="#" class="button megaoptim-see-stats"><?php _e( 'Show More Info', 'megaoptim-image-optimizer' ); ?></a>
 				<?php if ( $data->has_backup() ): ?>
                     <a data-attachmentid="<?php echo $data->get_id(); ?>" data-context="<?php echo $context; ?>"
-                       class="button megaoptim-optimize-restore"><?php _e( 'Restore', 'megaoptim' ); ?></a>
+                       class="button megaoptim-optimize-restore"><?php _e( 'Restore', 'megaoptim-image-optimizer' ); ?></a>
 				<?php endif; ?>
             </p>
         </div>
@@ -60,8 +60,8 @@ $success_icon = '<img src="' . WP_MEGAOPTIM_ASSETS_URL . '/img/check.png" alt="S
                 <table>
                     <thead>
                     <tr>
-                        <th>Thumbnail</th>
-                        <th>Details</th>
+                        <th><?php _e('Thumbnail', 'megaoptim-image-optimizer'); ?></th>
+                        <th><?php _e('Details', 'megaoptim-image-optimizer'); ?></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -77,15 +77,15 @@ $success_icon = '<img src="' . WP_MEGAOPTIM_ASSETS_URL . '/img/check.png" alt="S
                                 <td>
 									<?php
 									if ( ! $thumb['success'] ) {
-										$message = __( 'Already optimized. No further processing needed.', 'megaoptim' );
+										$message = __( 'Already optimized. No further processing needed.', 'megaoptim-image-optimizer' );
 										echo $message;
 									} else {
 										//$saved_bytes = $thumb['original_size'] - $thumb['optimized_size'];
-										$message = sprintf( __( 'Original Size: %s', 'megaoptim' ), megaoptim_human_file_size( $thumb['original_size'] ) ) . '<br/>';
-										$message .= sprintf( __( 'Optimized Size: %s', 'megaoptim' ), megaoptim_human_file_size( $thumb['optimized_size'] ) ) . '<br/>';
-										$message .= sprintf( __( 'Reduction: %s', 'megaoptim' ), megaoptim_round( $thumb['saved_percent'], 2 ) . '%' );
+										$message = sprintf( __( 'Original Size: %s', 'megaoptim-image-optimizer' ), megaoptim_human_file_size( $thumb['original_size'] ) ) . '<br/>';
+										$message .= sprintf( __( 'Optimized Size: %s', 'megaoptim-image-optimizer' ), megaoptim_human_file_size( $thumb['optimized_size'] ) ) . '<br/>';
+										$message .= sprintf( __( 'Reduction: %s', 'megaoptim-image-optimizer' ), megaoptim_round( $thumb['saved_percent'], 2 ) . '%' );
 										if ( $thumb['webp_size'] > 0 ) {
-											$message .= '<br>' . sprintf( __( 'WebP Size: %s', 'megaoptim' ), megaoptim_human_file_size( $thumb['webp_size'] ) );
+											$message .= '<br>' . sprintf( __( 'WebP Size: %s', 'megaoptim-image-optimizer' ), megaoptim_human_file_size( $thumb['webp_size'] ) );
 										}
 										echo $message;
 									}
@@ -111,19 +111,19 @@ $success_icon = '<img src="' . WP_MEGAOPTIM_ASSETS_URL . '/img/check.png" alt="S
             <input type="checkbox" id="optimize-<?php echo $data->get_id(); ?>" value=""
                    name="optimize-<?php echo $data->get_id(); ?>">
             <label for="optimize-<?php echo $data->get_id(); ?>" class="button-primary"
-                   data-toggle="dropdown"><?php _e( 'Optimize', 'megaoptim' ); ?></label>
+                   data-toggle="dropdown"><?php _e( 'Optimize', 'megaoptim-image-optimizer' ); ?></label>
             <ul>
                 <li>
                     <a class="megaoptim-optimize-run" data-compression="ultra"
-                       href="#"><?php _e( 'Ultra', 'megaoptim' ); ?></a>
+                       href="#"><?php _e( 'Ultra', 'megaoptim-image-optimizer' ); ?></a>
                 </li>
                 <li>
                     <a class="megaoptim-optimize-run" data-compression="intelligent"
-                       href="#"><?php _e( 'Intelligently', 'megaoptim' ); ?></a>
+                       href="#"><?php _e( 'Intelligently', 'megaoptim-image-optimizer' ); ?></a>
                 </li>
                 <li>
                     <a class="megaoptim-optimize-run" data-compression="lossless"
-                       href="#"><?php _e( 'Losslessly', 'megaoptim' ); ?></a>
+                       href="#"><?php _e( 'Losslessly', 'megaoptim-image-optimizer' ); ?></a>
                 </li>
             </ul>
             <!-- Optimize button end -->

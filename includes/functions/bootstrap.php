@@ -53,11 +53,11 @@ function megaoptim_include_files( $files ) {
 function megaoptim_update_nag() {
 	?>
 	<div class="update-nag">
-		<?php echo sprintf('%s %s.', __('Update your PHP version if you want to run', 'megaoptim'), '<strong>'.__('MegaOptim Image Optimizer', 'megaoptim') . '</strong>'); ?> <br/>
-		<?php _e( 'Your actual version is:', 'megaoptim' ) ?>
-		<strong><?php echo phpversion(); ?></strong>, <?php _e( 'required is', 'megaoptim' ) ?>
+		<?php echo sprintf('%s %s.', __('Update your PHP version if you want to run', 'megaoptim-image-optimizer'), '<strong>'.__('MegaOptim Image Optimizer', 'megaoptim-image-optimizer') . '</strong>'); ?> <br/>
+		<?php _e( 'Your actual version is:', 'megaoptim-image-optimizer' ) ?>
+		<strong><?php echo phpversion(); ?></strong>, <?php _e( 'required is', 'megaoptim-image-optimizer' ) ?>
 		<strong><?php echo WP_MEGAOPTIM_PHP_MINIMUM; ?></strong>
-		<?php _e( '. Please contact your hosting or MegaOptim support for further assistence.', 'megaoptim' ) ?>
+		<?php _e( '. Please contact your hosting or MegaOptim support for further assistence.', 'megaoptim-image-optimizer' ) ?>
 	</div>
 	<?php
 }

@@ -36,18 +36,18 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
                 <div id="megaoptim-folder-picker">
                     <div class="row text-center">
                         <?php if( $tokens == -1 || $tokens > 0 ): ?>
-                            <h3><?php _e('Optimize folders', 'megaoptim'); ?></h3>
-                            <p><?php _e('On this screen you can optimize your folders that contain images and are outside of the WordPress Media Library or the NextGen Galleries.', 'megaoptim'); ?></p>
-                            <p><?php _e(sprintf('Click on "Select custom folder" to choose a folder that contains images or optimize your current theme %s folder. (Recommended)', '<strong>'.wp_get_theme()->get( 'Name' ).'</strong>'), 'megaoptim'); ?></p>
+                            <h3><?php _e('Optimize folders', 'megaoptim-image-optimizer'); ?></h3>
+                            <p><?php _e('On this screen you can optimize your folders that contain images and are outside of the WordPress Media Library or the NextGen Galleries.', 'megaoptim-image-optimizer'); ?></p>
+                            <p><?php _e(sprintf('Click on "Select custom folder" to choose a folder that contains images or optimize your current theme %s folder. (Recommended)', '<strong>'.wp_get_theme()->get( 'Name' ).'</strong>'), 'megaoptim-image-optimizer'); ?></p>
                             <div class="megaoptim-actions">
                                 <p>
                                     <?php if(is_child_theme()): ?>
-                                        <a id="megaoptim-select-parent-theme-folder" class="button-primary megaoptim-optimize-theme-folder" data-themedir="<?php echo get_template_directory(); ?>" class="button-primary"><?php _e('Scan parent theme folder', 'megaoptim'); ?></a>
-                                        <a id="megaoptim-select-current-theme-folder" class="button-primary megaoptim-optimize-theme-folder" data-themedir="<?php echo get_stylesheet_directory(); ?>" class="button-primary"><?php _e('Scan child theme folder', 'megaoptim'); ?></a>
+                                        <a id="megaoptim-select-parent-theme-folder" class="button-primary megaoptim-optimize-theme-folder" data-themedir="<?php echo get_template_directory(); ?>" class="button-primary"><?php _e('Scan parent theme folder', 'megaoptim-image-optimizer'); ?></a>
+                                        <a id="megaoptim-select-current-theme-folder" class="button-primary megaoptim-optimize-theme-folder" data-themedir="<?php echo get_stylesheet_directory(); ?>" class="button-primary"><?php _e('Scan child theme folder', 'megaoptim-image-optimizer'); ?></a>
                                     <?php else: ?>
-                                        <a id="megaoptim-select-current-theme-folder" class="button-primary megaoptim-optimize-theme-folder" data-themedir="<?php echo get_template_directory(); ?>" class="button-primary"><?php _e('Scan theme folder', 'megaoptim'); ?></a>
+                                        <a id="megaoptim-select-current-theme-folder" class="button-primary megaoptim-optimize-theme-folder" data-themedir="<?php echo get_template_directory(); ?>" class="button-primary"><?php _e('Scan theme folder', 'megaoptim-image-optimizer'); ?></a>
                                     <?php endif; ?>
-	                                <?php _e('or', 'megaoptim'); ?> <a id="megaoptim-select-folder" href="#megaoptim-dir-select" class="button-default"><?php _e('Select custom folder', 'megaoptim'); ?></a>
+	                                <?php _e('or', 'megaoptim-image-optimizer'); ?> <a id="megaoptim-select-folder" href="#megaoptim-dir-select" class="button-default"><?php _e('Select custom folder', 'megaoptim-image-optimizer'); ?></a>
                                 </p>
                             </div>
                             <div id="megaoptim-selected-folder" style="display: none;" class="megaoptim-actions">
@@ -56,8 +56,8 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
                              <?php echo megaoptim_get_view('parts/out-of-tokens'); ?>
                             <div class="megaoptim-actions">
                                 <p>
-                                    <a disabled=disabled class="button-primary"><?php _e('Select custom folder', 'megaoptim'); ?></a> <?php _e('or', 'megaoptim'); ?>
-                                    <a disabled=disabled class="button-primary"><?php _e('Scan theme folder', 'megaoptim'); ?></a>
+                                    <a disabled=disabled class="button-primary"><?php _e('Select custom folder', 'megaoptim-image-optimizer'); ?></a> <?php _e('or', 'megaoptim-image-optimizer'); ?>
+                                    <a disabled=disabled class="button-primary"><?php _e('Scan theme folder', 'megaoptim-image-optimizer'); ?></a>
                                 </p>
                             </div>
                         <?php endif; ?>
@@ -70,7 +70,7 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
                                 <div class="megaoptim-stats-box">
                                     <div class="megaoptim-stats-square megaoptim-bg-secondary megaoptim-border-primary" id="total_optimized">0</div>
                                     <div class="megaoptim-stats-label">
-										<?php _e( 'Images Optimized', 'megaoptim' ); ?>
+										<?php _e( 'Images Optimized', 'megaoptim-image-optimizer' ); ?>
                                     </div>
                                 </div>
                             </div>
@@ -78,7 +78,7 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
                                 <div class="megaoptim-stats-box">
                                     <div class="megaoptim-stats-square megaoptim-bg-secondary megaoptim-border-primary" id="total_remaining">0</div>
                                     <div class="megaoptim-stats-label">
-										<?php _e( 'Remaining Images', 'megaoptim' ); ?>
+										<?php _e( 'Remaining Images', 'megaoptim-image-optimizer' ); ?>
                                     </div>
                                 </div>
                             </div>
@@ -86,7 +86,7 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
                                 <div class="megaoptim-stats-box">
                                     <div class="megaoptim-stats-square megaoptim-bg-secondary megaoptim-border-primary" id="total_saved_bytes">0</div>
                                     <div class="megaoptim-stats-label">
-										<?Php _e( 'Total saved MB', 'megaoptim' ); ?>
+										<?Php _e( 'Total saved MB', 'megaoptim-image-optimizer' ); ?>
                                     </div>
                                 </div>
                             </div>
@@ -107,7 +107,7 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
                         <div class="megaoptim-row">
                             <div class="megaoptim-col megaoptim-col-12 text-center">
                                 <button id="megaoptim-toggle-optimizer" data-action="megaoptim_optimize_ld_attachment" data-context="<?php echo MEGAOPTIM_TYPE_FILE_ATTACHMENT; ?>" data-next-state="start" data-stop-text="Stop Bulk Optimizer" data-start-text="Start Bulk Optimizer" class="button button-primary button-extra-large">
-									<?php _e( 'Start Bulk Optimizer', 'megaoptim' ); ?>
+									<?php _e( 'Start Bulk Optimizer', 'megaoptim-image-optimizer' ); ?>
                                 </button>
                             </div>
                         </div>
@@ -133,13 +133,13 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
         <thead>
         <tr>
             <th class="thumbnail"></th>
-            <th class="column-primary"><?php _e( 'Name', 'megaoptim' ); ?></th>
-            <th class="column"><?php _e( 'Original Size', 'megaoptim' ); ?></th>
-            <th class="column"><?php _e( 'After Compression', 'megaoptim' ); ?></th>
-            <th class="column"><?php _e( 'Reduced By', 'megaoptim' ); ?></th>
-            <th class="column"><?php _e( 'Savings', 'megaoptim' ); ?></th>
-            <th class="column"><?php _e( 'Thumbnails', 'megaoptim' ); ?></th>
-            <th class="column"><?php _e( 'Status', 'megaoptim' ); ?></th>
+            <th class="column-primary"><?php _e( 'Name', 'megaoptim-image-optimizer' ); ?></th>
+            <th class="column"><?php _e( 'Original Size', 'megaoptim-image-optimizer' ); ?></th>
+            <th class="column"><?php _e( 'After Compression', 'megaoptim-image-optimizer' ); ?></th>
+            <th class="column"><?php _e( 'Reduced By', 'megaoptim-image-optimizer' ); ?></th>
+            <th class="column"><?php _e( 'Savings', 'megaoptim-image-optimizer' ); ?></th>
+            <th class="column"><?php _e( 'Thumbnails', 'megaoptim-image-optimizer' ); ?></th>
+            <th class="column"><?php _e( 'Status', 'megaoptim-image-optimizer' ); ?></th>
         </tr>
         </thead>
         <tbody>

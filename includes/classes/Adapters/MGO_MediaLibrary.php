@@ -126,7 +126,7 @@ class MGO_MediaLibrary extends MGO_Library {
 		//$original_resource = $this->get_attachment( $attachment, 'full', false );
 		$original_path = $this->get_attachment_path( $attachment, 'full', false );
 		if ( ! file_exists( $original_path ) ) {
-			throw new MGO_Exception( __( 'Original image version does not exist on the server.', 'megaoptim' ) );
+			throw new MGO_Exception( __( 'Original image version does not exist on the server.', 'megaoptim-image-optimizer' ) );
 		}
 
 		//Create Backup If Enabled
@@ -313,7 +313,7 @@ class MGO_MediaLibrary extends MGO_Library {
 		//Get the file names
 		$original_path = $this->get_attachment_path( $attachment, 'full', false );
 		if ( ! file_exists( $original_path ) ) {
-			throw new MGO_Exception( __( 'Original image version does not exist on the server.', 'megaoptim' ) );
+			throw new MGO_Exception( __( 'Original image version does not exist on the server.', 'megaoptim-image-optimizer' ) );
 		}
 
 		//Create Backup If Enabled
