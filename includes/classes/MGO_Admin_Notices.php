@@ -174,4 +174,12 @@ class MGO_Admin_Notices {
 	private function get_notice_key( $id ) {
 		return $this->prefix . 'dismissed_' . $id;
 	}
+
+	/**
+	 * Dismiss notice
+	 * @param $id
+	 */
+	public function dismiss($id) {
+		set_transient( $this->get_notice_key( $id ), 'd', $this->expiry );
+	}
 }
