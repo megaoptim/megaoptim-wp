@@ -223,7 +223,7 @@ class MGO_Ajax extends MGO_BaseObject {
 	 */
 	public function set_api_key() {
 
-		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_DEFAULT, 'nonce' ) ) {
+		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_SETTINGS, 'nonce' ) ) {
 			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim' ) ) );
 		}
 

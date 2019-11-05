@@ -827,6 +827,38 @@ UL.jqueryFileTree A {
     border-radius: 5px;
 }
 
+.megaoptim-modal-status {
+    margin: 0 0 15px !important;
+}
+
+.megaoptim-modal-status {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    line-height: 1.5;
+}
+
+.megaoptim-modal-status.notice.success {
+    border-left-color: green;
+}
+
+.megaoptim-status-line:before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    background: #ccc;
+    position: relative;
+    top: -1px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+.megaoptim-status-line-success:before {
+    background: green;
+}
+.megaoptim-status-line-error:before {
+    background: red;
+}
+
 @media (min-width: 641px) {
     .megaoptim-modal {
         max-width: 500px;

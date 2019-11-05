@@ -274,7 +274,7 @@ class MGO_CLI {
 
 		$time_start = microtime( true );
 
-		$usage = 'Pleasse set valid --id=ID for single attachment restore OR set --all=1 for all attachments';
+		$usage = 'Pleasse enter valid ID if you want to restore single attachment OR enter "all" if you want to restore all the attachments';
 
 
 		if ( is_numeric( $ID_OR_ALL ) && false !== get_post_status( $ID_OR_ALL ) ) {

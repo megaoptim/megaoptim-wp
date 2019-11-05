@@ -10,23 +10,42 @@
         <div class="megaoptim-row">
             <div class="megaoptim-col3">
                 <div class="megaoptim-instruction">
-                    <h4 class="navy"><?php _e( '1. Obtain API Key', 'megaoptim' ); ?></h4>
+                    <h4 class="navy"><?php _e( '1. Get FREE API key', 'megaoptim' ); ?></h4>
                     <p>
-						<?php echo sprintf( __( 'The API key is essential to use the plugin, you can get it by clicking the button below. The initial FREE plan starts from %s tokens a month. You can also purcahse larger quota anytime from our %s.', 'megaoptim' ), '<strong>500</strong>', '<a title="' . __( 'In the dahsboard you can monitor see your optimization reports, api key, open support tickets and much more', 'megaoptim' ) . '" href="https://megaoptim.com/dashboard/api/credentials" target="_blank">' . __( 'dashboard', 'megaoptim' ) . '</a>' ); ?>
+						<?php
+
+						$title = __( 'In the dahsboard you can monitor see your optimization reports, api key, open support tickets and much more', 'megaoptim' );
+
+						echo sprintf( __( 'In order to use MegaOptim you will need %s. You can register for %s that comes with %s per month for %s. If you need larger quota you can get our premium %s plan for only %s or any other from our %s.', 'megaoptim' ),
+							'<strong>API KEY</strong>',
+							'<strong>FREE API KEY</strong>',
+							'<strong>500 tokens</strong>',
+							'<strong>FREE</strong>',
+							'<strong>UNLIMITED</strong>',
+							'<strong>$9.99/month</strong>',
+							'<a title="' . $title . '" href="https://megaoptim.com/pricing" target="_blank">' . __( 'website', 'megaoptim' ) . '</a>' );
+
+
+						?>
                     </p>
-                    <p><a target="_blank" id="megaoptim-trigger-register" data-remodal-target="megaoptim-register"
-                          class="button button-primary"><?php _e( 'Get API Key', 'megaoptim' ); ?></a> or <a
-                                href="<?php echo WP_MEGAOPTIM_REGISTER_URL; ?>" target="_blank">register here</a></p>
+                    <p><a target="_blank"
+                          id="megaoptim-trigger-register"
+                          data-remodal-target="megaoptim-register"
+                          class="button button-primary"><?php _e( 'Get API Key', 'megaoptim' ); ?></a> <?php _e('or', 'megaoptim'); ?> <a
+                                href="<?php echo WP_MEGAOPTIM_REGISTER_URL; ?>" target="_blank"><?php _e('register here', 'megaoptim'); ?></a></p>
                 </div>
             </div>
             <div class="megaoptim-col3">
                 <div class="megaoptim-instruction">
-                    <h4 class="navy"><?php _e( '2. Enter your API Key', 'megaoptim' ); ?></h4>
+                    <h4 class="navy"><?php _e( '2. Set your API Key', 'megaoptim' ); ?></h4>
                     <p>
 						<?php echo sprintf( __( 'On the "Settings" page you need to %s from step 1 and you can configure how the plugin behaves. Various options are available like auto-optimization on upload, which image sizes to be optimized, backup settings, etc.', 'megaoptim' ), '<strong><u>' . __( 'enter the api key', 'megaoptim' ) . '</u></strong>' ); ?>
                     </p>
-                    <p><a href="<?php echo MGO_Admin_UI::get_settings_url(); ?>"
-                          class="button button-primary"><?php _e( 'Go to Settings', 'megaoptim' ); ?></a></p>
+                    <p>
+                        <a data-remodal-target="megaoptim-setapikey" class="button button-primary"><?php _e( 'Set API Key', 'megaoptim' ); ?></a>
+	                    <?php _e('or', 'megaoptim'); ?>
+                        <a href="<?php echo MGO_Admin_UI::get_settings_url(); ?>" target="_blank"><?php _e('verify preferences', 'megaoptim'); ?></a>
+                    </p>
                 </div>
             </div>
             <div class="megaoptim-col3">
@@ -43,15 +62,15 @@
         <div class="megaoptim-row">
             <hr/>
         </div>
-        <div class="megaoptim-row">
+        <div class="megaoptim-row megaoptim-mb-10">
             <div class="megaoptim-colf">
                 <div class="megaoptim-extra">
                     <h4 class="navy"><?php _e( 'Referral program', 'megaoptim' ); ?></h4>
-                    <p><?php echo sprintf( __( 'We have a referral program available for everyone. Help us spread by sharing your %s with your friends and get %s on each signup and %s when the referral subscribes to any plan.' ), '<strong><a target="_blank" href="https://megaoptim.com/dashboard/referral">' . __( 'referral url' ) . '</a></strong>', '<strong>' . __( '120 tokens', 'megaoptim' ) . '</strong>', '<strong>' . __( '500 tokens', 'megaoptim' ) . '</strong>' ); ?></p>
+                    <p><?php echo sprintf( __( 'We have a referral program available for everyone. Help us spread by sharing your %s with your friends and get %s on each signup and %s when the referral subscribes to any plan.' ), '<strong><a target="_blank" href="https://app.megaoptim.com/referral">' . __( 'referral url' ) . '</a></strong>', '<strong>' . __( '120 tokens', 'megaoptim' ) . '</strong>', '<strong>' . __( '500 tokens', 'megaoptim' ) . '</strong>' ); ?></p>
                 </div>
             </div>
         </div>
-        <button type="button" class="notice-dismiss dismiss-megaoptim-notice"><span
-                    class="screen-reader-text"><?php _e( 'Dismiss this notice', 'megaoptim' ); ?>.</span></button>
+        <button type="button" class="notice-dismiss dismiss-megaoptim-notice"><span class="screen-reader-text"><?php _e( 'Dismiss this notice', 'megaoptim' ); ?>.</span></button>
     </div>
 </div>
+<?php megaoptim_view('modals/setapikey'); ?>

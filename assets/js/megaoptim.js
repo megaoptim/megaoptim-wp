@@ -186,7 +186,44 @@
 
 /**
  * MegaOptim
- * API Key
+ * API Key form used on the bulk optimizer page.
+ */
+(function ($) {
+    $(document).on('click', '#setapikey', function (e) {
+        e.preventDefault();
+        var $wrapper = $(this).closest($(this).data('wrapper'));
+        var key = $('#apikey').val();
+
+        console.log(key);
+
+        if (key && key !== '') {
+            $.ajax({
+                url: MegaOptim.endpoints.setapikey,
+                tyoe: 'POST',
+                beforeSend: function () {
+                    $wrapper.LoadingOverlay('show', {'size': 20});
+                },
+                data: {apikey: key, nonce : MegaOptim.nonce_settings},
+                success: function (response) {
+                    if (!response.success) {
+                        alert(response.data.error);
+                    } else {
+                        window.location.reload();
+                    }
+                },
+                complete: function () {
+                    $wrapper.LoadingOverlay('hide');
+                }
+            });
+        } else {
+            alert("Please enter valid api key.");
+        }
+    });
+})(jQuery);
+
+/**
+ * MegaOptim
+ * API Key Modal used on the instructions page.
  */
 (function ($) {
     $(document).on('submit', '.megaoptim-apikey-form', function (e) {
@@ -214,12 +251,9 @@
                         .html(response.data.message)
                         .show()
                         .removeClass('error')
-                        .addClass('success');
+                        .addClass('notice success');
                     $fields.hide();
                     $actions.hide();
-                    setTimeout(function () {
-                        window.location.href = MegaOptim.urls.settings
-                    }, 4000);
                 } else {
                     $messages.html('<p>' + response.data.error + '</p>').show().removeClass('success').addClass('error');
                 }
@@ -481,40 +515,6 @@
             });
         }
     })
-})(jQuery);
-
-
-(function ($) {
-    $(document).on('click', '#setapikey', function (e) {
-        e.preventDefault();
-        var $wrapper = $(this).closest($(this).data('wrapper'));
-        var key = $('#apikey').val();
-
-        console.log(key);
-
-        if (key && key !== '') {
-            $.ajax({
-                url: MegaOptim.ajax_url + '?action=megaoptim_set_apikey&nonce=' + MegaOptim.nonce_default,
-                tyoe: 'POST',
-                beforeSend: function () {
-                    $wrapper.LoadingOverlay('show', {'size': 20});
-                },
-                data: {apikey: key},
-                success: function (response) {
-                    if (!response.success) {
-                        alert(response.data.error);
-                    } else {
-                        window.location.reload();
-                    }
-                },
-                complete: function () {
-                    $wrapper.LoadingOverlay('hide');
-                }
-            });
-        } else {
-            alert("Please enter valid api key.");
-        }
-    });
 })(jQuery);
 
 

@@ -138,7 +138,9 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 = 1.4.1 =
 
 - Added notice to suggest to the user to switch to list mode in the Media Library screen
-- Refactor ajax security checks and added some more security hardening
+- Updated usage message for wp megaoptim restore command to match the command
+- Refactored ajax security checks and added some more security hardening (thanks to pluginvulnerabilities)
+- Improved welcome screen
 
 = 1.4.0 =
 - Added WP CLI command for optimizing images eg. `wp megaoptim optimize <ID> [--force] [--level=<option>]`
