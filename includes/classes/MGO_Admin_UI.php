@@ -316,7 +316,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 						'attachment'
 					) ),
 					'context'  => $current_screen->id,
-					'interval' => 4000,
+					'interval' => apply_filters( 'megaoptim_upload_ticker_interval', 4000 ),
 				),
 				'endpoints'      => array(
 					'profile'   => WP_MEGAOPTIM_API_PROFILE,

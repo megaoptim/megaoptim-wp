@@ -29,7 +29,7 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 	 */
 	protected function task( $item ) {
 
-		@set_time_limit(460);
+		@set_time_limit( 460 );
 
 		if ( count( $item ) == 0 ) {
 			return false;
@@ -38,7 +38,7 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 		$optimizer = MGO_Library::get_optimizer();
 
 		// NOTE: This will only work if all items are from the same attachment.
-		$attachment_id = $item[0]['attachment_id'];
+		$attachment_id  = $item[0]['attachment_id'];
 		$request_params = $item[0]['params'];
 
 		megaoptim_log( 'Optimizing images chunk of the attachment with id ' . $attachment_id . ' in background.' );
@@ -47,6 +47,7 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 			$attachment = new MGO_MediaAttachment( $attachment_id );
 		} catch ( \Exception $e ) {
 			megaoptim_log( '--- Attachment Exception: ' . $e->getMessage() );
+
 			return false; // Remove
 		}
 
@@ -67,6 +68,16 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 
 				// Run Optimizer
 				$response = $optimizer->run( $resources, $request_params );
+
+				if ( $response->isError() ) {
+					$error     = $response->getErrors();
+					$error_str = count( $error ) > 0 ? $error[0] : 'Unknown error.';
+					$attachment->set_attachment_data( 'full', array( 'error' => $error_str ), false );
+					$attachment->save();
+					$attachment->unlock();
+					return false;
+				}
+
 				megaoptim_log( '--- Response: ' . $response->getRawResponse() );
 
 				// Loop through the files and save the results.
@@ -90,12 +101,12 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 						$attachment->save();
 
 						// Save files
-						if($file->getSavedBytes() > 0 && $file->isSuccessfullyOptimized()) {
+						if ( $file->getSavedBytes() > 0 && $file->isSuccessfullyOptimized() ) {
 							$file->saveAsFile( $local_path );
 						}
 						$webp = $file->getWebP();
 						if ( ! is_null( $webp ) ) {
-							if($webp->getSavedBytes() > 0) {
+							if ( $webp->getSavedBytes() > 0 ) {
 								$webp->saveAsFile( $local_path . '.webp' );
 							}
 
@@ -118,12 +129,17 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 				}
 
 			} catch ( \Exception $e ) {
-				megaoptim_log( '--- Optimizer Exception: ' . $e->getMessage() . '. ('.json_encode($resources).')' );
+
+				megaoptim_log( '--- Optimizer Exception: ' . $e->getMessage() . '. (' . json_encode( $resources ) . ')' );
+
+				$attachment->set_attachment_data( 'full', array( 'error' => $e->getMessage() ), false );
+				$attachment->save();
 			}
 		}
 
 		// END
 		$attachment->unlock();
+
 		return false;
 	}
 }

@@ -157,7 +157,7 @@ class MGO_MediaAttachment extends MGO_Attachment {
 
 				return $backup_path;
 			} else {
-				megaoptim_log('Backup can not be created. Path to %s does not exists or is not writable.', $dir_path );
+				megaoptim_log( 'Backup can not be created. Path to %s does not exists or is not writable.', $dir_path );
 
 				return false;
 			}
@@ -242,7 +242,7 @@ class MGO_MediaAttachment extends MGO_Attachment {
 				}
 			}
 		}
-		if ( $include_retina && isset($this->data['retina']['thumbs']) ) {
+		if ( $include_retina && isset( $this->data['retina']['thumbs'] ) ) {
 			foreach ( $this->data['retina']['thumbs'] as $thumb ) {
 				if ( $thumb['saved_bytes'] > 0 ) {
 					$bytes += (float) $thumb['saved_bytes'];
@@ -312,6 +312,9 @@ class MGO_MediaAttachment extends MGO_Attachment {
 					$this->data['retina']['thumbs'][ $size ] = $params;
 				}
 			}
+		}
+		if ( $this->get_saved_bytes() > 0 ) {
+			$this->remove_error( $size );
 		}
 
 	}
@@ -491,7 +494,7 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	 * @return array
 	 */
 	public function get_retina() {
-		return isset($this->data['retina']) ? $this->data['retina'] : array();
+		return isset( $this->data['retina'] ) ? $this->data['retina'] : array();
 	}
 
 	/**
@@ -500,9 +503,10 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	 */
 	public function get_normal() {
 		$data = $this->data;
-		if(isset($data['retina'])) {
-			unset($data['retina']);
+		if ( isset( $data['retina'] ) ) {
+			unset( $data['retina'] );
 		}
+
 		return $data;
 	}
 
@@ -706,4 +710,52 @@ class MGO_MediaAttachment extends MGO_Attachment {
 			}
 		}
 	}
+
+	/**
+	 * Returns the error? Error can be set in the background task.
+	 *
+	 * @param $size
+	 *
+	 * @return bool
+	 */
+	public function get_error( $size ) {
+
+		if ( $size === 'full' ) {
+			return isset( $this->data['error'] ) && ! empty( $this->data['error'] ) ? $this->data['error'] : false;
+		} else {
+			return isset( $this->data['thumbs'][ $size ]['error'] ) && ! empty( $this->data['thumbs'][ $size ]['error'] ) ? $this->data['thumbs'][ $size ]['error'] : false;
+		}
+	}
+
+	/**
+	 * Is error?
+	 *
+	 * @param $size
+	 *
+	 * @return bool
+	 */
+	public function is_error( $size ) {
+		$error = $this->get_error( $size );
+
+		return false !== $error;
+	}
+
+	/**
+	 * Removes current error
+	 *
+	 * @param $size
+	 */
+	public function remove_error( $size ) {
+		if ( $size === 'full' ) {
+			if ( isset( $this->data['error'] ) ) {
+				unset( $this->data['error'] );
+			}
+		} else {
+			if ( isset( $this->data['thumbs'][ $size ]['error'] ) ) {
+				unset( $this->data['error'] );
+			}
+		}
+	}
+
+
 }

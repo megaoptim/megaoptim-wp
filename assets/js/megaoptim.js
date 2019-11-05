@@ -3,6 +3,7 @@
  */
 (function ($) {
     $.megaoptim = {};
+
     /**
      * MegaOptim Loader
      * @param params
@@ -125,7 +126,7 @@
     $.megaoptim.register = {};
     $.megaoptim.register.process_step = function (step, form_data, success) {
         $.ajax({
-            url: MegaOptim.ajax_url + '?action=megaoptim_api_register&step='+step+'&nonce=' + MegaOptim.nonce_default,
+            url: MegaOptim.ajax_url + '?action=megaoptim_api_register&step=' + step + '&nonce=' + MegaOptim.nonce_default,
             type: "POST",
             data: form_data,
             cache: false,
@@ -154,7 +155,7 @@
                             var $item = $('#mgo-' + i);
                             $item.addClass('mgo-error');
                             $item.find('.mgo-field-error').detach().remove();
-                            $item.append('<span class="mgo-field-error">' +  response.data.errors[i][0] + '</span>');
+                            $item.append('<span class="mgo-field-error">' + response.data.errors[i][0] + '</span>');
                         }
                     } else {
                         $('.mgo-form-group').each(function () {
@@ -167,7 +168,7 @@
                     }
                     break;
                 case 2:
-                    if(response.success) {
+                    if (response.success) {
                         $('#megaoptim-register-form-step2').hide();
                         $('#megaoptim-register-form-step3').show();
                         $self.closest('.remodal').find('.megaoptim-ok').detach().remove();
@@ -175,7 +176,7 @@
                         var $field = $('#mgo_api_key');
                         $field.addClass('mgo-error');
                         $field.find('.mgo-field-error').detach().remove();
-                        $field.append('<span class="mgo-field-error">' +  response.data + '</span>');
+                        $field.append('<span class="mgo-field-error">' + response.data + '</span>');
                     }
                     break;
             }
@@ -203,7 +204,7 @@
                 beforeSend: function () {
                     $wrapper.LoadingOverlay('show', {'size': 20});
                 },
-                data: {apikey: key, nonce : MegaOptim.nonce_settings},
+                data: {apikey: key, nonce: MegaOptim.nonce_settings},
                 success: function (response) {
                     if (!response.success) {
                         alert(response.data.error);
@@ -368,25 +369,45 @@
                         data: {processing: processing_items, context: MegaOptim.context.medialibrary},
                         success: function (response) {
                             if (response.success) {
+
+                                var $obj;
+                                var isOpen;
+                                var id;
+                                var current;
+                                var selector;
+
                                 for (var i in processing_items) {
-                                    var id = processing_items[i];
-                                    var current = getJObjectByID(response.data, id);
-                                    //console.log(current);
-                                    if (false !== current) {
-                                        if (!current.is_locked && !current.is_optimized) {
-                                            // Do nothing
-                                        } else {
-                                            if (MegaOptim.ticker.context === 'attachment') {
-                                                var selector = 'div.megaoptim_media_attachment';
-                                            } else {
-                                                var selector = '#post-' + current.id + ' td.megaoptim_media_attachment';
+
+                                    id = processing_items[i];
+                                    current = getJObjectByID(response.data, id);
+                                    $obj = $('#optimize-' + id);
+                                    isOpen = $obj.length > 0 && $obj.is(':checked');
+
+
+                                    if (MegaOptim.ticker.context === 'attachment') {
+                                        selector = 'div.megaoptim_media_attachment';
+                                    } else {
+                                        selector = '#post-' + current.id + ' td.megaoptim_media_attachment';
+                                    }
+
+                                    if (isOpen) {
+                                        continue; // Dropdown open? Skip.
+                                    }
+
+                                    if (current.hasOwnProperty('id')) {
+
+                                        //if ( $.megaoptim.current_attachment === id) {
+
+                                            if(current.is_error || current.is_optimized || current.is_locked) {
+                                                //$.megaoptim.current_attachment = null;
+                                                //$.megaoptim.current_attachment_tries = 0;
+                                                $(selector).html(current.html);
                                             }
-                                            $(selector).html(current.html);
-                                        }
+                                        //}
                                     }
                                 }
                             }
-                        }
+                        },
                     });
                 }
             }, MegaOptim.ticker.interval);
@@ -439,7 +460,6 @@
         if ($self.is(':disabled') || $self.hasClass('disabled')) {
             return;
         }
-
         var spinner = '<span class="megaoptim-spinner"></span>';
 
         var optimize_single_attachment = function ($self) {
@@ -461,13 +481,13 @@
                     $button.removeClass('button-primary').addClass('button disabled').html(spinner + ' ' + MegaOptim.strings.optimizing);
                 },
                 success: function (response) {
-                    if(!response.success) {
+                    if (!response.success) {
                         $button.addClass('button-primary').removeClass('button').removeClass('disabled').html(MegaOptim.strings.optimize);
                         $self.removeClass('megaoptim-optimizing');
                         alert(response.data.message);
                     }
                 },
-                error:function () {
+                error: function () {
                     $button.addClass('button-primary').removeClass('button').removeClass('disabled').html(MegaOptim.strings.optimize);
                     $self.removeClass('megaoptim-optimizing');
                     alert('HTTP Server Error. Please check error logs and contact your host or MegaOptim support.')
@@ -521,28 +541,28 @@
 // Admin settings conditional checkbox
 (function ($) {
     $('.megaoptim-checkbox-conditional').on('change', function () {
-        var target= $(this).data('target');
+        var target = $(this).data('target');
         var clearinputs = $(this).data('targetclearvalues') ? 1 : 0;
         var state = $(this).data('targetstate');
-        if(!state) {
+        if (!state) {
             state = 'disabled';
         }
-        if(target) {
+        if (target) {
             var $self = $(this);
             var $target = $(target);
-            if($target.length > 0) {
-                if($self.is(':checked')) {
-                    if(state === 'hide') {
+            if ($target.length > 0) {
+                if ($self.is(':checked')) {
+                    if (state === 'hide') {
                         $target.hide();
                     } else {
                         $target.prop(state, false);
                     }
-                    if(clearinputs) {
+                    if (clearinputs) {
                         $target.val('');
                         $target.find('input').val('');
                     }
                 } else {
-                    if(state === 'hide') {
+                    if (state === 'hide') {
                         $target.show();
                     } else {
                         $target.prop(state, true);
@@ -554,14 +574,14 @@
 })(jQuery);
 
 // Show/Hide Detailed Stats
-(function($){
-    $(document).on('click', '.megaoptim-see-stats', function(e){
+(function ($) {
+    $(document).on('click', '.megaoptim-see-stats', function (e) {
         e.preventDefault();
         var $self = $(this);
         var $wrap = $self.closest('.megaoptim-attachment-buttons');
-        var $tbl  = $wrap.find('.megaoptim-attachment-stats');
+        var $tbl = $wrap.find('.megaoptim-attachment-stats');
 
-        if($tbl.is(':hidden')) {
+        if ($tbl.is(':hidden')) {
             $tbl.show();
             $self.text(MegaOptim.strings.hide_thumbnail_info);
         } else {
@@ -572,20 +592,20 @@
 })(jQuery);
 
 // WebP management
-(function($){
-    $('#webp_create').on('change', function(){
+(function ($) {
+    $('#webp_create').on('change', function () {
         var $additional = $('#webp_create_additional');
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $additional.show();
         } else {
             $additional.hide();
         }
     });
-    $('#webp_delivery_method').on('change', function(){
+    $('#webp_delivery_method').on('change', function () {
         var value = $(this).val();
-        var $explanationWrap = $('#megaoptim-webp_delivery_method-'+value);
+        var $explanationWrap = $('#megaoptim-webp_delivery_method-' + value);
         $('.megaoptim-explanation-wrapper').hide();
-        if($explanationWrap.length > 0) {
+        if ($explanationWrap.length > 0) {
             $explanationWrap.show();
         }
     })

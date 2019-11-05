@@ -13,6 +13,10 @@ if ( ! empty( $retina_full['full'] ) ) {
 
 
 $success_icon = '<img src="' . WP_MEGAOPTIM_ASSETS_URL . '/img/check.png" alt="Success" width="12px"/>';
+$error_icon   = '<img src="' . WP_MEGAOPTIM_ASSETS_URL . '/img/error.png" alt="Success" width="12px"/>';
+
+$error = $data->get_error( 'full' );
+
 ?>
 
 <div class="megaoptim-attachment-buttons">
@@ -48,7 +52,8 @@ $success_icon = '<img src="' . WP_MEGAOPTIM_ASSETS_URL . '/img/check.png" alt="S
         </div>
         <div class="megaoptim-attachment-info-row megaoptim-attachment-actions">
             <p>
-                <a href="#" class="button megaoptim-see-stats"><?php _e( 'Show More Info', 'megaoptim-image-optimizer' ); ?></a>
+                <a href="#"
+                   class="button megaoptim-see-stats"><?php _e( 'Show More Info', 'megaoptim-image-optimizer' ); ?></a>
 				<?php if ( $data->has_backup() ): ?>
                     <a data-attachmentid="<?php echo $data->get_id(); ?>" data-context="<?php echo $context; ?>"
                        class="button megaoptim-optimize-restore"><?php _e( 'Restore', 'megaoptim-image-optimizer' ); ?></a>
@@ -60,8 +65,8 @@ $success_icon = '<img src="' . WP_MEGAOPTIM_ASSETS_URL . '/img/check.png" alt="S
                 <table>
                     <thead>
                     <tr>
-                        <th><?php _e('Thumbnail', 'megaoptim-image-optimizer'); ?></th>
-                        <th><?php _e('Details', 'megaoptim-image-optimizer'); ?></th>
+                        <th><?php _e( 'Thumbnail', 'megaoptim-image-optimizer' ); ?></th>
+                        <th><?php _e( 'Details', 'megaoptim-image-optimizer' ); ?></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -102,16 +107,26 @@ $success_icon = '<img src="' . WP_MEGAOPTIM_ASSETS_URL . '/img/check.png" alt="S
         <p>
             <a disabled="disabled" class="button megaoptim-optimize megaoptim-optimizing disabled"
                data-context="<?php echo $context; ?>" data-attachmentid="<?php echo $data->get_id(); ?>"><span
-                        class="megaoptim-spinner"></span> Optimizing...</a>
+                        class="megaoptim-spinner"></span> <?php _e('Optimizing...', 'megaoptim-image-optimizer'); ?></a>
         </p>
 	<?php else: ?>
+
+		<?php
+		if ( false !== $error ) {
+			$optimize_label = __( 'Re-Optimize', 'megaoptim-image-optimizer' );
+			$message        = "{$error_icon} <strong>" . __( 'Error' ) . "</strong>: {$error}";
+			echo '<p>' . $message . '</p>';
+		} else {
+			$optimize_label = __( 'Optimize', 'megaoptim-image-optimizer' );
+		}
+		?>
         <div class="megaoptim-dropdown megaoptim-optimize megaoptim-optimize-attachment"
              data-context="<?php echo $context; ?>" data-attachmentid="<?php echo $data->get_id(); ?>">
             <!-- Optimize button start -->
             <input type="checkbox" id="optimize-<?php echo $data->get_id(); ?>" value=""
                    name="optimize-<?php echo $data->get_id(); ?>">
             <label for="optimize-<?php echo $data->get_id(); ?>" class="button-primary"
-                   data-toggle="dropdown"><?php _e( 'Optimize', 'megaoptim-image-optimizer' ); ?></label>
+                   data-toggle="dropdown"><?php echo $optimize_label; ?></label>
             <ul>
                 <li>
                     <a class="megaoptim-optimize-run" data-compression="ultra"

@@ -519,7 +519,7 @@ class MGO_Ajax extends MGO_BaseObject {
 			if ( ! is_null( $stats ) ) {
 				wp_send_json_success( $stats );
 			} else {
-				wp_send_json_error( __('Unsupported context.', 'megaoptim-image-optimizer') );
+				wp_send_json_error( __( 'Unsupported context.', 'megaoptim-image-optimizer' ) );
 			}
 		}
 		die;
@@ -720,6 +720,7 @@ class MGO_Ajax extends MGO_BaseObject {
 								'id'           => $attachment->get_id(),
 								'is_locked'    => $attachment->is_locked(),
 								'is_optimized' => $attachment->is_processed(),
+								'is_error'     => $attachment->is_error( 'full' ),
 								'html'         => MGO_MediaLibrary::instance()->get_attachment_buttons( $attachment )
 							);
 
