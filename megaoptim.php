@@ -23,9 +23,4 @@ define( 'WP_MEGAOPTIM_PLUGIN_FILE_PATH', __FILE__ );
 require_once( WP_MEGAOPTIM_PATH . 'includes' . DIRECTORY_SEPARATOR  . 'loader.php' );
 
 
-var_dump(megaoptim_is_wp_accessible_from_public());
-die;
-
-
-
 
