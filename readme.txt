@@ -2,17 +2,17 @@
 Contributors: megaoptim, darkog
 Tags: image optimizer, image compression, pagespeed, compress, optimize images, image optimiser, image compressor, optimize images, optimize jpg, compress jpg, compress png, compress retina
 Requires at least: 3.6
-Tested up to: 5.2.4
-Requires PHP: 5.3.0
-Stable tag: 1.4.1
+Tested up to: 5.3
+Requires PHP: 5.3
+Stable tag: 1.4.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Compress your images to speed up your site and boost your SEO. Compatible with any gallery or slider.
+Optimize and compress your images to speed up your site and boost your SEO.
 
 == Description ==
 
-**MegaOptim is image optimization plugin/service and that is easy to use, stable and actively maintained by dedicated team behind.**
+**MegaOptim is image optimization plugin/service and that is easy to use, stable and actively maintained by dedicated team of experts :)**
 
 The plugin uses minimal resources on your server and all the heavy lifting is done by our API service on our servers. No binaries will be ever installed on your server that will slowdown your site.
 
@@ -134,6 +134,11 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 10.WP CLI - Bulk Restore command
 
 == Changelog ==
+
+= 1.4.2 =
+- Compatibility with WordPress 5.3
+- Improved image URL validation functionality
+- Improved public site detection functionality.
 
 = 1.4.1 =
 

@@ -166,6 +166,7 @@ class Optimizer {
 
 	/**
 	 * Returns the results of the process
+	 *
 	 * @param $process_id
 	 * @param int $max_wait_seconds
 	 *
@@ -211,17 +212,19 @@ class Optimizer {
 			$is_url  = 0;
 			$is_file = 0;
 			foreach ( $resource as $file ) {
-				if ( URL::validate( $file ) ) {
-					$is_url  = 1;
+
+				if ( file_exists( $file ) && is_file( $file ) ) {
+					$is_file = 1;
+					$is_url  = 0;
+				} else if ( file_exists( $file ) && is_dir( $file ) ) {
 					$is_file = 0;
+					$is_url  = 0;
+				} else if ( URL::validate( $file ) ) {
+					$is_file = 0;
+					$is_url  = 1;
 				} else {
-					if ( file_exists( $file ) ) {
-						$is_url  = 0;
-						$is_file = 1;
-					} else {
-						$is_url  = 0;
-						$is_file = 0;
-					}
+					$is_file = 0;
+					$is_url  = 0;
 				}
 			}
 			if ( $is_url ) {
@@ -313,11 +316,11 @@ class Optimizer {
 	 *
 	 * @return bool
 	 */
-	public static function valid_compression_level($level) {
-		return in_array($level, array(
+	public static function valid_compression_level( $level ) {
+		return in_array( $level, array(
 			self::COMPRESSION_LOSSLESS,
 			self::COMPRESSION_INTELLIGENT,
 			self::COMPRESSION_ULTRA,
-		));
+		) );
 	}
 }
