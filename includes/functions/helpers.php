@@ -330,19 +330,28 @@ function megaoptim_is_ip_private( $ip ) {
  */
 function megaoptim_is_wp_accessible_from_public() {
 
-	if ( ! $is_accessible_from_public = megaoptim_cache_get( 'is_accessible_from_public' ) ) {
+	$is_accessible_from_public = megaoptim_cache_get( 'is_accessible_from_public' );
+
+	if ( false === $is_accessible_from_public ) {
 		$parts = parse_url( site_url() );
 		$host  = $parts['host'];
 		$ip    = @gethostbyname( $host );
+		if ( false === $ip ) {
+			// One more try to avoid CNAME on www.
+			if ( megaoptim_contains( $host, 'www.' ) ) {
+				$host = str_replace( 'www.', '', $host );
+				$ip   = @gethostbyname( $host );
+			}
+		}
 		if ( $ip === false ) {
-			$is_accessible_from_public = false;
+			$is_accessible_from_public = 0;
 		} else {
-			$is_accessible_from_public = ! megaoptim_is_ip_private( $ip );
+			$is_accessible_from_public = megaoptim_is_ip_private( $ip ) ? 0 : 1;
 		}
 		megaoptim_cache_set( 'is_accessible_from_public', $is_accessible_from_public, MEGAOPTIM_ONE_HOUR_IN_SECONDS );
 	}
 
-	return apply_filters( 'megaoptim_public_site', $is_accessible_from_public );
+	return (bool) apply_filters( 'megaoptim_public_site', $is_accessible_from_public );
 }
 
 /**
