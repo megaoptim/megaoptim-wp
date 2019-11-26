@@ -688,7 +688,6 @@ span.mgo-field-error {
 .directory .megaoptim-select-directory {
     display: none;
 }
-
 .directory:hover .megaoptim-select-directory {
     display: inline-block;
 }
@@ -706,6 +705,10 @@ UL.jqueryFileTree A {
     background-color: green;
     color: #fff;
     display: inline-block;
+}
+
+.directory:hover .megaoptim-select-directory {
+    border: 1px solid #000;
 }
 
 #megaoptim-folder-toptimizer div#megaoptim-stats {
@@ -1161,4 +1164,8 @@ UL.jqueryFileTree A {
     list-style: disc !important;
     margin-left: 31px !important;
     padding-left: inherit;
+}
+
+.loadingoverlay {
+    z-index: 99998 !important;
 }

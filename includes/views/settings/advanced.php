@@ -42,11 +42,6 @@ $cf_email   = $settings->get( MGO_Settings::CLOUDFLARE_EMAIL );
 ?>
 <div class="megaoptim-postbox">
     <form class="content-wrapper" method="POST" id="megaoptim_save_form" data-action="megaoptim_save_advanced_settings">
-        <div class="megaoptim-form-header">
-            <div class="megaoptim-full">
-                <h3 class="content-header"><?php _e( 'Advanced Settings', 'megaoptim-image-optimizer' ); ?></h3>
-            </div>
-        </div>
         <div class="megaoptim-field-group" id="save_status"></div>
 
         <div class="megaoptim-field-group">

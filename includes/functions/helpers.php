@@ -627,8 +627,7 @@ function megaoptim_raise_memory_limit() {
  * @return bool
  */
 function megaoptim_dir_contains_images( $path ) {
-	$files = glob( $path . DIRECTORY_SEPARATOR . "*.{jpg,jpeg,png,gif}", GLOB_BRACE );
-
+	$files = megaoptim_find_images_non_recursively( $path );
 	return ! empty( $files );
 }
 
@@ -645,28 +644,50 @@ function megaoptim_dir_contains_children( $dir ) {
 		while ( ! $result && ( $file = readdir( $dh ) ) !== false ) {
 			$result = $file !== "." && $file !== "..";
 		}
-
 		closedir( $dh );
 	}
 
 	return $result;
 }
 
+/**
+ * Get the images in specific folder non-recursively.
+ *
+ * @param $path
+ *
+ * @return array|false
+ */
+function megaoptim_find_images_non_recursively( $path ) {
+	$files = glob( $path . DIRECTORY_SEPARATOR . "*.{jpg,jpeg,png,gif}", GLOB_BRACE );
+	if(!empty($files)) {
+		foreach($files as $key => $file) {
+			$files[$key] = realpath($files[$key]);
+		}
+	}
+	return $files;
+}
 
 /**
  * Get the dir contents recursively.
  *
  * @param $dir
  *
+ * @param bool $recursive
+ *
  * @return array
  */
-function megaoptim_find_images( $dir ) {
+function megaoptim_find_images( $dir, $recursive = false ) {
+
+	if ( ! $recursive ) {
+		return megaoptim_find_images_non_recursively( $dir );
+	}
+
 	$direcotry_iterator = new RecursiveDirectoryIterator( $dir );
 	$iterator           = new RecursiveIteratorIterator( $direcotry_iterator );
 	$r_iterator         = new RegexIterator( $iterator, '/^.+(.jpe?g|.png|.gif)$/i', RecursiveRegexIterator::GET_MATCH );
 	$images             = array();
 	foreach ( $r_iterator as $image ) {
-		array_push( $images, $image[0] );
+		array_push( $images, realpath( $image[0] ) );
 	}
 
 	return $images;
@@ -927,6 +948,7 @@ function megaoptim_create_datetime( $value, $format = 'Y-m-d' ) {
 
 /**
  * Check the ajax referer
+ *
  * @param $nonce_name
  * @param $query_parameter_key
  *

@@ -39,7 +39,7 @@ class Optimizer {
 	const RESOURCE_FILES = 'files';
 	const MAX_ALLOWED_RESOURCES = 5;
 
-	const VERSION = '1.0.2';
+	const VERSION = '1.0.5';
 	/**
 	 * @var string
 	 */

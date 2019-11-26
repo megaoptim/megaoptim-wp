@@ -27,10 +27,7 @@
             },
             success: success,
             complete: function () {
-                setTimeout(function(){
-                    loader.stop();
-                },3000)
-
+                loader.stop();
             }
         });
     };
@@ -91,7 +88,8 @@
         } else {
             var instance = $(this).closest('.remodal').remodal();
             var path = jQuery("UL.jqueryFileTree LI.directory.megaoptim-directory-selected A").attr("rel");
-            $.prepare_processor(path);
+            var recursive = $('#recursive').is(':checked');
+            $.prepare_processor(path, {recursive: recursive ? 1 : 0});
             instance.close();
         }
     });
@@ -99,6 +97,11 @@
     $(document).on('click', '.megaoptim-optimize-theme-folder', function (e) {
         var path = $(this).data('themedir');
         $.prepare_processor(path, {recursive: 1});
+    });
+
+    $(document).on('click', '#megaoptim-select-folder', function(e){
+        var instance = $('#megaoptim-dir-select').remodal({ hashTracking: false });
+        instance.open();
     });
 
     function main() {

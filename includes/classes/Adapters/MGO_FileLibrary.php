@@ -44,6 +44,12 @@ class MGO_FileLibrary extends MGO_Library {
 	 */
 	public function optimize( $attachment, $params = array() ) {
 
+		if ( is_string( $attachment ) ) {
+			if ( file_exists( $attachment ) ) {
+				$attachment = new MGO_File( $this->get_image( $attachment ) );
+			}
+		}
+
 		$result = new MGO_ResultBag();
 
 		//Dont go further if not connected
@@ -61,7 +67,7 @@ class MGO_FileLibrary extends MGO_Library {
 
 		// Bail if no tokens left.
 		$tokens = $profile->get_tokens_count();
-		if ( $tokens != -1 && $tokens <= 0 ) {
+		if ( $tokens != - 1 && $tokens <= 0 ) {
 			throw new MGO_Exception( 'No tokens left. Please top up your account at https://megaoptim.com/dashboard in order to continue.' );
 		}
 
@@ -73,10 +79,12 @@ class MGO_FileLibrary extends MGO_Library {
 
 		/**
 		 * Fired before the optimization of the attachment
-		 * @since 1.0
 		 *
 		 * @param MGO_FileAttachment $attachment_object
 		 * @param array $request_params
+		 *
+		 * @since 1.0
+		 *
 		 */
 		do_action( 'megaoptim_before_optimization', $attachment_object, $request_params );
 
@@ -101,10 +109,10 @@ class MGO_FileLibrary extends MGO_Library {
 				megaoptim_log( $response->getErrors() );
 			} else {
 				foreach ( $response->getOptimizedFiles() as $file ) {
-					if($file->getSavedBytes() > 0 && $file->isSuccessfullyOptimized()) {
+					if ( $file->getSavedBytes() > 0 && $file->isSuccessfullyOptimized() ) {
 						$file->saveAsFile( $attachment->path );
 					}
-					$result->total_full_size++;
+					$result->total_full_size ++;
 					$result->total_saved_bytes += $file->getSavedBytes();
 				}
 				$attachment_object->set_data( $response, $request_params );
@@ -118,17 +126,20 @@ class MGO_FileLibrary extends MGO_Library {
 				 * Fired when attachment is successfully optimized.
 				 * Tip: Use instanceof $attachment_object to check what kind of attachment was optimized.
 				 * Attachemnt object get_id() returns md5 hash of the file path. The get_path() method returns the path.
-				 * @since 1.0.0
 				 *
 				 * @param MGO_FileAttachment $attachment_object - The media attachment. Useful to check with instanceof.
 				 * @param \MegaOptim\Responses\Response $response - The api request response
 				 * @param array $request_params - The api request parameters
 				 * @param string $size
+				 *
+				 * @since 1.0.0
+				 *
 				 */
 				do_action( 'megaoptim_attachment_optimized', $attachment_object, $resource, $response, $request_params, $size = 'full' );
 			}
 
 			$result->set_attachment( $attachment_object );
+
 			return $result;
 		} catch ( Exception $e ) {
 			throw new MGO_Exception( $e->getMessage() . ' in ' . $e->getFile() );
@@ -144,8 +155,31 @@ class MGO_FileLibrary extends MGO_Library {
 	 *
 	 * @return void
 	 */
-	public function optimize_async( $attachment, $params = array(), $type = 'any') {
+	public function optimize_async( $attachment, $params = array(), $type = 'any' ) {
 		// TODO: Implement optimize_async() method.
+	}
+
+
+	/**
+	 * Returns image path
+	 *
+	 * @param $path
+	 *
+	 * @return array
+	 */
+	public function get_image( $path ) {
+
+		$file_id = md5( $path );
+		$url     = get_site_url() . '/' . str_replace( megaoptim_get_wp_root_path() . '/', '', $path );
+
+		return array(
+			'ID'        => $file_id,
+			'title'     => megaoptim_basename( $path ),
+			'thumbnail' => $url,
+			'directory' => dirname( $path ),
+			'path'      => $path,
+			'url'       => $url,
+		);
 	}
 
 	/**
@@ -159,16 +193,7 @@ class MGO_FileLibrary extends MGO_Library {
 		foreach ( $types as $ext ) {
 			$found_files = glob( $directory . "*." . $ext );
 			foreach ( $found_files as $file ) {
-				$file_id = md5( $file );
-				$url     = get_site_url() . '/' . str_replace( megaoptim_get_wp_root_path() . '/', '', $file );
-				array_push( $file_list, array(
-					'ID'        => $file_id,
-					'title'     => megaoptim_basename( $file ),
-					'thumbnail' => $url,
-					'directory' => $directory,
-					'path'      => $file,
-					'url'       => $url,
-				) );
+				array_push( $file_list, $this->get_image( $file ) );
 			}
 			array_merge( $file_list, $found_files );
 		}
@@ -178,6 +203,7 @@ class MGO_FileLibrary extends MGO_Library {
 
 	/**
 	 * Returns all the images for specific directory
+	 *
 	 * @param $directory
 	 *
 	 * @return array
@@ -231,7 +257,7 @@ class MGO_FileLibrary extends MGO_Library {
 		if ( isset( $additional_data['recursive'] ) && $additional_data['recursive'] == 1 ) {
 			$stats       = new MGO_Stats();
 			$directories = array();
-			$files       = megaoptim_find_images( $directory );
+			$files       = megaoptim_find_images( $directory, true );
 			foreach ( $files as $file ) {
 				array_push( $directories, dirname( $file ) . DIRECTORY_SEPARATOR );
 			}

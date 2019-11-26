@@ -47,7 +47,7 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
                                     <?php else: ?>
                                         <a id="megaoptim-select-current-theme-folder" class="button-primary megaoptim-optimize-theme-folder" data-themedir="<?php echo get_template_directory(); ?>" class="button-primary"><?php _e('Scan theme folder', 'megaoptim-image-optimizer'); ?></a>
                                     <?php endif; ?>
-	                                <?php _e('or', 'megaoptim-image-optimizer'); ?> <a id="megaoptim-select-folder" href="#megaoptim-dir-select" class="button-default"><?php _e('Select custom folder', 'megaoptim-image-optimizer'); ?></a>
+	                                <a id="megaoptim-select-folder" href="#" class="button-primary"><?php _e('Select custom folder', 'megaoptim-image-optimizer'); ?></a>
                                 </p>
                             </div>
                             <div id="megaoptim-selected-folder" style="display: none;" class="megaoptim-actions">
@@ -56,7 +56,7 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
                              <?php echo megaoptim_get_view('parts/out-of-tokens'); ?>
                             <div class="megaoptim-actions">
                                 <p>
-                                    <a disabled=disabled class="button-primary"><?php _e('Select custom folder', 'megaoptim-image-optimizer'); ?></a> <?php _e('or', 'megaoptim-image-optimizer'); ?>
+                                    <a disabled=disabled class="button-primary"><?php _e('Select custom folder', 'megaoptim-image-optimizer'); ?></a>
                                     <a disabled=disabled class="button-primary"><?php _e('Scan theme folder', 'megaoptim-image-optimizer'); ?></a>
                                 </p>
                             </div>

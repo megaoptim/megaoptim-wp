@@ -4,7 +4,7 @@ Tags: image optimizer, image compression, pagespeed, compress, optimize images, 
 Requires at least: 3.6
 Tested up to: 5.3
 Requires PHP: 5.3
-Stable tag: 1.4.2
+Stable tag: 1.4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -134,6 +134,11 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 10.WP CLI - Bulk Restore command
 
 == Changelog ==
+
+= 1.4.3 =
+- Added file/directory support to `wp megaoptim optimize` command. You can now optimize files and folders by specifying path.
+- Improved file optimizer
+- Improved UI
 
 = 1.4.2 =
 - Compatibility with WordPress 5.3

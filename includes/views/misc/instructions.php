@@ -65,8 +65,8 @@
         <div class="megaoptim-row megaoptim-mb-10">
             <div class="megaoptim-colf">
                 <div class="megaoptim-extra">
-                    <h4 class="navy"><?php _e( 'Referral program', 'megaoptim-image-optimizer' ); ?></h4>
-                    <p><?php echo sprintf( __( 'We have a referral program available for everyone. Help us spread by sharing your %s with your friends and get %s on each signup and %s when the referral subscribes to any plan.' ), '<strong><a target="_blank" href="https://app.megaoptim.com/referral">' . __( 'referral url', 'megaoptim-image-optimizer' ) . '</a></strong>', '<strong>' . __( '120 tokens', 'megaoptim-image-optimizer' ) . '</strong>', '<strong>' . __( '500 tokens', 'megaoptim-image-optimizer' ) . '</strong>' ); ?></p>
+                    <h4 class="navy"><?php _e( 'Developer Happiness', 'megaoptim-image-optimizer' ); ?> :)</h4>
+                    <p><?php echo sprintf(__('If you are developer or you already know about WP CLI, click %s to read more about how to use our new WP CLI commands to optimize images from your command-line interface.', 'megaoptim-image-optimizer'), '<a target="_blank" href="http://megaoptim.com/wpcli">'.__('here', 'megaoptim-image-optimizer').'</a>'); ?></p>
                 </div>
             </div>
         </div>

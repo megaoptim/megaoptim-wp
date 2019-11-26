@@ -18,7 +18,6 @@
  * along with MegaOptim Image Optimizer. If not, see <https://www.gnu.org/licenses/>.
  **********************************************************************/
 
-
 class MGO_CLI {
 
 	/**
@@ -49,7 +48,6 @@ class MGO_CLI {
 
 			WP_CLI::error( __( 'Not connected. To set your api key type: wp megaoptim set_api_key=your-api-key', 'megaoptim-image-optimizer' ), false );
 			WP_CLI::error( __( 'If you do not have api key. Please sign up at https://megaoptim.com/register', 'megaoptim-image-optimizer' ) );
-
 		}
 
 	}
@@ -93,22 +91,32 @@ class MGO_CLI {
 	 *   - lossless
 	 * ---
 	 *
+	 * [--recursive]
+	 * : Only used when optimizing directory
+	 *
 	 * ## EXAMPLES
 	 *
 	 *     wp megaoptim optimize 5
 	 *     wp megaoptim optimize 5 --force
+	 *     wp megaoptim optimize /path/to/file.jpg
+	 *     wp megaoptim optimize /path/to/folder
+	 *     wp megaoptim optimize /path/to/folder --recursive
 	 *
 	 */
 	public function optimize( $args1, $args2 ) {
 
-		$ID = (int) $args1[0];
+		$ID = $args1[0];
 
-		$force = 0;
-		$level = '';
+		$force     = 0;
+		$recursive = 0;
+		$level     = '';
 
 		// Collect the optional parameters
 		if ( isset( $args2['force'] ) ) {
 			$force = (int) $args2['force'];
+		}
+		if ( isset( $args2['recursive'] ) ) {
+			$recursive = (int) $args2['recursive'];
 		}
 		if ( isset( $args2['level'] ) ) {
 			$level = $args2['level'];
@@ -119,35 +127,36 @@ class MGO_CLI {
 			}
 		}
 
-		// Attemtpt to optimize
-		try {
-			$params     = array();
-			$attachment = new MGO_MediaAttachment( $ID );
-			// If force, first restore it.
-			if ( $force ) {
-				if ( $attachment->has_backup() ) {
-					$attachment->restore();
+		if ( file_exists( $ID ) ) { // File path
+			$path = $ID;
+			if ( is_dir( $ID ) ) {
+				$images = megaoptim_find_images( $path, $recursive );
+				if ( ! empty( $images ) ) {
+					$total = 0;
+					WP_CLI::success( __( 'Images found ' ) . ': ' . count( $images ) );
+					foreach ( $images as $image ) {
+						$r = $this->optimize_file( $image, $force, $level );
+						if ( ! is_null( $r ) ) {
+							$total += $r->total_saved_bytes;
+						}
+					}
+					WP_CLI::success( __( 'Total saved on all images ' ) . ': ' . megaoptim_human_file_size( $total ) );
+				} else {
+					WP_CLI::error( __( 'No images found in directory' ) . ': ' . $path );
 				}
+			} else {
+				$this->optimize_file( $path, $force, $level );
 			}
-			// Setup params
-			if ( ! empty( $level ) ) {
-				$params['compression'] = $level;
-			}
-			// Other params
-			// ...
-
-			// Optimize now
-			$result  = MGO_MediaLibrary::instance()->optimize( $attachment, $params );
-			$message = sprintf( __( 'Attachment %s optimized. Total thumbnails %s, Total saved %s', 'megaoptim-image-optimizer' ), $ID, $result->total_thumbnails, megaoptim_human_file_size( $result->total_saved_bytes ) );
-			\WP_CLI::success( $message );
-		} catch ( MGO_Attachment_Already_Optimized_Exception $e ) {
-			$message = sprintf( __( 'Attachment already %s optimized. No further optimization needed.', 'megaoptim-image-optimizer' ), $ID );
-			\WP_CLI::success( $message );
-		} catch ( \Exception $e ) {
-			$message = sprintf( __( 'Attachment %s not optimized. Reason: %s', 'megaoptim-image-optimizer' ), $ID, $e->getMessage() );
-			\WP_CLI::warning( $message );
+		} else if ( is_numeric( $ID ) ) { // Media attachment
+			$ID = (int) $ID;
+			$this->optimize_media_library( $ID, $force, $level );
+		} else { // Unknown
+			WP_CLI::error( __( 'Parameter 1 should be ID, path to image or path to folder with images.' ) );
 		}
+
+
 	}
+
 
 	/**
 	 * Optimizes Media Library images in bulk mode.
@@ -361,6 +370,76 @@ class MGO_CLI {
 		}
 
 	}
+
+	/////////////////////////// UTILS ///////////////////////
+
+	/**
+	 * Optimize single file
+	 *
+	 * @param $file
+	 * @param $force
+	 * @param $level
+	 *
+	 * @return MGO_ResultBag
+	 */
+	public static function optimize_file( $file, $force, $level ) {
+		$params = array();
+		// Setup params
+		if ( ! empty( $level ) ) {
+			$params['compression'] = $level;
+		}
+		try {
+			$result  = MGO_FileLibrary::instance()->optimize( $file, $params );
+			$message = sprintf( __( 'File %s optimized. Total saved %s', 'megaoptim-image-optimizer' ), $file, megaoptim_human_file_size( $result->total_saved_bytes ) );
+			\WP_CLI::success( $message );
+
+			return $result;
+		} catch ( MGO_Attachment_Already_Optimized_Exception $e ) {
+			$message = sprintf( __( 'File already %s optimized. No further optimization needed.', 'megaoptim-image-optimizer' ), $file );
+			\WP_CLI::success( $message );
+		} catch ( MGO_Exception $e ) {
+			$message = sprintf( __( 'File %s not optimized. Reason: %s', 'megaoptim-image-optimizer' ), $file, $e->getMessage() );
+			\WP_CLI::warning( $message );
+		}
+
+		return null;
+	}
+
+	/**
+	 * Optimize single media library attachment
+	 *
+	 * @param $ID
+	 * @param $force
+	 * @param $level
+	 */
+	public static function optimize_media_library( $ID, $force, $level ) {
+		// Attemtpt to optimize
+		try {
+			$params     = array();
+			$attachment = new MGO_MediaAttachment( $ID );
+			// If force, first restore it.
+			if ( $force ) {
+				if ( $attachment->has_backup() ) {
+					$attachment->restore();
+				}
+			}
+			// Setup params
+			if ( ! empty( $level ) ) {
+				$params['compression'] = $level;
+			}
+			// Optimize now
+			$result  = MGO_MediaLibrary::instance()->optimize( $attachment, $params );
+			$message = sprintf( __( 'Attachment %s optimized. Total thumbnails %s, Total saved %s', 'megaoptim-image-optimizer' ), $ID, $result->total_thumbnails, megaoptim_human_file_size( $result->total_saved_bytes ) );
+			\WP_CLI::success( $message );
+		} catch ( MGO_Attachment_Already_Optimized_Exception $e ) {
+			$message = sprintf( __( 'Attachment already %s optimized. No further optimization needed.', 'megaoptim-image-optimizer' ), $ID );
+			\WP_CLI::success( $message );
+		} catch ( \Exception $e ) {
+			$message = sprintf( __( 'Attachment %s not optimized. Reason: %s', 'megaoptim-image-optimizer' ), $ID, $e->getMessage() );
+			\WP_CLI::warning( $message );
+		}
+	}
+
 
 }
 

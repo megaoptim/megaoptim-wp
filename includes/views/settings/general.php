@@ -33,11 +33,6 @@ $http_pass     = MGO_Settings::instance()->get(MGO_Settings::HTTP_PASS );
 ?>
 <div class="megaoptim-postbox">
     <form class="content-wrapper" method="POST" id="megaoptim_save_form" data-action="megaoptim_save_settings">
-        <div class="megaoptim-form-header">
-            <div class="megaoptim-full">
-                <h3 class="content-header"><?php _e( 'General Settings', 'megaoptim-image-optimizer' ); ?></h3>
-            </div>
-        </div>
         <div class="megaoptim-field-group" id="save_status"></div>
         <div class="megaoptim-field-group">
             <div class="megaoptim-field-group-inner">

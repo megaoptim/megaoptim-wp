@@ -369,7 +369,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 				'strings'       => array(
 					'alert_select_files'  => __( 'Please select a folder you want to optimize from the list.', 'megaoptim-image-optimizer' ),
 					'info_optimized'      => '<p>' . __( 'Congratulations! This folder is fully optimized. Come back later when there are more images.', 'megaoptim-image-optimizer' ) . '</p>',
-					'info_not_optimized'  => '<p>' . sprintf( '%s: ', __( 'In order the plugin to work, you need to keep the tab open, you can always open a %s and continue in that tab. If you close this tab the optimizer will stop but don\'t worry, you can always continue later from where you stopped.', 'megaoptim-image-optimizer' ) ) . '</p>',
+					'info_not_optimized'  => '<p>' . __('In order the plugin to work, you need to keep the tab open, you can always open a new tab and continue in that tab. If you close this tab the optimizer will stop but don\'t worry, you can always continue later from where you stopped.','megaoptim-image-optimizer') . '</p>',
 					'selected_folder'     => __( 'Selected Folder', 'megaoptim-image-optimizer' ),
 					'loading_title'       => __( 'Scanning...', 'megaoptim-image-optimizer' ),
 					'loading_description' => __( 'We are currently scanning the selected folder for unoptimized images. Once finished if any unoptimized images are found you will be able to start optimizing.', 'megaoptim-image-optimizer' )

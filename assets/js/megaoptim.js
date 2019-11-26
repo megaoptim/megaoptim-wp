@@ -290,7 +290,7 @@
         if (confirm(MegaOptim.strings.backup_delete_confirm)) {
             var status = false;
             var $self = $(this);
-            var spinner = '<span class="megaoptim-spinner"></span>';
+            var spinner = '<span class="megaoptim-spinner" style="height: 15px;width: 15px;top:2px;position: relative;margin-right: 3px;"></span>';
             if (!$self.is(':disabled') || !$self.hasClass('disabled')) {
                 var action = 'megaoptim_empty_backup_dir';
                 var context = $(this).data('context');
@@ -398,11 +398,11 @@
 
                                         //if ( $.megaoptim.current_attachment === id) {
 
-                                            if(current.is_error || current.is_optimized || current.is_locked) {
-                                                //$.megaoptim.current_attachment = null;
-                                                //$.megaoptim.current_attachment_tries = 0;
-                                                $(selector).html(current.html);
-                                            }
+                                        if (current.is_error || current.is_optimized || current.is_locked) {
+                                            //$.megaoptim.current_attachment = null;
+                                            //$.megaoptim.current_attachment_tries = 0;
+                                            $(selector).html(current.html);
+                                        }
                                         //}
                                     }
                                 }
