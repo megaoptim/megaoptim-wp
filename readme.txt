@@ -4,7 +4,7 @@ Tags: image optimizer, image compression, pagespeed, compress, optimize images, 
 Requires at least: 3.6
 Tested up to: 5.3
 Requires PHP: 5.3
-Stable tag: 1.4.3
+Stable tag: 1.4.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -134,6 +134,9 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 10.WP CLI - Bulk Restore command
 
 == Changelog ==
+
+= 1.4.4 =
+- Added W3 Offload Media (Lite/Pro) support
 
 = 1.4.3 =
 - Added file/directory support to `wp megaoptim optimize` command. You can now optimize files and folders by specifying path.

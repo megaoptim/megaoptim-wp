@@ -33,5 +33,5 @@ if ( ! function_exists( '_megaoptim_wpengine_purge' ) ) {
 			}
 		}
 	}
-	add_action( 'megaoptim_attachment_optimized', '_megaoptim_wpengine_purge', 10, 0 );
+	add_action( 'megaoptim_size_optimized', '_megaoptim_wpengine_purge', 10, 0 );
 }
