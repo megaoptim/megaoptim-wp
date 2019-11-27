@@ -223,17 +223,18 @@ class MGO_MediaLibrary extends MGO_Library {
 								 *
 								 * @since 1.0.0
 								 */
-								do_action( 'megaoptim_attachment_optimized', $attachment_object, $att['save_path'], $response, $request_params, $size );
+								do_action( 'megaoptim_size_optimized', $attachment_object, $att['save_path'], $response, $request_params, $size );
 							}
 						}
 					}
 				}
 			}
-			do_action( 'megaoptim_before_finish', $attachment_object, $request_params, $result );
 			$attachment_object->unlock();
 			$attachment_object->save();
 			$attachment_object->refresh();
 			$result->set_attachment( $attachment_object );
+
+			do_action( 'megaoptim_attachment_optimized', $attachment_object, $request_params, $result );
 
 			return $result;
 		} catch ( Exception $e ) {

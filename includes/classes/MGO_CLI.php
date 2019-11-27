@@ -352,7 +352,7 @@ class MGO_CLI {
 					if ( @rename( $attachment_backup_path, $attachment_path ) ) {
 						megaoptim_regenerate_thumbnails( $attachment_ID, $attachment_path );
 						delete_post_meta( $attachment_ID, '_megaoptim_data' );
-						do_action( 'megaoptim_after_restore_attachment', $attachment_ID );
+						do_action( 'megaoptim_after_restore_attachment', new MGO_MediaAttachment($attachment_ID) );
 						WP_CLI::success( sprintf( __( 'Attachment %s successfully restored.', 'megaoptim-image-optimizer' ), $attachment_ID ) );
 						$total_restored ++;
 					} else {

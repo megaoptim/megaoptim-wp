@@ -52,25 +52,27 @@ function megaoptim_include_files( $files ) {
  */
 function megaoptim_update_nag() {
 	?>
-	<div class="update-nag">
-		<?php echo sprintf('%s %s.', __('Update your PHP version if you want to run', 'megaoptim-image-optimizer'), '<strong>'.__('MegaOptim Image Optimizer', 'megaoptim-image-optimizer') . '</strong>'); ?> <br/>
+    <div class="update-nag">
+		<?php echo sprintf( '%s %s.', __( 'Update your PHP version if you want to run', 'megaoptim-image-optimizer' ), '<strong>' . __( 'MegaOptim Image Optimizer', 'megaoptim-image-optimizer' ) . '</strong>' ); ?>
+        <br/>
 		<?php _e( 'Your actual version is:', 'megaoptim-image-optimizer' ) ?>
-		<strong><?php echo phpversion(); ?></strong>, <?php _e( 'required is', 'megaoptim-image-optimizer' ) ?>
-		<strong><?php echo WP_MEGAOPTIM_PHP_MINIMUM; ?></strong>
+        <strong><?php echo phpversion(); ?></strong>, <?php _e( 'required is', 'megaoptim-image-optimizer' ) ?>
+        <strong><?php echo WP_MEGAOPTIM_PHP_MINIMUM; ?></strong>
 		<?php _e( '. Please contact your hosting or MegaOptim support for further assistence.', 'megaoptim-image-optimizer' ) ?>
-	</div>
+    </div>
 	<?php
 }
 
 /**
  * Include file from megaoptim plugin
+ *
  * @param $path
  * @param $require
  */
-function megaoptim_include_file($path, $require = true) {
-	$path = str_replace('/', DIRECTORY_SEPARATOR, $path);
+function megaoptim_include_file( $path, $require = true ) {
+	$path      = str_replace( '/', DIRECTORY_SEPARATOR, $path );
 	$full_path = WP_MEGAOPTIM_PATH . DIRECTORY_SEPARATOR . $path;
-	if($require) {
+	if ( $require ) {
 		require_once $full_path;
 	} else {
 		include_once $full_path;
@@ -84,7 +86,7 @@ function megaoptim_prepare_optimizer() {
 	global $wp_version;
 	require_once( WP_MEGAOPTIM_LIBRARIES_PATH . 'megaoptim-php' . DIRECTORY_SEPARATOR . 'loadnoncomposer.php' );
 	\MegaOptim\Http\BaseClient::$api_url = WP_MEGAOPTIM_API_BASE_URL;
-	\MegaOptim\Http\BaseClient::set_user_agent('WordPress ' . $wp_version . ' / Plugin ' . WP_MEGAOPTIM_VER);
+	\MegaOptim\Http\BaseClient::set_user_agent( 'WordPress ' . $wp_version . ' / Plugin ' . WP_MEGAOPTIM_VER );
 }
 
 /**
@@ -108,16 +110,61 @@ function megaoptim_is_wr2x_active() {
 }
 
 /**
+ * Check if WP Offload Media is active.
+ * @return bool
+ */
+function megaoptim_is_as3cf_active() {
+
+
+	if ( function_exists( 'as3cf_init' ) ) {
+		// WP Offload S3 Lite.
+		$version = ! empty( $GLOBALS['aws_meta']['amazon-s3-and-cloudfront']['version'] ) ? $GLOBALS['aws_meta']['amazon-s3-and-cloudfront']['version'] : false;
+		if ( ! $version ) {
+			return false;
+		}
+		if ( ! function_exists( 'amazon_web_services_init' ) && version_compare( $version, '1.3' ) < 0 ) {
+			// Old version, plugin Amazon Web Services is required.
+			return false;
+		}
+		if ( version_compare( $version, '2.3', '>=' ) ) {
+			return true;
+		}
+
+		return false;
+
+	} else if ( function_exists( 'as3cf_pro_init' ) ) {
+		// WP Offload S3 Pro.
+		$version = ! empty( $GLOBALS['aws_meta']['amazon-s3-and-cloudfront-pro']['version'] ) ? $GLOBALS['aws_meta']['amazon-s3-and-cloudfront-pro']['version'] : false;
+		if ( ! $version ) {
+			return false;
+		}
+		if ( ! function_exists( 'amazon_web_services_init' ) && version_compare( $version, '1.6' ) < 0 ) {
+			// Old version, plugin Amazon Web Services is required.
+			return false;
+		}
+		if ( version_compare( $version, '2.3', '>=' ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	return false;
+}
+
+
+/**
  * Is WPEngine environment?
  * @return bool
  */
 function megaoptim_is_wpengine() {
-	return function_exists('is_wpe') && is_wpe();
+	return function_exists( 'is_wpe' ) && is_wpe();
 }
+
 
 /**
  * Is the current PHP version compatible?
  */
 function megaoptim_is_php_version_compatible() {
-	return version_compare(phpversion(), WP_MEGAOPTIM_PHP_MINIMUM, '>=');
+	return version_compare( phpversion(), WP_MEGAOPTIM_PHP_MINIMUM, '>=' );
 }

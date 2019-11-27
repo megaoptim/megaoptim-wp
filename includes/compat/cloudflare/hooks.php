@@ -55,5 +55,5 @@ if ( ! function_exists( '_megaoptim_cloudflare_purge' ) ) {
 			}
 		}
 	}
-	add_action( 'megaoptim_attachment_optimized', '_megaoptim_cloudflare_purge', 10, 5 );
+	add_action( 'megaoptim_size_optimized', '_megaoptim_cloudflare_purge', 10, 5 );
 }

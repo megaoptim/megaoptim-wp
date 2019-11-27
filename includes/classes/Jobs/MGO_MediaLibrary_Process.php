@@ -35,6 +35,8 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 			return false;
 		}
 
+		$result = new MGO_ResultBag();
+
 		$optimizer = MGO_Library::get_optimizer();
 
 		// NOTE: This will only work if all items are from the same attachment.
@@ -112,6 +114,15 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 
 						}
 
+						// Set Stats
+						if ( $size !== 'full' ) {
+							$result->total_thumbnails = $result->total_thumbnails + 1;
+						} else {
+							$result->total_full_size = $result->total_full_size + 1;
+						}
+						$result->total_saved_bytes = $result->total_saved_bytes + $file->getSavedBytes();
+
+
 						$size = $is_retina ? $size . '@2x' : $size;
 
 						/**
@@ -124,7 +135,7 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 						 *
 						 * @since 1.0.0
 						 */
-						do_action( 'megaoptim_attachment_optimized', $attachment, $local_path, $response, $request_params, $size );
+						do_action( 'megaoptim_size_optimized', $attachment, $local_path, $response, $request_params, $size );
 					}
 				}
 
@@ -139,6 +150,8 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 
 		// END
 		$attachment->unlock();
+
+		do_action( 'megaoptim_attachment_optimized', $attachment, $request_params, $result );
 
 		return false;
 	}

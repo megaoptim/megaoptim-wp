@@ -113,15 +113,26 @@ $includes = array(
 	'compat/mediapress/hooks/attachments.php',
 );
 
+
+// -- WP Offload Media
+if(megaoptim_is_as3cf_active()) {
+	$includes = array_merge( $includes, array(
+		'compat/wp-offload-media/MGO_As3cf_Util.php',
+		'compat/wp-offload-media/MGO_As3cf.php',
+	) );
+}
+
+
+// -- WP Retina 2x
 if ( megaoptim_is_wr2x_active() ) {
 	$includes = array_merge( $includes, array(
-		// -- WP Retina 2x
 		'compat/wp-retina-2x/hooks/general.php',
 	) );
 }
+
+// -- Nextgen Library
 if ( megaoptim_is_nextgen_active() ) {
 	$includes = array_merge( $includes, array(
-		// -- Nextgen Library
 		'compat/nextgen-gallery/helpers.php',
 		'compat/nextgen-gallery/hooks/ajax.php',
 		'compat/nextgen-gallery/hooks/attachments.php',
@@ -130,9 +141,9 @@ if ( megaoptim_is_nextgen_active() ) {
 	) );
 }
 
+// -- WPEngine
 if ( megaoptim_is_wpengine() ) {
 	$includes = array_merge( $includes, array(
-		// -- WPEngine
 		'compat/hosting/wpengine/hooks.php'
 	) );
 }
