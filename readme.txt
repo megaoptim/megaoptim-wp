@@ -137,6 +137,7 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 
 = 1.4.4 =
 - Added W3 Offload Media (Lite/Pro) support
+- Improved WebP support
 
 = 1.4.3 =
 - Added file/directory support to `wp megaoptim optimize` command. You can now optimize files and folders by specifying path.

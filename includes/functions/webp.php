@@ -83,12 +83,17 @@ function megaoptim_replace_img_with_webp( $match ) {
 	// Skip images with this class
 	$ignore_webp_by_class = apply_filters( 'megaoptim_webp_ignored_class', 'mgo-skip-webp' );
 
-	if ( megaoptim_contains( $match[0], $ignore_webp_by_class ) ) {
+	if ( megaoptim_contains( $match[0], $ignore_webp_by_class ) || megaoptim_contains( $match[0], 'rev-sildebg' ) ) {
 		return $match[0];
 	}
 
 	$img = megaoptim_get_dom_element_attributes( $match[0], 'img' );
 	if ( $img === false ) {
+		return $match[0];
+	}
+
+	// Skip <img> with backgrounds.
+	if ( isset( $img['style'] ) && strpos( $img['style'], 'background' ) !== false ) {
 		return $match[0];
 	}
 
@@ -104,7 +109,11 @@ function megaoptim_replace_img_with_webp( $match ) {
 	$sizes        = $sizes_data['value'];
 	$sizes_prefix = $sizes_data['prefix'];
 
-	$alt_attr = isset( $img['alt'] ) && strlen( $img['alt'] ) ? ' alt="' . $img['alt'] . '"' : '';
+	// Keep those attributes for the new <img>
+	$old_alt    = isset( $img['alt'] ) && strlen( $img['alt'] ) ? ' alt="' . $img['alt'] . '"' : '';
+	$old_id     = isset( $img['id'] ) && strlen( $img['id'] ) ? ' id="' . $img['id'] . '"' : '';
+	$old_height = isset( $img['height'] ) && strlen( $img['height'] ) ? ' height="' . $img['height'] . '"' : '';
+	$old_width  = isset( $img['width'] ) && strlen( $img['width'] ) ? ' width="' . $img['width'] . '"' : '';
 
 	$uploads_path_base = megaoptim_webp_get_image_dir( $src );
 	if ( $uploads_path_base === false ) {
@@ -159,7 +168,7 @@ function megaoptim_replace_img_with_webp( $match ) {
 	return '<picture ' . megaoptim_create_dom_element_attributes( $img ) . '>'
 	       . '<source ' . $srcset_prefix . 'srcset="' . $srcset_webp . '"' . ( $sizes ? ' ' . $sizes_prefix . 'sizes="' . $sizes . '"' : '' ) . ' type="image/webp">'
 	       . '<source ' . $srcset_prefix . 'srcset="' . $srcset . '"' . ( $sizes ? ' ' . $sizes_prefix . 'sizes="' . $sizes . '"' : '' ) . '>'
-	       . '<img ' . $src_prefix . 'src="' . $src . '" ' . megaoptim_create_dom_element_attributes( $img ) . $alt_attr
+	       . '<img ' . $src_prefix . 'src="' . $src . '" ' . megaoptim_create_dom_element_attributes( $img ) . $old_id . $old_alt . $old_height . $old_width
 	       . ( strlen( $srcset ) ? ' srcset="' . $srcset . '"' : '' ) . ( strlen( $sizes ) ? ' sizes="' . $sizes . '"' : '' ) . '>'
 	       . '</picture>';
 }
@@ -241,6 +250,7 @@ function megaoptim_webp_get_image_dir( $src ) {
 
 	$base_dir = $updir['basedir'];
 	$base_url = $updir['baseurl'];
+
 
 	// Make the src and the current protocol same protocol.
 	$protocol = explode( "://", $src );
