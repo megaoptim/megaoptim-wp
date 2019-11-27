@@ -165,10 +165,12 @@ function megaoptim_replace_img_with_webp( $match ) {
 	}
 	$img['class'] = ( isset( $img['class'] ) ? $img['class'] . " " : "" ) . $ignore_webp_by_class;
 
-	return '<picture ' . megaoptim_create_dom_element_attributes( $img ) . '>'
+	$img_attrs = megaoptim_create_dom_element_attributes( $img );
+
+	return '<picture>'
 	       . '<source ' . $srcset_prefix . 'srcset="' . $srcset_webp . '"' . ( $sizes ? ' ' . $sizes_prefix . 'sizes="' . $sizes . '"' : '' ) . ' type="image/webp">'
 	       . '<source ' . $srcset_prefix . 'srcset="' . $srcset . '"' . ( $sizes ? ' ' . $sizes_prefix . 'sizes="' . $sizes . '"' : '' ) . '>'
-	       . '<img ' . $src_prefix . 'src="' . $src . '" ' . megaoptim_create_dom_element_attributes( $img ) . $old_id . $old_alt . $old_height . $old_width
+	       . '<img ' . $src_prefix . 'src="' . $src . '" ' . $img_attrs . $old_id . $old_alt . $old_height . $old_width
 	       . ( strlen( $srcset ) ? ' srcset="' . $srcset . '"' : '' ) . ( strlen( $sizes ) ? ' sizes="' . $sizes . '"' : '' ) . '>'
 	       . '</picture>';
 }
