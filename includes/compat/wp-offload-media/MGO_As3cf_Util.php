@@ -82,9 +82,7 @@ class MGO_As3cf_Util {
 
 		// First remove the old attachment (if any)
 		$this->remove_attachment( $attachment );
-
 		return $this->upload_attachment( $attachment );
-
 	}
 
 

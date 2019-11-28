@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( 'Direct access is not allowed.' );
 }
 
-define( 'WP_MEGAOPTIM_VER', '1.4.3' );
+define( 'WP_MEGAOPTIM_VER', '1.4.4' );
 define( 'WP_MEGAOPTIM_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WP_MEGAOPTIM_URL', plugin_dir_url( __FILE__ ) );
 define( 'WP_MEGAOPTIM_BASENAME', plugin_basename( __FILE__ ) );

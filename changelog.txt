@@ -1,0 +1,49 @@
+= 1.1.5 =
+* Improved WP Retina 2x compatibility
+
+= 1.1.4 =
+* Fix error triggered on media table and media edit screen in the MegaOptim column/metabox when attachment is not image.
+
+= 1.1.3 =
+* Updated MegaOptim php library
+* Fix problems with non-ascii parts in the urls
+
+= 1.1.2 =
+* Security hardening
+* WordPress 5.1+ compatibility
+* Fix undefined variable problem on 'Custom folders' screen
+* Fix non-unique html ids for thumbnail size checkboxes
+
+= 1.1.1 =
+* Fixed error warnings
+
+= 1.1.0 =
+* Added feature to sign up for api key from the WordPress Dashboard
+* Improved UI & added scan library button
+* Improved instructions
+* Removed the unnecessary database queries for faster bulk processing
+* Removed the unnecessary megaoptim API calls for faster bulk processing
+* Removed unnecessary code leftovers
+* Fixed nextgen gallery sql query used to find all unoptimized images
+* Improved compatibility with PHP5.3 and onwards
+
+= 1.0.4 =
+* Don't stop the bulk process when image is missing on the server, continue to next instead.
+* Added the WP version in the useragent header when sending request to the api server
+* Corrected info message in the Media List Table and the Media Edit Metabox.
+
+= 1.0.3 =
+* Imrpoved settings instructions
+* Removed tag folder from the plugin directory.
+
+= 1.0.2 =
+* Fix error when editing post
+* Improved Welcome instructions
+* Improved API Key form
+
+= 1.0.1 =
+* Added megaoptim_after_restore_attachment action hook (Called after attachment is restored.)
+* Improved readme and fixed typos
+
+= 1.0.0 =
+* Initial release

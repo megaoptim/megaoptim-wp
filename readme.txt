@@ -31,6 +31,7 @@ Want more tokens for free? Help us spread MegaOptim and earn 120 tokens per sign
 - Bulk optimization for the Media Library, NextGen Libaries, MediaPress, Envira and other
 - Bulk optimization of Custom folders by your choice in your hosting account
 - WP CLI Support for optimization and restore (either bulk or single attachment)
+- Compatible with WP Offload Media (formerly WP Offload S3)
 - WebP Support (Enable/Disable WebP. Convert images to WebP upon optimization and automatically replace the content images with WebP version if available)
 - Backups & Restore Support. Select which attachment to backup
 - Sub Accounts Support (Manage your client sites and have separate statistics and subaccount/api key for each. Transfer tokens from onetime or monthly balances between accounts.)
@@ -78,8 +79,8 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 = Can i manage multiple sites separately with sub-accounts?
     You can create sub-account for your client and transfer tokens to the sub-account balance. This way your client will have separate account and api key and you will be managing it. You have the option to add or remove api tokens from it.
 
-= Can i optimize the WordPress Media Library =
-    Sure, just go to Media > MegaOptim and in the top right select \"WP Media Library\" and start the process!
+= Is the plugin compatible with WP Offload Media? =
+    Yes. If you have configured WP Offload Media no further configurations are needed.
 
 = Can i backup and restore the images? =
     Yes, MegaOptim have option to backup the images and it is enabled by default. You can alawys restore the original images if there is backup.
@@ -93,7 +94,7 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 = Is there WP CLI commands to run MegaOptim optimizer or restore?
     Yes, Please check the <a href="https://megaoptim.com/tools/wordpress/">documentation</a>.
 
-= Does the plugin optimizes the images on the site server and drains resources? =
+= Does the plugin optimizes the images on the site server and overloads my server? =
     The plugin does not install libraries for compression. Each image is sent to our servers and optimized by them to avoid resource drain on the website server.
 
 = What payment methods do you support? =
@@ -113,9 +114,6 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 
 = Will MegaOptim work with CloudFlare? =
     Yes! You need to use the CloudFlare plugin with correct credentials or setup credentials in the Settings > Advanced menu. If the credentials are setup correctly, the plugin will automatically purge from the CloudFlare cached images when they are optimized with MegaOptim.
-
-= Is the plugin compatible with WP offload S3 and WP Stateless? =
-    Not fully compatible at this time, but we are already working and testing this feature. It will be released soon.
 
 = I have problem, the plugin won't work. =
    Please <a target="_blank" href="https://megaoptim.com/contact">contact us</a> as soon as possible and we can assist you. We even have a live chat.
@@ -201,53 +199,3 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 * Fixed PHP Strict Standards warning
 * Fixed saving max dimensions value
 * Revamped database upgrade process
-
-= 1.1.5 =
-* Improved WP Retina 2x compatibility
-
-= 1.1.4 =
-* Fix error triggered on media table and media edit screen in the MegaOptim column/metabox when attachment is not image.
-
-= 1.1.3 =
-* Updated MegaOptim php library
-* Fix problems with non-ascii parts in the urls
-
-= 1.1.2 =
-* Security hardening
-* WordPress 5.1+ compatibility
-* Fix undefined variable problem on 'Custom folders' screen
-* Fix non-unique html ids for thumbnail size checkboxes
-
-= 1.1.1 =
-* Fixed error warnings
-
-= 1.1.0 =
-* Added feature to sign up for api key from the WordPress Dashboard
-* Improved UI & added scan library button
-* Improved instructions
-* Removed the unnecessary database queries for faster bulk processing
-* Removed the unnecessary megaoptim API calls for faster bulk processing
-* Removed unnecessary code leftovers
-* Fixed nextgen gallery sql query used to find all unoptimized images
-* Improved compatibility with PHP5.3 and onwards
-
-= 1.0.4 =
-* Don't stop the bulk process when image is missing on the server, continue to next instead.
-* Added the WP version in the useragent header when sending request to the api server
-* Corrected info message in the Media List Table and the Media Edit Metabox.
-
-= 1.0.3 =
-* Imrpoved settings instructions
-* Removed tag folder from the plugin directory.
-
-= 1.0.2 =
-* Fix error when editing post
-* Improved Welcome instructions
-* Improved API Key form
-
-= 1.0.1 =
-* Added megaoptim_after_restore_attachment action hook (Called after attachment is restored.)
-* Improved readme and fixed typos
-
-= 1.0.0 =
-* Initial release
