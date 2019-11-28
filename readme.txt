@@ -12,7 +12,7 @@ Optimize and compress your images to speed up your site and boost your SEO.
 
 == Description ==
 
-**MegaOptim is image optimization plugin/service and that is easy to use, stable and actively maintained by dedicated team of experts :)**
+**MegaOptim is image optimization plugin/service and that is easy to use, stable and actively maintained by dedicated team of experts. :)**
 
 The plugin uses minimal resources on your server and all the heavy lifting is done by our API service on our servers. No binaries will be ever installed on your server that will slowdown your site.
 
