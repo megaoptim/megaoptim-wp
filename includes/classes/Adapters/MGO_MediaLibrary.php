@@ -300,8 +300,6 @@ class MGO_MediaLibrary extends MGO_Library {
 			$request_params = array_merge( $request_params, $params );
 		}
 
-		megaoptim_log($request_params);
-
 		/**
 		 * Fired before the optimization of the attachment
 		 *

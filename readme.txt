@@ -134,7 +134,9 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 == Changelog ==
 
 = 1.4.5 =
--
+- Added compatibility for WP 5.3 "BIG Image" threshold. If Auto-Optimize is enabled AND Max Width/Height are set in the options, disable the "BIG Image" treshold.
+- Fix the auto resize width/height option (was not working correctly)
+- Improved Media library table rendering
 
 = 1.4.4 =
 - Added WP Offload Media (Lite/Pro) support
