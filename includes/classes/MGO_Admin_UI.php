@@ -33,7 +33,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 		add_filter( 'admin_body_class', array( $this, 'admin_body_class' ), 10, 1 );
 		add_action( 'admin_notices', array( $this, 'activation_guide' ) );
 		add_filter( 'manage_media_columns', array( $this, 'manage_media_columns' ), 10, 1 );
-		add_filter( 'manage_media_custom_column', array( $this, 'manage_media_custom_column' ), 10, 2 );
+		add_action( 'manage_media_custom_column', array( $this, 'manage_media_custom_column' ), 10, 2 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_action( 'add_meta_boxes', array( $this, 'register_info_metabox' ) );
 		add_filter( "plugin_action_links_" . WP_MEGAOPTIM_BASENAME, array( $this, 'add_settings_link' ), 20, 1 );
