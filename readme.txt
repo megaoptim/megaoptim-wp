@@ -4,7 +4,7 @@ Tags: image optimizer, image compression, pagespeed, compress, optimize images, 
 Requires at least: 3.6
 Tested up to: 5.3
 Requires PHP: 5.3
-Stable tag: 1.4.4
+Stable tag: 1.4.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -133,8 +133,11 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 
 == Changelog ==
 
+= 1.4.5 =
+-
+
 = 1.4.4 =
-- Added W3 Offload Media (Lite/Pro) support
+- Added WP Offload Media (Lite/Pro) support
 - Improved WebP support
 
 = 1.4.3 =

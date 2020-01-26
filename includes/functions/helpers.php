@@ -95,16 +95,11 @@ Header set X-Robots-Tag "noindex"
 function megaoptim_log( $message, $filename = "debug.log" ) {
 	$log_file_dir = megaoptim_get_tmp_path();
 	megaoptim_protect_dir( $log_file_dir );
-	if ( ! file_exists( $log_file_dir ) ) {
-		@mkdir( $log_file_dir );
-	}
 	$log_file_path = $log_file_dir . DIRECTORY_SEPARATOR . $filename;
-	// TODO: Remove after some time
-	$old_file_path = $log_file_dir . DIRECTORY_SEPARATOR . 'debug.txt';
-	if ( file_exists( $old_file_path ) ) {
-		@rename( $old_file_path, $log_file_path );
-	}
-	// END TODO
+    // Remove the log file if it is larger than 10 MB
+    if (file_exists($log_file_path) && filesize($log_file_path) > 10485760) {
+        @unlink($log_file_path);
+    }
 	if ( ! is_string( $message ) && ! is_numeric( $message ) ) {
 		ob_start();
 		megaoptim_dump( $message );
