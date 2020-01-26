@@ -86,3 +86,34 @@ function _megaoptim_optimize_media_attachment( $metadata, $attachment_id ) {
 add_filter( 'wp_generate_attachment_metadata', '_megaoptim_optimize_media_attachment', WP_MEGAOPTIM_INT_MAX, 2 );
 
 
+/**
+ * If the big image size threshold is enabled disable it in the following cases:
+ *
+ * - If auto-optimize is enabled
+ * - If max_width or max_height are bigger than 0
+ *
+ * If both conditions are true it means that the user wants to override the big image size threhsold via MegaOptim
+ * so we disable it.
+ *
+ * @param $threshold
+ *
+ * @return mixed
+ */
+function _megaoptim_big_image_size_threshold($threshold)
+{
+    // If disabled do not continue
+    if ( ! $threshold) {
+        return $threshold;
+    }
+    $optimize   = MGO_Settings::instance()->isAutoOptimizeEnabled();
+    $max_width  = (int) MGO_Settings::instance()->get(MGO_Settings::MAX_WIDTH, 0);
+    $max_height = (int) MGO_Settings::instance()->get(MGO_Settings::MAX_HEIGHT, 0);
+    if ($optimize && ($max_width > 0 || $max_height > 0)) {
+        return FALSE; // disable.
+    } else {
+        return $threshold; // leave as is.
+    }
+}
+
+add_filter('big_image_size_threshold', '_megaoptim_big_image_size_threshold', WP_MEGAOPTIM_INT_MAX, 1);
+
