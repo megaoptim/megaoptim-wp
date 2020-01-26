@@ -300,6 +300,8 @@ class MGO_MediaLibrary extends MGO_Library {
 			$request_params = array_merge( $request_params, $params );
 		}
 
+		megaoptim_log($request_params);
+
 		/**
 		 * Fired before the optimization of the attachment
 		 *
@@ -758,16 +760,30 @@ class MGO_MediaLibrary extends MGO_Library {
 
 		$largest_thumbnail_dimensions = $attachment->get_largest_thumbnail_dimensions();
 
-		if ( isset( $params['max_width'] ) && $params['max_width'] > 0 ) {
-			if ( $params['max_width'] < $largest_thumbnail_dimensions['width'] ) {
-				unset( $params['max_width'] );
-			}
-		}
-		if ( isset( $params['max_height'] ) && $params['max_height'] > 0 ) {
-			if ( $params['max_height'] < $largest_thumbnail_dimensions['height'] ) {
-				unset( $params['max_height'] );
-			}
-		}
+        $max_width  = 0;
+        $max_height = 0;
+
+        if (isset($params['max_width'])) {
+            $max_width = intval($params['max_width']);
+        }
+        if (isset($params['max_height'])) {
+            $max_height = intval($params['max_height']);
+        }
+
+        if ($max_width > 0) {
+            if ($max_width > $largest_thumbnail_dimensions['width']) {
+                $max_width = 0;
+            }
+        }
+
+        if ($max_height > 0) {
+            if ($max_height > $largest_thumbnail_dimensions['height']) {
+                $max_height = 0;
+            }
+        }
+
+        $params['max_width']  = $max_width;
+        $params['max_height'] = $max_height;
 
 		return $params;
 	}
