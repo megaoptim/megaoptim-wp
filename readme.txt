@@ -106,7 +106,7 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
     Absolutely! You can cancel your subscription whenever you want.
 
 = Do you have an API? =
-   Yes, please check out <a href="https://megaoptim.com/docs/api">here</a> for more documentation.
+   Yes, please check out <a href="https://megaoptim.com/docs/api">here</a> for more documentation. Need to optimize images in your custom projects? You can even use our <a href="https://github.com/megaoptim/megaoptim-php">PHP Library</a> via composer.
 
 = Will MegaOptim work with CloudFlare? =
     Yes! You need to use the CloudFlare plugin with correct credentials or setup credentials in the Settings > Advanced menu. If the credentials are setup correctly, the plugin will automatically purge from the CloudFlare cached images when they are optimized with MegaOptim.
