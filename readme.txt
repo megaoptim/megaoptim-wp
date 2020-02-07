@@ -24,33 +24,32 @@ Image Optimization is delivering the high-quality images in the right format, di
 
 The service comes with **500 FREE images/tokens per month for everyone**. We also have <strong>unlimited plan</strong> at only $9.99 that will help us maintain the service. Check our pricing <a href="https://megaoptim.com/pricing" target="_blank">here</a>.
 
-Want more tokens for free? Help us spread MegaOptim and earn 120 tokens per sign up and 300 tokens once customer becomes paid customer. Our Referral program can be found in the <a target="_blank" href="https://app.megaoptim.com/">dashboard area</a>.
-
 = What features does MegaOptim offer? =
 
-- Bulk optimization for the Media Library, NextGen Libaries, MediaPress, Envira and other
-- Bulk optimization of Custom folders by your choice in your hosting account
-- WP CLI Support for optimization and restore (either bulk or single attachment)
+- Bulk optimization for the Media Library, NextGen, MediaPress, etc
+- Bulk optimization of Folders by your choice in your server
+- WP CLI Support for optimization and restore (bulk or single)
 - Compatible with WP Offload Media (formerly WP Offload S3)
-- WebP Support (Enable/Disable WebP. Convert images to WebP upon optimization and automatically replace the content images with WebP version if available)
-- Backups & Restore Support. Select which attachment to backup
-- Sub Accounts Support (Manage your client sites and have separate statistics and subaccount/api key for each. Transfer tokens from onetime or monthly balances between accounts.)
-- WordPress Multisite Support. Setup the plugin separately on the sites you want
-- Integrates with WP Retina 2x(Free and Pro). It will optimize all the retina images too
-- Integrates with CloudFlare. Purges CloudFlare image cache once specific image is optimized
+- WebP Support (Convert images to WebP upon optimization and automatically replace the content images with WebP version if available)
+- Backups & restore support and option to select waht to backup
+- Sub-accounts support with detailed statistics.
+- Compatible with WP Retina 2x (Optimizes retina images too!)
+- Compatible with CloudFlare. (Purges CloudFlare image cache upon optimization)
 - Option to select which thumbnails to optimize
-- Option to enable/disable auto conversion from CMYK to RGB (A better color profile for web)
-- Option to preserve EXIF data(location, time, camera model) or remove it upon the optimization
-- Option to specify maximum dimensions of optimized images. You may not need plugins like Imansity anymore
-- Works fine on Public, Localhost or Password Protected via htpasswd
-- Uses progressive JPEG for the larger images to display them faster in the browser
-- Compatible with WP Engine, SiteGround and other hosting providers
+- Option to enable/disable conversion from CMYK to RGB
+- Option to preserve EXIF data(location, time, camera model) or remove it during optimization
+- Option to specify maximum dimensions of optimized images. No need for Imansity anymore.
+- Compatible with WP 5.3 BIG Image Threshold feature
+- Works fine on public, localhost or sites protected via htpasswd
+- Uses progressive JPEG format for faster rendering
+- Compatible with WP Engine, SiteGround and other providers
 - Compatible with Windows/UNIX(Linux, OSx) hosting environments
-- Images that are optimized and the total saved size is less than 5% are free, no tokens are charged
-- Optimization stats available at the <a target="_blank" href="https://app.megaoptim.com/dashboard">dashboard area</a>
-- Dedicated support team ready to help you 24/7.
+- No credit charge if %5 or less is saved per image
+- Multisite Support
 
 = Have a question? Contact us! =
+
+We have dedicated support team ready to help you 24/7.
 
 * Email  [<a href="https://megaoptim.com/contact">Click Here</a>]
 * Twitter [<a href="https://twitter.com/MegaoptimO">Click Here</a>]
@@ -76,29 +75,26 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 = Can i use the same API Key on multiple websites? =
     Absolutely. You can use your API key on as many websites as you want or you can also create sub accounts for each of the sites you manage if you want to keep the things separate or bill your clients separate.
 
-= Can i manage multiple sites separately with sub-accounts?
-    You can create sub-account for your client and transfer tokens to the sub-account balance. This way your client will have separate account and api key and you will be managing it. You have the option to add or remove api tokens from it.
-
 = Is the plugin compatible with WP Offload Media? =
-    Yes. If you have configured WP Offload Media no further configurations are needed.
+    Yes. If you have configured WP Offload Media no further configurations are needed, the images will be automatically optimized and offloaded to your S3 bucket.
+
+= Do you charge additional tokens for WebP?
+    WebP versions are free of charge! :)
 
 = Can i backup and restore the images? =
     Yes, MegaOptim have option to backup the images and it is enabled by default. You can alawys restore the original images if there is backup.
 
-= What image formats can be optimized? =
-    MegaOptim supports JPEG, PNG, GIF (animated or non animated) and WebP
+= Can i manage multiple sites separately with sub-accounts?
+    Sure! You can create sub-account for your client and transfer tokens to the sub-account balance. This way your client will have separate account and api key and you will be managing it. You have the option to add or remove api tokens from it.
 
-= Do i need separate tokens for WebP Images?
-    No, WebP versions are free of charge!
-
-= Is there WP CLI commands to run MegaOptim optimizer or restore?
+= Is there WP CLI commands to run MegaOptim optimizer or restore from command line?
     Yes, Please check the <a href="https://megaoptim.com/tools/wordpress/">documentation</a>.
 
-= Does the plugin optimizes the images on the site server and overloads my server? =
-    The plugin does not install libraries for compression. Each image is sent to our servers and optimized by them to avoid resource drain on the website server.
+= Is this plugin heavy for my site? =
+    The plugin optimizes images on our external servers and does not run anything on your own servers that may cause slowndowns. In addition it only runs when you start bulk process or if you upload image via Media Library to autoamatically optimize it. It's not active in background unlike some other plugins.
 
-= What payment methods do you support? =
-    We support both PayPal and Credit Card via Paddle. The payments can be recurring or onetime.
+= I used ShortPixel, Imagify and other plugins. Will your plugin optimize the images futher? =
+    In most cases yes! The plugin will make attempt to optimize the image further. If the saved size result is less or equal to 5% no token will be charged!
 
 = What happens if i stop using or deactivate MegaOptim plugin? =
     Nothing, your images will remain optimized, if you used the WebP feature the site won't serve WebP any longer.
@@ -115,8 +111,11 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 = Will MegaOptim work with CloudFlare? =
     Yes! You need to use the CloudFlare plugin with correct credentials or setup credentials in the Settings > Advanced menu. If the credentials are setup correctly, the plugin will automatically purge from the CloudFlare cached images when they are optimized with MegaOptim.
 
+= Do you have referral program? =
+    Sure! Help us spread MegaOptim and earn 120 tokens per sign up and 300 tokens once customer becomes paid customer. Our Referral program can be found in the <a target="_blank" href="https://app.megaoptim.com/">dashboard area</a>.
+
 = I have problem, the plugin won't work. =
-   Please <a target="_blank" href="https://megaoptim.com/contact">contact us</a> as soon as possible and we can assist you. We even have a live chat.
+   Before anything, please <a target="_blank" href="https://megaoptim.com/contact">contact us</a> as soon as possible and we can assist you. We even have a live chat on our site.
 
 
 == Screenshots ==
