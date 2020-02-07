@@ -93,7 +93,7 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 = Is this plugin heavy for my site? =
     The plugin optimizes images on our external servers and does not run anything on your own servers that may cause slowndowns. In addition it only runs when you start bulk process or if you upload image via Media Library to autoamatically optimize it. It's not active in background unlike some other plugins.
 
-= I used ShortPixel, Imagify and other plugins. Will your plugin optimize the images futher? =
+= I used ShortPixel, Imagify and other plugins. Will your plugin reduce the images size further more? =
     In most cases yes! The plugin will make attempt to optimize the image further. If the saved size result is less or equal to 5% no token will be charged!
 
 = What happens if i stop using or deactivate MegaOptim plugin? =
