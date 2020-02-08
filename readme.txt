@@ -30,20 +30,20 @@ The service comes with **500 FREE images/tokens per month for everyone**. We als
 - Bulk optimization of Folders by your choice in your server
 - WP CLI Support for optimization and restore (bulk or single)
 - Uses progressive JPEG format for faster rendering
-- Supports <strong>WebP</strong> (Creates WebP versions and serves them when possible)
+- Supports <strong>WebP</strong>. Creates and serves WebP when possible
 - Supports Sub-accounts support with detailed statistics
 - Supports Backups/Restore + option to configure what to backup
 - Option to select which thumbnails to optimize
 - Option to enable/disable conversion from CMYK to RGB
-- Option to preserve EXIF data(location, time, camera model) or remove it during optimization
-- Option to specify maximum dimensions of optimized images. No need plugins like Imansity anymore
-- Compatible with WP 5.3 BIG Image Threshold feature
-- Compatbile with localhost and password protected sites
-- Compatible with WP Engine, SiteGround and other providers
-- Compatible with Windows/UNIX(Linux, OSx) hosting environments
-- Compatible with CloudFlare. (Purges CloudFlare image cache upon optimization)
-- Compatible with WP Retina 2x (Optimizes retina images too!)
+- Option to preserve/remove the EXIF/IPTC metadata
+- Option to auto-resize images to given dimensions upon optimization/upload
+- Compatible with WP Retina 2x
 - Compatible with WP Offload Media / Amazon S3
+- Compatible with CloudFlare. Purges image cache upon optimization
+- Compatible with WP 5.3+ BIG Image Threshold feature
+- Compatible with Windows/UNIX hosting environments
+- Compatible with WP Engine, SiteGround and other providers
+- Compatbile with localhost and password protected sites
 - No credits charged if %5 or less is saved per image
 - Multisite Support
 
