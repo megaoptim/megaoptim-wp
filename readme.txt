@@ -29,8 +29,8 @@ The service comes with **500 FREE images/tokens per month for everyone**. We als
 - Bulk optimization for the Media Library, NextGen, MediaPress, etc
 - Bulk optimization of Folders by your choice in your server
 - WP CLI Support for optimization and restore (bulk or single)
-- Compatible with WP Offload Media (formerly WP Offload S3)
-- WebP Support (Convert images to WebP upon optimization and automatically replace the content images with WebP version if available)
+- Compatible with WP Offload Media (Formerly WP Offload S3)
+- WebP Support (Converts images to WebP upon optimization and replaces images within the content with WebP version if available)
 - Backups & restore support and option to select waht to backup
 - Sub-accounts support with detailed statistics.
 - Compatible with WP Retina 2x (Optimizes retina images too!)
@@ -87,8 +87,8 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 = Can i manage multiple sites separately with sub-accounts?
     Sure! You can create sub-account for your client and transfer tokens to the sub-account balance. This way your client will have separate account and api key and you will be managing it. You have the option to add or remove api tokens from it.
 
-= Is there WP CLI commands to run MegaOptim optimizer or restore from command line?
-    Yes, Please check the <a href="https://megaoptim.com/tools/wordpress/">documentation</a>.
+= Is WP CLI (command line) supported?
+    Sure! You can optimize and restore images from the command line using WP CLI. Please see this <a href="https://megaoptim.com/blog/how-to-optimize-wordpress-images-with-wp-cli-and-megaoptim/">guide</a> for more information.
 
 = Is this plugin heavy for my site? =
     The plugin optimizes images on our external servers and does not run anything on your own servers that may cause slowndowns. In addition it only runs when you start bulk process or if you upload image via Media Library to autoamatically optimize it. It's not active in background unlike some other plugins.
@@ -128,7 +128,7 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 7. Media Library Single Attachment Page
 8. WP CLI - All commands
 9. WP CLI - Bulk Optimize command
-10.WP CLI - Bulk Restore command
+10. WP CLI - Bulk Restore command
 
 == Changelog ==
 
