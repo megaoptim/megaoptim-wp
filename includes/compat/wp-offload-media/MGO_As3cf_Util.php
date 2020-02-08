@@ -32,6 +32,12 @@ class MGO_As3cf_Util {
 	 */
 	protected $as3cf;
 
+    /**
+     * Is it cname?
+     * @var
+     */
+    public $cname = null;
+
 	/**
 	 * MGO_As3cf_Util constructor.
 	 *
@@ -39,6 +45,9 @@ class MGO_As3cf_Util {
 	 */
 	public function __construct( $as3cf ) {
 		$this->as3cf = $as3cf;
+        if ('cloudfront' === $this->as3cf->get_setting('domain')) {
+            $this->cname = $this->as3cf->get_setting('cloudfront');
+        }
 	}
 
 

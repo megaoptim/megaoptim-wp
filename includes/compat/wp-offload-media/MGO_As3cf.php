@@ -206,8 +206,11 @@ class MGO_As3cf {
 
         if ($url === false) {
             return $this->convert_webp_path($url, $original);
+        } elseif ( ! empty($this->util->cname) && ! is_null($this->util->cname)) {
+            if (megaoptim_contains($original, $this->util->cname)) {
+                return $this->convert_webp_path($url, $original);
+            }
         }
-
         return $url;
     }
 

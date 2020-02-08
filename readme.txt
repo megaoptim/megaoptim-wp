@@ -133,7 +133,8 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 == Changelog ==
 
 = 1.4.6 =
-- Improved WebP/WP Media Offload support. If WebP image exist on the remote server replace it in the final markup
+- Improved WebP/WP Media Offload support: Detect if WebP image exist on the remote s3 bucket use it in the final markup
+- Improved WebP/WP Media Offload support: Added support for installs that use CNAME to mask the s3 bucket url.
 
 = 1.4.5 =
 - Added compatibility for WP 5.3 "BIG Image" threshold. If Auto-Optimize is enabled AND Max Width/Height are set in the options, disable the "BIG Image" treshold
