@@ -26,6 +26,7 @@
  * @return string|string[]|null
  */
 function megaoptim_webp_filter_content( $content ) {
+
 	if ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ) {
 		return $content;
 	}
@@ -115,10 +116,11 @@ function megaoptim_replace_img_with_webp( $match ) {
 	$old_height = isset( $img['height'] ) && strlen( $img['height'] ) ? ' height="' . $img['height'] . '"' : '';
 	$old_width  = isset( $img['width'] ) && strlen( $img['width'] ) ? ' width="' . $img['width'] . '"' : '';
 
-	$uploads_path_base = megaoptim_webp_get_image_dir( $src );
+	$uploads_path_base = apply_filters( 'megaoptim_webp_uploads_base', megaoptim_webp_get_image_dir( $src ), $src );
 	if ( $uploads_path_base === false ) {
 		return $match[0];
 	}
+	$uploads_path_base =  trailingslashit($uploads_path_base);
 
 	// Remove all previous attributes.
 	unset( $img['src'] );
@@ -129,38 +131,39 @@ function megaoptim_replace_img_with_webp( $match ) {
 	unset( $img['alt'] );
 
 	// Try to assemble the picture
-	$srcset_webp = '';
-	if ( $srcset ) {
-		$defs = explode( ",", $srcset );
-		foreach ( $defs as $item ) {
-			$parts            = preg_split( '/\s+/', trim( $item ) );
-			$file_webp_compat = $uploads_path_base . wp_basename( $parts[0], '.' . pathinfo( $parts[0], PATHINFO_EXTENSION ) ) . '.webp';
-			$file_webp        = $uploads_path_base . wp_basename( $parts[0] ) . '.webp';
-			if ( file_exists( $file_webp ) ) {
-				$srcset_webp .= strlen( $srcset_webp ) > 0 ? ',' : '';
-				$srcset_webp .= $parts[0] . '.webp';
-				$srcset_webp .= isset( $parts[1] ) ? ' ' . $parts[1] : '';
-			}
-			if ( file_exists( $file_webp_compat ) ) {
-				$srcset_webp .= strlen( $srcset_webp ) > 0 ? ',' : '';
-				$srcset_webp .= preg_replace( '/\.[a-zA-Z0-9]+$/', '.webp', $parts[0] );
-				$srcset_webp .= isset( $parts[1] ) ? ' ' . $parts[1] : '';
-			}
-		}
-	} else {
-		$srcset           = trim( $src );
-		$file_webp_compat = $uploads_path_base . wp_basename( $srcset, '.' . pathinfo( $srcset, PATHINFO_EXTENSION ) ) . '.webp';
-		$file_webp        = $uploads_path_base . wp_basename( $srcset ) . '.webp';
-		if ( file_exists( $file_webp ) ) {
-			$srcset_webp = $srcset . ".webp";
-		} else {
-			if ( file_exists( $file_webp_compat ) ) {
-				$srcset_webp = preg_replace( '/\.[a-zA-Z0-9]+$/', '.webp', $srcset );
-			}
-		}
-	}
+    if($srcset['value']) {
+        $defs = explode( ",", $srcset );
+    } else {
+        $defs = array( $src );
+    }
 
-	if ( ! strlen( $srcset_webp ) ) {
+    $srcset_webp = array();
+    foreach ( $defs as $item ) {
+        $parts         = preg_split('/\s+/', trim($item));
+        $file_url      = $parts[0];
+        $file_url_base = trailingslashit(dirname($file_url));
+        $source_width  = isset($parts[1]) ? ' '.$parts[1] : ''; // Append source width with space eg ' 300w'
+        $webp_files    = array(
+            $uploads_path_base.wp_basename($file_url).'.webp',
+            $uploads_path_base.wp_basename($file_url, '.'.pathinfo($file_url, PATHINFO_EXTENSION)).'.webp',
+        );
+        foreach ($webp_files as $webp_file) {
+            $webp_file_exist = file_exists($webp_file);
+            if ( ! $webp_file_exist) {
+                // Used in the MGO_As3Cf to determine the webp_file path if it is remote.
+                $webp_file = apply_filters('megaoptim_webp_file_404', false, $webp_file, $file_url, $uploads_path_base);
+            }
+            if ($webp_file !== false) {
+                $final_webp_path = $file_url_base.wp_basename($webp_file).$source_width;
+                array_push($srcset_webp, $final_webp_path);
+            }
+        }
+    }
+
+
+    $srcset_webp = implode(',', $srcset_webp);
+
+	if ( empty($srcset_webp) ) {
 		return $match[0];
 	}
 	$img['class'] = ( isset( $img['class'] ) ? $img['class'] . " " : "" ) . $ignore_webp_by_class;
@@ -210,7 +213,7 @@ function megaoptim_replace_inline_backgrounds_with_webp( $matches, $content ) {
 			continue;
 		}
 		$image_base_url  = str_replace( $file_basename, '', $url );
-		$image_base_path = megaoptim_webp_get_image_dir( $url );
+		$image_base_path = apply_filters( 'megaoptim_webp_uploads_base', megaoptim_webp_get_image_dir( $url ), $url );
 		if ( ! $image_base_path ) {
 			continue;
 		}

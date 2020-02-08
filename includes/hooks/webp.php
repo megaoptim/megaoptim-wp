@@ -41,7 +41,7 @@ function megaoptim_webp_init() {
 		} else {
 			$filters = megaoptim_webp_target_filters();
 			foreach($filters as $filter) {
-				add_filter( $filter, 'megaoptim_webp_filter_content', 9999, 1 );
+				add_filter( $filter, 'megaoptim_webp_filter_content', PHP_INT_MAX, 1 );
 			}
 		}
 	}

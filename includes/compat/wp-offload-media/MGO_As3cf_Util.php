@@ -18,6 +18,8 @@
  * along with MegaOptim Image Optimizer. If not, see <https://www.gnu.org/licenses/>.
  **********************************************************************/
 
+use DeliciousBrains\WP_Offload_Media\Items\Media_Library_Item;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die( 'Direct access is not allowed.' );
 }
@@ -45,7 +47,7 @@ class MGO_As3cf_Util {
 	 *
 	 * @param MGO_MediaAttachment $attachment
 	 *
-	 * @return bool
+	 * @return array|bool|Media_Library_Item|WP_Error
 	 * @throws Exception
 	 */
 	public function upload_attachment( $attachment ) {
@@ -110,6 +112,32 @@ class MGO_As3cf_Util {
 
 		return $new_paths;
 	}
+
+    /**
+     * Returns item by id
+     * @param $id
+     *
+     * @return bool|Media_Library_Item
+     */
+	public function get_item_by_id($id) {
+        return Media_Library_Item::get_by_source_id($id);
+    }
+
+    /**
+     * Returns  item by url
+     * @param $url
+     *
+     * @return bool|Media_Library_Item
+     */
+    public function get_item_by_url($url) {
+        $source_id = Media_Library_Item::get_source_id_by_remote_url($url);
+        if($source_id === false) {
+            $source = false;
+        } else {
+            $source = $this->get_item_by_id($source_id);
+        }
+        return $source;
+    }
 
 	/**
 	 * Logs

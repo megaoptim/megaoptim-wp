@@ -51,16 +51,18 @@ class MGO_As3cf {
 		if ( ! $as3cf->is_plugin_setup( true ) ) {
 			$this->util->log( 'init', 'Plugin not setup. Integration will not be added.' );
 
-			return;
-		}
-		add_filter( 'wp_check_filetype_and_ext', array($this, 'add_webp_support'), 10, 4 );
-		add_filter( 'get_attached_file', array( $this, 'prevent_filtering_s3_paths' ), 10, 2 );
-		add_filter( 'as3cf_pre_update_attachment_metadata', array( $this, 'prevent_initial_upload' ), 10, 4 );
-		add_filter( 'as3cf_attachment_file_paths', array( $this, 'add_webp_paths' ), 15, 1 );
-		add_filter( 'as3cf_remove_attachment_paths', array( $this, 'remove_webp_paths' ), 15, 1 );
-		add_action( 'megaoptim_attachment_optimized', array( $this, 'upload_attachment' ), 10, 1 );
-		add_action( 'megaoptim_after_restore_attachment', array( $this, 'restore_attachment' ), 10, 1 );
-	}
+            return;
+        }
+        add_filter('wp_check_filetype_and_ext', array($this, 'add_webp_support'), 10, 4);
+        add_filter('get_attached_file', array($this, 'prevent_filtering_s3_paths'), 10, 2);
+        add_filter('as3cf_pre_update_attachment_metadata', array($this, 'prevent_initial_upload'), 10, 4);
+        add_filter('as3cf_attachment_file_paths', array($this, 'add_webp_paths'), 15, 1);
+        add_filter('as3cf_remove_attachment_paths', array($this, 'remove_webp_paths'), 15, 1);
+        add_action('megaoptim_attachment_optimized', array($this, 'upload_attachment'), 10, 1);
+        add_action('megaoptim_after_restore_attachment', array($this, 'restore_attachment'), 10, 1);
+        add_filter('megaoptim_webp_uploads_base', array($this, 'webp_uploads_base'), 10, 2);
+        add_filter('megaoptim_webp_file_404', array($this, 'fix_remote_webp_path'), 10, 4);
+    }
 
 
 	/**
@@ -178,16 +180,73 @@ class MGO_As3cf {
 
 	/**
 	 * Remove webp paths if they exist
-	 *
-	 * @param $paths
-	 *
-	 * @return array
-	 */
-	public function remove_webp_paths( $paths ) {
-		$paths = $this->util->get_paths_including_webp( $paths, false );
+     *
+     * @param $paths
+     *
+     * @return array
+     */
+    public function remove_webp_paths($paths)
+    {
+        $paths = $this->util->get_paths_including_webp($paths, false);
 
-		return $paths;
-	}
+        return $paths;
+    }
+
+
+    /**
+     * Change the uploads base so that equals to the remote storage base if this item exist on the remote storage.
+     *
+     * @param $url
+     * @param $original
+     *
+     * @return mixed
+     */
+    public function webp_uploads_base($url, $original)
+    {
+
+        if ($url === false) {
+            return $this->convert_webp_path($url, $original);
+        }
+
+        return $url;
+    }
+
+    /**
+     * Convert normal images that are uploaded to S3 to their .webp versions if they exist on the remote storage.
+     *
+     * @param $url
+     * @param $original
+     *
+     * @return string|string[]
+     */
+    public function convert_webp_path($url, $original)
+    {
+        $remote_item = $this->util->get_item_by_url($original);
+        if ($remote_item === false) {
+            $replaced_url = preg_replace('/-\d+x\d*/i', '', $original);
+            $remote_item  = $this->util->get_item_by_url($replaced_url);
+        }
+        if ($remote_item === false) {
+            return $url;
+        }
+        $parsed = parse_url($original);
+        $url    = str_replace($parsed['scheme'].'://', '', $original);
+        $url    = str_replace(basename($url), '', $url);
+        return $url;
+    }
+
+    /**
+     * @param $bool
+     * @param $webp_file
+     * @param $file_url
+     * @param $uploads_path_base
+     *
+     * @return mixed
+     */
+    public function fix_remote_webp_path($bool, $webp_file, $file_url, $uploads_path_base)
+    {
+        return megaoptim_contains($file_url, $uploads_path_base) ? $webp_file : $bool;
+    }
 }
 
 new MGO_As3cf();
