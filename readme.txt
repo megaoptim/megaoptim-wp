@@ -22,29 +22,29 @@ Image Optimization is delivering the high-quality images in the right format, di
 
 = How much does MegaOptim cost? =
 
-The service comes with **500 FREE images/tokens per month for everyone**. We also have <strong>unlimited plan</strong> at only $9.99 that will help us maintain the service. Check our pricing <a href="https://megaoptim.com/pricing" target="_blank">here</a>.
+The service comes with **500 FREE images/tokens per month for everyone**. We also have <strong>unlimited plan</strong> at only $9.99. Check our pricing <a href="https://megaoptim.com/pricing" target="_blank">here</a>.
 
 = What features does MegaOptim offer? =
 
 - Bulk optimization for the Media Library, NextGen, MediaPress, etc
 - Bulk optimization of Folders by your choice in your server
 - WP CLI Support for optimization and restore (bulk or single)
-- Compatible with WP Offload Media (Formerly WP Offload S3)
-- WebP Support (Converts images to WebP upon optimization and replaces images within the content with WebP version if available)
-- Backups & restore support and option to select waht to backup
-- Sub-accounts support with detailed statistics.
-- Compatible with WP Retina 2x (Optimizes retina images too!)
-- Compatible with CloudFlare. (Purges CloudFlare image cache upon optimization)
+- Uses progressive JPEG format for faster rendering
+- Supports <strong>WebP</strong> (Creates WebP versions and serves them when possible)
+- Supports Sub-accounts support with detailed statistics
+- Supports Backups/Restore + option to configure what to backup
 - Option to select which thumbnails to optimize
 - Option to enable/disable conversion from CMYK to RGB
 - Option to preserve EXIF data(location, time, camera model) or remove it during optimization
-- Option to specify maximum dimensions of optimized images. No need for Imansity anymore.
+- Option to specify maximum dimensions of optimized images. No need plugins like Imansity anymore
 - Compatible with WP 5.3 BIG Image Threshold feature
-- Works fine on public, localhost or sites protected via htpasswd
-- Uses progressive JPEG format for faster rendering
+- Compatbile with localhost and password protected sites
 - Compatible with WP Engine, SiteGround and other providers
 - Compatible with Windows/UNIX(Linux, OSx) hosting environments
-- No credit charge if %5 or less is saved per image
+- Compatible with CloudFlare. (Purges CloudFlare image cache upon optimization)
+- Compatible with WP Retina 2x (Optimizes retina images too!)
+- Compatible with WP Offload Media / Amazon S3
+- No credits charged if %5 or less is saved per image
 - Multisite Support
 
 = Have a question? Contact us! =
