@@ -10,7 +10,7 @@ define( 'WP_MEGAOPTIM_PHP_MINIMUM', '5.3' );
 
 #General
 define( 'MEGAOPTIM_PAGE_BULK_OPTIMIZER', 'megaoptim_bulk_optimizer' );
-define( 'MEGAOPTIM_PAGE_SETTINGS', 'megaoptim' );
+define( 'MEGAOPTIM_PAGE_SETTINGS', 'megaoptim_settings' );
 define( 'MEGAOPTIM_TYPE_MEDIA_ATTACHMENT', 'wp' );
 define( 'MEGAOPTIM_TYPE_FILE_ATTACHMENT', 'localfiles' );
 define( 'MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT', 'nextgenv2' );

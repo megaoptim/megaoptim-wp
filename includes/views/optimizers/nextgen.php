@@ -104,8 +104,9 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
 						<div class="megaoptim-row">
 							<div class="megaoptim-col megaoptim-col-12 text-center">
 								<button id="megaoptim-toggle-optimizer" data-action="megaoptim_ngg_optimize_attachment" data-context="<?php echo MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT; ?>" data-next-state="start" data-stop-text="Stop Bulk Optimizer" data-start-text="Start Bulk Optimizer" class="button button-primary button-extra-large"><?php _e( 'Start Bulk Optimizer', 'megaoptim-image-optimizer' ); ?></button>
-							</div>
-						</div>
+                                <p><a class="megaoptim-cancel-optimizer" href="#" data-cancel="<?php _e( "Are you sure you want to cancel the optimizer?", "megaoptim-image-optimizer" ); ?>"><?php _e( 'Cancel', 'megaoptim-image-optimizer' ); ?></a> </p>
+                            </div>
+                        </div>
 					</div>
 				</div>
 			<?php elseif ( $is_profile_valid && ($tokens != -1 && $tokens <= 0) ): ?>

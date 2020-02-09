@@ -20,6 +20,7 @@
          */
         this.set_optimizer_running = function () {
             $.is_megaoptim_optimizer_running = true;
+            $('body').data('megaoptim', 'running');
         };
 
         /**
@@ -27,6 +28,7 @@
          */
         this.set_optimizer_off = function () {
             $.is_megaoptim_optimizer_running = false;
+            $('body').data('megaoptim', 'stopped');
         };
 
         /**

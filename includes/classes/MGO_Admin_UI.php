@@ -142,9 +142,12 @@ class MGO_Admin_UI extends MGO_BaseObject {
 	 */
 	public function admin_body_class( $classes ) {
 		if ( megaoptim_is_admin_page() ) {
-			$classes .= 'megaoptim-page';
-		}
-
+            $custom = array('megaoptim-page');
+            if (megaoptim_is_admin_page(MEGAOPTIM_PAGE_BULK_OPTIMIZER)) {
+                array_push($custom, 'megaoptim-page-optimizer');
+            }
+            $classes = ' '.implode(' ', $custom).' ';
+        }
 		return $classes;
 	}
 
@@ -293,15 +296,16 @@ class MGO_Admin_UI extends MGO_BaseObject {
 				'nonce_settings' => wp_create_nonce( MGO_Ajax::NONCE_SETTINGS ),
 				'root_path'      => megaoptim_get_wp_root_path(),
 				'strings'        => array(
-					'clean'                 => __( 'Clean', 'megaoptim-image-optimizer' ),
-					'backup_delete_confirm' => __( 'Are you sure you want to delete your backups? This action can not be reversed!', 'megaoptim-image-optimizer' ),
-					'optimize'              => __( 'Optimize', 'megaoptim-image-optimizer' ),
-					'optimizing'            => __( 'Optimizing...', 'megaoptim-image-optimizer' ),
-					'working'               => __( 'Working...', 'megaoptim-image-optimizer' ),
-					'no_tokens'             => __( 'No enough tokens left. You can always top up your account at https://megaoptim.com/dashboard/', 'megaoptim-image-optimizer' ),
-					'profile_error'         => __( 'Error! We can not retrieve your profile. Please check if there is active internet connection or open a ticket in our dashboard area.', 'megaoptim-image-optimizer' ),
-					'show_thumbnail_info'   => __( 'Show More Info', 'megaoptim-image-optimizer' ),
-					'hide_thumbnail_info'   => __( 'Hide More Info', 'megaoptim-image-optimizer' ),
+                    'clean'                 => __( 'Clean', 'megaoptim-image-optimizer' ),
+                    'backup_delete_confirm' => __( 'Are you sure you want to delete your backups? This action can not be reversed!', 'megaoptim-image-optimizer' ),
+                    'optimize'              => __( 'Optimize', 'megaoptim-image-optimizer' ),
+                    'optimizing'            => __( 'Optimizing...', 'megaoptim-image-optimizer' ),
+                    'working'               => __( 'Working...', 'megaoptim-image-optimizer' ),
+                    'no_tokens'             => __( 'No enough tokens left. You can always top up your account at https://megaoptim.com/dashboard/', 'megaoptim-image-optimizer' ),
+                    'profile_error'         => __( 'Error! We can not retrieve your profile. Please check if there is active internet connection or open a ticket in our dashboard area.', 'megaoptim-image-optimizer' ),
+                    'show_thumbnail_info'   => __( 'Show More Info', 'megaoptim-image-optimizer' ),
+                    'hide_thumbnail_info'   => __( 'Hide More Info', 'megaoptim-image-optimizer' ),
+                    'leave'                 => __('Are you sure you want to leave?', 'megaoptim-image-optimizer')
 				),
 				'context'        => array(
 					'medialibrary' => MEGAOPTIM_TYPE_MEDIA_ATTACHMENT,

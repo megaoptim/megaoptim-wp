@@ -12,19 +12,17 @@ Optimize and compress your images to speed up your site and boost your SEO.
 
 == Description ==
 
-**MegaOptim is image optimization plugin/service and that is easy to use, stable and actively maintained by dedicated team of experts. :)**
+**MegaOptim is image optimization plugin and that is easy to use, stable and actively maintained by dedicated team of experts. :)**
 
 The plugin uses minimal resources on your server and all the heavy lifting is done by our API service on our servers. No binaries will be ever installed on your server that will slowdown your site.
 
-= What is image optimization / compression and why it is important? =
+We strive to make the plguin as lightweight as possible and will never bloat your dashboard with ads, notifications, upsells or run background services that will cause high CPU usage constantly. The plugin only runs when it's really necessary.
+
+## What is image optimization and why it is important?
 
 Image Optimization is delivering the high-quality images in the right format, dimension, size, and resolution while keeping the smallest possible size.
 
-= How much does MegaOptim cost? =
-
-The service comes with **500 FREE images/tokens per month for everyone**. We also have <strong>unlimited plan</strong> at only $9.99. Check our pricing <a href="https://megaoptim.com/pricing" target="_blank">here</a>.
-
-= What features does MegaOptim offer? =
+## What features does MegaOptim offer?
 
 - Bulk optimization for the Media Library, NextGen, MediaPress, etc
 - Bulk optimization of Folders by your choice in your server
@@ -47,7 +45,11 @@ The service comes with **500 FREE images/tokens per month for everyone**. We als
 - No credits charged if %5 or less is saved per image
 - Multisite Support
 
-= Have a question? Contact us! =
+## How much does MegaOptim cost?
+
+The service comes with **500 FREE images/tokens per month for everyone**. We also have <strong>unlimited plan</strong> at only $9.99. Check our pricing <a href="https://megaoptim.com/pricing" target="_blank">here</a>.
+
+## Have a question? Contact us!
 
 We have dedicated support team ready to help you 24/7.
 
@@ -55,7 +57,7 @@ We have dedicated support team ready to help you 24/7.
 * Twitter [<a href="https://twitter.com/MegaoptimO">Click Here</a>]
 * Facebook [<a href="https://www.facebook.com/megaoptimio">Click Here</a>]
 
-= Are you a developer? =
+## Developer Hooks / CLI
 
 Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> to read more about our WP CLI integration and the actions and filters that are available.
 
@@ -75,11 +77,14 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 = Can i use the same API Key on multiple websites? =
     Absolutely. You can use your API key on as many websites as you want or you can also create sub accounts for each of the sites you manage if you want to keep the things separate or bill your clients separate.
 
+= Do you offer CDN?
+    No, but our plugin integrates with WP Offload Media and that way you can easily use Amazon S3 bucket as your CDN which is much cheaper than actual CDN service.
+
 = Is the plugin compatible with WP Offload Media? =
     Yes. If you have configured WP Offload Media no further configurations are needed, the images will be automatically optimized and offloaded to your S3 bucket.
 
-= Do you charge additional tokens for WebP?
-    WebP versions are free of charge! :)
+= How the WebP feature works?
+    The WebP versions are free of charge and our API service will create optimized WebP for each image upon optimization and store it in your storage. If you enable Front-End delivery the content will be re-written and if .webp version exist for specific image it will be used instead.
 
 = Can i backup and restore the images? =
     Yes, MegaOptim have option to backup the images and it is enabled by default. You can alawys restore the original images if there is backup.
@@ -133,8 +138,10 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 == Changelog ==
 
 = 1.4.6 =
+- Improved Bulk Optimizer UI (Added confirmation on exit and Cancel button)
 - Improved WebP/WP Media Offload support: Detect if WebP image exist on the remote s3 bucket use it in the final markup
 - Improved WebP/WP Media Offload support: Added support for installs that use CNAME to mask the s3 bucket url.
+- Improved readme
 
 = 1.4.5 =
 - Added compatibility for WP 5.3 "BIG Image" threshold. If Auto-Optimize is enabled AND Max Width/Height are set in the options, disable the "BIG Image" treshold

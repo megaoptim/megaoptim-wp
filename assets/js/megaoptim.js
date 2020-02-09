@@ -610,3 +610,21 @@
         }
     })
 })(jQuery);
+
+// Cancel and confirm exit during optimizing
+(function ($) {
+    $(window).bind('beforeunload', function () {
+        var $body = $('body');
+        var is_optimizer = $body.hasClass('megaoptim-page-optimizer');
+        if (is_optimizer) {
+            var is_running = $body.data('megaoptim') === 'running';
+            if (is_running) {
+                return MegaOptim.strings.leave;
+            }
+        }
+    });
+    $(document).on('click', '.megaoptim-cancel-optimizer', function (e) {
+        e.preventDefault();
+        window.location.href = window.location.href;
+    })
+})(jQuery);
