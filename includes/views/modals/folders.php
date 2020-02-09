@@ -1,4 +1,4 @@
-<div class="remodal megaoptim-panel megaoptim-modal" id="megaoptim-dir-select" data-remodal-id="megaoptim-dir-select" data-remodal-options="hashTracking: false;">
+<div class="remodal megaoptim-panel megaoptim-modal" id="megaoptim-dir-select" style="display: none;" data-remodal-id="megaoptim-dir-select" data-remodal-options="hashTracking: false;">
     <div class="megaoptim-panel-inner">
         <div class="megaoptim-panel-header">
             <div class="megaoptim-panel-header-inner">

@@ -388,11 +388,14 @@ class MGO_MediaLibrary extends MGO_Library {
 			$query_str      = "SELECT P.ID, P.post_title, PM1.meta_value as metadata, PM2.meta_value as megaoptim FROM {$wpdb->posts} P INNER JOIN {$wpdb->postmeta} PM1 ON PM1.post_id=P.ID AND PM1.meta_key='_wp_attachment_metadata' LEFT JOIN {$wpdb->postmeta} PM2 ON PM2.post_id=P.ID AND PM2.meta_key='_megaoptim_data' WHERE P.post_type='attachment' AND P.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')";
 
 			// Add dates
-			if ( isset( $args['date_from'] ) && $args['date_to'] ) {
+			if ( isset( $args['date_from'] ) && isset($args['date_to']) ) {
 				$query_str .= ' AND (P.post_date BETWEEN %s AND %s)';
 				array_push( $prepare_params, $args['date_from'] );
 				array_push( $prepare_params, $args['date_to'] );
-			}
+			} else if( isset( $args['date_from'] ) ) {
+                $query_str .= ' AND (P.post_date >= %s)';
+                array_push( $prepare_params, $args['date_from'] );
+            }
 
 			// Add author
 			if ( isset( $args['author'] ) && ! empty( $args['author'] ) ) {

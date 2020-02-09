@@ -1,4 +1,4 @@
-<div class="remodal megaoptim-panel megaoptim-modal" id="megaoptim-loader" data-remodal-options="hashTracking: false, closeOnOutsideClick: false, closeOnEscape: false">
+<div class="remodal megaoptim-panel megaoptim-modal" id="megaoptim-loader" style="display: none;" data-remodal-options="hashTracking: false, closeOnOutsideClick: false, closeOnEscape: false">
 	<div class="megaoptim-panel-inner">
 		<div class="megaoptim-panel-header">
 			<div class="megaoptim-panel-header-inner">

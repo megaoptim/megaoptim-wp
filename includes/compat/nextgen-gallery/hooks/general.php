@@ -96,7 +96,7 @@ add_filter( 'megaoptim_optimizer_params', '_megaoptim_ngg_optimizer_params', 10,
 
 function _megaoptim_ngg_is_optimizer_page($is_optimizer, $optimizer, $module) {
 	if( $optimizer === MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT ) {
-		if( $module === 'nextgen' ) {
+		if( $module === MEGAOPTIM_MODULE_NEXTGEN ) {
 			$is_optimizer = true;
 		}
 	}

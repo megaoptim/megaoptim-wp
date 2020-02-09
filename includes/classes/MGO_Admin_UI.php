@@ -78,7 +78,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 		$optimizer = '';
 		$params    = array();
 
-		if ( empty( $module ) || $module === 'wp-media-library' ) {
+		if ( empty( $module ) || $module === MEGAOPTIM_MODULE_MEDIA_LIBRARY ) {
 
 			$optimizer = 'optimizers/media-library';
 			$params    = array(
@@ -87,7 +87,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 				'profile' => MGO_Profile::get_profile()
 			);
 
-		} else if ( $module === 'folders' ) {
+		} else if ( $module === MEGAOPTIM_MODULE_FOLDERS ) {
 
 			$optimizer = 'optimizers/folders';
 			$params    = array(
@@ -262,6 +262,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 	public function admin_enqueue_scripts() {
 
 		$current_screen = get_current_screen();
+        $is_optimizer = megaoptim_is_admin_page( MEGAOPTIM_PAGE_BULK_OPTIMIZER );
 
 		//Enqueue Loading Overlay
 		wp_register_script( 'megaoptim-loadingoverlay', WP_MEGAOPTIM_ASSETS_URL . 'js/loadingoverlay.min.js', array( 'jquery' ), '', true );
@@ -284,9 +285,15 @@ class MGO_Admin_UI extends MGO_BaseObject {
 		wp_register_style( 'megaoptim-fontawesome', WP_MEGAOPTIM_ASSETS_URL . 'resources/font-awesome/css/font-awesome.min.css', '', time(), 'screen' );
 		wp_enqueue_style( 'megaoptim-fontawesome' );
 
+		if($is_optimizer) {
+            wp_enqueue_script('jquery-ui-datepicker');
+            wp_register_style('jquery-ui', WP_MEGAOPTIM_ASSETS_URL.'resources/jquery-ui/jquery-ui.min.css');
+            wp_enqueue_style('jquery-ui');
+        }
+
 		//Enqueues megaoptim.css,js
-		wp_register_style( 'megaoptim', WP_MEGAOPTIM_ASSETS_URL . 'css/megaoptim.css', '', time(), 'screen' );
-		wp_enqueue_style( 'megaoptim' );
+		wp_register_style( 'megaoptim-ui', WP_MEGAOPTIM_ASSETS_URL . 'css/megaoptim.css', '', time(), 'screen' );
+		wp_enqueue_style( 'megaoptim-ui' );
 		wp_register_script( 'megaoptim-ui', WP_MEGAOPTIM_ASSETS_URL . 'js/megaoptim.js', array( 'jquery' ), time(), true );
 		wp_enqueue_script( 'megaoptim-ui' );
 		wp_localize_script(
@@ -305,7 +312,9 @@ class MGO_Admin_UI extends MGO_BaseObject {
                     'profile_error'         => __( 'Error! We can not retrieve your profile. Please check if there is active internet connection or open a ticket in our dashboard area.', 'megaoptim-image-optimizer' ),
                     'show_thumbnail_info'   => __( 'Show More Info', 'megaoptim-image-optimizer' ),
                     'hide_thumbnail_info'   => __( 'Hide More Info', 'megaoptim-image-optimizer' ),
-                    'leave'                 => __('Are you sure you want to leave?', 'megaoptim-image-optimizer')
+                    'leave'                 => __('Are you sure you want to leave?', 'megaoptim-image-optimizer'),
+                    'clear'                 => __('Clear', 'megaoptim-image-optimizer'),
+                    'current_filters'       => __('Current Filters', 'megaoptim-image-optimizer'),
 				),
 				'context'        => array(
 					'medialibrary' => MEGAOPTIM_TYPE_MEDIA_ATTACHMENT,
@@ -335,10 +344,11 @@ class MGO_Admin_UI extends MGO_BaseObject {
 			)
 		);
 
-		// Bulk Processor
+		// Bulk Processor ( After megaoptim.js )
 		wp_register_script( 'megaoptim-processor', WP_MEGAOPTIM_ASSETS_URL . 'js/megaoptim-processor.js', array( 'jquery' ), time(), true );
-		if ( megaoptim_is_admin_page( MEGAOPTIM_PAGE_BULK_OPTIMIZER ) ) {
-			wp_enqueue_script( 'megaoptim-processor' );
+		if ( $is_optimizer ) {
+
+            wp_enqueue_script( 'megaoptim-processor' );
 			wp_localize_script(
 				'megaoptim-processor', 'MGOProcessorData', array(
 					'ajax_url'        => admin_url( 'admin-ajax.php' ),
@@ -409,12 +419,19 @@ class MGO_Admin_UI extends MGO_BaseObject {
 		return admin_url( 'options-general.php?page=megaoptim_settings' );
 	}
 
-	/**
-	 * Returns the optimizer url
-	 * @return string
-	 */
-	public static function get_optimizer_url() {
-		return admin_url( 'upload.php?page=megaoptim_bulk_optimizer' );
+    /**
+     * Returns the optimizer url
+     *
+     * @param  null  $module
+     *
+     * @return string
+     */
+	public static function get_optimizer_url($module = null) {
+		$url = admin_url( 'upload.php?page=megaoptim_bulk_optimizer' );
+		if(!is_null($module)) {
+		    $url = add_query_arg('module', $module, $url);
+        }
+		return $url;
 	}
 }
 

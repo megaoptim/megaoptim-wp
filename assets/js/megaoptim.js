@@ -195,8 +195,6 @@
         var $wrapper = $(this).closest($(this).data('wrapper'));
         var key = $('#apikey').val();
 
-        console.log(key);
-
         if (key && key !== '') {
             $.ajax({
                 url: MegaOptim.endpoints.setapikey,
@@ -623,8 +621,4 @@
             }
         }
     });
-    $(document).on('click', '.megaoptim-cancel-optimizer', function (e) {
-        e.preventDefault();
-        window.location.href = window.location.href;
-    })
 })(jQuery);

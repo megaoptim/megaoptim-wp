@@ -1169,3 +1169,32 @@ UL.jqueryFileTree A {
 .loadingoverlay {
     z-index: 99998 !important;
 }
+
+.megoaptim-current-filters-list {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+.megoaptim-current-filters-label {
+    font-weight: bold;
+}
+.megoaptim-current-filters-label, .megoaptim-current-filters-list {
+    display: inline-block;
+}
+
+.megoaptim-current-filters-list li:last-child:after {
+    content: '';
+}
+.megoaptim-current-filters-list li:after {
+    content: ',';
+}
+.megoaptim-current-filters-list li {
+    list-style: none;
+    display: inline-block;
+    margin-right: 5px;
+}
+.megaoptim-current-filters {
+    margin-top: 8px;
+}
+.megaoptim-filters-no-clear .megoaptim-current-filters-clear {
+    display: none;
+}

@@ -106,10 +106,10 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
                     <div id="megaoptim-control">
                         <div class="megaoptim-row">
                             <div class="megaoptim-col megaoptim-col-12 text-center">
-                                <button id="megaoptim-toggle-optimizer" data-action="megaoptim_optimize_ld_attachment" data-context="<?php echo MEGAOPTIM_TYPE_FILE_ATTACHMENT; ?>" data-next-state="start" data-stop-text="Stop Bulk Optimizer" data-start-text="Start Bulk Optimizer" class="button button-primary button-extra-large">
+                                <button id="megaoptim-toggle-optimizer" data-action="megaoptim_optimize_ld_attachment" data-context="<?php echo MEGAOPTIM_MODULE_MEDIA_LIBRARY; ?>" data-next-state="start" data-stop-text="Stop Bulk Optimizer" data-start-text="Start Bulk Optimizer" class="button button-primary button-extra-large">
 									<?php _e( 'Start Bulk Optimizer', 'megaoptim-image-optimizer' ); ?>
                                 </button>
-                                <p><a class="megaoptim-cancel-optimizer" href="#" data-cancel="<?php _e( "Are you sure you want to cancel the optimizer?", "megaoptim-image-optimizer" ); ?>"><?php _e( 'Cancel', 'megaoptim-image-optimizer' ); ?></a> </p>
+                                <p><a class="megaoptim-cancel-optimizer" href="<?php echo MGO_Admin_UI::get_optimizer_url(MEGAOPTIM_MODULE_FOLDERS); ?>"><?php _e( 'Cancel', 'megaoptim-image-optimizer' ); ?></a></p>
                             </div>
                         </div>
                     </div>

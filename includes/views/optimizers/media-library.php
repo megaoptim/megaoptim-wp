@@ -40,6 +40,15 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
                             <div class="megaoptim-col megaoptim-col-12 text-center">
                                 <button id="megaoptim-scan-library" class="button button-primary button-extra-large" data-context="<?php echo MEGAOPTIM_TYPE_MEDIA_ATTACHMENT; ?>">
 									<?php _e( 'Start now', 'megaoptim-image-optimizer' ); ?>
+                                </button>
+                                <div class="megaoptim-filters">
+                                    <p>
+                                        <a target="_blank" data-remodal-target="megaoptim-media-filters" href="#">
+                                            <?php _e('Show Filters', 'megaoptim-image-optimizer'); ?>
+                                        </a>
+                                    </p>
+                                    <div class="megaoptim-filters-wrap"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -104,7 +113,8 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
                         <div class="megaoptim-row">
                             <div class="megaoptim-col megaoptim-col-12 text-center">
                                 <button id="megaoptim-toggle-optimizer" data-action="megaoptim_optimize_attachment" data-context="<?php echo MEGAOPTIM_TYPE_MEDIA_ATTACHMENT; ?>" data-next-state="start" data-stop-text="Stop Bulk Optimizer" data-start-text="Start Bulk Optimizer" class="button button-primary button-extra-large"><?php _e( 'Start Bulk Optimizer', 'megaoptim-image-optimizer' ); ?></button>
-                                <p><a class="megaoptim-cancel-optimizer" href="#" data-cancel="<?php _e( "Are you sure you want to cancel the optimizer?", "megaoptim-image-optimizer" ); ?>"><?php _e( 'Cancel', 'megaoptim-image-optimizer' ); ?></a> </p>
+                                <p><a class="megaoptim-cancel-optimizer" href="<?php echo MGO_Admin_UI::get_optimizer_url(MEGAOPTIM_MODULE_MEDIA_LIBRARY); ?>"><?php _e( 'Cancel', 'megaoptim-image-optimizer' ); ?></a></p>
+                                <div class="megaoptim-filters-wrap megaoptim-filters-no-clear"></div>
                             </div>
                         </div>
                     </div>
@@ -149,3 +159,5 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
         </tbody>
     </table>
 </div>
+
+<?php megaoptim_view('modals/filters'); ?>

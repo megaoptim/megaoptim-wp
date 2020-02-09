@@ -511,8 +511,14 @@ class MGO_Ajax extends MGO_BaseObject {
 			$context = $_REQUEST['context'];
 			switch ( $context ) {
 				case MEGAOPTIM_TYPE_MEDIA_ATTACHMENT:
-					$stats = MGO_MediaLibrary::instance()->get_stats( true );
-					break;
+                    $filters = array();
+                    foreach (array('date_from', 'date_to') as $key) {
+                        if (isset($_REQUEST[$key]) && ! empty($_REQUEST[$key])) {
+                            $filters[$key] = $_REQUEST[$key];
+                        }
+                    }
+                    $stats = MGO_MediaLibrary::instance()->get_stats(true, $filters);
+                    break;
 				default:
 					$stats = apply_filters( 'megaoptim_library_data', null, $context );
 			}

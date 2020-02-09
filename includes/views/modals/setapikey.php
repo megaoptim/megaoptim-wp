@@ -3,7 +3,7 @@ $profile      = new MGO_Profile();
 $is_connected = $profile->is_connected();
 ?>
 
-<div class="remodal megaoptim-panel megaoptim-modal" id="megaoptim-apikey-modal" data-remodal-id="megaoptim-setapikey">
+<div class="remodal megaoptim-panel megaoptim-modal" id="megaoptim-apikey-modal" style="display: none;" data-remodal-id="megaoptim-setapikey">
     <form class="megaoptim-modal-form megaoptim-apikey-form" method="POST">
         <div class="megaoptim-panel-header">
             <div class="megaoptim-panel-header-inner">

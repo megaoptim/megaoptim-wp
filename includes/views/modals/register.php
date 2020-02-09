@@ -14,7 +14,7 @@ if ( ! empty( $api_key ) ) {
 }
 ?>
 
-<div class="remodal megaoptim-panel megaoptim-modal" id="megaoptim-register" data-remodal-id="megaoptim-register">
+<div class="remodal megaoptim-panel megaoptim-modal" id="megaoptim-register" style="display: none;" data-remodal-id="megaoptim-register">
     <form method="POST" id="megaoptim-register-form" class="megaoptim-panel-inner" data-step="<?php echo $step; ?>">
         <div class="megaoptim-panel-header">
             <div class="megaoptim-panel-header-inner">

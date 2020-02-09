@@ -60,9 +60,9 @@ function megaoptim_is_optimizer_page( $optimizer ) {
 	}
 	$module = $_GET['module'];
 	if ( $optimizer === MEGAOPTIM_TYPE_MEDIA_ATTACHMENT ) {
-		return $module === 'wp-media-library';
+		return $module === MEGAOPTIM_MODULE_MEDIA_LIBRARY;
 	} else if ( $optimizer === MEGAOPTIM_TYPE_FILE_ATTACHMENT ) {
-		return $module === 'folders';
+		return $module === MEGAOPTIM_MODULE_FOLDERS;
 	}
 	return apply_filters( 'megaoptim_is_optimizer_page', false, $optimizer, $module );
 }

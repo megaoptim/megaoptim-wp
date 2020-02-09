@@ -14,6 +14,9 @@ define( 'MEGAOPTIM_PAGE_SETTINGS', 'megaoptim_settings' );
 define( 'MEGAOPTIM_TYPE_MEDIA_ATTACHMENT', 'wp' );
 define( 'MEGAOPTIM_TYPE_FILE_ATTACHMENT', 'localfiles' );
 define( 'MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT', 'nextgenv2' );
+define( 'MEGAOPTIM_MODULE_MEDIA_LIBRARY', 'wp-media-library' );
+define( 'MEGAOPTIM_MODULE_FOLDERS', 'folders' );
+define( 'MEGAOPTIM_MODULE_NEXTGEN', 'nextgen' );
 define( 'MEGAOPTIM_CACHE_PREFIX', 'megaoptim' );
 
 #API Config

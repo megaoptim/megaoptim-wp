@@ -66,10 +66,94 @@
 
     $(document).on('click', '#megaoptim-scan-library', function (e) {
         var context = $(this).data('context');
+        var params = {context: context};
+
+        $('.mgo-filter').each(function (i, self) {
+            var key = $(self).data('key');
+            var value = $(self).val();
+            if (!value) {
+                return; // continue;
+            }
+            params[key] = value;
+        });
+
         e.preventDefault();
         $(this).prop('disabled', true);
-        $.prepare_processor({context:context});
+        $.prepare_processor(params);
         $(this).prop('disabled', false);
+    });
+
+})(jQuery);
+
+
+// Optimizer Filters
+(function ($) {
+
+    if (jQuery().datepicker) {
+        $('.mgo-datepicker').each(function () {
+            var format = $(this).data('format');
+            if (!format) {
+                format = 'yy-mm-dd';
+            }
+            $(this).datepicker({
+                'dateFormat': format,
+                changeMonth: true,
+                changeYear: true
+            })
+        });
+    }
+
+    $(document).on('click', '.megoaptim-current-filters-clear a', function (e) {
+        e.preventDefault();
+        var filtersForm = document.getElementById("megaoptim-filters-form");
+        if (filtersForm) {
+            filtersForm.reset();
+            $('.megaoptim-current-filters').hide();
+            $('.megoaptim-current-filters-wrap ul').html('');
+        }
+    });
+
+    $(document).on('change', '.mgo-filter', function (e) {
+        var filters = [];
+        $('.mgo-filter').each(function (i, self) {
+            var value = $(self).val();
+            if (!value) {
+                return; // continue;
+            }
+            var label = $(self).data('label');
+            if (!label) {
+                var labelEl = $(self).closest('.mgo-form-group').find('label');
+                if (labelEl.length) {
+                    label = labelEl.text();
+                }
+            }
+            var formatted = '<li>' + label + '(' + value + ')</li>';
+            filters.push(formatted)
+        });
+
+        if (filters.length > 0) {
+            var formatted;
+            if (filters.length > 1) {
+                formatted = filters.join('');
+            } else {
+                formatted = filters[0];
+            }
+            var html = '<div class="megaoptim-current-filters">\n' +
+                '    <div class="megoaptim-current-filters-wrap">\n' +
+                '        <div class="megoaptim-current-filters-label">'+MegaOptim.strings.current_filters+':</div>\n' +
+                '        <ul class="megoaptim-current-filters-list">'+formatted+'</ul>\n' +
+                '    </div>\n' +
+                '    <div class="megoaptim-current-filters-clear"><a href="#">'+MegaOptim.strings.clear+'</a>\n' +
+                '    </div>\n' +
+                '</div>';
+            $('.megaoptim-filters-wrap').each(function(i, fself){
+                $(fself).html(html);
+            });
+        } else {
+            $('.megaoptim-filters-wrap').each(function(i, fself){
+                $(fself).html('');
+            });
+        }
     });
 
 })(jQuery);
