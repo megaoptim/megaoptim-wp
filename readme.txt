@@ -138,6 +138,7 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 == Changelog ==
 
 = 1.4.6 =
+- Added scan filters
 - Improved Bulk Optimizer UI (Added confirmation on exit and Cancel button)
 - Improved WebP/WP Media Offload support: Detect if WebP image exist on the remote s3 bucket use it in the final markup
 - Improved WebP/WP Media Offload support: Added support for installs that use CNAME to mask the s3 bucket url.
