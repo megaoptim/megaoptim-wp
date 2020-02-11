@@ -54,7 +54,7 @@ function megaoptim_current_screen() {
 			$url = admin_url( 'upload.php?mode=list' );
 			$list_mode_url  = '<a href="' . $url . '">' . __( 'Click here', 'megaoptim-image-optimizer' ) . '</a>';
 			$list_mode_text = '<strong>' . __( 'list', 'megaoptim-image-optimizer' ) . '</strong>';
-			$message        = sprintf( __( 'MegaOptim provides optimization buttons in the list mode where you can optimize or restore sinle attachments. %s to switch to %s mode.' ), $list_mode_url, $list_mode_text );
+			$message        = sprintf( __( 'MegaOptim provides optimization buttons in the list mode that will help you optimize or restore signle attachments. %s to switch to %s mode.' ), $list_mode_url, $list_mode_text );
 			MGO_Admin_Notices::instance()->info( 'notify_media_list_features', $message, 1 );
 		}
 	}
