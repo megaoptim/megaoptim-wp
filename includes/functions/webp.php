@@ -131,7 +131,7 @@ function megaoptim_replace_img_with_webp( $match ) {
 	unset( $img['alt'] );
 
 	// Try to assemble the picture
-    if($srcset['value']) {
+    if(megaoptim_contains($srcset, ',')) {
         $defs = explode( ",", $srcset );
     } else {
         $defs = array( $src );
