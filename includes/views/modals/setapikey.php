@@ -7,7 +7,7 @@ $is_connected = $profile->is_connected();
     <form class="megaoptim-modal-form megaoptim-apikey-form" method="POST">
         <div class="megaoptim-panel-header">
             <div class="megaoptim-panel-header-inner">
-                <h1 class="megaoptim-panel-title"><?php _e( 'Connect to MegaOptim', 'megaoptim-image-optimizer' ); ?></h1>
+                <h3 class="megaoptim-panel-title"><?php _e( 'Connect to MegaOptim', 'megaoptim-image-optimizer' ); ?></h3>
                 <p class="megaoptim-panel-desc">
 					<?php _e( 'If you already have MegaOptim API Key please enter it below', 'megaoptim-image-optimizer' ); ?> </p>
             </div>

@@ -176,7 +176,7 @@ class MGO_FileAttachment extends MGO_Attachment {
 		$row['raw']['saved_thumbs']        = 0;
 		$row['raw']['saved_thumbs_retina'] = 0;
 		$row['raw']['saved_total']         = (int) $row['raw']['saved_bytes'] + (int) $row['raw']['saved_thumbs'] + (int) $row['raw']['saved_thumbs_retina'];
-		$row['raw']['saved_total_mb']      = megaoptim_convert_bytes_to_specified( $row['raw']['saved_total'], 'MB', 2 );
+		$row['raw']['saved_total_mb']      = (float) megaoptim_convert_bytes_to_specified( $row['raw']['saved_total'], 'MB', 2 );
 		// Other counters
 		$row['processed_thumbs']        = 0;
 		$row['processed_thumbs_retina'] = 0;

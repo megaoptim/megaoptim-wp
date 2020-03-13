@@ -2,7 +2,7 @@
     <div class="megaoptim-panel-inner">
         <div class="megaoptim-panel-header">
             <div class="megaoptim-panel-header-inner">
-                <h1 class="megaoptim-panel-title"><?php _e( 'Select Folder', 'megaoptim-image-optimizer' ); ?></h1>
+                <h3 class="megaoptim-panel-title"><?php _e( 'Select Folder', 'megaoptim-image-optimizer' ); ?></h3>
                 <p class="megaoptim-panel-desc">
 					<?php _e( 'Click on the check icon to select a folder you want to optimize! The icon will be green if you selected a folder correctly.', 'megaoptim-image-optimizer' ); ?>
                 </p>

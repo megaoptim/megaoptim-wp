@@ -33,42 +33,45 @@ $tokens           = $is_profile_valid ? $profile->get_tokens_count() : 0;
     <form class="content-wrapper" method="POST" id="megaoptim-folder-toptimizer">
         <div class="megaoptim-middle-content">
 			<?php if ( $is_profile_valid ): ?>
-                <div id="megaoptim-folder-picker">
-                    <div class="row text-center">
-                        <?php if( $tokens == -1 || $tokens > 0 ): ?>
+				<?php if( $tokens == -1 || $tokens > 0 ): ?>
+                    <div id="megaoptim-folder-picker">
+                        <div class="row text-center">
                             <h3><?php _e('Optimize folders', 'megaoptim-image-optimizer'); ?></h3>
                             <p><?php _e('On this screen you can optimize your folders that contain images and are outside of the WordPress Media Library or the NextGen Galleries.', 'megaoptim-image-optimizer'); ?></p>
                             <p><?php _e(sprintf('Click on "Select custom folder" to choose a folder that contains images or optimize your current theme %s folder. (Recommended)', '<strong>'.wp_get_theme()->get( 'Name' ).'</strong>'), 'megaoptim-image-optimizer'); ?></p>
                             <div class="megaoptim-actions">
                                 <p>
-                                    <?php if(is_child_theme()): ?>
+									<?php if(is_child_theme()): ?>
                                         <a id="megaoptim-select-parent-theme-folder" class="button-primary megaoptim-optimize-theme-folder" data-themedir="<?php echo get_template_directory(); ?>" class="button-primary"><?php _e('Scan parent theme folder', 'megaoptim-image-optimizer'); ?></a>
                                         <a id="megaoptim-select-current-theme-folder" class="button-primary megaoptim-optimize-theme-folder" data-themedir="<?php echo get_stylesheet_directory(); ?>" class="button-primary"><?php _e('Scan child theme folder', 'megaoptim-image-optimizer'); ?></a>
-                                    <?php else: ?>
+									<?php else: ?>
                                         <a id="megaoptim-select-current-theme-folder" class="button-primary megaoptim-optimize-theme-folder" data-themedir="<?php echo get_template_directory(); ?>" class="button-primary"><?php _e('Scan theme folder', 'megaoptim-image-optimizer'); ?></a>
-                                    <?php endif; ?>
-	                                <a id="megaoptim-select-folder" href="#" class="button-primary"><?php _e('Select custom folder', 'megaoptim-image-optimizer'); ?></a>
+									<?php endif; ?>
+                                    <a id="megaoptim-select-folder" href="#" class="button-primary"><?php _e('Select custom folder', 'megaoptim-image-optimizer'); ?></a>
                                 </p>
                             </div>
-                            <div id="megaoptim-selected-folder" style="display: none;" class="megaoptim-actions">
-                            </div>
-                        <?php else: ?>
-                             <?php echo megaoptim_get_view('parts/out-of-tokens'); ?>
-                            <div class="megaoptim-actions">
-                                <p>
-                                    <a disabled=disabled class="button-primary"><?php _e('Select custom folder', 'megaoptim-image-optimizer'); ?></a>
-                                    <a disabled=disabled class="button-primary"><?php _e('Scan theme folder', 'megaoptim-image-optimizer'); ?></a>
-                                </p>
-                            </div>
-                        <?php endif; ?>
+                            <div id="megaoptim-selected-folder" style="display: none;" class="megaoptim-actions"></div>
+                        </div>
                     </div>
-                </div>
+				<?php else: ?>
+
+                    <?php echo megaoptim_get_view('parts/out-of-tokens'); ?>
+                    <div class="megaoptim-actions">
+                        <p>
+                            <a disabled=disabled class="button-primary"><?php _e('Select custom folder', 'megaoptim-image-optimizer'); ?></a>
+                            <a disabled=disabled class="button-primary"><?php _e('Scan theme folder', 'megaoptim-image-optimizer'); ?></a>
+                        </p>
+                    </div>
+                <?php endif; ?>
+
                 <div style="display: none;" id="megaoptim-file-optimizer">
                     <div id="megaoptim-stats">
                         <div class="megaoptim-row">
                             <div class="megaoptim-col-4 megaoptim-extra-xs-full">
                                 <div class="megaoptim-stats-box">
-                                    <div class="megaoptim-stats-square megaoptim-bg-secondary megaoptim-border-primary" id="total_optimized">0</div>
+                                    <div class="megaoptim-stats-square megaoptim-bg-secondary megaoptim-border-primary" id="total_optimized">
+                                        0
+                                    </div>
                                     <div class="megaoptim-stats-label">
 										<?php _e( 'Images Optimized', 'megaoptim-image-optimizer' ); ?>
                                     </div>

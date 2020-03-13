@@ -14,10 +14,10 @@ function _megaoptim_notice_user_balance() {
 		if ( !empty($api_key) && intval( $tokens_count ) === 0 ) {
 			$message = sprintf(
 				'%s %s %s %s.',
-				__( 'Your image tokens balance is 0. To continue using', 'megaoptim-image-optimizer' ),
+				__( 'Your MegaOptim account is out of optimization tokens. To continue using', 'megaoptim-image-optimizer' ),
 				'<strong>' . __( 'MegaOptim Image Optimizer', 'megaoptim-image-optimizer' ) . '</strong>',
 				__( 'please top up your account' ),
-				'<a href="' . WP_MEGAOPTIM_DASHBOARD_URL . '">' . __( 'here', 'megaoptim-image-optimizer' ) . '</a>'
+				'<a target="_blank" href="' . WP_MEGAOPTIM_DASHBOARD_URL . '">' . __( 'here', 'megaoptim-image-optimizer' ) . '</a>'
 			);
 			MGO_Admin_Notices::instance()->warning( 'insufficient_balance', $message, 1 );
 		}

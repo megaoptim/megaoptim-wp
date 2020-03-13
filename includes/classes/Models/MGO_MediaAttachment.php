@@ -344,7 +344,7 @@ class MGO_MediaAttachment extends MGO_Attachment {
 		$row['raw']['saved_thumbs']        = $this->get_total_saved_bytes_thumbnails( false, false );
 		$row['raw']['saved_thumbs_retina'] = $this->get_total_saved_bytes_thumbnails( false, true );
 		$row['raw']['saved_total']         = (int) $row['raw']['saved_bytes'] + (int) $row['raw']['saved_thumbs'] + (int) $row['raw']['saved_thumbs_retina'];
-		$row['raw']['saved_total_mb']      = megaoptim_convert_bytes_to_specified( $row['raw']['saved_total'], 'MB', 2 );
+		$row['raw']['saved_total_mb']      = (float) megaoptim_convert_bytes_to_specified( $row['raw']['saved_total'], 'MB', 2 );
 		// Other counters
 		$row['processed_thumbs']        = count( $thumbnails['normal'] );
 		$row['processed_thumbs_retina'] = count( $thumbnails['retina'] );

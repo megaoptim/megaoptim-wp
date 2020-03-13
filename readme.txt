@@ -145,6 +145,8 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 - Improved Bulk Folder/File Optimizer
 - Improved Bulk Media Library Optimizer
 - Improved Bulk NextGen Library Optimizer
+- Improved UI out-of-tokens signalization
+- Fixed notice title conflicts
 - Fixed several typos
 
 = 1.4.7 =

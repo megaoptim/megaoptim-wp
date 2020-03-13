@@ -18,7 +18,7 @@ if ( ! empty( $api_key ) ) {
     <form method="POST" id="megaoptim-register-form" class="megaoptim-panel-inner" data-step="<?php echo $step; ?>">
         <div class="megaoptim-panel-header">
             <div class="megaoptim-panel-header-inner">
-                <h1 class="megaoptim-panel-title"><?php _e( 'Create MegaOptim Account', 'megaoptim-image-optimizer' ); ?></h1>
+                <h3 class="megaoptim-panel-title"><?php _e( 'Create MegaOptim Account', 'megaoptim-image-optimizer' ); ?></h3>
                 <p class="megaoptim-panel-desc">
 					<?php _e( 'Obtain MegaOptim api key and start optimizing your galleries.', 'megaoptim-image-optimizer' ); ?> </p>
             </div>

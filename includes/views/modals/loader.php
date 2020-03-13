@@ -6,7 +6,7 @@
                     <div class="mgo-spinner spinner-1 mgo-spinner-light"></div>
                 </div>
                 <div class="megaoptim-row">
-                   <h1 class="megaoptim-panel-title"></h1>
+                   <h3 class="megaoptim-panel-title"></h3>
                 </div>
 			</div>
 		</div>
