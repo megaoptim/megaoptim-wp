@@ -60,4 +60,25 @@ function _megaoptim_database_upgrade() {
 		MGO_Upgrader::instance()->maybe_upgrade();
 	}
 }
+
 add_action( 'plugins_loaded', '_megaoptim_database_upgrade', 100 );
+
+
+/**
+ * Calculate the optimal chunk size.
+ *
+ * @param $size
+ *
+ * @return int
+ */
+function _megaoptim_max_scan_chunk_size( $size ) {
+	$thumbnails        = MGO_Settings::instance()->get( MGO_Settings::IMAGE_SIZES, array() );
+	$thumbnails_retina = MGO_Settings::instance()->get( MGO_Settings::RETINA_IMAGE_SIZES, array() );
+	$sizes_count       = count( $thumbnails ) + count( $thumbnails_retina ) + 1;
+	if ( $sizes_count > 0 ) {
+		$max  = 10000; // absolute maximum.
+		$size = $max / $sizes_count;
+	}
+	return (int) $size;
+}
+add_filter( 'megaoptim_max_scan_chunk_size', '_megaoptim_max_scan_chunk_size', 15, 1 );

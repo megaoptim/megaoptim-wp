@@ -1,29 +1,117 @@
 (function ($) {
 
     /**
+     * The initial attachments list
+     * @type {*[]}
+     */
+    window.megaoptim_attachment_list = [];
+    window.megaoptim_total_optimized_mixed = 0;
+    window.megaoptim_total_fully_optimized_attachments = 0;
+    window.megaoptim_total_thumbnails_optimized = 0;
+    window.megaoptim_total_saved_bytes = 0;
+    window.megaoptim_total_remaining = 0;
+    window.megaoptim_total_pages = 1;
+    window.megaoptim_current_page = 1;
+
+    /**
+     * Format bytes
+     * @param bytes
+     * @returns {string}
+     */
+    $.format_bytes = function (bytes) {
+        var marker = 1024;
+        var decimal = 0;
+        var megaBytes = marker * marker;
+        return (bytes / megaBytes).toFixed(decimal);
+    };
+
+    /**
+     * Merge arrays
+     * @param arr1
+     * @param arr2
+     * @returns {[]}
+     */
+    $.merge_arrays = function (arr1, arr2) {
+
+        var final = [];
+        if (Array.isArray(arr1) && arr1.length > 0) {
+            for (var i in arr1) {
+                final.push(arr1[i]);
+            }
+        }
+        if (Array.isArray(arr2) && arr2.length > 0) {
+            for (var j in arr2) {
+                final.push(arr2[j]);
+            }
+        }
+        return final;
+    };
+
+    /**
+     * Queries data recursively.
+     * @param params
+     * @param success
+     */
+    $.query_stats = function (params, success) {
+        $.ajax({
+            url: MGOLibrary.ajax_url + '?action=megaoptim_library_data&nonce=' + MGOLibrary.nonce_default,
+            data: params,
+            type: 'POST',
+            success: function (response) {
+                if (response.hasOwnProperty('data')) {
+
+                    var total_pages = response.data.hasOwnProperty('total_pages') ? response.data.total_pages : 1;
+                    var current_page = parseInt(params['page']);
+                    var next_page = current_page + 1;
+
+                    if (response.data.hasOwnProperty('remaining')) {
+                        window.megaoptim_attachment_list = $.merge_arrays(window.megaoptim_attachment_list, response.data.remaining);
+                    }
+                    if (response.data.hasOwnProperty('total_optimized_mixed')) {
+                        window.megaoptim_total_optimized_mixed += parseInt(response.data.total_optimized_mixed);
+                    }
+                    if (response.data.hasOwnProperty('total_fully_optimized_attachments')) {
+                        window.megaoptim_total_fully_optimized_attachments += parseInt(response.data.total_fully_optimized_attachments);
+                    }
+                    if (response.data.hasOwnProperty('total_thumbnails_optimized')) {
+                        window.megaoptim_total_thumbnails_optimized += parseInt(response.data.total_thumbnails_optimized);
+                    }
+                    if (response.data.hasOwnProperty('total_saved_bytes')) {
+                        window.megaoptim_total_saved_bytes += parseFloat(response.data.total_saved_bytes);
+                    }
+                    if (response.data.hasOwnProperty('total_remaining')) {
+                        window.megaoptim_total_remaining += parseFloat(response.data.total_remaining);
+                    }
+                    if (response.data.hasOwnProperty('total_pages')) {
+                        window.megaoptim_total_pages = response.data.total_pages;
+                    }
+                    if (current_page < total_pages) {
+                        params['page'] = next_page;
+                        $.query_stats(params, success);
+                    } else {
+                        success(1);
+                    }
+                } else {
+                    success(0);
+                }
+            },
+            error: function () {
+                success(0);
+            }
+        });
+    };
+
+    /**
      * Return the library stats
      * @param params
      * @param success
      */
     $.get_library_stats = function (params, success) {
 
-        var loader = new $.megaoptim.loader({
-            'title': MGOLibrary.strings.loading_title,
-            'description': MGOLibrary.strings.loading_description,
-        });
+        params['page'] = 1;
+        params['per_page'] = MGOLibrary.max_chunk_size;
 
-        $.ajax({
-            url: MGOLibrary.ajax_url + '?action=megaoptim_library_data&nonce=' + MGOLibrary.nonce_default,
-            data: params,
-            beforeSend: function () {
-                loader.start()
-            },
-            type: 'POST',
-            success: success,
-            complete: function () {
-                loader.stop()
-            }
-        });
+        $.query_stats(params, success);
     };
 
     /**
@@ -35,32 +123,52 @@
      * @param params
      */
     $.prepare_processor = function (params) {
+
+        var loader = new $.megaoptim.loader({
+            'title': MGOLibrary.strings.loading_title,
+            'description': MGOLibrary.strings.loading_description,
+        });
+
         var $wrapper = $('#megaoptim-optimizer-scan');
         var $processor_btn = $('#megaoptim-toggle-optimizer');
-        $.get_library_stats(params, function (response) {
-            if (response.success) {
-                var $optimizer_container = $('#megaoptim-optimizer-wrapper');
-                var $total_optimized_counter = $optimizer_container.find('#total_optimized');
-                var $total_remaining_counter = $optimizer_container.find('#total_remaining');
-                var $total_saved_bytes_counter = $optimizer_container.find("#total_saved_bytes");
-                var $progress_percentage = $optimizer_container.find('#progress_percentage');
-                var $progress_percentage_bar = $optimizer_container.find('#progress_percentage_bar');
-                $total_optimized_counter.text(response.data.total_optimized_mixed);
-                $total_remaining_counter.text(response.data.total_remaining);
-                $total_saved_bytes_counter.text(response.data.total_saved_bytes_human);
-                $progress_percentage.text(response.data.total_optimized_mixed_percentage + '%');
-                $progress_percentage_bar.css('width', response.data.total_optimized_mixed_percentage + '%');
-                window.megaoptim_attachment_list = response.data.remaining;
-                if (response.data.total_remaining > 0) {
+        loader.start();
+        $.get_library_stats(params, function (isSuccess) {
+            if (isSuccess) {
+                var $container = $('#megaoptim-optimizer-wrapper');
+
+                var $total_optimized_counter = $container.find('#total_optimized');
+                var $total_remaining_counter = $container.find('#total_remaining');
+                var $total_saved_bytes_counter = $container.find("#total_saved_bytes");
+
+                var $progress_percentage = $container.find('#progress_percentage');
+                var $progress_percentage_bar = $container.find('#progress_percentage_bar');
+
+                var total_optimized_percentage = 0;
+                var total_saved_bytes = $.format_bytes(window.megaoptim_total_saved_bytes);
+                var total_optimized = window.megaoptim_total_optimized_mixed;
+                var total_remaining = window.megaoptim_total_remaining;
+                var total_attachments = total_optimized + total_remaining;
+                if (total_attachments > 0 && total_optimized > 0) {
+                    total_optimized_percentage = ((total_optimized*100)/total_attachments).toFixed(2);
+                }
+
+                $total_optimized_counter.text(total_optimized);
+                $total_remaining_counter.text(total_remaining);
+                $total_saved_bytes_counter.text(total_saved_bytes);
+                $progress_percentage.text(total_optimized_percentage + '%');
+                $progress_percentage_bar.css('width', total_optimized_percentage + '%');
+
+                if (total_remaining > 0) {
                     $processor_btn.prop('disabled', false);
                 } else {
                     $processor_btn.prop('disabled', true);
                 }
-                $optimizer_container.show();
+                $container.show();
                 $wrapper.hide();
             } else {
                 alert("Internal server error. Please contact support.");
             }
+            loader.stop();
         });
     };
 

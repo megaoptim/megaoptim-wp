@@ -492,6 +492,7 @@ class MGO_Ajax extends MGO_BaseObject {
 		die( json_encode( $debug->generate_report() ) );
 	}
 
+
 	/**
 	 * Generates library data
 	 */
@@ -517,6 +518,8 @@ class MGO_Ajax extends MGO_BaseObject {
                             $filters[$key] = $_REQUEST[$key];
                         }
                     }
+					$filters['page'] = isset($_REQUEST['page']) ? $_REQUEST['page'] : null;
+					$filters['per_page'] = isset($_REQUEST['per_page']) ? $_REQUEST['per_page'] : 5000;
                     $stats = MGO_MediaLibrary::instance()->get_stats(true, $filters);
                     break;
 				default:

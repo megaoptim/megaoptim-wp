@@ -379,38 +379,65 @@ class MGO_MediaLibrary extends MGO_Library {
 	 * @return array|null|object
 	 */
 	public function get_images( $args = array() ) {
+
+
 		global $wpdb;
-		//$query  = $wpdb->prepare( "SELECT P.ID, P.post_title FROM $wpdb->posts P WHERE P.post_type='attachment' AND P.post_mime_type LIKE %s", "%image%" );
 
-		if ( is_array( $args ) && count( $args ) > 0 ) {
+		$tag       = '==SELECT_WHAT==';
+		$tag_query = 'P.ID, P.post_title, PM1.meta_value as metadata, PM2.meta_value as megaoptim';
+		$tag_count = 'COUNT(*)';
 
+		$filters = megaoptim_array_only( $args, array( 'date_from', 'date_to', 'author' ) );
+
+		$page_number    = isset( $args['page'] ) ? intval( $args['page'] ) : null;
+		$items_per_page = isset( $args['per_page'] ) ? intval( $args['per_page'] ) : 5000;
+
+		// Base Query
+		$query_str = "SELECT {$tag} FROM {$wpdb->posts} P INNER JOIN {$wpdb->postmeta} PM1 ON PM1.post_id=P.ID AND PM1.meta_key='_wp_attachment_metadata' LEFT JOIN {$wpdb->postmeta} PM2 ON PM2.post_id=P.ID AND PM2.meta_key='_megaoptim_data' WHERE P.post_type='attachment' AND P.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')";
+
+		if ( is_array( $filters ) && count( $filters ) > 0 ) {
 			$prepare_params = array();
-			$query_str      = "SELECT P.ID, P.post_title, PM1.meta_value as metadata, PM2.meta_value as megaoptim FROM {$wpdb->posts} P INNER JOIN {$wpdb->postmeta} PM1 ON PM1.post_id=P.ID AND PM1.meta_key='_wp_attachment_metadata' LEFT JOIN {$wpdb->postmeta} PM2 ON PM2.post_id=P.ID AND PM2.meta_key='_megaoptim_data' WHERE P.post_type='attachment' AND P.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')";
-
 			// Add dates
-			if ( isset( $args['date_from'] ) && isset($args['date_to']) ) {
+			if ( isset( $filters['date_from'] ) && isset( $filters['date_to'] ) ) {
 				$query_str .= ' AND (P.post_date BETWEEN %s AND %s)';
-				array_push( $prepare_params, $args['date_from'] );
-				array_push( $prepare_params, $args['date_to'] );
-			} else if( isset( $args['date_from'] ) ) {
-                $query_str .= ' AND (P.post_date >= %s)';
-                array_push( $prepare_params, $args['date_from'] );
-            }
-
+				array_push( $prepare_params, $filters['date_from'] );
+				array_push( $prepare_params, $filters['date_to'] );
+			} elseif ( isset( $filters['date_from'] ) ) {
+				$query_str .= ' AND (P.post_date >= %s)';
+				array_push( $prepare_params, $filters['date_from'] );
+			}
 			// Add author
-			if ( isset( $args['author'] ) && ! empty( $args['author'] ) ) {
+			if ( isset( $filters['author'] ) && ! empty( $filters['author'] ) ) {
 				$query_str .= ' AND P.post_author=%d';
-				array_push( $prepare_params, $args['author'] );
+				array_push( $prepare_params, $filters['author'] );
 			}
 			$query_str .= " ORDER BY P.post_date DESC";
-			$query_str = $wpdb->prepare( $query_str, $args );
+			$query_str = $wpdb->prepare( $query_str, $prepare_params );
 
 		} else {
-			$query_str = "SELECT P.ID, P.post_title, PM1.meta_value as metadata, PM2.meta_value as megaoptim FROM {$wpdb->posts} P INNER JOIN {$wpdb->postmeta} PM1 ON PM1.post_id=P.ID AND PM1.meta_key='_wp_attachment_metadata' LEFT JOIN {$wpdb->postmeta} PM2 ON PM2.post_id=P.ID AND PM2.meta_key='_megaoptim_data' WHERE P.post_type='attachment' AND P.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif') ORDER BY P.post_date DESC";
+			$query_str .= " ORDER BY P.post_date DESC";
 		}
-		$result = $wpdb->get_results( $query_str, ARRAY_A );
 
-		return $result;
+		// Count the overall query
+		$query       = str_replace( $tag, $tag_count, $query_str );
+		$total_items = (int) $wpdb->get_var( $query );
+		$total_pages = ( $total_items > 0 && $items_per_page > 0 ) ?  ceil(( $total_items / $items_per_page )) : 1;
+
+		// Setup page offset
+		if ( is_numeric( $page_number ) && is_numeric( $items_per_page ) && $page_number > 0 ) {
+			$offset    = ( $page_number - 1 ) * $items_per_page;
+			$query_str .= ' LIMIT ' . $offset . ', ' . $items_per_page;
+		}
+
+		// Query the current page results.
+		$query  = str_replace( $tag, $tag_query, $query_str );
+		$result = $wpdb->get_results( $query, ARRAY_A );
+
+		return array(
+			'total_items' => $total_items,
+			'total_pages' => $total_pages,
+			'result'      => $result,
+		);
 	}
 
 	/**
@@ -426,6 +453,7 @@ class MGO_MediaLibrary extends MGO_Library {
 		//$sql_filters = megaoptim_array_except($args, array('include_remaining'));
 
 		@set_time_limit( 0 );
+		megaoptim_raise_memory_limit();
 		$images_total         = 0;
 		$optimized_total      = 0;
 		$optimized_thumbnails = 0;
@@ -433,7 +461,8 @@ class MGO_MediaLibrary extends MGO_Library {
 		$saved_bytes          = 0;
 		$remaining_list       = array();
 		$remaining_total      = 0;
-		$images               = $this->get_images( $args );
+		$media_query          = $this->get_images( $args );
+		$images               = $media_query['result'];
 		$empty_gallery        = true;
 		if ( ! empty( $images ) && count( $images ) > 0 ) {
 			$empty_gallery = false;
@@ -477,7 +506,7 @@ class MGO_MediaLibrary extends MGO_Library {
 						}
 
 					}
-				} catch ( MGO_Exception $e ) {
+				} catch ( \MGO_Exception $e ) {
 					continue;
 				}
 			}
@@ -491,6 +520,7 @@ class MGO_MediaLibrary extends MGO_Library {
 		$data->total_thumbnails_optimized        = $optimized_thumbnails;
 		$data->total_saved_bytes                 = $saved_bytes;
 		$data->total_remaining                   = $remaining_total;
+		$data->total_pages                       = $media_query['total_pages'];
 
 		if ( $include_remaining ) {
 			$data->set_remaining( $remaining_list );

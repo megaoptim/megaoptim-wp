@@ -137,6 +137,11 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 
 == Changelog ==
 
+= 1.4.8 =
+- Added chunked Media Library scanning for large media libraries to prevent memory exhaustion and timeouts
+- Improved Media Library Bulk Optimizer counters
+- Fixed several typos
+
 = 1.4.7 =
 - Fix WebP php warning
 

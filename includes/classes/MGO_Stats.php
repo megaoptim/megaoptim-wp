@@ -39,6 +39,8 @@ class MGO_Stats {
 	public $total_remaining;
 	// Remaining list
 	public $remaining;
+	// Total query pages
+	public $total_pages;
 
 	/**
 	 * Calcultes the optimized percentage.

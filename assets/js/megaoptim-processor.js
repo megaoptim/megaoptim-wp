@@ -190,8 +190,8 @@
                         if (index < len) {
                             if (response.success) {
                                 self.update_table_row(response.data['attachment']);
-                                self.update_couters(response.data['general']);
-                                if (response.data['tokens'] === 0) {
+                                self.update_couters(response.data);
+                                if (parseInt(response.data['tokens']) === 0) {
                                     window.location.href = window.location.href;
                                 }
                             } else {
@@ -258,8 +258,18 @@
          * @param attachment
          */
         this.add_table_row = function (attachment) {
+
             var $table = self.get_results_table();
             var $body = $table.find('tbody');
+
+            // Clean up older entries. Allow only N rows to be displayed.
+            var max_rows = 30;
+            var $rows = $body.find('tr');
+            if($rows.length > max_rows) {
+                $body.find('tr:last').remove();
+            }
+
+            // Insert new one
             $body.prepend(self.generate_table_row(attachment));
         };
 
@@ -348,13 +358,24 @@
             var $el_total_saved_bytes = $('#total_saved_bytes');
             var $el_percent_number = $('#progress_percentage');
             var $el_percent_bar = $('#progress_percentage_bar');
-            // calculations
 
-            var total_processed = parseInt(data.total);
+            // calculations
+            var total_processed = 0;
+            if (self.is_media_library()) {
+                total_processed = data.attachment.optimized_thumbs;
+                if (data.attachment.hasOwnProperty('optimized_thumbs_retina')) {
+                    total_processed += data.attachment.optimized_thumbs_retina;
+                }
+                if (data.attachment.saved_percent > 0) { // Count the full size.
+                    total_processed++;
+                }
+            } else {
+                total_processed = data.general.total;
+            }
             var total_optimized = parseInt($el_total_optimized_mixed.text()) + total_processed;
             var total_remaining = parseInt($el_total_remaining.text()) - total_processed;
             var total = (total_optimized + total_remaining);
-            var total_saved_bytes = parseFloat($el_total_saved_bytes.text()) + parseInt(data.saved_megabytes);
+            var total_saved_bytes = parseFloat($el_total_saved_bytes.text()) + parseFloat(data.general.saved_megabytes);
 
             // aassignments
             $el_total_optimized_mixed.text(total_optimized);

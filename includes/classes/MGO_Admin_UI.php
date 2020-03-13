@@ -394,18 +394,20 @@ class MGO_Admin_UI extends MGO_BaseObject {
 
 		// Library processor
 		wp_register_script( 'megaoptim-library', WP_MEGAOPTIM_ASSETS_URL . 'js/megaoptim-library.js', array( 'jquery' ), time(), true );
-		if ( megaoptim_is_optimizer_page( MEGAOPTIM_TYPE_MEDIA_ATTACHMENT )
-		     || ( class_exists( 'MGO_NGGAttachment' )
-		          && megaoptim_is_optimizer_page( MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT ) ) ) {
 
+		$is_media_library = megaoptim_is_optimizer_page( MEGAOPTIM_TYPE_MEDIA_ATTACHMENT );
+		$is_ngg_library   = ( class_exists( 'MGO_NGGAttachment' ) && megaoptim_is_optimizer_page( MEGAOPTIM_TYPE_NEXTGEN_ATTACHMENT ) );
+
+		if ( $is_media_library || $is_ngg_library ) {
 			wp_localize_script( 'megaoptim-library', 'MGOLibrary', array(
-				'ajax_url'      => admin_url( 'admin-ajax.php' ),
-				'nonce_default' => wp_create_nonce( MGO_Ajax::NONCE_DEFAULT ),
-				'root_path'     => megaoptim_get_wp_root_path(),
-				'strings'       => array(
+				'ajax_url'       => admin_url( 'admin-ajax.php' ),
+				'nonce_default'  => wp_create_nonce( MGO_Ajax::NONCE_DEFAULT ),
+				'root_path'      => megaoptim_get_wp_root_path(),
+				'strings'        => array(
 					'loading_title'       => __( 'Scanning...', 'megaoptim-image-optimizer' ),
 					'loading_description' => __( 'We are currently scanning for unoptimized images... Once finished if any unoptimized images are found you will be able to start optimizing.', 'megaoptim-image-optimizer' )
-				)
+				),
+				'max_chunk_size' => apply_filters( 'megaoptim_max_scan_chunk_size', 1500 ),
 			) );
 			wp_enqueue_script( 'megaoptim-library' );
 		}

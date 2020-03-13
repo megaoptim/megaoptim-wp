@@ -492,6 +492,26 @@ function megaoptim_array_except( $arr, $keys ) {
 }
 
 /**
+ * Array only
+ *
+ * @param $arr
+ * @param $keys
+ *
+ * @return array
+ */
+function megaoptim_array_only( $arr, $keys ) {
+	$new = array();
+	if(count($arr) > 0) {
+		foreach ( $arr as $key => $value ) {
+			if ( in_array( $key, $keys ) ) {
+				$new[ $key ] = $value;
+			}
+		}
+	}
+	return $new;
+}
+
+/**
  * Check if the dir should be exclued from the directory tree.
  *
  * @param $dir
@@ -607,10 +627,12 @@ function megaoptim_view( $file, $data = array(), $extension = '' ) {
 
 /**
  * Raise the WP Memory limit.
+ *
+ * @param  string  $context
  */
-function megaoptim_raise_memory_limit() {
+function megaoptim_raise_memory_limit($context = 'image') {
 	if ( function_exists( 'wp_raise_memory_limit' ) ) {
-		wp_raise_memory_limit();
+		wp_raise_memory_limit($context);
 	}
 }
 
