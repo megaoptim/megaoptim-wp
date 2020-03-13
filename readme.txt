@@ -4,7 +4,7 @@ Tags: image optimizer, image compression, pagespeed, compress, optimize images, 
 Requires at least: 3.6
 Tested up to: 5.3
 Requires PHP: 5.3
-Stable tag: 1.4.7
+Stable tag: 1.4.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -139,7 +139,12 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 
 = 1.4.8 =
 - Added chunked Media Library scanning for large media libraries to prevent memory exhaustion and timeouts
-- Improved Media Library Bulk Optimizer counters
+- Added error reporting for cases when there is fatal error during bulk optimization caused by third party. eg: plugin updates, etc.
+- Improved Bulk Optimizer counters
+- Improved WPCLI Bulk Optimizer command
+- Improved Bulk Folder/File Optimizer
+- Improved Bulk Media Library Optimizer
+- Improved Bulk NextGen Library Optimizer
 - Fixed several typos
 
 = 1.4.7 =

@@ -325,18 +325,30 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	 */
 	public function get_optimization_stats() {
 
-		$optimized_thumbnails = $this->get_processed_thumbnails();
+		$thumbnails = $this->get_processed_thumbnails();
+		$row        = array();
+		$row['ID']  = $this->ID;
 
-		$row                            = array();
-		$row['ID']                      = $this->ID;
-		$row['optimized_size']          = megaoptim_human_file_size( $this->get_original_size() - $this->get_saved_bytes() );
-		$row['original_size']           = megaoptim_human_file_size( $this->get_original_size() );
-		$row['saved_bytes']             = megaoptim_human_file_size( $this->get_saved_bytes() );
-		$row['saved_percent']           = megaoptim_round( $this->get_saved_percent(), 2 );
-		$row['optimized_thumbs']        = count( $optimized_thumbnails['normal'] );
-		$row['optimized_thumbs_retina'] = count( $optimized_thumbnails['retina'] );
-		$row['saved_thumbs']            = $this->get_total_saved_bytes_thumbnails( true, false );
-		$row['saved_thumbs_retina']     = $this->get_total_saved_bytes_thumbnails( true, true );;
+		// Stats Formatted
+		$row['optimized_size']      = $this->get_optimized_size( true );
+		$row['original_size']       = $this->get_original_size( true );
+		$row['saved_bytes']         = $this->get_saved_bytes( true );
+		$row['saved_percent']       = $this->get_saved_percent( false, 2 );
+		$row['saved_thumbs']        = $this->get_total_saved_bytes_thumbnails( true, false );
+		$row['saved_thumbs_retina'] = $this->get_total_saved_bytes_thumbnails( true, true );
+		// Stats Raw
+		$row['raw']                        = array();
+		$row['raw']['optimized_size']      = $this->get_optimized_size( false );
+		$row['raw']['original_size']       = $this->get_original_size( false );
+		$row['raw']['saved_bytes']         = $this->get_saved_bytes( false );
+		$row['raw']['saved_thumbs']        = $this->get_total_saved_bytes_thumbnails( false, false );
+		$row['raw']['saved_thumbs_retina'] = $this->get_total_saved_bytes_thumbnails( false, true );
+		$row['raw']['saved_total']         = (int) $row['raw']['saved_bytes'] + (int) $row['raw']['saved_thumbs'] + (int) $row['raw']['saved_thumbs_retina'];
+		$row['raw']['saved_total_mb']      = megaoptim_convert_bytes_to_specified( $row['raw']['saved_total'], 'MB', 2 );
+		// Other counters
+		$row['processed_thumbs']        = count( $thumbnails['normal'] );
+		$row['processed_thumbs_retina'] = count( $thumbnails['retina'] );
+		$row['processed_total']         = $row['processed_thumbs'] + $row['processed_thumbs_retina'] + 1;
 
 		return apply_filters( 'megaoptim_attachment_optimization_stats', $row, $this );
 	}

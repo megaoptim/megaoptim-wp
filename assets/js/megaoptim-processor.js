@@ -151,7 +151,7 @@
                 $btn.text($btn.data('start-text'));
                 $btn.prop('disabled', false);
                 self.set_optimizer_off();
-            }, 7000);
+            }, 5000);
         };
 
         /**
@@ -173,9 +173,7 @@
                     return;
                 }
                 self.log('Start optimizing attachment with id:' + data[index]['ID'], 'info');
-                if (self.is_media_library() || self.is_ngg()) {
-                    self.add_table_row(data[index]);
-                }
+                self.add_table_row(data[index]);
                 self.update_row_status(data[index]['ID'], self.get_small_spinner(MGOProcessorData.strings.optimizing));
                 self.lock_optimizer();
                 $.ajax({
@@ -188,19 +186,25 @@
                         self.log('Received response. Optimization maybe done?!', 'info');
                         self.log(response, 'log');
                         if (index < len) {
-                            if (response.success) {
-                                self.update_table_row(response.data['attachment']);
-                                self.update_couters(response.data);
-                                if (parseInt(response.data['tokens']) === 0) {
-                                    window.location.href = window.location.href;
+                            if(response.hasOwnProperty('success')) {
+                                if (response.success) {
+                                    self.update_table_row(response.data['attachment']);
+                                    self.update_couters(response.data);
+                                    if (parseInt(response.data['tokens']) === 0) {
+                                        window.location.href = window.location.href;
+                                    }
+                                } else {
+                                    self.update_row_error(data[index]['ID'], response.data.error);
+                                    self.log(response.data, 'log');
+                                    if (!(response.data['can_continue'] === 1 || response.data['can_continue'] === '1')) {
+                                        self.stop_optimizer();
+                                    }
                                 }
                             } else {
-                                self.update_row_error(data[index]['ID'], response.data.error);
-                                self.log(response.data, 'log');
-                                if (!(response.data['can_continue'] === 1 || response.data['can_continue'] === '1')) {
-                                    self.stop_optimizer();
-                                }
+                                self.update_row_error(data[index]['ID'], MGOProcessorData.parse_error);
+                                self.stop_optimizer();
                             }
+
                         }
                         else {
                             self.stop_optimizer();
@@ -318,13 +322,13 @@
                 $row.find('.attachment_optimized_size').text(attachment.optimized_size);
                 $row.find('.attachment_saved_bytes').text(attachment.saved_bytes);
                 $row.find('.attachment_saved_percent').text(attachment.saved_percent + '%');
-                var txt_optimized_thumbs = attachment.optimized_thumbs;
-                if (attachment.hasOwnProperty('optimized_thumbs_retina') && attachment.optimized_thumbs_retina > 0 && attachment.hasOwnProperty('saved_thumbs_retina')) {
-                    txt_optimized_thumbs += ' regular (total saved: ' + attachment.saved_thumbs + ') and ' + attachment.optimized_thumbs_retina + ' retina (total saved: ' + attachment.saved_thumbs_retina + ') thumbs';
+                var txt_processed_thumbs = attachment.processed_thumbs;
+                if (attachment.hasOwnProperty('processed_thumbs_retina') && attachment.processed_thumbs_retina > 0 && attachment.hasOwnProperty('saved_thumbs_retina')) {
+                    txt_processed_thumbs += ' regular (total saved: ' + attachment.saved_thumbs + ') and ' + attachment.processed_thumbs_retina + ' retina (total saved: ' + attachment.saved_thumbs_retina + ') thumbs';
                 } else if (attachment.hasOwnProperty('saved_thumbs') && attachment.saved_thumbs > 0) {
-                    txt_optimized_thumbs += ' regular thumbs (total saved: ' + attachment.saved_thumbs + ')';
+                    txt_processed_thumbs += ' regular thumbs (total saved: ' + attachment.saved_thumbs + ')';
                 }
-                $row.find('.attachment_optimized_thumbs').text(txt_optimized_thumbs);
+                $row.find('.attachment_optimized_thumbs').text(txt_processed_thumbs);
                 var status;
                 if (attachment.saved_percent < 5) {
                     status = MGOProcessorData.strings.already_optimized;
@@ -360,22 +364,13 @@
             var $el_percent_bar = $('#progress_percentage_bar');
 
             // calculations
-            var total_processed = 0;
-            if (self.is_media_library()) {
-                total_processed = data.attachment.optimized_thumbs;
-                if (data.attachment.hasOwnProperty('optimized_thumbs_retina')) {
-                    total_processed += data.attachment.optimized_thumbs_retina;
-                }
-                if (data.attachment.saved_percent > 0) { // Count the full size.
-                    total_processed++;
-                }
-            } else {
-                total_processed = data.general.total;
-            }
-            var total_optimized = parseInt($el_total_optimized_mixed.text()) + total_processed;
-            var total_remaining = parseInt($el_total_remaining.text()) - total_processed;
+            var total_sizes_processed = data.attachment.processed_total;
+            var total_saved_megabytes = data.attachment.raw.saved_total_mb;
+            
+            var total_optimized = parseInt($el_total_optimized_mixed.text()) + total_sizes_processed;
+            var total_remaining = parseInt($el_total_remaining.text()) - total_sizes_processed;
             var total = (total_optimized + total_remaining);
-            var total_saved_bytes = parseFloat($el_total_saved_bytes.text()) + parseFloat(data.general.saved_megabytes);
+            var total_saved_bytes = parseFloat($el_total_saved_bytes.text()) + parseFloat(total_saved_megabytes);
 
             // aassignments
             $el_total_optimized_mixed.text(total_optimized);

@@ -169,7 +169,6 @@ class MGO_Ajax extends MGO_BaseObject {
 
 			if ( $attachment instanceof MGO_MediaAttachment ) {
 				$response['attachment'] = $attachment->get_optimization_stats();
-				$response['general']    = $result->get_optimization_info();
 				$response['tokens']     = $tokens;
 				wp_send_json_success( $response );
 			} else {
@@ -204,7 +203,6 @@ class MGO_Ajax extends MGO_BaseObject {
 			$attachment = $result->get_attachment();
 			if ( $attachment instanceof MGO_FileAttachment ) {
 				$response['attachment'] = $attachment->get_optimization_stats();
-				$response['general']    = $result->get_optimization_info();
 				$response['tokens']     = $result->get_last_response()->getUser()->getTokens();
 				wp_send_json_success( $response );
 			} else {

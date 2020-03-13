@@ -252,16 +252,17 @@ abstract class MGO_Attachment {
 	/**
 	 * Returns the saved percent
 	 *
-	 * @param bool $formatted
+	 * @param  bool  $formatted
+	 *
+	 * @param  int  $round
 	 *
 	 * @return int|string
 	 */
-	public function get_saved_percent( $formatted = false ) {
+	public function get_saved_percent( $formatted = false, $round = 2 ) {
 
-		$percent = isset( $this->data['saved_percent'] )
-			? $this->data['saved_percent'] : 0;
+		$percent = isset( $this->data['saved_percent'] ) ? megaoptim_round( $this->data['saved_percent'], $round ) : 0;
 		if ( $formatted ) {
-			$percent = megaoptim_round( $percent, 2 ) . '%';
+			$percent = $percent . '%';
 		}
 
 		return $percent;

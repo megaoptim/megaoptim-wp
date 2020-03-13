@@ -20,7 +20,7 @@
      */
     $.format_bytes = function (bytes) {
         var marker = 1024;
-        var decimal = 0;
+        var decimal = 2;
         var megaBytes = marker * marker;
         return (bytes / megaBytes).toFixed(decimal);
     };

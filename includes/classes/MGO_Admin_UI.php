@@ -363,6 +363,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 						'already_optimized'          => __( 'Already Optimized', 'megaoptim-image-optimizer' ),
 						'loader_working_title'       => __( 'Preparing...', 'megaoptim-image-optimizer' ),
 						'loader_working_description' => __( 'Hiring ultrasonic optimizers...', 'megaoptim-image-optimizer' ),
+						'parse_error' => __('Unable to parse the optimizer response', 'megaoptim-image-optimizer'),
 					),
 					'context'         => array(
 						'media_library' => MEGAOPTIM_TYPE_MEDIA_ATTACHMENT,

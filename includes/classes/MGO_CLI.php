@@ -210,7 +210,7 @@ class MGO_CLI {
 			$to   = megaoptim_create_datetime( $params['date_to'], 'Y-m-d' );
 			if ( $from instanceof DateTime && $to instanceof DateTime ) {
 				$query['date_from'] = $from->format( 'Y-m-d 00:00:00' );
-				$query['date_to']   = $to->format( 'Y-m-d 00:00:00' );
+				$query['date_to']   = $to->format( 'Y-m-d 23:59:59' );
 			}
 		}
 
@@ -260,7 +260,7 @@ class MGO_CLI {
 				}
 			}
 			$time_elapsed_secs = microtime( true ) - $time_start;
-			WP_CLI::success( sprintf( __( 'Process finished in %s seconds. Total optimized %s, Totaal saved %s', 'megaoptim-image-optimizer' ), $time_elapsed_secs, $total_optimized, $total_saved ) );
+			WP_CLI::success( sprintf( __( 'Process finished in %s seconds. Total optimized %s, Totaal saved %s', 'megaoptim-image-optimizer' ), megaoptim_round($time_elapsed_secs, 5), $total_optimized, megaoptim_human_file_size($total_saved) ) );
 		}
 	}
 
