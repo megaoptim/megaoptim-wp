@@ -396,6 +396,10 @@ span.megaoptim-error {
 /**
  * Form
  */
+.megaoptim-header-logo .navbar-brand, .megaoptim-header-logo .navbar-brand:focus {
+    text-decoration: none !important;
+    box-shadow: none !important;
+}
 .megaoptim-form-actions {
     padding-top: 10px;
     padding-bottom: 10px;
