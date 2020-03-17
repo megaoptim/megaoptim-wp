@@ -2,9 +2,9 @@
 Contributors: megaoptim, darkog
 Tags: image optimizer, image compression, pagespeed, compress, optimize images, image optimiser, image compressor, optimize images, optimize jpg, compress jpg, compress png, compress retina
 Requires at least: 3.6
-Tested up to: 5.3
+Tested up to: 5.4
 Requires PHP: 5.3
-Stable tag: 1.4.8
+Stable tag: 1.4.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -136,6 +136,11 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 10. WP CLI - Bulk Restore command
 
 == Changelog ==
+
+= 1.4.9 =
+- Fix broken WebP images when both file.png.webp and file.webp exists on the server
+- Improved WebP settings UI/UX
+- Tested on WordPress 5.4
 
 = 1.4.8 =
 - Added chunked Media Library scanning for large media libraries to prevent memory exhaustion and timeouts

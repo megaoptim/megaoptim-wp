@@ -436,8 +436,20 @@ span.megaoptim-error {
     float: left;
 }
 
+#save_status {
+    border: 0;
+    padding-bottom: 0;
+}
+
 .megaoptim-field-group {
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 15px;
     margin-bottom: 15px;
+}
+
+.megaoptim-field-group--last {
+    border-bottom: 0 !important;
+    padding-bottom: 0 !important;
 }
 
 .megaoptim-option-label {

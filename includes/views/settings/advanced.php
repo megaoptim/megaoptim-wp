@@ -52,116 +52,95 @@ $cf_email   = $settings->get( MGO_Settings::CLOUDFLARE_EMAIL );
                 </div>
                 <div class="megaoptim-field-wrap">
                     <div class="megaoptim-checkbox">
-                        <input type="checkbox" <?php checked( $webp_create_images, 1 ); ?>
-                               id="<?php echo MGO_Settings::WEBP_CREATE_IMAGES; ?>"
-                               name="<?php echo MGO_Settings::WEBP_CREATE_IMAGES; ?>" value="1"/>
+                        <input type="checkbox" <?php checked( $webp_create_images, 1 ); ?> id="<?php echo MGO_Settings::WEBP_CREATE_IMAGES; ?>" name="<?php echo MGO_Settings::WEBP_CREATE_IMAGES; ?>" value="1"/>
                         <label for="<?php echo MGO_Settings::WEBP_CREATE_IMAGES; ?>"><?php echo sprintf( __( 'Create WebP Images upon optimization for %s', 'megaoptim-image-optimizer' ), '<strong>' . __( 'free', 'megaoptim-image-optimizer' ) . '</strong>' ); ?></label>
                         <p class="megaoptim-field-desc">
-							<?php _e( 'If enbaled, the plugin creates WebP versions of your images upon optimizing, so, each optimized image will have optimized webp version which will be used once your page is rendered.', 'megaoptim-image-optimizer' ); ?>
+							<?php _e( 'If enbaled, the plugin creates optimized WebP versions of your images after optimization. Below you can choose delivery method to make use of the generated webp versions.', 'megaoptim-image-optimizer' ); ?>
                             <br/>
                         </p>
                     </div>
-                    <div id="<?php echo MGO_Settings::WEBP_CREATE_IMAGES; ?>_additional" class="megaoptim-checkbox"
-                         style="<?php echo $webp_create_images == 1 ? '' : 'display: none;'; ?>">
-                        <div class="megaoptim-full-wrap megaoptim-mt-5">
-                            <label class="megaoptim-option-label"
-                                   for="<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>"><?php _e( 'WebP Front-end Delivery Method', 'megaoptim-image-optimizer' ); ?></label>
+                    <div id="<?php echo MGO_Settings::WEBP_CREATE_IMAGES; ?>_additional" class="megaoptim-checkbox">
+                        <div class="megaoptim-full-wrap megaoptim-mb-5">
+                            <label class="megaoptim-option-label" for="<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>"><?php _e( 'WebP Front-end Delivery Method', 'megaoptim-image-optimizer' ); ?></label>
                         </div>
-                        <div class="megaoptim-full-wrap">
-                            <select name="<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>"
-                                    id="<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>">
-                                <option <?php selected( $webp_delivery_method, 'none' ); ?>
-                                        value="none"><?php _e( 'No front-end delivery', 'megaoptim-image-optimizer' ); ?></option>
-                                <option <?php selected( $webp_delivery_method, 'picture' ); ?>
-                                        value="picture"><?php _e( 'Using &lt;PICTURE&gt; TAG', 'megaoptim-image-optimizer' ); ?></option>
-                                <option <?php selected( $webp_delivery_method, 'rewrite' ); ?>
-                                        value="rewrite"><?php _e( 'Using server-side rewritting', 'megaoptim-image-optimizer' ); ?></option>
-                            </select>
-                        </div>
-                        <div class="megaoptim-full-wrap">
-                            <!-- PICTURE Method settings-->
-                            <div id="megaoptim-<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>-picture"
-                                 class="megaoptim-explanation-wrapper"
-                                 style="<?php echo $webp_delivery_method === 'picture' ? '' : 'display: none;'; ?>">
-                                <div class="megaoptim-full-wrap megaoptim-mb-10">
-                                    <p class="megaoptim-field-desc" style="margin-bottom: 0;">
-										<?php _e( 'Using the &lt;PICTURE&gt; method replaces &lt;img&gt; tags with &lt;PICTURE&gt; tags. While this is recommended method of delivery. Please note that there can be display inconssitency after switching if your site relies on styling the &lt;img&gt; tags. You can switch to other option anytime.', 'megaoptim-image-optimizer' ); ?>
-                                    </p>
-                                </div>
-                                <div class="megaoptim-full-wrap megaoptim-mb-10">
-                                    <label class="megaoptim-option-label"
-                                           for="<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>"><?php _e( 'Target to replace WebP', 'megaoptim-image-optimizer' ); ?></label>
-                                </div>
-                                <div class="megaoptim-full-wrap">
-                                    <input type="radio" <?php checked( $webp_target_to_replace, 'default' ); ?>
-                                           name="<?php echo MGO_Settings::WEBP_TARGET_TO_REPLACE; ?>" value="default"/>
-                                    <label for="<?php echo MGO_Settings::WEBP_TARGET_TO_REPLACE; ?>">Default
-                                        (<?php echo implode( ', ', megaoptim_webp_target_filters() ); ?>) filters.
-                                        <strong>(Recommended)</strong></label>
-                                </div>
-                                <div class="megaoptim-full-wrap megaoptim-mb-10">
-                                    <input type="radio" <?php checked( $webp_target_to_replace, 'global' ); ?>
-                                           name="<?php echo MGO_Settings::WEBP_TARGET_TO_REPLACE; ?>" value="global"/>
-                                    <label for="<?php echo MGO_Settings::WEBP_TARGET_TO_REPLACE; ?>"><?php _e( 'Global (Captures the output using output buffer and replaces the images. May not work sometimes.)', 'megaoptim-image-optimizer' ); ?></label>
-                                </div>
-                                <div class="megaoptim-full-wrap megaoptim-mb-10">
-                                    <label class="megaoptim-option-label"
-                                           for="<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>"><?php _e( 'Greater &lt;PICTURE&gt; tag compatibility', 'megaoptim-image-optimizer' ); ?></label>
-                                </div>
-                                <div class="megaoptim-full-wrap megaoptim-mb-10">
-                                    <p class="megaoptim-field-desc">
-										<?php _e( 'Include Picturefill.js polyfill for better &lt;PICTURE&gt; compatibility. Please note that &lt;PICTURE&gt; tag is already supported by all modern browsers and you may not need this. Only enable this if you want a support older browsers e.g Internet Explorer 11.', 'megaoptim-image-optimizer' ); ?>
-                                    </p>
-                                </div>
-                                <div class="megaoptim-full-wrap">
-                                    <select name="<?php echo MGO_Settings::WEBP_PICTUREFILL; ?>"
-                                            id="<?php echo MGO_Settings::WEBP_PICTUREFILL; ?>">
-                                        <option <?php selected( $webp_picturefill, '1' ); ?>
-                                                value="1"><?php _e( 'Yes, Include Picturefill' ); ?></option>
-                                        <option <?php selected( $webp_picturefill, '0' ); ?>
-                                                value="0"><?php _e( "No, i don't need Picturefill." ); ?></option>
-                                    </select>
-                                </div>
+                        <div class="megaoptim-suboption">
+                            <div class="megaoptim-full-wrap">
+                                <select name="<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>" id="<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>">
+                                    <option <?php selected( $webp_delivery_method, 'none' ); ?> value="none"><?php _e( 'No front-end delivery', 'megaoptim-image-optimizer' ); ?></option>
+                                    <option <?php selected( $webp_delivery_method, 'picture' ); ?> value="picture"><?php _e( 'Using &lt;PICTURE&gt; TAG', 'megaoptim-image-optimizer' ); ?></option>
+                                    <option <?php selected( $webp_delivery_method, 'rewrite' ); ?> value="rewrite"><?php _e( 'Using server-side rewritting', 'megaoptim-image-optimizer' ); ?></option>
+                                </select>
                             </div>
-                            <!-- REWRITE Method settings-->
-                            <div id="megaoptim-<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>-rewrite"
-                                 class="megaoptim-explanation-wrapper"
-                                 style="<?php echo $settings->get( MGO_Settings::WEBP_DELIVERY_METHOD ) === 'rewrite' ? '' : 'display: none;'; ?>">
-                                <p class="megaoptim-option-explanation">
-									<?php if ( megaoptim_contains( strtolower( $_SERVER['SERVER_SOFTWARE'] ), 'apache' ) || megaoptim_contains( strtolower( $_SERVER['SERVER_SOFTWARE'] ), 'litespeed' ) ): ?>
-										<?php
-										$htaccess_path = megaoptim_get_htaccess_path();
-										if ( ! file_exists( $htaccess_path ) && is_writable( dirname( $htaccess_path ) ) ) { // if .htaccess doesn't exist and the root dir is writable, we can create it probably.
-											$writable = 1;
-										} else if ( file_exists( $htaccess_path ) && is_writable( $htaccess_path ) ) { // if .htaccess exists and is writable, we can alter it probably.
-											$writable = 1;
-										} else { // If none of those, htaccess is not writable.
-											$writable = 0;
-										}
-										?>
-										<?php if ( ! $writable ): ?>
-                                            <span style="color: red;"><?php _e( 'Permission denied. We tried to alter your .htaccess file but it looks like we don\'t have enough permissions to do it. We kindly ask you to contact your administrator and ask to grant you with permissions to write to .htaccess and then come back on this page and re-save the advanced settings tab. If everything is alright the .htaccess webp snippet will be added automatically upon save.', 'megaoptim-image-optimizer' ); ?></span>
-										<?php else: ?>
-											<?php echo sprintf( __( 'You are using %s which supports .htaccess', 'megaoptim-image-optimizer' ), '<strong>' . $_SERVER['SERVER_SOFTWARE'] . '</strong>' ); ?>
-											<?php _e( 'We will try to automatically alter your .htaccess file to add support for webp rewriting. Once you hit "Save" button below, you can check your .htaccess file to see if there is block of code that starts with "# BEGIN MegaOptimIO". If the code is there, no other action required.', 'megaoptim-image-optimizer' ); ?>
-										<?php endif; ?>
-                                        ?>
-									<?php elseif ( megaoptim_contains( strtolower( $_SERVER['SERVER_SOFTWARE'] ), 'nginx' ) ): ?>
-                                        <span style="color:red"><?php echo sprintf( __( 'You are using %s which doesn\'t support .htaccess. To enable WebP for nginx you need to edit your nginx config using administrative permissions and restart the web server. Note: Please be careful and do this only if you know what you are doing.', 'megaoptim-image-optimizer' ), '<strong>' . $_SERVER['SERVER_SOFTWARE'] . '</strong>' ); ?></span>
-                                        <br/>
-                                        <a style="margin-top: 10px;" target="_blank"
-                                           href="https://megaoptim.com/blog/how-to-serve-webp-images-in-wordpress-with-nginx"><?php _e( 'Follow the Guide', 'megaoptim-image-optimizer' ); ?></a>
-									<?php else: ?>
-										<?php _e( 'Looks like you are using unsupported web server. This feature will not be supported. Please choose the picture method instead.', 'megaoptim-image-optimizer' ); ?>
-									<?php endif; ?>
-                                </p>
+                            <div class="megaoptim-full-wrap">
+                                <!-- PICTURE Method settings-->
+                                <div id="megaoptim-<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>-picture" class="megaoptim-explanation-wrapper" style="<?php echo $webp_delivery_method === 'picture' ? '' : 'display: none;'; ?>">
+                                    <div class="megaoptim-full-wrap megaoptim-mb-15">
+                                        <p class="megaoptim-field-desc" style="margin-bottom: 0;">
+					                        <?php _e( 'Using the &lt;PICTURE&gt; method replaces &lt;img&gt; tags with &lt;PICTURE&gt; tags. While this is recommended method of delivery, please note that there can be display inconssitency after switching if your site relies on styling the &lt;img&gt; tags. You can switch to other option anytime.', 'megaoptim-image-optimizer' ); ?>
+                                        </p>
+                                    </div>
+                                    <div class="megaoptim-full-wrap megaoptim-mb-5">
+                                        <label class="megaoptim-option-label" for="<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>"><?php _e( 'Target to replace WebP', 'megaoptim-image-optimizer' ); ?></label>
+                                    </div>
+                                    <div class="megaoptim-full-wrap">
+                                        <input type="radio" <?php checked( $webp_target_to_replace, 'default' ); ?> name="<?php echo MGO_Settings::WEBP_TARGET_TO_REPLACE; ?>" value="default"/>
+                                        <label for="<?php echo MGO_Settings::WEBP_TARGET_TO_REPLACE; ?>">Default (<?php echo implode( ', ', megaoptim_webp_target_filters() ); ?>) filters. <strong>(Recommended)</strong></label>
+                                    </div>
+                                    <div class="megaoptim-full-wrap megaoptim-mb-20">
+                                        <input type="radio" <?php checked( $webp_target_to_replace, 'global' ); ?>name="<?php echo MGO_Settings::WEBP_TARGET_TO_REPLACE; ?>" value="global"/>
+                                        <label for="<?php echo MGO_Settings::WEBP_TARGET_TO_REPLACE; ?>"><?php _e( 'Global (Captures the output using output buffer and replaces the images. May not work sometimes.)', 'megaoptim-image-optimizer' ); ?></label>
+                                    </div>
+                                    <div class="megaoptim-full-wrap megaoptim-mb-0">
+                                        <label class="megaoptim-option-label" for="<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>"><?php _e( 'Greater &lt;PICTURE&gt; tag compatibility', 'megaoptim-image-optimizer' ); ?></label>
+                                    </div>
+                                    <div class="megaoptim-full-wrap megaoptim-mb-10">
+                                        <p class="megaoptim-field-desc">
+					                        <?php _e( 'Include Picturefill.js polyfill for better &lt;PICTURE&gt; compatibility. Please note that &lt;PICTURE&gt; tag is already supported by all modern browsers and you may not need this. Only enable this if you want a support older browsers e.g Internet Explorer 11.', 'megaoptim-image-optimizer' ); ?>
+                                        </p>
+                                    </div>
+                                    <div class="megaoptim-full-wrap">
+                                        <select name="<?php echo MGO_Settings::WEBP_PICTUREFILL; ?>" id="<?php echo MGO_Settings::WEBP_PICTUREFILL; ?>">
+                                            <option <?php selected( $webp_picturefill, '1' ); ?>value="1"><?php _e( 'Yes, Include Picturefill' ); ?></option>
+                                            <option <?php selected( $webp_picturefill, '0' ); ?>value="0"><?php _e( "No, i don't need Picturefill." ); ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- REWRITE Method settings-->
+                                <div id="megaoptim-<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>-rewrite" class="megaoptim-explanation-wrapper" style="<?php echo $settings->get( MGO_Settings::WEBP_DELIVERY_METHOD ) === 'rewrite' ? '' : 'display: none;'; ?>">
+                                    <p class="megaoptim-option-explanation">
+				                        <?php if ( megaoptim_contains( strtolower( $_SERVER['SERVER_SOFTWARE'] ), 'apache' ) || megaoptim_contains( strtolower( $_SERVER['SERVER_SOFTWARE'] ), 'litespeed' ) ): ?>
+					                        <?php
+					                        $htaccess_path = megaoptim_get_htaccess_path();
+					                        if ( ! file_exists( $htaccess_path ) && is_writable( dirname( $htaccess_path ) ) ) { // if .htaccess doesn't exist and the root dir is writable, we can create it probably.
+						                        $writable = 1;
+					                        } else if ( file_exists( $htaccess_path ) && is_writable( $htaccess_path ) ) { // if .htaccess exists and is writable, we can alter it probably.
+						                        $writable = 1;
+					                        } else { // If none of those, htaccess is not writable.
+						                        $writable = 0;
+					                        }
+					                        ?>
+					                        <?php if ( ! $writable ): ?>
+                                                <span style="color: red;"><?php _e( 'Permission denied. We tried to alter your .htaccess file but it looks like we don\'t have enough permissions to do it. We kindly ask you to contact your administrator and ask to grant you with permissions to write to .htaccess and then come back on this page and re-save the advanced settings tab. If everything is alright the .htaccess webp snippet will be added automatically upon save.', 'megaoptim-image-optimizer' ); ?></span>
+					                        <?php else: ?>
+						                        <?php echo sprintf( __( 'You are using %s which supports .htaccess.', 'megaoptim-image-optimizer' ), '<strong>' . $_SERVER['SERVER_SOFTWARE'] . '</strong>' ); ?>
+						                        <?php _e( 'We will try to automatically alter your .htaccess file to add support for webp rewriting. Once you hit "Save" button below, you can check your .htaccess file to see if there is block of code that starts with "# BEGIN MegaOptimIO". If the code is there, no other action required.', 'megaoptim-image-optimizer' ); ?>
+					                        <?php endif; ?>
+                                            ?>
+				                        <?php elseif ( megaoptim_contains( strtolower( $_SERVER['SERVER_SOFTWARE'] ), 'nginx' ) ): ?>
+                                            <span style="color:red"><?php echo sprintf( __( 'You are using %s which doesn\'t support .htaccess. To enable WebP for nginx you need to edit your nginx config using administrative permissions and restart the web server. Note: Please be careful and do this only if you know what you are doing.', 'megaoptim-image-optimizer' ), '<strong>' . $_SERVER['SERVER_SOFTWARE'] . '</strong>' ); ?></span>
+                                            <br/>
+                                            <a style="margin-top: 10px;" target="_blank" href="https://megaoptim.com/blog/how-to-serve-webp-images-in-wordpress-with-nginx"><?php _e( 'Follow the Guide', 'megaoptim-image-optimizer' ); ?></a>
+				                        <?php else: ?>
+					                        <?php _e( 'Looks like you are using unsupported web server. This feature will not be supported. Please choose the picture method instead.', 'megaoptim-image-optimizer' ); ?>
+				                        <?php endif; ?>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
 
         <div class="megaoptim-field-group">
             <div class="megaoptim-field-group-inner">
@@ -284,7 +263,7 @@ $cf_email   = $settings->get( MGO_Settings::CLOUDFLARE_EMAIL );
         </div>
 
 
-        <div class="megaoptim-field-group">
+        <div class="megaoptim-field-group megaoptim-field-group--last">
             <div class="megaoptim-field-group-inner">
                 <div class="megaoptim-label-wrap">
                     <label class="megaoptim-option-label"><?php _e( 'CloudFlare Credentials', 'megaoptim-image-optimizer' ); ?></label>

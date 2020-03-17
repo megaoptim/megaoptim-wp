@@ -156,7 +156,7 @@ $http_pass     = MGO_Settings::instance()->get(MGO_Settings::HTTP_PASS );
                 </div>
             </div>
         </div>
-        <div class="megaoptim-field-group">
+        <div class="megaoptim-field-group megaoptim-field-group--last">
             <div class="megaoptim-field-group-inner">
                 <div class="megaoptim-label-wrap">
                     <label class="megaoptim-option-label"><?php _e( 'HTTP AUTH credentials', 'megaoptim-image-optimizer' ); ?></label>

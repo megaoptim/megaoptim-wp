@@ -34,8 +34,13 @@ function megaoptim_webp_filter_content( $content ) {
 		return $content;
 	}
 
-	$content = megaoptim_webp_convert_inline_backgrounds( $content );
+	$new_content = megaoptim_webp_filter_picture_tags( $content );
+	if ( false !== $new_content ) {
+		$content = $new_content;
+	}
+
 	$content = megaoptim_webp_convert_img_tags( $content );
+	$content = megaoptim_webp_convert_inline_backgrounds( $content );
 
 	return $content;
 }
@@ -50,7 +55,39 @@ function megaoptim_webp_filter_content( $content ) {
  * @return string
  */
 function megaoptim_webp_convert_img_tags( $content ) {
-	return preg_replace_callback( '/<img[^>]*>/', 'megaoptim_replace_img_with_webp', $content );
+	return preg_replace_callback( '/<img[^>]*>/i', 'megaoptim_replace_img_with_webp', $content );
+}
+
+
+/**
+ * Filter picture tags and mark the <img> tags within the <picture> tags as skipped.
+ *
+ * @param $content
+ *
+ * @return bool|string|string[]
+ */
+function megaoptim_webp_filter_picture_tags( $content ) {
+	$pattern = '/<picture.*?>.*?(<img.*?>).*?<\/picture>/is';
+	preg_match_all( $pattern, $content, $matches );
+	if ( $matches === false ) {
+		return false;
+	}
+	if ( is_array( $matches ) && count( $matches ) > 0 ) {
+		foreach ( $matches[1] as $match ) {
+			$img_tag = $match;
+			if ( strpos( $img_tag, 'class=' ) !== false ) {
+				$pos    = strpos( $img_tag, 'class=' );
+				$pos    = $pos + 7;
+				$newimg = substr( $img_tag, 0, $pos ) . 'mgo-skip-webp ' . substr( $img_tag, $pos );
+			} else {
+				$pos    = 4;
+				$newimg = substr( $img_tag, 0, $pos ) . ' class="mgo-skip-webp" ' . substr( $img_tag, $pos );
+			}
+			$content = str_replace( $img_tag, $newimg, $content );
+		}
+	}
+
+	return $content;
 }
 
 /**
@@ -129,6 +166,9 @@ function megaoptim_replace_img_with_webp( $match ) {
 	unset( $img['srcset'] );
 	unset( $img['sizes'] );
 	unset( $img['alt'] );
+	unset($img['id']);
+	unset($img['width']);
+	unset($img['height']);
 
 	// Try to assemble the picture
     if(megaoptim_contains($srcset, ',')) {
@@ -139,30 +179,31 @@ function megaoptim_replace_img_with_webp( $match ) {
 
     $srcset_webp = array();
     foreach ( $defs as $item ) {
+        $total         = 0;
         $parts         = preg_split('/\s+/', trim($item));
         $file_url      = $parts[0];
         $file_url_base = trailingslashit(dirname($file_url));
         $source_width  = isset($parts[1]) ? ' '.$parts[1] : ''; // Append source width with space eg ' 300w'
         $webp_files    = array(
             $uploads_path_base.wp_basename($file_url).'.webp',
-            $uploads_path_base.wp_basename($file_url, '.'.pathinfo($file_url, PATHINFO_EXTENSION)).'.webp',
+            $uploads_path_base.wp_basename($file_url, '.'.pathinfo($file_url, PATHINFO_EXTENSION)).'.webp'
         );
         foreach ($webp_files as $webp_file) {
-            $webp_file_exist = file_exists($webp_file);
-            if ( ! $webp_file_exist) {
+            if (!file_exists($webp_file) ) {
                 // Used in the MGO_As3Cf to determine the webp_file path if it is remote.
-                $webp_file = apply_filters('megaoptim_webp_file_404', false, $webp_file, $file_url, $uploads_path_base);
+	            $file_found = apply_filters('megaoptim_webp_file_404', false, $webp_file, $file_url, $uploads_path_base);
+            } else {
+                $file_found = true;
             }
-            if ($webp_file !== false) {
+            if ($file_found && $total < 1) { // It doesn't work with two versions (eg. file.webp and file.png.webp)
                 $final_webp_path = $file_url_base.wp_basename($webp_file).$source_width;
                 array_push($srcset_webp, $final_webp_path);
+	            $total++;
             }
         }
     }
 
-
     $srcset_webp = implode(',', $srcset_webp);
-
 	if ( empty($srcset_webp) ) {
 		return $match[0];
 	}
@@ -170,12 +211,15 @@ function megaoptim_replace_img_with_webp( $match ) {
 
 	$img_attrs = megaoptim_create_dom_element_attributes( $img );
 
-	return '<picture>'
-	       . '<source ' . $srcset_prefix . 'srcset="' . $srcset_webp . '"' . ( $sizes ? ' ' . $sizes_prefix . 'sizes="' . $sizes . '"' : '' ) . ' type="image/webp">'
-	       . '<source ' . $srcset_prefix . 'srcset="' . $srcset . '"' . ( $sizes ? ' ' . $sizes_prefix . 'sizes="' . $sizes . '"' : '' ) . '>'
-	       . '<img ' . $src_prefix . 'src="' . $src . '" ' . $img_attrs . $old_id . $old_alt . $old_height . $old_width
-	       . ( strlen( $srcset ) ? ' srcset="' . $srcset . '"' : '' ) . ( strlen( $sizes ) ? ' sizes="' . $sizes . '"' : '' ) . '>'
-	       . '</picture>';
+	$output = '<picture>';
+	$output .= '<source ' . $srcset_prefix . 'srcset="' . $srcset_webp . '"' . ( $sizes ? ' ' . $sizes_prefix . 'sizes="' . $sizes . '"' : '' ) . ' type="image/webp">';
+	if(false !== $srcset) {
+		$output .= '<source ' . $srcset_prefix . 'srcset="' . $srcset . '"' . ( $sizes ? ' ' . $sizes_prefix . 'sizes="' . $sizes . '"' : '' ) . '>';
+	}
+	$output .= '<img ' . $src_prefix . 'src="' . $src . '" ' . $img_attrs . $old_id . $old_alt . $old_height . $old_width . ( strlen( $srcset ) ? ' srcset="' . $srcset . '"' : '' ) . ( strlen( $sizes ) ? ' sizes="' . $sizes . '"' : '' ) . '>';
+	$output .= '</picture>';
+
+	return $output;
 }
 
 /**
@@ -202,8 +246,8 @@ function megaoptim_replace_inline_backgrounds_with_webp( $matches, $content ) {
 			continue;
 		}
 		/**
-		 * $match[0] => 'url('http://mgo.test/wp-content/uploads/2018/10/shutterstock_98494004.jpg')'
-         * $match[1] => http://mgo.test/wp-content/uploads/2018/10/shutterstock_98494004.jpg
+		 * $match[0] => 'url('http://s.test/wp-content/uploads/2018/10/image.jpg')'
+		 * $match[1] => http://s.test/wp-content/uploads/2018/10/image.jpg
 		 */
 		$url           = $match[1];
 		$file_basename = basename( $url );
@@ -243,12 +287,27 @@ function megaoptim_replace_inline_backgrounds_with_webp( $matches, $content ) {
 /**
  * Returns the image dir if it's local. Otherwise it returns false.
  *
- * @param $src
+ * @param $src  - Url of the image
  *
  * @return bool|mixed|string
  */
 function megaoptim_webp_get_image_dir( $src ) {
+
+	$url_parsed = parse_url( $src );
+	if ( ! isset( $url_parsed['host'] ) ) {
+		if ( $src[0] == '/' ) {
+			$src = get_site_url() . $src;
+		} else {
+			global $wp;
+			$src = trailingslashit( home_url( $wp->request ) ) . $src;
+		}
+		$url_parsed = parse_url( $src );
+	}
+
 	$updir = wp_upload_dir();
+	if ( substr( $src, 0, 2 ) == '//' ) {
+		$src = ( stripos( $_SERVER['SERVER_PROTOCOL'], 'https' ) === false ? 'http:' : 'https:' ) . $src;
+	}
 
 	$content_dir = WP_CONTENT_DIR;
 	$content_url = content_url();
@@ -276,16 +335,17 @@ function megaoptim_webp_get_image_dir( $src ) {
 	}
 	// Handle CDN, subdomain or relative url cases.
 	if ( $base_img_src == $src ) {
-		$url  = parse_url( $src );
-		$base = parse_url( $base_url );
+		$url         = parse_url( $src );
+		$base_parsed = parse_url( $base_url );
 		// Bail if no host
-		if ( ! isset( $url['host'] ) || ! isset( $base['host'] ) ) {
+		if ( ! isset( $url_parsed['host'] ) || ! isset( $base_parsed['host'] ) ) {
 			return false;
 		}
-		$src_host      = array_reverse( explode( '.', $url['host'] ) );
-		$base_url_host = array_reverse( explode( '.', $base['host'] ) );
-		if ( $src_host[0] === $base_url_host[0] && $src_host[1] === $base_url_host[1] && ( strlen( $src_host[1] ) > 3 || isset( $src_host[2] ) && isset( $src_host[2] ) && $src_host[2] == $base_url_host[2] ) ) {
-			$baseurl      = str_replace( $base['scheme'] . '://' . $base['host'], $url['scheme'] . '://' . $url['host'], $base_url );
+		$src_host      = array_reverse( explode( '.', $url_parsed['host'] ) );
+		$base_url_host = array_reverse( explode( '.', $base_parsed['host'] ) );
+
+		if ( $src_host[0] === $base_url_host[0] && $src_host[1] === $base_url_host[1] && ( strlen( $src_host[1] ) > 3 || isset( $src_host[2] ) && $src_host[2] == $base_url_host[2] ) ) {
+			$baseurl      = str_replace( $base_parsed['scheme'] . '://' . $base_parsed['host'], $url_parsed['scheme'] . '://' . $url_parsed['host'], $base_url );
 			$base_img_src = str_replace( $baseurl, $base_dir, $src );
 		}
 		// Bail if external url
@@ -308,17 +368,24 @@ function megaoptim_webp_get_image_dir( $src ) {
  * @return array
  */
 function megaoptim_get_image_attributes( $attribute_array, $type ) {
+
+	$value  = false;
+	$prefix = false;
+
+	if ( isset( $attribute_array[ 'data-lazy-' . $type ] ) && strlen( $attribute_array[ 'data-lazy-' . $type ] ) > 0 ) {
+		$value  = $attribute_array[ 'data-lazy-' . $type ];
+		$prefix = 'data-lazy-';
+	} elseif ( isset( $attribute_array[ 'data-' . $type ] ) && strlen( $attribute_array[ 'data-' . $type ] ) > 0 ) {
+		$value  = $attribute_array[ 'data-' . $type ];
+		$prefix = 'data-';
+	} elseif ( isset( $attribute_array[ $type ] ) && strlen( $attribute_array[ $type ] ) > 0 ) {
+		$value  = $attribute_array[ $type ];
+		$prefix = '';
+	}
+
 	return array(
-		'value'  =>
-			( isset( $attribute_array[ 'data-lazy-' . $type ] ) && strlen( $attribute_array[ 'data-lazy-' . $type ] ) ) ?
-				$attribute_array[ 'data-lazy-' . $type ]
-				: ( isset( $attribute_array[ 'data-' . $type ] ) && strlen( $attribute_array[ 'data-' . $type ] ) ?
-				$attribute_array[ 'data-' . $type ]
-				: ( isset( $attribute_array[ $type ] ) && strlen( $attribute_array[ $type ] ) ? $attribute_array[ $type ] : false ) ),
-		'prefix' =>
-			( isset( $attribute_array[ 'data-lazy-' . $type ] ) && strlen( $attribute_array[ 'data-lazy-' . $type ] ) ) ? 'data-lazy-'
-				: ( isset( $attribute_array[ 'data-' . $type ] ) && strlen( $attribute_array[ 'data-' . $type ] ) ? 'data-'
-				: ( isset( $attribute_array[ $type ] ) && strlen( $attribute_array[ $type ] ) ? '' : false ) )
+		'value'  => $value,
+		'prefix' => $prefix,
 	);
 }
 
@@ -353,15 +420,19 @@ function megaoptim_get_dom_element_attributes( $content, $element ) {
 	if ( function_exists( "mb_convert_encoding" ) ) {
 		$content = mb_convert_encoding( $content, 'HTML-ENTITIES', 'UTF-8' );
 	}
-	$dom = new DOMDocument;
-	$dom->loadHTML( $content );
-	$attr = array();
-	foreach ( $dom->getElementsByTagName( $element ) as $tag ) {
-		foreach ( $tag->attributes as $attribName => $attribNodeVal ) {
-			$attr[ $attribName ] = $tag->getAttribute( $attribName );
-		}
-	}
 
+	$attr = array();
+	if( !class_exists('DOMDocument')) {
+	    megaoptim_log('Class DOMDocument not found. Please enable the php-dom extension.');
+    } else {
+		$dom = new \DOMDocument;
+		$dom->loadHTML( $content );
+		foreach ( $dom->getElementsByTagName( $element ) as $tag ) {
+			foreach ( $tag->attributes as $attribName => $attribNodeVal ) {
+				$attr[ $attribName ] = $tag->getAttribute( $attribName );
+			}
+		}
+    }
 	return $attr;
 }
 

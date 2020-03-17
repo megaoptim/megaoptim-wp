@@ -591,14 +591,6 @@
 
 // WebP management
 (function ($) {
-    $('#webp_create').on('change', function () {
-        var $additional = $('#webp_create_additional');
-        if ($(this).is(':checked')) {
-            $additional.show();
-        } else {
-            $additional.hide();
-        }
-    });
     $('#webp_delivery_method').on('change', function () {
         var value = $(this).val();
         var $explanationWrap = $('#megaoptim-webp_delivery_method-' + value);
