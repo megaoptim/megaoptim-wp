@@ -4,7 +4,7 @@ Tags: image optimizer, image compression, pagespeed, compress, optimize images, 
 Requires at least: 3.6
 Tested up to: 5.4
 Requires PHP: 5.3
-Stable tag: 1.4.9
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -136,6 +136,11 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 10. WP CLI - Bulk Restore command
 
 == Changelog ==
+
+= 1.5.0 =
+- Added chunked File Library scanning for large folders to prevent memory exhaustion and  timeouts (In Progress)
+- Added WebP convertor for the existing media library items (In Progress)
+- Fix fatal error in some occuasions when generating debug report.
 
 = 1.4.9 =
 - Fix broken WebP images when both file.png.webp and file.webp exists on the server
