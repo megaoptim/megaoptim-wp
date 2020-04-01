@@ -360,7 +360,7 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	public function is_processed() {
 
 		// Check if full size normal is processed
-		if ( ! isset( $this->data['status'] ) || ! isset( $this->data['thumbs'] ) ) {
+		if ( ! isset( $this->data['status'] ) ) {
 			return false;
 		}
 
