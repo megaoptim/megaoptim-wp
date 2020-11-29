@@ -79,23 +79,26 @@ class MGO_Admin_UI extends MGO_BaseObject {
 		$params    = array();
 
 		if ( empty( $module ) || $module === MEGAOPTIM_MODULE_MEDIA_LIBRARY ) {
-
 			$optimizer = 'optimizers/media-library';
 			$params    = array(
 				'menu'    => $menu,
 				'module'  => $module,
 				'profile' => MGO_Profile::get_profile()
 			);
-
 		} else if ( $module === MEGAOPTIM_MODULE_FOLDERS ) {
-
-			$optimizer = 'optimizers/folders';
-			$params    = array(
-				'menu'    => $menu,
-				'module'  => $module,
-				'profile' => MGO_Profile::get_profile()
-			);
-
+            $optimizer = 'optimizers/folders';
+            $params    = array(
+                'menu'    => $menu,
+                'module'  => $module,
+                'profile' => MGO_Profile::get_profile()
+            );
+        } else if( $module === MEGAOPTIM_MODULE_WEBP_CONVERTER) {
+            $optimizer = 'optimizers/webp-converter';
+            $params    = array(
+                'menu'    => $menu,
+                'module'  => $module,
+                'profile' => MGO_Profile::get_profile()
+            );
 		} else {
 			$optimizer = apply_filters( 'megaoptim_optimizer_view', $optimizer, $module, $menu );
 			$params    = apply_filters( 'megaoptim_optimizer_params', $params, $optimizer, $module, $menu );

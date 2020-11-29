@@ -58,11 +58,14 @@ function megaoptim_is_optimizer_page( $optimizer ) {
 		}
 
 	}
-	$module = $_GET['module'];
+	$module = isset($_GET['module']) ? $_GET['module'] : null;
+
 	if ( $optimizer === MEGAOPTIM_TYPE_MEDIA_ATTACHMENT ) {
 		return $module === MEGAOPTIM_MODULE_MEDIA_LIBRARY;
 	} else if ( $optimizer === MEGAOPTIM_TYPE_FILE_ATTACHMENT ) {
 		return $module === MEGAOPTIM_MODULE_FOLDERS;
-	}
+	} else if( $module === MEGAOPTIM_MODULE_WEBP_CONVERTER ) {
+	    return true;
+    }
 	return apply_filters( 'megaoptim_is_optimizer_page', false, $optimizer, $module );
 }

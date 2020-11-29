@@ -138,9 +138,12 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 == Changelog ==
 
 = 1.5.0 =
-- Added chunked File Library scanning for large folders to prevent memory exhaustion and  timeouts (In Progress)
+- Added chunked File Library scanning for large folders to prevent memory exhaustion and timeouts (In Progress)
 - Added WebP convertor for the existing media library items (In Progress)
 - Fix fatal error in some occuasions when generating debug report.
+- Fix forever loading when "Optimize" button is pressed in Media Library list table screen in certain cases
+- Fix file naming problem when '#' is present in file names
+- Ignore wp-content/uploads from 'Custom Folders' scan
 
 = 1.4.9 =
 - Fix broken WebP images when both file.png.webp and file.webp exists on the server

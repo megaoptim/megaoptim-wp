@@ -41,11 +41,12 @@ if ( ! is_null( $module ) ) {
                 <div class="megaoptim-header-menu">
                     <form class="optimizer-switcher" method="GET" action="<?php echo admin_url( "upload.php" ); ?>">
                         <input type="hidden" name="page" value="megaoptim_bulk_optimizer"/>
-                        <label for="module">Select optimizer</label>
+                        <label for="module"><?php _e( 'Select tool', 'megaoptim-image-optimizer' ); ?></label>
                         <select name="module" id="module">
-                            <option <?php echo ! isset( $_GET['module'] ) || ( isset( $_GET['module'] ) && $_GET['module'] === 'wp-media-library' ) ? 'selected' : ''; ?> value="wp-media-library">WP Media Library</option>
-                            <option <?php echo ( isset( $_GET['module'] ) && $_GET['module'] === 'folders' ) ? 'selected' : ''; ?> value="folders">Custom Folders</option>
-                            <option <?php echo ! megaoptim_is_nextgen_active() ? 'disabled' : ''; ?> <?php echo ( isset( $_GET['module'] ) && $_GET['module'] === 'nextgen' ) ? 'selected' : ''; ?> value="nextgen">NextGen Galleries</option>
+                            <option <?php echo ! isset( $_GET['module'] ) || ( isset( $_GET['module'] ) && $_GET['module'] === 'wp-media-library' ) ? 'selected' : ''; ?> value="wp-media-library"><?php _e( 'WP Media Library', 'megaoptim-image-optimizer' ); ?></option>
+                            <option <?php echo ( isset( $_GET['module'] ) && $_GET['module'] === 'folders' ) ? 'selected' : ''; ?> value="folders"><?php _e( 'Custom Folders', 'megaoptim-image-optimizer' ); ?></option>
+                            <option <?php echo ! megaoptim_is_nextgen_active() ? 'disabled' : ''; ?> <?php echo ( isset( $_GET['module'] ) && $_GET['module'] === 'nextgen' ) ? 'selected' : ''; ?> value="nextgen"><?php _e( 'NextGen Galeries', 'megaoptim-image-optimizer' ); ?></option>
+                            <option <?php echo ( isset( $_GET['module'] ) && $_GET['module'] === 'webp-convertor' ) ? 'selected' : ''; ?> value="webp-converter"><?php _e( 'WebP Converter', 'megaoptim-image-optimizer' ); ?></option>
                         </select>
                         <button type="submit" class="button-primary" name="switch" value="1">Switch</button>
                     </form>

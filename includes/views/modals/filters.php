@@ -4,7 +4,7 @@
             <div class="megaoptim-panel-header-inner">
                 <h1 class="megaoptim-panel-title"><?php _e( 'Scan Filters', 'megaoptim-image-optimizer' ); ?></h1>
                 <p class="megaoptim-panel-desc">
-					<?php _e( 'Scan for unoptimized images by specifying custom filters', 'megaoptim-image-optimizer' ); ?>
+					<?php _e( 'Specify filters for the scanner', 'megaoptim-image-optimizer' ); ?>
                 </p>
             </div>
         </div>

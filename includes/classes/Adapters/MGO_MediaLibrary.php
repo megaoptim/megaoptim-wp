@@ -65,7 +65,7 @@ class MGO_MediaLibrary extends MGO_Library {
 	 */
 	public function optimize( $attachment, $params = array() ) {
 
-		//@set_time_limit(0);
+		@set_time_limit(0);
 
 		$result = new MGO_ResultBag();
 
@@ -204,7 +204,6 @@ class MGO_MediaLibrary extends MGO_Library {
 										$webp->saveAsFile( $att['save_path'] . '.webp' );
 									}
 								}
-
 								// Set Stats
 								if ( $att['size'] !== 'full' ) {
 									$result->total_thumbnails = $result->total_thumbnails + 1;
@@ -370,6 +369,10 @@ class MGO_MediaLibrary extends MGO_Library {
 			$this->background_process->save()->dispatch();
 		}
 	}
+
+	public function convert_webp( $args ) {
+
+    }
 
 	/**
 	 * Returns all the available media attachments.

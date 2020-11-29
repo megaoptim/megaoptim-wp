@@ -676,14 +676,28 @@ function megaoptim_dir_contains_children( $dir ) {
  *
  * @return array|false
  */
-function megaoptim_find_images_non_recursively( $path ) {
-	$files = glob( $path . DIRECTORY_SEPARATOR . "*.{jpg,jpeg,png,gif}", GLOB_BRACE );
-	if(!empty($files)) {
-		foreach($files as $key => $file) {
-			$files[$key] = realpath($files[$key]);
-		}
-	}
-	return $files;
+function megaoptim_find_images_non_recursively($path)
+{
+    $files = glob($path.DIRECTORY_SEPARATOR."*.{jpg,jpeg,png,gif}", GLOB_BRACE);
+    if ( ! empty($files)) {
+        foreach ($files as $key => $file) {
+            $files[$key] = realpath($files[$key]);
+        }
+    }
+
+    return $files;
+}
+
+/**
+ * List of excluded custom folders from 'Custom Folders' scan
+ * @retun array
+ */
+function megaoptim_get_excluded_custom_dir_paths()
+{
+    $uploads     = wp_upload_dir();
+    $directories = array();
+
+    return array();
 }
 
 /**
@@ -691,25 +705,57 @@ function megaoptim_find_images_non_recursively( $path ) {
  *
  * @param $dir
  *
- * @param bool $recursive
+ * @param  bool  $recursive
+ *
+ * @param  array  $excluded_dirs
  *
  * @return array
  */
-function megaoptim_find_images( $dir, $recursive = false ) {
+function megaoptim_find_images($dir, $recursive = false, $excluded_dirs = array())
+{
 
-	if ( ! $recursive ) {
-		return megaoptim_find_images_non_recursively( $dir );
-	}
+    if ( ! $recursive) {
+        return megaoptim_find_images_non_recursively($dir);
+    }
 
-	$direcotry_iterator = new RecursiveDirectoryIterator( $dir );
-	$iterator           = new RecursiveIteratorIterator( $direcotry_iterator );
-	$r_iterator         = new RegexIterator( $iterator, '/^.+(.jpe?g|.png|.gif)$/i', RecursiveRegexIterator::GET_MATCH );
-	$images             = array();
-	foreach ( $r_iterator as $image ) {
-		array_push( $images, realpath( $image[0] ) );
-	}
+    $excluded_dir_names = array(
+        '.git',
+    );
 
-	return $images;
+    /**
+     * @param  SplFileInfo  $file
+     * @param  mixed  $key
+     * @param  RecursiveCallbackFilterIterator  $iterator
+     *
+     * @return bool True if you need to recurse or if the item is acceptable
+     */
+    $filter = function ($file, $key, $iterator) use ($excluded_dirs, $excluded_dir_names) {
+        if ($file->isDir()) {
+            if(in_array($file->getPath(), $excluded_dirs) || in_array($file->getBasename(), $excluded_dir_names)) {
+                return true;
+            }
+        } elseif ($file->isFile()) {
+            $ext = $file->getExtension();
+            return in_array($ext, array(
+                'jpg',
+                'jpeg',
+                'png',
+                'gif',
+            ));
+        }
+
+        return true;
+    };
+
+    $innerIterator = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
+    $iterator      = new RecursiveIteratorIterator(new RecursiveCallbackFilterIterator($innerIterator, $filter));
+
+    $images     = array();
+    foreach ($iterator as $image) {
+        array_push($images, realpath($image[0]));
+    }
+
+    return $images;
 }
 
 /**

@@ -108,12 +108,19 @@ class MGO_FileLibrary extends MGO_Library {
 			if ( $response->isError() ) {
 				megaoptim_log( $response->getErrors() );
 			} else {
+			    megaoptim_log($response);
 				foreach ( $response->getOptimizedFiles() as $file ) {
 					if ( $file->getSavedBytes() > 0 && $file->isSuccessfullyOptimized() ) {
 						$file->saveAsFile( $attachment->path );
 					}
 					$result->total_full_size ++;
 					$result->total_saved_bytes += $file->getSavedBytes();
+                    $webp = $file->getWebP();
+                    if ( ! is_null( $webp ) ) {
+                        if ( $webp->getSavedBytes() > 0 ) {
+                            $webp->saveAsFile( $attachment->path . '.webp' );
+                        }
+                    }
 				}
 				$attachment_object->set_data( $response, $request_params );
 				$attachment_object->set( 'directory', $attachment->directory );
@@ -259,7 +266,8 @@ class MGO_FileLibrary extends MGO_Library {
 		if ( isset( $additional_data['recursive'] ) && $additional_data['recursive'] == 1 ) {
 			$stats       = new MGO_Stats();
 			$directories = array();
-			$files       = megaoptim_find_images( $directory, true );
+			$excludes    = megaoptim_get_excluded_custom_dir_paths();
+			$files       = megaoptim_find_images( $directory, true,  $excludes);
 			foreach ( $files as $file ) {
 				array_push( $directories, dirname( $file ) . DIRECTORY_SEPARATOR );
 			}
