@@ -139,7 +139,6 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 
 = 1.4.10 =
 - Speed improvements to the 'Custom Folders' module
-- Added WebP convertor for the existing media library items (In Progress)
 - Fix fatal error in some occuasions when generating debug report.
 - Fix forever loading when "Optimize" button is pressed in Media Library list table screen in certain cases
 - Fix file naming problem when '#' is present in file names
