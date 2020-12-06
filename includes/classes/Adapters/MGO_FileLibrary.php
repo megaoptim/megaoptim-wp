@@ -263,6 +263,8 @@ class MGO_FileLibrary extends MGO_Library {
 	 */
 	public function get_stats( $directory = '', $additional_data = array() ) {
 
+		megaoptim_raise_memory_limit();
+
 		if ( isset( $additional_data['recursive'] ) && $additional_data['recursive'] == 1 ) {
 			$stats       = new MGO_Stats();
 			$directories = array();

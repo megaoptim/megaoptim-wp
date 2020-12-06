@@ -61,6 +61,7 @@ $includes = array(
 	'classes/MGO_BaseObject.php',
 	'classes/MGO_ResultBag.php',
 	'classes/MGO_Upgrader.php',
+	'classes/MGO_ImageFilter.php',
 	'classes/Models/MGO_Attachment.php',
 	'classes/Adapters/MGO_Library.php',
 	'classes/Exceptions/MGO_Exception.php',

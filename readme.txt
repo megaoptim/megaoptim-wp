@@ -1,10 +1,10 @@
 === MegaOptim Image Optimizer ===
 Contributors: megaoptim, darkog
-Tags: image optimizer, image compression, pagespeed, compress, optimize images, image optimiser, image compressor, optimize images, optimize jpg, compress jpg, compress png, compress retina
+Tags: convert webp, webp, optimize images, optimize, images, compress
 Requires at least: 3.6
-Tested up to: 5.4
+Tested up to: 5.6
 Requires PHP: 5.3
-Stable tag: 1.5.0
+Stable tag: 1.4.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -137,8 +137,8 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 
 == Changelog ==
 
-= 1.5.0 =
-- Added chunked File Library scanning for large folders to prevent memory exhaustion and timeouts (In Progress)
+= 1.4.10 =
+- Speed improvements to the 'Custom Folders' module
 - Added WebP convertor for the existing media library items (In Progress)
 - Fix fatal error in some occuasions when generating debug report.
 - Fix forever loading when "Optimize" button is pressed in Media Library list table screen in certain cases

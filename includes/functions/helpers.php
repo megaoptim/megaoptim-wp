@@ -96,10 +96,10 @@ function megaoptim_log( $message, $filename = "debug.log" ) {
 	$log_file_dir = megaoptim_get_tmp_path();
 	megaoptim_protect_dir( $log_file_dir );
 	$log_file_path = $log_file_dir . DIRECTORY_SEPARATOR . $filename;
-    // Remove the log file if it is larger than 10 MB
-    if (file_exists($log_file_path) && filesize($log_file_path) > 10485760) {
-        @unlink($log_file_path);
-    }
+	// Remove the log file if it is larger than 10 MB
+	if ( file_exists( $log_file_path ) && filesize( $log_file_path ) > 10485760 ) {
+		@unlink( $log_file_path );
+	}
 	if ( ! is_string( $message ) && ! is_numeric( $message ) ) {
 		ob_start();
 		megaoptim_dump( $message );
@@ -159,9 +159,10 @@ function megaoptim_get_dir_size( $path ) {
 	$path       = realpath( $path );
 	if ( $path !== false && $path != '' && file_exists( $path ) ) {
 		foreach ( new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $path, FilesystemIterator::SKIP_DOTS ) ) as $object ) {
-		    try {
-                $bytestotal += $object->getSize();
-            } catch (\Exception $e) {}
+			try {
+				$bytestotal += $object->getSize();
+			} catch ( \Exception $e ) {
+			}
 		}
 	}
 
@@ -503,13 +504,14 @@ function megaoptim_array_except( $arr, $keys ) {
  */
 function megaoptim_array_only( $arr, $keys ) {
 	$new = array();
-	if(count($arr) > 0) {
+	if ( count( $arr ) > 0 ) {
 		foreach ( $arr as $key => $value ) {
 			if ( in_array( $key, $keys ) ) {
 				$new[ $key ] = $value;
 			}
 		}
 	}
+
 	return $new;
 }
 
@@ -630,11 +632,11 @@ function megaoptim_view( $file, $data = array(), $extension = '' ) {
 /**
  * Raise the WP Memory limit.
  *
- * @param  string  $context
+ * @param string $context
  */
-function megaoptim_raise_memory_limit($context = 'image') {
+function megaoptim_raise_memory_limit( $context = 'image' ) {
 	if ( function_exists( 'wp_raise_memory_limit' ) ) {
-		wp_raise_memory_limit($context);
+		wp_raise_memory_limit( $context );
 	}
 }
 
@@ -647,6 +649,7 @@ function megaoptim_raise_memory_limit($context = 'image') {
  */
 function megaoptim_dir_contains_images( $path ) {
 	$files = megaoptim_find_images_non_recursively( $path );
+
 	return ! empty( $files );
 }
 
@@ -676,28 +679,24 @@ function megaoptim_dir_contains_children( $dir ) {
  *
  * @return array|false
  */
-function megaoptim_find_images_non_recursively($path)
-{
-    $files = glob($path.DIRECTORY_SEPARATOR."*.{jpg,jpeg,png,gif}", GLOB_BRACE);
-    if ( ! empty($files)) {
-        foreach ($files as $key => $file) {
-            $files[$key] = realpath($files[$key]);
-        }
-    }
+function megaoptim_find_images_non_recursively( $path ) {
+	$files = glob( $path . DIRECTORY_SEPARATOR . "*.{jpg,jpeg,png,gif}", GLOB_BRACE );
+	if ( ! empty( $files ) ) {
+		foreach ( $files as $key => $file ) {
+			$files[ $key ] = realpath( $files[ $key ] );
+		}
+	}
 
-    return $files;
+	return $files;
 }
 
 /**
  * List of excluded custom folders from 'Custom Folders' scan
  * @retun array
  */
-function megaoptim_get_excluded_custom_dir_paths()
-{
-    $uploads     = wp_upload_dir();
-    $directories = array();
-
-    return array();
+function megaoptim_get_excluded_custom_dir_paths() {
+	$uploads = wp_upload_dir();
+	return array( $uploads['basedir'] );
 }
 
 /**
@@ -705,57 +704,84 @@ function megaoptim_get_excluded_custom_dir_paths()
  *
  * @param $dir
  *
- * @param  bool  $recursive
+ * @param bool $recursive
  *
- * @param  array  $excluded_dirs
+ * @param array $excluded_dirs
  *
  * @return array
  */
-function megaoptim_find_images($dir, $recursive = false, $excluded_dirs = array())
-{
+function megaoptim_find_images( $dir, $recursive = false, $excluded_dirs = array() ) {
 
-    if ( ! $recursive) {
-        return megaoptim_find_images_non_recursively($dir);
-    }
+	if ( ! $recursive ) {
+		return megaoptim_find_images_non_recursively( $dir );
+	}
 
-    $excluded_dir_names = array(
-        '.git',
-    );
+	$files = array();
 
-    /**
-     * @param  SplFileInfo  $file
-     * @param  mixed  $key
-     * @param  RecursiveCallbackFilterIterator  $iterator
-     *
-     * @return bool True if you need to recurse or if the item is acceptable
-     */
-    $filter = function ($file, $key, $iterator) use ($excluded_dirs, $excluded_dir_names) {
-        if ($file->isDir()) {
-            if(in_array($file->getPath(), $excluded_dirs) || in_array($file->getBasename(), $excluded_dir_names)) {
-                return true;
-            }
-        } elseif ($file->isFile()) {
-            $ext = $file->getExtension();
-            return in_array($ext, array(
-                'jpg',
-                'jpeg',
-                'png',
-                'gif',
-            ));
-        }
+	if ( empty( $excluded_dirs ) ) {
+		$files = megaoptim_find_images_quick( $dir, $recursive );
+	} else {
+		$directory = new RecursiveDirectoryIterator( $dir );
+		$filtered  = new MGO_ImageFilter( $directory, $excluded_dirs );
+		$iterator  = new RecursiveIteratorIterator( $filtered );
+		$iterator  = new RegexIterator( $iterator, '/^.+(.jpe?g|.png|.gif)$/i', RecursiveRegexIterator::GET_MATCH );
+		foreach ( $iterator as $file ) {
+			array_push( $files, realpath( $file[0] ) );
+		}
+	}
 
-        return true;
-    };
 
-    $innerIterator = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
-    $iterator      = new RecursiveIteratorIterator(new RecursiveCallbackFilterIterator($innerIterator, $filter));
+	return $files;
+}
 
-    $images     = array();
-    foreach ($iterator as $image) {
-        array_push($images, realpath($image[0]));
-    }
+/**
+ * Get the dir contents recursively.
+ *
+ * Note: Quickier method than megaoptim_find_images() when no excluding is required.
+ *
+ * @param $dir
+ * @param false $recursive
+ *
+ * @return array
+ */
+function megaoptim_find_images_quick( $dir, $recursive = false ) {
 
-    return $images;
+	$dir = trailingslashit( $dir );
+
+	if ( is_dir( $dir ) === false ) {
+		return array();
+	}
+	try {
+		$res     = opendir( $dir );
+		$images  = array();
+		$formats = array( '.jpg', '.jpeg', '.png', '.gif' );
+
+		while ( false !== ( $item = readdir( $res ) ) ) {
+			if ( $item == "." || $item == ".." ) {
+				continue;
+			}
+			$path = $dir . $item;
+			if ( $recursive && is_dir( $path ) ) {
+				$_images = megaoptim_find_images_quick( $path, $recursive );
+				$images  = array_merge( $images, $_images );
+			} else {
+				$found = 0;
+				foreach ( $formats as $format ) {
+					if ( substr( $item, - strlen( $format ) ) === $format ) {
+						$found ++;
+					}
+				}
+				if ( ! $found ) {
+					continue;
+				}
+				array_push( $images, $path );
+			}
+		}
+	} catch ( \Exception $e ) {
+		return array();
+	}
+
+	return $images;
 }
 
 /**
