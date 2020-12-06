@@ -157,7 +157,7 @@ function megaoptim_replace_img_with_webp( $match ) {
 	if ( $uploads_path_base === false ) {
 		return $match[0];
 	}
-	$uploads_path_base =  trailingslashit($uploads_path_base);
+	$uploads_path_base = trailingslashit( $uploads_path_base );
 
 	// Remove all previous attributes.
 	unset( $img['src'] );
@@ -166,45 +166,45 @@ function megaoptim_replace_img_with_webp( $match ) {
 	unset( $img['srcset'] );
 	unset( $img['sizes'] );
 	unset( $img['alt'] );
-	unset($img['id']);
-	unset($img['width']);
-	unset($img['height']);
+	unset( $img['id'] );
+	unset( $img['width'] );
+	unset( $img['height'] );
 
 	// Try to assemble the picture
-    if(megaoptim_contains($srcset, ',')) {
-        $defs = explode( ",", $srcset );
-    } else {
-        $defs = array( $src );
-    }
+	if ( megaoptim_contains( $srcset, ',' ) ) {
+		$defs = explode( ",", $srcset );
+	} else {
+		$defs = array( $src );
+	}
 
-    $srcset_webp = array();
-    foreach ( $defs as $item ) {
-        $total         = 0;
-        $parts         = preg_split('/\s+/', trim($item));
-        $file_url      = $parts[0];
-        $file_url_base = trailingslashit(dirname($file_url));
-        $source_width  = isset($parts[1]) ? ' '.$parts[1] : ''; // Append source width with space eg ' 300w'
-        $webp_files    = array(
-            $uploads_path_base.wp_basename($file_url).'.webp',
-            $uploads_path_base.wp_basename($file_url, '.'.pathinfo($file_url, PATHINFO_EXTENSION)).'.webp'
-        );
-        foreach ($webp_files as $webp_file) {
-            if (!file_exists($webp_file) ) {
-                // Used in the MGO_As3Cf to determine the webp_file path if it is remote.
-	            $file_found = apply_filters('megaoptim_webp_file_404', false, $webp_file, $file_url, $uploads_path_base);
-            } else {
-                $file_found = true;
-            }
-            if ($file_found && $total < 1) { // It doesn't work with two versions (eg. file.webp and file.png.webp)
-                $final_webp_path = $file_url_base.wp_basename($webp_file).$source_width;
-                array_push($srcset_webp, $final_webp_path);
-	            $total++;
-            }
-        }
-    }
+	$srcset_webp = array();
+	foreach ( $defs as $item ) {
+		$total         = 0;
+		$parts         = preg_split( '/\s+/', trim( $item ) );
+		$file_url      = $parts[0];
+		$file_url_base = trailingslashit( dirname( $file_url ) );
+		$source_width  = isset( $parts[1] ) ? ' ' . $parts[1] : ''; // Append source width with space eg ' 300w'
+		$webp_files    = array(
+			$uploads_path_base . wp_basename( $file_url ) . '.webp',
+			$uploads_path_base . wp_basename( $file_url, '.' . pathinfo( $file_url, PATHINFO_EXTENSION ) ) . '.webp'
+		);
+		foreach ( $webp_files as $webp_file ) {
+			if ( ! file_exists( $webp_file ) ) {
+				// Used in the MGO_As3Cf to determine the webp_file path if it is remote.
+				$file_found = apply_filters( 'megaoptim_webp_file_404', false, $webp_file, $file_url, $uploads_path_base );
+			} else {
+				$file_found = true;
+			}
+			if ( $file_found && $total < 1 ) { // It doesn't work with two versions (eg. file.webp and file.png.webp)
+				$final_webp_path = $file_url_base . wp_basename( $webp_file ) . $source_width;
+				array_push( $srcset_webp, $final_webp_path );
+				$total ++;
+			}
+		}
+	}
 
-    $srcset_webp = implode(',', $srcset_webp);
-	if ( empty($srcset_webp) ) {
+	$srcset_webp = implode( ',', $srcset_webp );
+	if ( empty( $srcset_webp ) ) {
 		return $match[0];
 	}
 	$img['class'] = ( isset( $img['class'] ) ? $img['class'] . " " : "" ) . $ignore_webp_by_class;
@@ -213,7 +213,7 @@ function megaoptim_replace_img_with_webp( $match ) {
 
 	$output = '<picture>';
 	$output .= '<source ' . $srcset_prefix . 'srcset="' . $srcset_webp . '"' . ( $sizes ? ' ' . $sizes_prefix . 'sizes="' . $sizes . '"' : '' ) . ' type="image/webp">';
-	if(false !== $srcset) {
+	if ( false !== $srcset ) {
 		$output .= '<source ' . $srcset_prefix . 'srcset="' . $srcset . '"' . ( $sizes ? ' ' . $sizes_prefix . 'sizes="' . $sizes . '"' : '' ) . '>';
 	}
 	$output .= '<img ' . $src_prefix . 'src="' . $src . '" ' . $img_attrs . $old_id . $old_alt . $old_height . $old_width . ( strlen( $srcset ) ? ' srcset="' . $srcset . '"' : '' ) . ( strlen( $sizes ) ? ' sizes="' . $sizes . '"' : '' ) . '>';
@@ -233,7 +233,7 @@ function megaoptim_replace_img_with_webp( $match ) {
 function megaoptim_replace_inline_backgrounds_with_webp( $matches, $content ) {
 
 	// Bail if empty
-	if ( empty( $matches ) || count($matches) == 1 && empty($matches[0]) ) {
+	if ( empty( $matches ) || count( $matches ) == 1 && empty( $matches[0] ) ) {
 		return $content;
 	}
 
@@ -287,11 +287,15 @@ function megaoptim_replace_inline_backgrounds_with_webp( $matches, $content ) {
 /**
  * Returns the image dir if it's local. Otherwise it returns false.
  *
- * @param $src  - Url of the image
+ * @param $src - Url of the image
  *
  * @return bool|mixed|string
  */
 function megaoptim_webp_get_image_dir( $src ) {
+
+	if ( empty( $src ) ) {
+		return false;
+	}
 
 	$url_parsed = parse_url( $src );
 	if ( ! isset( $url_parsed['host'] ) ) {
@@ -422,9 +426,9 @@ function megaoptim_get_dom_element_attributes( $content, $element ) {
 	}
 
 	$attr = array();
-	if( !class_exists('DOMDocument')) {
-	    megaoptim_log('Class DOMDocument not found. Please enable the php-dom extension.');
-    } else {
+	if ( ! class_exists( 'DOMDocument' ) ) {
+		megaoptim_log( 'Class DOMDocument not found. Please enable the php-dom extension.' );
+	} else {
 		$dom = new \DOMDocument;
 		$dom->loadHTML( $content );
 		foreach ( $dom->getElementsByTagName( $element ) as $tag ) {
@@ -432,7 +436,8 @@ function megaoptim_get_dom_element_attributes( $content, $element ) {
 				$attr[ $attribName ] = $tag->getAttribute( $attribName );
 			}
 		}
-    }
+	}
+
 	return $attr;
 }
 
