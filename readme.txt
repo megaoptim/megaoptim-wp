@@ -138,6 +138,8 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 == Changelog ==
 
 = 1.4.10 =
+- Add compatibility with PHP 8
+- Add compatibility with WordPress 5.6
 - Speed improvements to the 'Custom Folders' module
 - Fix fatal error in some occuasions when generating debug report.
 - Fix forever loading when "Optimize" button is pressed in Media Library list table screen in certain cases
