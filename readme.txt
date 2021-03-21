@@ -2,7 +2,7 @@
 Contributors: megaoptim, darkog
 Tags: convert webp, webp, optimize images, optimize, images, compress
 Requires at least: 3.6
-Tested up to: 5.6
+Tested up to: 5.7
 Requires PHP: 5.3
 Stable tag: 1.4.10
 License: GPLv2 or later
