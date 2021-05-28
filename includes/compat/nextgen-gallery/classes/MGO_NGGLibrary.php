@@ -158,6 +158,10 @@ class MGO_NGGLibrary extends MGO_Library {
 				do_action( 'megaoptim_size_optimized', $attachment_object, $resource, $response, $request_params, $size = 'full' );
 			}
 
+			if ( $result->is_erroneous() ) {
+				$result->throw_last_error();
+			}
+
 			$attachment_object->unlock();
 
 			$result->set_attachment( $attachment_object );

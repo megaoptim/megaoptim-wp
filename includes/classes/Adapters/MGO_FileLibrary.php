@@ -139,6 +139,10 @@ class MGO_FileLibrary extends MGO_Library {
 				do_action( 'megaoptim_size_optimized', $attachment_object, $resource, $response, $request_params, $size = 'full' );
 			}
 
+			if ( $result->is_erroneous() ) {
+				$result->throw_last_error();
+			}
+
 			$result->set_attachment( $attachment_object );
 
 			do_action( 'megaoptim_attachment_optimized', $attachment_object, $request_params, $result );
