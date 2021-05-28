@@ -133,7 +133,7 @@
                 self.loader_preparing.stop();
                 $spin.show();
                 self.run(index, attachments.length, attachments);
-            }, 1000);
+            }, 500);
 
         };
 
@@ -191,12 +191,13 @@
                                     self.update_table_row(response.data['attachment']);
                                     self.update_couters(response.data);
                                     if (parseInt(response.data['tokens']) === 0) {
+                                        $(window).off('beforeunload');
                                         window.location.href = window.location.href;
                                     }
                                 } else {
                                     self.update_row_error(data[index]['ID'], response.data.error);
                                     self.log(response.data, 'log');
-                                    if (!(response.data['can_continue'] === 1 || response.data['can_continue'] === '1')) {
+                                    if ( response.data.hasOwnProperty('can_continue') && !(response.data['can_continue'] === 1 || response.data['can_continue'] === '1')) {
                                         self.stop_optimizer();
                                     }
                                 }
@@ -215,7 +216,7 @@
                         setTimeout(function () {
                             self.unlock_optimizer();
                             self.run(index, len, data);
-                        }, 500);
+                        }, 120);
                     }
                 });
             } else {
