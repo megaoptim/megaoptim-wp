@@ -4,7 +4,7 @@ Tags: convert webp, webp, optimize images, optimize, images, compress
 Requires at least: 3.6
 Tested up to: 5.7
 Requires PHP: 5.3
-Stable tag: 1.4.12
+Stable tag: 1.4.13
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
