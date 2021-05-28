@@ -111,7 +111,7 @@ class MGO_Ajax extends MGO_BaseObject {
 			case 2:
 				if ( isset( $_REQUEST['api_key'] ) && ! empty( $_REQUEST['api_key'] ) ) {
 					try {
-						$profile = new MGO_Profile( $_REQUEST['api_key'] );
+						$profile = new MGO_Profile( $_REQUEST['api_key'], true );
 						if ( $profile->is_valid_apikey() ) {
 							MGO_Settings::instance()->update( array(
 								MGO_Settings::API_KEY => $_REQUEST['api_key']
@@ -139,15 +139,24 @@ class MGO_Ajax extends MGO_BaseObject {
 	public function optimize_attachment() {
 
 		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_OPTIMIZER, 'nonce' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
+			wp_send_json_error( array(
+				'error'        => __( 'Access denied.', 'megaoptim-image-optimizer' ),
+				'can_continue' => 0,
+			) );
 		}
 
 		if ( ! is_user_logged_in() || ! current_user_can( 'upload_files' ) ) {
-			wp_send_json_error( array( 'error' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
+			wp_send_json_error( array(
+				'error'        => __( 'Access denied.', 'megaoptim-image-optimizer' ),
+				'can_continue' => 0,
+			) );
 		}
 
 		if ( ! isset( $_REQUEST['attachment'] ) ) {
-			wp_send_json_error( array( 'error' => __( 'No attachment provided.', 'megaoptim-image-optimizer' ) ) );
+			wp_send_json_error( array(
+				'error'        => __( 'No attachment provided.', 'megaoptim-image-optimizer' ),
+				'can_continue' => 1,
+			) );
 		}
 		$attachment_id = $_REQUEST['attachment']['ID'];
 		try {
@@ -302,13 +311,10 @@ class MGO_Ajax extends MGO_BaseObject {
 		//validations
 		if ( isset( $_REQUEST[ MGO_Settings::API_KEY ] ) && ! empty( $_REQUEST[ MGO_Settings::API_KEY ] ) ) {
 			try {
-				$response = MGO_Profile::get_user_by_api_key( $_REQUEST['megaoptimpt_api_key'] );
-				if ( $response === false ) {
-					array_push( $errors, __( 'Could not verify your API key. The API can not be reached. Please contact support.', 'megaoptim-image-optimizer' ) );
-				} else if ( ! isset( $response['status'] ) ) {
-					array_push( $errors, __( 'We received invalid response trying to authenticate your api key. Please contact support.', 'megaoptim-image-optimizer' ) );
-				} else if ( $response['status'] != 'ok' ) {
-					array_push( $errors, __( 'Your API key is invalid. Please make sure you use correct API issued by MegaOptim.com', 'megaoptim-image-optimizer' ) );
+				$apikey  = sanitize_text_field( $_REQUEST['megaoptimpt_api_key'] );
+				$profile = new MGO_Profile( $apikey, true );
+				if ( ! $profile->is_connected() ) {
+					array_push( $errors, __( 'Could not connect to the MegaOptim API. The provided API key is empty or invalid.', 'megaoptim-image-optimizer' ) );
 				}
 			} catch ( MGO_Exception $e ) {
 				array_push( $errors, $e->getMessage() );
@@ -396,8 +402,8 @@ class MGO_Ajax extends MGO_BaseObject {
 		$errors = array();
 
 		// Image sizes
-		if ( ! isset( $_REQUEST[ MGO_Settings::IMAGE_SIZES ] ) OR ! is_array( $_REQUEST[ MGO_Settings::IMAGE_SIZES ] )
-		     OR count( $_REQUEST[ MGO_Settings::IMAGE_SIZES ] ) === 0
+		if ( ! isset( $_REQUEST[ MGO_Settings::IMAGE_SIZES ] ) or ! is_array( $_REQUEST[ MGO_Settings::IMAGE_SIZES ] )
+		     or count( $_REQUEST[ MGO_Settings::IMAGE_SIZES ] ) === 0
 		) {
 			array_push( $errors, __( 'No image sizes selected. Please select some!', 'megaoptim-image-optimizer' ) );
 		}
@@ -510,16 +516,16 @@ class MGO_Ajax extends MGO_BaseObject {
 			$context = $_REQUEST['context'];
 			switch ( $context ) {
 				case MEGAOPTIM_TYPE_MEDIA_ATTACHMENT:
-                    $filters = array();
-                    foreach (array('date_from', 'date_to') as $key) {
-                        if (isset($_REQUEST[$key]) && ! empty($_REQUEST[$key])) {
-                            $filters[$key] = $_REQUEST[$key];
-                        }
-                    }
-					$filters['page'] = isset($_REQUEST['page']) ? $_REQUEST['page'] : null;
-					$filters['per_page'] = isset($_REQUEST['per_page']) ? $_REQUEST['per_page'] : 5000;
-                    $stats = MGO_MediaLibrary::instance()->get_stats(true, $filters);
-                    break;
+					$filters = array();
+					foreach ( array( 'date_from', 'date_to' ) as $key ) {
+						if ( isset( $_REQUEST[ $key ] ) && ! empty( $_REQUEST[ $key ] ) ) {
+							$filters[ $key ] = $_REQUEST[ $key ];
+						}
+					}
+					$filters['page']     = isset( $_REQUEST['page'] ) ? $_REQUEST['page'] : null;
+					$filters['per_page'] = isset( $_REQUEST['per_page'] ) ? $_REQUEST['per_page'] : 5000;
+					$stats               = MGO_MediaLibrary::instance()->get_stats( true, $filters );
+					break;
 				default:
 					$stats = apply_filters( 'megaoptim_library_data', null, $context );
 			}

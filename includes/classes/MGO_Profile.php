@@ -94,7 +94,7 @@ class MGO_Profile {
 	public static function get_user_by_api_key( $api_key ) {
 		$response = wp_remote_post( WP_MEGAOPTIM_API_PROFILE, array(
 				'method'      => 'POST',
-				'timeout'     => 45,
+				'timeout'     => 10,
 				'redirection' => 5,
 				'httpversion' => '1.0',
 				'blocking'    => true,
@@ -149,10 +149,13 @@ class MGO_Profile {
 
 	/**
 	 * Returns the Tokens count left.
+	 *
+	 * @param $refresh - Refresh if the data is not fresh.
+	 *
 	 * @return mixed|string
 	 */
-	public function get_tokens_count() {
-		if ( ! $this->fresh ) {
+	public function get_tokens_count( $refresh = true ) {
+		if ( ! $this->fresh && $refresh ) {
 			$this->refresh();
 		}
 
