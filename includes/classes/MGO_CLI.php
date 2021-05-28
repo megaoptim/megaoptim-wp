@@ -251,16 +251,19 @@ class MGO_CLI {
 						$message = sprintf( __( 'Attachment %s optimized. Total thumbnails %s, Total saved %s', 'megaoptim-image-optimizer' ), $image['ID'], $result->total_thumbnails, megaoptim_human_file_size( $result->total_saved_bytes ) );
 					}
 					\WP_CLI::success( $message );
-				} catch ( MGO_Attachment_Already_Optimized_Exception $e ) {
-					$message = sprintf( __( 'Attachment already %s optimized. No further optimization needed.', 'megaoptim-image-optimizer' ), $image['ID'] );
-					\WP_CLI::success( $message );
-				} catch ( MGO_Exception $e ) {
-					$message = sprintf( __( 'Attachment %s not optimized. Reason: %s', 'megaoptim-image-optimizer' ), $image['ID'], $e->getMessage() );
-					\WP_CLI::warning( $message );
+				} catch ( \MGO_Exception $e ) {
+					if ( $e instanceof MGO_Attachment_Already_Optimized_Exception ) {
+						\WP_CLI::success( sprintf( __( 'Attachment %s already optimized. No further optimization needed.', 'megaoptim-image-optimizer' ), $image['ID'] ) );
+					} else if ( $e instanceof MGO_Attachment_Locked_Exception ) {
+						\WP_CLI::warning( sprintf( __( 'Attachment %s not optimized. Reason: %s', 'megaoptim-image-optimizer' ), $image['ID'], $e->getMessage() ) );
+					} else {
+						\WP_CLI::warning( sprintf( __( 'Attachment %s not optimized. Reason: %s', 'megaoptim-image-optimizer' ), $image['ID'], $e->getMessage() ) );
+						break;
+					}
 				}
 			}
 			$time_elapsed_secs = microtime( true ) - $time_start;
-			WP_CLI::success( sprintf( __( 'Process finished in %s seconds. Total optimized %s, Totaal saved %s', 'megaoptim-image-optimizer' ), megaoptim_round($time_elapsed_secs, 5), $total_optimized, megaoptim_human_file_size($total_saved) ) );
+			WP_CLI::success( sprintf( __( 'Process finished in %s seconds. Total optimized %s, Totaal saved %s', 'megaoptim-image-optimizer' ), megaoptim_round( $time_elapsed_secs, 5 ), $total_optimized, megaoptim_human_file_size( $total_saved ) ) );
 		}
 	}
 
@@ -352,7 +355,7 @@ class MGO_CLI {
 					if ( @rename( $attachment_backup_path, $attachment_path ) ) {
 						megaoptim_regenerate_thumbnails( $attachment_ID, $attachment_path );
 						delete_post_meta( $attachment_ID, '_megaoptim_data' );
-						do_action( 'megaoptim_after_restore_attachment', new MGO_MediaAttachment($attachment_ID) );
+						do_action( 'megaoptim_after_restore_attachment', new MGO_MediaAttachment( $attachment_ID ) );
 						WP_CLI::success( sprintf( __( 'Attachment %s successfully restored.', 'megaoptim-image-optimizer' ), $attachment_ID ) );
 						$total_restored ++;
 					} else {
