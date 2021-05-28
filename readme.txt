@@ -137,6 +137,9 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 
 == Changelog ==
 
+= 1.4.13 =
+- Terminate the WP CLI Bulk process only if API problem is found e.g. Insufficuent tokens.
+
 = 1.4.12 =
 - Performance optimizations in /wp-admin
 - Performance optimizations in the Bulk optimization process through the admin UI
