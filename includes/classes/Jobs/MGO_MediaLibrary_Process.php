@@ -77,6 +77,7 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 					$attachment->set_attachment_data( 'full', array( 'error' => $error_str ), false );
 					$attachment->save();
 					$attachment->unlock();
+
 					return false;
 				}
 
@@ -92,7 +93,8 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 					$local_path = $_itm['attachment_local_path'];
 					$is_retina  = $_itm['type'] === 'retina';
 
-					$file = $response->getResultByFileName( basename( $resource ) );
+					$filename = basename( $resource );
+					$file     = $response->getResultByFileName( $filename );
 
 					if ( ! is_null( $file ) ) {
 
@@ -111,7 +113,6 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 							if ( $webp->getSavedBytes() > 0 ) {
 								$webp->saveAsFile( $local_path . '.webp' );
 							}
-
 						}
 
 						// Set Stats
@@ -136,6 +137,8 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 						 * @since 1.0.0
 						 */
 						do_action( 'megaoptim_size_optimized', $attachment, $local_path, $response, $request_params, $size );
+					} else {
+						megaoptim_log( '--- Saving Response: Response by filename not found. File name: '.$filename );
 					}
 				}
 

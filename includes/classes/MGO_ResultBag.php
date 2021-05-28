@@ -20,7 +20,6 @@
 
 class MGO_ResultBag {
 
-
 	public $total_full_size = 0;
 	public $total_thumbnails = 0;
 	public $total_saved_bytes = 0;
@@ -106,5 +105,39 @@ class MGO_ResultBag {
 			'saved_bytes'      => $this->total_saved_bytes,
 			'saved_megabytes'  => megaoptim_convert_bytes_to_specified( $this->total_saved_bytes, 'MB', 3 )
 		);
+	}
+
+	/**
+	 * Is errorneous?
+	 */
+	public function is_erroneous() {
+		$totalE = 0;
+		$totalR = 0;
+		foreach ( $this->responses as $response ) {
+			if ( $response->isError() ) {
+				$totalE ++;
+			}
+			$totalR ++;
+		}
+		return $totalR > 0 && $totalR === $totalE;
+	}
+
+	/**
+	 * Throw the last error.
+	 * @throws MGO_Exception
+	 */
+	public function throw_last_error() {
+		$error = null;
+		foreach ( $this->responses as $response ) {
+			if ( method_exists( $response, 'isError' ) && $response->isError() ) {
+				$error = $response;
+			}
+		}
+		if ( ! empty( $error ) ) {
+			$messages = $error->getErrors();
+			if ( count( $messages ) > 0 ) {
+				throw new MGO_Exception( $messages[0], $error->getErrorCode() );
+			}
+		}
 	}
 }

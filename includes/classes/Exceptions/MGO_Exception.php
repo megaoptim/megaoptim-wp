@@ -22,11 +22,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( 'Direct access is not allowed.' );
 }
 
+/**
+ * Class MGO_Exception
+ */
 class MGO_Exception extends Exception {
 
-	private $errors = array();
+	/**
+	 * The errors
+	 * @var array|string[]
+	 */
+	private $errors;
 
-	public function __construct( $message = "", $code = 0, Exception $previous = null ) {
+	/**
+	 * MGO_Exception constructor.
+	 *
+	 * @param array $message
+	 * @param int $code
+	 * @param null $previous
+	 */
+	public function __construct( $message = "", $code = 0, $previous = null ) {
+
+		$this->errors = array();
 		if ( is_array( $message ) ) {
 			$primary_error_message = $message[0];
 			$this->errors          = $message;
@@ -37,6 +53,10 @@ class MGO_Exception extends Exception {
 		parent::__construct( $primary_error_message, $code, $previous );
 	}
 
+	/**
+	 * Return the errors
+	 * @return array|string[]
+	 */
 	public function get_errors() {
 		return $this->errors;
 	}

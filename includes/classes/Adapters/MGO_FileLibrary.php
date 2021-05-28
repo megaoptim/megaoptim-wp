@@ -52,11 +52,6 @@ class MGO_FileLibrary extends MGO_Library {
 
 		$result = new MGO_ResultBag();
 
-		//Dont go further if not connected
-		$profile = MGO_Profile::_is_connected();
-		if ( ! $profile OR is_null( $this->optimizer ) ) {
-			throw new MGO_Exception( 'Please make sure you have set up MegaOptim.com API key' );
-		}
 		//Check if attachment is optimized
 		$attachment_object = new MGO_FileAttachment( $attachment->path );
 
@@ -65,16 +60,15 @@ class MGO_FileLibrary extends MGO_Library {
 			throw new MGO_Attachment_Already_Optimized_Exception( 'The attachment is already fully optimized.' );
 		}
 
-		// Bail if no tokens left.
-		$tokens = $profile->get_tokens_count();
-		if ( $tokens != - 1 && $tokens <= 0 ) {
-			throw new MGO_Exception( 'No tokens left. Please top up your account at https://megaoptim.com/dashboard in order to continue.' );
-		}
-
 		//Setup Request params
 		$request_params = $this->build_request_params();
 		if ( ! empty( $params ) ) {
 			$request_params = array_merge( $request_params, $params );
+		}
+
+		// Check if image exist
+		if ( ! file_exists( $attachment->path ) ) {
+			throw new MGO_Exception( __( 'Original image version does not exist on the server.', 'megaoptim-image-optimizer' ) );
 		}
 
 		/**
@@ -88,43 +82,43 @@ class MGO_FileLibrary extends MGO_Library {
 		 */
 		do_action( 'megaoptim_before_optimization', $attachment_object, $request_params );
 
-		//Create Backup If needed
-		if ( $this->should_backup() ) {
-			$backup_path = $attachment_object->backup();
-			$attachment_object->set_backup_path( $backup_path );
-		}
-
-		// Check if image exist
-		if ( ! file_exists( $attachment->path ) ) {
-			throw new MGO_Exception( __( 'Original image version does not exist on the server.', 'megaoptim-image-optimizer' ) );
-		}
-
 		try {
 			// Grab the resource
 			$resource = $this->get_attachment_path( $attachment );
 			// Optimize the original
 			$response = $this->optimizer->run( $resource, $request_params );
 			$result->add( 'full', $response );
+
 			if ( $response->isError() ) {
 				megaoptim_log( $response->getErrors() );
 			} else {
-			    megaoptim_log($response);
+
+				megaoptim_log( $response );
+
+				//Create Backup If needed
+				if ( $this->should_backup() ) {
+					$backup_path = $attachment_object->backup();
+					$attachment_object->set_backup_path( $backup_path );
+				}
+
+				// Save optimized files
 				foreach ( $response->getOptimizedFiles() as $file ) {
 					if ( $file->getSavedBytes() > 0 && $file->isSuccessfullyOptimized() ) {
 						$file->saveAsFile( $attachment->path );
 					}
 					$result->total_full_size ++;
 					$result->total_saved_bytes += $file->getSavedBytes();
-                    $webp = $file->getWebP();
-                    if ( ! is_null( $webp ) ) {
-                        if ( $webp->getSavedBytes() > 0 ) {
-                            $webp->saveAsFile( $attachment->path . '.webp' );
-                        }
-                    }
+					$webp                      = $file->getWebP();
+					if ( ! is_null( $webp ) ) {
+						if ( $webp->getSavedBytes() > 0 ) {
+							$webp->saveAsFile( $attachment->path . '.webp' );
+						}
+					}
 				}
 				$attachment_object->set_data( $response, $request_params );
 				$attachment_object->set( 'directory', $attachment->directory );
 				$attachment_object->save();
+
 				// No need to backup attachments that are already optimized!
 				if ( $attachment_object->is_already_optimized() ) {
 					$attachment_object->delete_backup();
@@ -269,7 +263,7 @@ class MGO_FileLibrary extends MGO_Library {
 			$stats       = new MGO_Stats();
 			$directories = array();
 			$excludes    = megaoptim_get_excluded_custom_dir_paths();
-			$files       = megaoptim_find_images( $directory, true,  $excludes);
+			$files       = megaoptim_find_images( $directory, true, $excludes );
 			foreach ( $files as $file ) {
 				array_push( $directories, dirname( $file ) . DIRECTORY_SEPARATOR );
 			}

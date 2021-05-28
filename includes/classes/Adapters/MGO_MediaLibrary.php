@@ -65,15 +65,9 @@ class MGO_MediaLibrary extends MGO_Library {
 	 */
 	public function optimize( $attachment, $params = array() ) {
 
-		@set_time_limit(0);
+		@set_time_limit( 0 );
 
 		$result = new MGO_ResultBag();
-
-		//Don't go further if not connected
-		$profile = MGO_Profile::_is_connected();
-		if ( ! $profile OR is_null( $this->optimizer ) ) {
-			throw new MGO_Exception( 'Please make sure you have set up MegaOptim.com API key' );
-		}
 
 		//Check if Attachment is image
 		$att_id = $attachment instanceof MGO_MediaAttachment ? $attachment->get_id() : $attachment;
@@ -99,12 +93,6 @@ class MGO_MediaLibrary extends MGO_Library {
 			throw new MGO_Attachment_Already_Optimized_Exception( 'The attachment is already fully optimized.' );
 		}
 
-		// Bail if no tokens left.
-		$tokens = $profile->get_tokens_count();
-		if ( $tokens != - 1 && $tokens <= 0 ) {
-			throw new MGO_Exception( 'No tokens left. Please top up your account at https://megaoptim.com/dashboard in order to continue.' );
-		}
-
 		//Setup Request params
 		$request_params = $this->filter_params( $this->build_request_params(), $attachment_object );
 		if ( ! empty( $params ) ) {
@@ -123,25 +111,24 @@ class MGO_MediaLibrary extends MGO_Library {
 		do_action( 'megaoptim_before_optimization', $attachment_object, $request_params );
 
 		//Get the file names
-		//$original_resource = $this->get_attachment( $attachment, 'full', false );
 		$original_path = $this->get_attachment_path( $attachment, 'full', false );
 		if ( ! file_exists( $original_path ) ) {
 			throw new MGO_Exception( __( 'Original image version does not exist on the server.', 'megaoptim-image-optimizer' ) );
 		}
 
-		//Create Backup If Enabled
-		if ( $this->should_backup() ) {
-			$backup_path = $attachment_object->backup();
-			$attachment_object->set_backup_path( $backup_path );
-		}
-
 		// Optimize the original and the thumbnails
 		try {
+
 			megaoptim_log( 'Optimizing MediaLibrary attachment with id ' . $attachment_object->get_id() );
 
+			//Create Backup If Enabled
+			if ( $this->should_backup() ) {
+				$backup_path = $attachment_object->backup();
+				$attachment_object->set_backup_path( $backup_path );
+			}
+			// Create resources
 			$resources   = array();
 			$attachments = array();
-
 			$attachment_object->maybe_set_metadata();
 			$remaining_thumbnails = $attachment_object->get_remaining_thumbnails();
 			foreach ( array( 'normal', 'retina' ) as $_type ) {
@@ -188,7 +175,8 @@ class MGO_MediaLibrary extends MGO_Library {
 					} else {
 						megaoptim_log( '--- Response: ' . $response->getRawResponse() );
 						foreach ( $attachments as $att ) {
-							$file = $response->getResultByFileName( basename( $att['save_path'] ) );
+							$filename = basename( $att['save_path'] );
+							$file     = $response->getResultByFileName( $filename );
 							if ( ! is_null( $file ) ) {
 								// Save data
 								$data = megaoptim_generate_attachment_data( $file, $response, $request_params );
@@ -223,6 +211,8 @@ class MGO_MediaLibrary extends MGO_Library {
 								 * @since 1.0.0
 								 */
 								do_action( 'megaoptim_size_optimized', $attachment_object, $att['save_path'], $response, $request_params, $size );
+							} else {
+								megaoptim_log( '--- Saving Response: Response by filename not found. File name: ' . $filename );
 							}
 						}
 					}
@@ -231,15 +221,19 @@ class MGO_MediaLibrary extends MGO_Library {
 			$attachment_object->unlock();
 			$attachment_object->save();
 			$attachment_object->refresh();
-			$result->set_attachment( $attachment_object );
 
+			if ( $result->is_erroneous() ) {
+				$result->throw_last_error();
+			}
+
+			$result->set_attachment( $attachment_object );
 			do_action( 'megaoptim_attachment_optimized', $attachment_object, $request_params, $result );
 
 			return $result;
 		} catch ( Exception $e ) {
 			$attachment_object->unlock();
-			megaoptim_log( '--- Optimizer Exception: ' . $e->getMessage() );
-			throw new MGO_Exception( $e->getMessage() . ' in ' . $e->getFile() );
+			megaoptim_log( '--- Optimizer Exception: ' . sprintf( '%s in %s', $e->getMessage(), $e->getFile() ) );
+			throw new MGO_Exception( $e->getMessage() );
 		}
 	}
 
@@ -262,12 +256,6 @@ class MGO_MediaLibrary extends MGO_Library {
 			return;
 		}
 
-		//Don't go further if not connected
-		$profile = MGO_Profile::_is_connected();
-		if ( ! $profile OR is_null( $this->optimizer ) ) {
-			throw new MGO_Exception( 'Please make sure you have set up MegaOptim.com API key' );
-		}
-
 		//Check if Attachment is image
 		$att_id = $attachment instanceof MGO_MediaAttachment ? $attachment->get_id() : $attachment;
 		if ( ! wp_attachment_is_image( $att_id ) ) {
@@ -285,12 +273,6 @@ class MGO_MediaLibrary extends MGO_Library {
 		// Prevent
 		if ( $attachment_object->is_locked() ) {
 			throw new MGO_Attachment_Locked_Exception( 'The attachment is currently being optimized. No need to re-run the optimization.' );
-		}
-
-		// Bail if no tokens left.
-		$tokens = $profile->get_tokens_count();
-		if ( $tokens != - 1 && $tokens <= 0 ) {
-			throw new MGO_Exception( 'No tokens left. Please top up your account at https://megaoptim.com/dashboard in order to continue.' );
 		}
 
 		//Setup Request params
@@ -372,7 +354,7 @@ class MGO_MediaLibrary extends MGO_Library {
 
 	public function convert_webp( $args ) {
 
-    }
+	}
 
 	/**
 	 * Returns all the available media attachments.
@@ -382,7 +364,6 @@ class MGO_MediaLibrary extends MGO_Library {
 	 * @return array|null|object
 	 */
 	public function get_images( $args = array() ) {
-
 
 		global $wpdb;
 
@@ -424,7 +405,7 @@ class MGO_MediaLibrary extends MGO_Library {
 		// Count the overall query
 		$query       = str_replace( $tag, $tag_count, $query_str );
 		$total_items = (int) $wpdb->get_var( $query );
-		$total_pages = ( $total_items > 0 && $items_per_page > 0 ) ?  ceil(( $total_items / $items_per_page )) : 1;
+		$total_pages = ( $total_items > 0 && $items_per_page > 0 ) ? ceil( ( $total_items / $items_per_page ) ) : 1;
 
 		// Setup page offset
 		if ( is_numeric( $page_number ) && is_numeric( $items_per_page ) && $page_number > 0 ) {
@@ -794,30 +775,30 @@ class MGO_MediaLibrary extends MGO_Library {
 
 		$largest_thumbnail_dimensions = $attachment->get_largest_thumbnail_dimensions();
 
-        $max_width  = 0;
-        $max_height = 0;
+		$max_width  = 0;
+		$max_height = 0;
 
-        if (isset($params['max_width'])) {
-            $max_width = intval($params['max_width']);
-        }
-        if (isset($params['max_height'])) {
-            $max_height = intval($params['max_height']);
-        }
+		if ( isset( $params['max_width'] ) ) {
+			$max_width = intval( $params['max_width'] );
+		}
+		if ( isset( $params['max_height'] ) ) {
+			$max_height = intval( $params['max_height'] );
+		}
 
-        if ($max_width > 0) {
-            if ($max_width > $largest_thumbnail_dimensions['width']) {
-                $max_width = 0;
-            }
-        }
+		if ( $max_width > 0 ) {
+			if ( $max_width > $largest_thumbnail_dimensions['width'] ) {
+				$max_width = 0;
+			}
+		}
 
-        if ($max_height > 0) {
-            if ($max_height > $largest_thumbnail_dimensions['height']) {
-                $max_height = 0;
-            }
-        }
+		if ( $max_height > 0 ) {
+			if ( $max_height > $largest_thumbnail_dimensions['height'] ) {
+				$max_height = 0;
+			}
+		}
 
-        $params['max_width']  = $max_width;
-        $params['max_height'] = $max_height;
+		$params['max_width']  = $max_width;
+		$params['max_height'] = $max_height;
 
 		return $params;
 	}

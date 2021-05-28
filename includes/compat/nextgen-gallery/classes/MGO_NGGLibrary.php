@@ -77,11 +77,6 @@ class MGO_NGGLibrary extends MGO_Library {
 			$attachment = megaoptim_get_ngg_attachment( $attachment );
 		}
 
-		//Dont go further if not connected
-		$profile = MGO_Profile::_is_connected();
-		if ( ! $profile OR is_null( $this->optimizer ) ) {
-			throw new MGO_Exception( 'Please make sure you have set up MegaOptim.com API key' );
-		}
 		//Check if attachment is optimized
 		$attachment_object = new MGO_NGGAttachment( $attachment->ID );
 
@@ -93,12 +88,6 @@ class MGO_NGGLibrary extends MGO_Library {
 		// Bail if optimized!
 		if ( $attachment_object->is_processed() ) {
 			throw new MGO_Attachment_Already_Optimized_Exception( 'The attachment is already fully optimized.' );
-		}
-
-		// Bail if no tokens left.
-		$tokens = $profile->get_tokens_count();
-		if ( $tokens != -1 && $tokens <= 0 ) {
-			throw new MGO_Exception( 'No tokens left. Please top up your account at https://megaoptim.com/dashboard in order to continue.' );
 		}
 
 		//Setup Request params
@@ -115,12 +104,6 @@ class MGO_NGGLibrary extends MGO_Library {
 		 * @param array $request_params
 		 */
 		do_action( 'megaoptim_before_optimization', $attachment_object, $request_params );
-
-		//Create Backup If needed
-		if ( $this->should_backup() ) {
-			$backup_path = $attachment_object->backup();
-			$attachment_object->set_backup_path( $backup_path );
-		}
 
 		// Check if image exist
 		if ( ! file_exists( $attachment->path ) ) {
@@ -139,6 +122,13 @@ class MGO_NGGLibrary extends MGO_Library {
 			if ( $response->isError() ) {
 				megaoptim_log('--- API Errors: ' . $response->getErrors() );
 			} else {
+
+				//Create Backup If needed
+				if ( $this->should_backup() ) {
+					$backup_path = $attachment_object->backup();
+					$attachment_object->set_backup_path( $backup_path );
+				}
+
 				megaoptim_log( '--- Response: ' . $response->getRawResponse() );
 				foreach ( $response->getOptimizedFiles() as $file ) {
 					if($file->getSavedBytes() > 0 && $file->isSuccessfullyOptimized()) {
@@ -203,11 +193,6 @@ class MGO_NGGLibrary extends MGO_Library {
 			$attachment = megaoptim_get_ngg_attachment( $attachment );
 		}
 
-		//Dont go further if not connected
-		$profile = MGO_Profile::_is_connected();
-		if ( ! $profile OR is_null( $this->optimizer ) ) {
-			throw new MGO_Exception( 'Please make sure you have set up MegaOptim.com API key' );
-		}
 		//Check if attachment is optimized
 		$attachment_object = new MGO_NGGAttachment( $attachment->ID );
 
@@ -219,12 +204,6 @@ class MGO_NGGLibrary extends MGO_Library {
 		// Bail if optimized!
 		if ( $attachment_object->is_processed() ) {
 			throw new MGO_Attachment_Already_Optimized_Exception( 'The attachment is already fully optimized.' );
-		}
-
-		// Bail if no tokens left.
-		$tokens = $profile->get_tokens_count();
-		if ( $tokens != -1 && $tokens <= 0 ) {
-			throw new MGO_Exception( 'No tokens left. Please top up your account at https://megaoptim.com/dashboard in order to continue.' );
 		}
 
 		//Setup Request params
