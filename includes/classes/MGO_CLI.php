@@ -256,9 +256,11 @@ class MGO_CLI {
 						\WP_CLI::success( sprintf( __( 'Attachment %s already optimized. No further optimization needed.', 'megaoptim-image-optimizer' ), $image['ID'] ) );
 					} else if ( $e instanceof MGO_Attachment_Locked_Exception ) {
 						\WP_CLI::warning( sprintf( __( 'Attachment %s not optimized. Reason: %s', 'megaoptim-image-optimizer' ), $image['ID'], $e->getMessage() ) );
-					} else {
+					} else if ( $e instanceof MGO_API_Response_Exception ) {
 						\WP_CLI::warning( sprintf( __( 'Attachment %s not optimized. Reason: %s', 'megaoptim-image-optimizer' ), $image['ID'], $e->getMessage() ) );
 						break;
+					} else {
+						\WP_CLI::warning( sprintf( __( 'Attachment %s not optimized. Reason: %s', 'megaoptim-image-optimizer' ), $image['ID'], $e->getMessage() ) );
 					}
 				}
 			}

@@ -67,6 +67,7 @@ $includes = array(
 	'classes/Exceptions/MGO_Exception.php',
 	'classes/Exceptions/MGO_Attachment_Already_Optimized_Exception.php',
 	'classes/Exceptions/MGO_Attachment_Locked_Exception.php',
+	'classes/Exceptions/MGO_API_Response_Exception.php',
 	'classes/MGO_File.php',
 	'classes/MGO_Stats.php',
 	'classes/MGO_Profile.php',

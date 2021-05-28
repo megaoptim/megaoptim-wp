@@ -136,7 +136,7 @@ class MGO_ResultBag {
 		if ( ! empty( $error ) ) {
 			$messages = $error->getErrors();
 			if ( count( $messages ) > 0 ) {
-				throw new MGO_Exception( $messages[0], $error->getErrorCode() );
+				throw new MGO_API_Response_Exception( $messages[0], $error->getErrorCode() );
 			}
 		}
 	}
