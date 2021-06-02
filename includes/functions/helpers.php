@@ -54,7 +54,9 @@ function megaoptim_write( $file, $contents, $force_flag = '' ) {
 		$fp   = fopen( $file, $flag );
 		fwrite( $fp, $contents . "\n" );
 	}
-	fclose( $fp );
+	if ( is_resource( $fp ) ) {
+		fclose( $fp );
+	}
 }
 
 /**
@@ -696,6 +698,7 @@ function megaoptim_find_images_non_recursively( $path ) {
  */
 function megaoptim_get_excluded_custom_dir_paths() {
 	$uploads = wp_upload_dir();
+
 	return array( $uploads['basedir'] );
 }
 

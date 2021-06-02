@@ -212,7 +212,6 @@ class Optimizer {
 			$is_url  = 0;
 			$is_file = 0;
 			foreach ( $resource as $file ) {
-
 				if ( file_exists( $file ) && is_file( $file ) ) {
 					$is_file = 1;
 					$is_url  = 0;

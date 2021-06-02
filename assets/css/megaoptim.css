@@ -1,8 +1,74 @@
 /**
  * Misc
  */
+
+.megaoptim * {
+    box-sizing: border-box !important;
+}
+
+
 .megaoptim-container {
-    max-width: 1200px;
+    width: 80%;
+    float: left;
+}
+
+.megaoptim-sidebar {
+    width: 20%;
+    float: left;
+}
+.megaoptim-sidebar .megaoptim-widget {
+    background: #fff;
+    float: left;
+    width: 100%;
+    padding: 0;
+    box-sizing: border-box;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
+}
+.megaoptim-sidebar .megaoptim-widget-title {
+    padding: 8px 12px;
+    border-bottom: 1px solid #e5e5e5;
+}
+.megaoptim-sidebar .megaoptim-widget-title h3 {
+    padding: 0;
+    margin:0;
+    font-size: 14px;
+    line-height: 1.4;
+}
+.megaoptim-sidebar .megaoptim-widget-content {
+    padding: 8px 12px;
+}
+.megaoptim-sidebar .megaoptim-widget-content p, .megaoptim-sidebar .megaoptim-widget-content ul {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+.megaoptim-sidebar .megaoptim-widget-content p:last-child {
+    margin-bottom: 0;
+}
+
+.megaoptim-sidebar .megaoptim-widget-content h4 {
+    margin-top:0;
+    margin-bottom: 5px;
+}
+.megaoptim-widget-resource:last-child {
+    border-bottom: 0;
+}
+
+.megaoptim-widget-resource {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+@media(max-width: 768px) {
+    .megaoptim-container {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .megaoptim-sidebar {
+        width: 100%;
+    }
+
 }
 
 .megaoptim-bg-primary {
@@ -313,10 +379,37 @@ span.megaoptim-error {
     width: 74%;
 }
 
-.megaoptim-header-logo {
-    max-width: 18%;
-    margin-right: 2%;
-    padding: 2% 2%;
+.megaoptim-optimizer-switcher {
+    padding-top: 3.0%;
+    padding-bottom: 3.0%;
+    float: right;
+}
+.megaoptim-optimizer-switcher label {
+    color: #fff;
+}
+
+
+@media(max-width: 767px) {
+
+    .megaoptim-optimizer-switcher {
+        float:none;
+        margin: 0 auto;
+    }
+
+    .megaoptim-header-logo {
+        padding-top: 20px;
+        width: 100%;
+    }
+    .megaoptim-header-logo img {
+        max-width: 250px !important;
+    }
+}
+@media(min-width: 768px) {
+    .megaoptim-header-logo {
+        max-width: 20%;
+        margin-right: 2%;
+        padding: 1.6% 1.6%;
+    }
 }
 
 @media (min-width: 1500px) {
@@ -331,8 +424,8 @@ span.megaoptim-error {
 }
 
 .megaoptim-menu {
-    padding-top: 4.7%;
-    padding-bottom: 4.7%;
+    padding-top: 3.8%;
+    padding-bottom: 3.7%;
     margin: 0;
     list-style: none;
 }
@@ -665,16 +758,6 @@ span.mgo-field-error {
 
 .megaoptim-table th.column {
     width: auto;
-}
-
-.optimizer-switcher {
-    padding-top: 3.5%;
-    padding-bottom: 3.5%;
-    float: right;
-}
-
-.optimizer-switcher label {
-    color: #fff;
 }
 
 .megaoptim-actions {

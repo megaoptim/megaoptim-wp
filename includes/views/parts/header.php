@@ -39,7 +39,7 @@ if ( ! is_null( $module ) ) {
                 </div>
 			<?php elseif ( $menu === 'optimizer' ): ?>
                 <div class="megaoptim-header-menu">
-                    <form class="optimizer-switcher" method="GET" action="<?php echo admin_url( "upload.php" ); ?>">
+                    <form class="megaoptim-optimizer-switcher" method="GET" action="<?php echo admin_url( "upload.php" ); ?>">
                         <input type="hidden" name="page" value="megaoptim_bulk_optimizer"/>
                         <label for="module"><?php _e( 'Select tool', 'megaoptim-image-optimizer' ); ?></label>
                         <select name="module" id="module">
