@@ -230,10 +230,10 @@ class MGO_MediaLibrary extends MGO_Library {
 			do_action( 'megaoptim_attachment_optimized', $attachment_object, $request_params, $result );
 
 			return $result;
-		} catch ( Exception $e ) {
+		} catch ( \Exception $e ) {
 			$attachment_object->unlock();
 			megaoptim_log( '--- Optimizer Exception: ' . sprintf( '%s in %s', $e->getMessage(), $e->getFile() ) );
-			throw new MGO_Exception( $e->getMessage() );
+			throw $e;
 		}
 	}
 

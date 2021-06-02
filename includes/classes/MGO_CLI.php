@@ -235,6 +235,7 @@ class MGO_CLI {
 			// Run
 			$total_saved     = 0;
 			$total_optimized = 0;
+			$api_errors      = 0;
 			foreach ( $images as $image ) {
 				try {
 					$api_params = array();
@@ -251,14 +252,19 @@ class MGO_CLI {
 						$message = sprintf( __( 'Attachment %s optimized. Total thumbnails %s, Total saved %s', 'megaoptim-image-optimizer' ), $image['ID'], $result->total_thumbnails, megaoptim_human_file_size( $result->total_saved_bytes ) );
 					}
 					\WP_CLI::success( $message );
+					$api_errors = 0;
 				} catch ( \MGO_Exception $e ) {
 					if ( $e instanceof MGO_Attachment_Already_Optimized_Exception ) {
 						\WP_CLI::success( sprintf( __( 'Attachment %s already optimized. No further optimization needed.', 'megaoptim-image-optimizer' ), $image['ID'] ) );
 					} else if ( $e instanceof MGO_Attachment_Locked_Exception ) {
 						\WP_CLI::warning( sprintf( __( 'Attachment %s not optimized. Reason: %s', 'megaoptim-image-optimizer' ), $image['ID'], $e->getMessage() ) );
 					} else if ( $e instanceof MGO_API_Response_Exception ) {
+						$api_errors ++;
 						\WP_CLI::warning( sprintf( __( 'Attachment %s not optimized. Reason: %s', 'megaoptim-image-optimizer' ), $image['ID'], $e->getMessage() ) );
-						break;
+						if ( $api_errors > 10 ) {
+							\WP_CLI::error( sprintf( __( 'We found %d consecutive erroneous API responses. Please fix the problem before continuing.' ), $api_errors ) );
+							break;
+						}
 					} else {
 						\WP_CLI::warning( sprintf( __( 'Attachment %s not optimized. Reason: %s', 'megaoptim-image-optimizer' ), $image['ID'], $e->getMessage() ) );
 					}

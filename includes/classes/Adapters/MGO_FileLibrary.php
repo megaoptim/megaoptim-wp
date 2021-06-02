@@ -149,7 +149,9 @@ class MGO_FileLibrary extends MGO_Library {
 
 			return $result;
 		} catch ( Exception $e ) {
-			throw new MGO_Exception( $e->getMessage() . ' in ' . $e->getFile() );
+			$attachment_object->unlock();
+			megaoptim_log( '--- Optimizer Exception: ' . sprintf( '%s in %s', $e->getMessage(), $e->getFile() ) );
+			throw $e;
 		}
 	}
 

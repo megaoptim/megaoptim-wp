@@ -169,8 +169,8 @@ class MGO_NGGLibrary extends MGO_Library {
 			return $result;
 		} catch ( Exception $e ) {
 			$attachment_object->unlock();
-			megaoptim_log( '--- Optimizer Exception: ' . $e->getMessage() );
-			throw new MGO_Exception( $e->getMessage() . ' in ' . $e->getFile() );
+			megaoptim_log( '--- Optimizer Exception: ' . sprintf( '%s in %s', $e->getMessage(), $e->getFile() ) );
+			throw $e;
 		}
 	}
 
