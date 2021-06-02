@@ -4,7 +4,7 @@ Tags: convert webp, webp, optimize images, optimize, images, compress
 Requires at least: 3.6
 Tested up to: 5.7
 Requires PHP: 5.3
-Stable tag: 1.4.13
+Stable tag: 1.4.14
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -136,6 +136,12 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 10. WP CLI - Bulk Restore command
 
 == Changelog ==
+
+= 1.4.14 =
+- Added UI sidebar for links and other information
+- Added free tokens promo link
+- Added various responsive UI fixes
+- Fixed problem with CLI. Allow up to 10 consecutive errors before terminating bulk upload.
 
 = 1.4.13 =
 - Terminate the WP CLI Bulk process only if API problem is found e.g. Insufficuent tokens.
