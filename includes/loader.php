@@ -23,16 +23,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Load the constants configuration
-require_once 'constants.php';
+require_once WP_MEGAOPTIM_INC_PATH . 'constants.php';
 
 // Load the MegaOptim Bootstrapping functionality
-require_once(
-	WP_MEGAOPTIM_INC_PATH .
-	DIRECTORY_SEPARATOR .
-	'functions' .
-	DIRECTORY_SEPARATOR .
-	'bootstrap.php'
-);
+require_once( WP_MEGAOPTIM_INC_PATH . 'functions' . DIRECTORY_SEPARATOR . 'bootstrap.php' );
 
 // Check if the PHP version requirements are met.
 if(!megaoptim_is_php_version_compatible()) {
