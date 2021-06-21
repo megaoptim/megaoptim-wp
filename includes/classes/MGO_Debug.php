@@ -73,7 +73,7 @@ class MGO_Debug {
 			'WordPress Language'                 => get_bloginfo( 'language' ),
 			'WordPress /wp-content/uploads size' => megaoptim_human_file_size( $wp_content_uploads_size ),
 			// Server
-			'Operating System'                   => php_uname(),
+			'Server Software/OS'                 => PHP_OS,
 			'Server Info'                        => isset( $_SERVER['SERVER_SOFTWARE'] ) ? $_SERVER['SERVER_SOFTWARE'] : 'Unknown',
 			'PHP Version'                        => phpversion(),
 			'MySQL Version'                      => $wpdb->db_version(),
