@@ -8,11 +8,14 @@
      */
     var MGOProcessor = function (action, context) {
 
+        this.fatalErrors = 0;
+        this.maxFatalErrors = 30;
+
         this.action = action;
         this.context = context;
         this.loader_preparing = new $.megaoptim.loader({
-            'title' : MGOProcessorData.strings.loader_working_title,
-            'description' : MGOProcessorData.strings.loader_working_description,
+            'title': MGOProcessorData.strings.loader_working_title,
+            'description': MGOProcessorData.strings.loader_working_description,
         });
 
         /**
@@ -116,6 +119,7 @@
          */
         this.start_optimizer = function () {
             var $spin = $('#megaoptim-running-spinner');
+            self.fatalErrors = 0;
             self.loader_preparing.start();
             self.unlock_optimizer();
             self.set_optimizer_running();
@@ -152,6 +156,7 @@
                 $btn.prop('disabled', false);
                 self.set_optimizer_off();
             }, 5000);
+            self.fatalErrors = 0;
         };
 
         /**
@@ -186,8 +191,9 @@
                         self.log('Received response. Optimization maybe done?!', 'info');
                         self.log(response, 'log');
                         if (index < len) {
-                            if(response.hasOwnProperty('success')) {
+                            if (response.hasOwnProperty('success')) {
                                 if (response.success) {
+                                    // Success handling
                                     self.update_table_row(response.data['attachment']);
                                     self.update_couters(response.data);
                                     if (parseInt(response.data['tokens']) === 0) {
@@ -195,28 +201,50 @@
                                         window.location.href = window.location.href;
                                     }
                                 } else {
+                                    // Failed optimization handling.
                                     self.update_row_error(data[index]['ID'], response.data.error);
                                     self.log(response.data, 'log');
-                                    if ( response.data.hasOwnProperty('can_continue') && !(response.data['can_continue'] === 1 || response.data['can_continue'] === '1')) {
-                                        self.stop_optimizer();
+                                    if (response.data.hasOwnProperty('can_continue')) {
+                                        if( !(response.data['can_continue'] === 1 || response.data['can_continue'] === '1') ) {
+                                            self.stop_optimizer();
+                                        }
                                     }
                                 }
+                                self.fatalErrors = 0; // for consecutiveness.
                             } else {
-                                self.update_row_error(data[index]['ID'], MGOProcessorData.parse_error);
-                                self.stop_optimizer();
+                                // Unreadable response.
+                                self.update_row_error(data[index]['ID'], MGOProcessorData.strings.parse_error);
+                                self.fatalErrors++;
+                                if (self.fatalErrors >= self.maxFatalErrors) {
+                                    alert(MGOProcessorData.strings.consecutive_errors.replace('_number_', self.fatalErrors));
+                                    self.stop_optimizer();
+                                }
                             }
 
-                        }
-                        else {
+                        } else {
+                            // Finished?
                             self.stop_optimizer();
                             self.log('Optimizer finished.', 'info');
                             return;
                         }
+                        // Next attachment.
                         index++;
                         setTimeout(function () {
                             self.unlock_optimizer();
                             self.run(index, len, data);
                         }, 120);
+                    },
+                    error: function () {
+                        // Error handling.
+                        self.update_row_error(data[index]['ID'],  MGOProcessorData.strings.unprocessable);
+                        self.fatalErrors++;
+                        if (self.fatalErrors >= self.maxFatalErrors) {
+                            alert(MGOProcessorData.strings.consecutive_errors.replace('_number_', self.fatalErrors));
+                            self.stop_optimizer();
+                        } else {
+                            self.unlock_optimizer();
+                            self.run(index, len, data);
+                        }
                     }
                 });
             } else {
@@ -270,7 +298,7 @@
             // Clean up older entries. Allow only N rows to be displayed.
             var max_rows = 30;
             var $rows = $body.find('tr');
-            if($rows.length > max_rows) {
+            if ($rows.length > max_rows) {
                 $body.find('tr:last').remove();
             }
 
@@ -367,7 +395,7 @@
             // calculations
             var total_sizes_processed = data.attachment.processed_total;
             var total_saved_megabytes = data.attachment.raw.saved_total_mb;
-            
+
             var total_optimized = parseInt($el_total_optimized_mixed.text()) + total_sizes_processed;
             var total_remaining = parseInt($el_total_remaining.text()) - total_sizes_processed;
             var total = (total_optimized + total_remaining);
