@@ -140,14 +140,14 @@ class MGO_Ajax extends MGO_BaseObject {
 
 		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_OPTIMIZER, 'nonce' ) ) {
 			wp_send_json_error( array(
-				'error'        => __( 'Access denied.', 'megaoptim-image-optimizer' ),
+				'error'        => __( 'Access denied. Security validation didn\'t passed. Are you cheatin\'?', 'megaoptim-image-optimizer' ),
 				'can_continue' => 0,
 			) );
 		}
 
 		if ( ! is_user_logged_in() || ! current_user_can( 'upload_files' ) ) {
 			wp_send_json_error( array(
-				'error'        => __( 'Access denied.', 'megaoptim-image-optimizer' ),
+				'error'        => __( 'Permission denied. You must be able to upload attachments in order to optimize them.', 'megaoptim-image-optimizer' ),
 				'can_continue' => 0,
 			) );
 		}

@@ -86,19 +86,19 @@ class MGO_Admin_UI extends MGO_BaseObject {
 				'profile' => MGO_Profile::get_profile()
 			);
 		} else if ( $module === MEGAOPTIM_MODULE_FOLDERS ) {
-            $optimizer = 'optimizers/folders';
-            $params    = array(
-                'menu'    => $menu,
-                'module'  => $module,
-                'profile' => MGO_Profile::get_profile()
-            );
-        } else if( $module === MEGAOPTIM_MODULE_WEBP_CONVERTER) {
-            $optimizer = 'optimizers/webp-converter';
-            $params    = array(
-                'menu'    => $menu,
-                'module'  => $module,
-                'profile' => MGO_Profile::get_profile()
-            );
+			$optimizer = 'optimizers/folders';
+			$params    = array(
+				'menu'    => $menu,
+				'module'  => $module,
+				'profile' => MGO_Profile::get_profile()
+			);
+		} else if ( $module === MEGAOPTIM_MODULE_WEBP_CONVERTER ) {
+			$optimizer = 'optimizers/webp-converter';
+			$params    = array(
+				'menu'    => $menu,
+				'module'  => $module,
+				'profile' => MGO_Profile::get_profile()
+			);
 		} else {
 			$optimizer = apply_filters( 'megaoptim_optimizer_view', $optimizer, $module, $menu );
 			$params    = apply_filters( 'megaoptim_optimizer_params', $params, $optimizer, $module, $menu );
@@ -145,12 +145,13 @@ class MGO_Admin_UI extends MGO_BaseObject {
 	 */
 	public function admin_body_class( $classes ) {
 		if ( megaoptim_is_admin_page() ) {
-            $custom = array('megaoptim-page');
-            if (megaoptim_is_admin_page(MEGAOPTIM_PAGE_BULK_OPTIMIZER)) {
-                array_push($custom, 'megaoptim-page-optimizer');
-            }
-            $classes = ' '.implode(' ', $custom).' ';
-        }
+			$custom = array( 'megaoptim-page' );
+			if ( megaoptim_is_admin_page( MEGAOPTIM_PAGE_BULK_OPTIMIZER ) ) {
+				array_push( $custom, 'megaoptim-page-optimizer' );
+			}
+			$classes = ' ' . implode( ' ', $custom ) . ' ';
+		}
+
 		return $classes;
 	}
 
@@ -265,7 +266,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 	public function admin_enqueue_scripts() {
 
 		$current_screen = get_current_screen();
-        $is_optimizer = megaoptim_is_admin_page( MEGAOPTIM_PAGE_BULK_OPTIMIZER );
+		$is_optimizer   = megaoptim_is_admin_page( MEGAOPTIM_PAGE_BULK_OPTIMIZER );
 
 		//Enqueue Loading Overlay
 		wp_register_script( 'megaoptim-loadingoverlay', WP_MEGAOPTIM_ASSETS_URL . 'js/loadingoverlay.min.js', array( 'jquery' ), '', true );
@@ -288,11 +289,11 @@ class MGO_Admin_UI extends MGO_BaseObject {
 		wp_register_style( 'megaoptim-fontawesome', WP_MEGAOPTIM_ASSETS_URL . 'resources/font-awesome/css/font-awesome.min.css', '', time(), 'screen' );
 		wp_enqueue_style( 'megaoptim-fontawesome' );
 
-		if($is_optimizer) {
-            wp_enqueue_script('jquery-ui-datepicker');
-            wp_register_style('jquery-ui', WP_MEGAOPTIM_ASSETS_URL.'resources/jquery-ui/jquery-ui.min.css');
-            wp_enqueue_style('jquery-ui');
-        }
+		if ( $is_optimizer ) {
+			wp_enqueue_script( 'jquery-ui-datepicker' );
+			wp_register_style( 'jquery-ui', WP_MEGAOPTIM_ASSETS_URL . 'resources/jquery-ui/jquery-ui.min.css' );
+			wp_enqueue_style( 'jquery-ui' );
+		}
 
 		//Enqueues megaoptim.css,js
 		wp_register_style( 'megaoptim-ui', WP_MEGAOPTIM_ASSETS_URL . 'css/megaoptim.css', '', time(), 'screen' );
@@ -306,18 +307,18 @@ class MGO_Admin_UI extends MGO_BaseObject {
 				'nonce_settings' => wp_create_nonce( MGO_Ajax::NONCE_SETTINGS ),
 				'root_path'      => megaoptim_get_wp_root_path(),
 				'strings'        => array(
-                    'clean'                 => __( 'Clean', 'megaoptim-image-optimizer' ),
-                    'backup_delete_confirm' => __( 'Are you sure you want to delete your backups? This action can not be reversed!', 'megaoptim-image-optimizer' ),
-                    'optimize'              => __( 'Optimize', 'megaoptim-image-optimizer' ),
-                    'optimizing'            => __( 'Optimizing...', 'megaoptim-image-optimizer' ),
-                    'working'               => __( 'Working...', 'megaoptim-image-optimizer' ),
-                    'no_tokens'             => __( 'No enough tokens left. You can always top up your account at https://megaoptim.com/dashboard/', 'megaoptim-image-optimizer' ),
-                    'profile_error'         => __( 'Error! We can not retrieve your profile. Please check if there is active internet connection or open a ticket in our dashboard area.', 'megaoptim-image-optimizer' ),
-                    'show_thumbnail_info'   => __( 'Show More Info', 'megaoptim-image-optimizer' ),
-                    'hide_thumbnail_info'   => __( 'Hide More Info', 'megaoptim-image-optimizer' ),
-                    'leave'                 => __('Are you sure you want to leave?', 'megaoptim-image-optimizer'),
-                    'clear'                 => __('Clear', 'megaoptim-image-optimizer'),
-                    'current_filters'       => __('Current Filters', 'megaoptim-image-optimizer'),
+					'clean'                 => __( 'Clean', 'megaoptim-image-optimizer' ),
+					'backup_delete_confirm' => __( 'Are you sure you want to delete your backups? This action can not be reversed!', 'megaoptim-image-optimizer' ),
+					'optimize'              => __( 'Optimize', 'megaoptim-image-optimizer' ),
+					'optimizing'            => __( 'Optimizing...', 'megaoptim-image-optimizer' ),
+					'working'               => __( 'Working...', 'megaoptim-image-optimizer' ),
+					'no_tokens'             => __( 'No enough tokens left. You can always top up your account at https://megaoptim.com/dashboard/', 'megaoptim-image-optimizer' ),
+					'profile_error'         => __( 'Error! We can not retrieve your profile. Please check if there is active internet connection or open a ticket in our dashboard area.', 'megaoptim-image-optimizer' ),
+					'show_thumbnail_info'   => __( 'Show More Info', 'megaoptim-image-optimizer' ),
+					'hide_thumbnail_info'   => __( 'Hide More Info', 'megaoptim-image-optimizer' ),
+					'leave'                 => __( 'Are you sure you want to leave?', 'megaoptim-image-optimizer' ),
+					'clear'                 => __( 'Clear', 'megaoptim-image-optimizer' ),
+					'current_filters'       => __( 'Current Filters', 'megaoptim-image-optimizer' ),
 				),
 				'context'        => array(
 					'medialibrary' => MEGAOPTIM_TYPE_MEDIA_ATTACHMENT,
@@ -351,7 +352,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 		wp_register_script( 'megaoptim-processor', WP_MEGAOPTIM_ASSETS_URL . 'js/megaoptim-processor.js', array( 'jquery' ), time(), true );
 		if ( $is_optimizer ) {
 
-            wp_enqueue_script( 'megaoptim-processor' );
+			wp_enqueue_script( 'megaoptim-processor' );
 			wp_localize_script(
 				'megaoptim-processor', 'MGOProcessorData', array(
 					'ajax_url'        => admin_url( 'admin-ajax.php' ),
@@ -366,7 +367,9 @@ class MGO_Admin_UI extends MGO_BaseObject {
 						'already_optimized'          => __( 'Already Optimized', 'megaoptim-image-optimizer' ),
 						'loader_working_title'       => __( 'Preparing...', 'megaoptim-image-optimizer' ),
 						'loader_working_description' => __( 'Hiring ultrasonic optimizers...', 'megaoptim-image-optimizer' ),
-						'parse_error' => __('Unable to parse the optimizer response', 'megaoptim-image-optimizer'),
+						'parse_error'                => __( 'Unable to parse the optimizer response', 'megaoptim-image-optimizer' ),
+						'unprocessable'              => __( 'Attachment could not be processed. It\'s either optimized or there is some error.', 'megaoptim-image-optimizer' ),
+						'consecutive_errors'         => __( 'Ow snap! Unfortunately there were _number_ consecutive errors. This is not normal behaviour and there is either a problem on your site or MegaOptim servers. Please contact support for help.', 'megaoptim-image-optimizer' ),
 					),
 					'context'         => array(
 						'media_library' => MEGAOPTIM_TYPE_MEDIA_ATTACHMENT,
@@ -387,7 +390,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 				'strings'       => array(
 					'alert_select_files'  => __( 'Please select a folder you want to optimize from the list.', 'megaoptim-image-optimizer' ),
 					'info_optimized'      => '<p>' . __( 'Congratulations! This folder is fully optimized. Come back later when there are more images.', 'megaoptim-image-optimizer' ) . '</p>',
-					'info_not_optimized'  => '<p>' . __('In order the plugin to work, you need to keep the tab open, you can always open a new tab and continue in that tab. If you close this tab the optimizer will stop but don\'t worry, you can always continue later from where you stopped.','megaoptim-image-optimizer') . '</p>',
+					'info_not_optimized'  => '<p>' . __( 'In order the plugin to work, you need to keep the tab open, you can always open a new tab and continue in that tab. If you close this tab the optimizer will stop but don\'t worry, you can always continue later from where you stopped.', 'megaoptim-image-optimizer' ) . '</p>',
 					'selected_folder'     => __( 'Selected Folder', 'megaoptim-image-optimizer' ),
 					'loading_title'       => __( 'Scanning...', 'megaoptim-image-optimizer' ),
 					'loading_description' => __( 'We are currently scanning the selected folder for unoptimized images. Once finished if any unoptimized images are found you will be able to start optimizing.', 'megaoptim-image-optimizer' )
@@ -425,18 +428,19 @@ class MGO_Admin_UI extends MGO_BaseObject {
 		return admin_url( 'options-general.php?page=megaoptim_settings' );
 	}
 
-    /**
-     * Returns the optimizer url
-     *
-     * @param  null  $module
-     *
-     * @return string
-     */
-	public static function get_optimizer_url($module = null) {
+	/**
+	 * Returns the optimizer url
+	 *
+	 * @param null $module
+	 *
+	 * @return string
+	 */
+	public static function get_optimizer_url( $module = null ) {
 		$url = admin_url( 'upload.php?page=megaoptim_bulk_optimizer' );
-		if(!is_null($module)) {
-		    $url = add_query_arg('module', $module, $url);
-        }
+		if ( ! is_null( $module ) ) {
+			$url = add_query_arg( 'module', $module, $url );
+		}
+
 		return $url;
 	}
 }

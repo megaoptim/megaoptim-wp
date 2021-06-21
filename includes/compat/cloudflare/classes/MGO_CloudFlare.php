@@ -251,7 +251,7 @@ class MGO_CloudFlare {
 	 * @return array|mixed|object
 	 */
 	public static function get( $endpoint, $headers ) {
-		$response = wp_remote_get( $endpoint, array( 'timeout' => 30, 'headers' => $headers ) );
+		$response = wp_remote_get( $endpoint, array( 'timeout' => 10, 'headers' => $headers ) );
 		if ( is_wp_error( $response ) ) {
 			return false;
 		}
