@@ -317,10 +317,12 @@ class MGO_FileLibrary extends MGO_Library {
 	 * Returns the attachment path
 	 *
 	 * @param MGO_File $attachment
+	 *
+	 * @return string
 	 */
 	public function get_attachment_path( MGO_File $attachment ) {
 		if ( $this->is_public_environment ) {
-			return $attachment->url;
+			return esc_url_raw( $attachment->url );
 		} else {
 			return $attachment->path;
 		}

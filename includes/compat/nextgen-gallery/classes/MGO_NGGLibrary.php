@@ -48,7 +48,7 @@ class MGO_NGGLibrary extends MGO_Library {
 	public function __construct() {
 		parent::__construct();
 		$this->is_public_environment = megaoptim_is_wp_accessible_from_public();
-		add_action('plugins_loaded', array($this, 'initialize'));
+		add_action( 'plugins_loaded', array( $this, 'initialize' ) );
 	}
 
 	/**
@@ -98,10 +98,12 @@ class MGO_NGGLibrary extends MGO_Library {
 
 		/**
 		 * Fired before the optimization of the attachment
-		 * @since 1.0
 		 *
 		 * @param MGO_NGGAttachment $attachment_object
 		 * @param array $request_params
+		 *
+		 * @since 1.0
+		 *
 		 */
 		do_action( 'megaoptim_before_optimization', $attachment_object, $request_params );
 
@@ -120,7 +122,7 @@ class MGO_NGGLibrary extends MGO_Library {
 			$response = $this->optimizer->run( $resource, $request_params );
 			$result->add( 'full', $response );
 			if ( $response->isError() ) {
-				megaoptim_log('--- API Errors: ' . $response->getErrors() );
+				megaoptim_log( '--- API Errors: ' . $response->getErrors() );
 			} else {
 
 				//Create Backup If needed
@@ -131,11 +133,11 @@ class MGO_NGGLibrary extends MGO_Library {
 
 				megaoptim_log( '--- Response: ' . $response->getRawResponse() );
 				foreach ( $response->getOptimizedFiles() as $file ) {
-					if($file->getSavedBytes() > 0 && $file->isSuccessfullyOptimized()) {
+					if ( $file->getSavedBytes() > 0 && $file->isSuccessfullyOptimized() ) {
 						$file->saveAsFile( $attachment->path );
 					}
-					$result->total_full_size++;
-					$result->total_saved_bytes+=$file->getSavedBytes();
+					$result->total_full_size ++;
+					$result->total_saved_bytes += $file->getSavedBytes();
 				}
 				$attachment_object->set_data( $response, $request_params );
 				$attachment_object->update_ngg_meta();
@@ -148,12 +150,14 @@ class MGO_NGGLibrary extends MGO_Library {
 				 * Fired when attachment is successfully optimized.
 				 * Tip: Use instanceof $attachment_object to check what kind of attachment was optimized.
 				 * Attachemnt object get_id() method returns  the ID of the nextgen picture that was optimized.
-				 * @since 1.0.0
 				 *
 				 * @param MGO_FileAttachment $attachment_object - The media attachment. Useful to check with instanceof.
 				 * @param \MegaOptim\Responses\Response $response - The api request response
 				 * @param array $request_params - The api request parameters
 				 * @param string $size
+				 *
+				 * @since 1.0.0
+				 *
 				 */
 				do_action( 'megaoptim_size_optimized', $attachment_object, $resource, $response, $request_params, $size = 'full' );
 			}
@@ -190,6 +194,7 @@ class MGO_NGGLibrary extends MGO_Library {
 
 		if ( is_null( $this->background_process ) ) {
 			_doing_it_wrong( __METHOD__, 'Called too early. Please make sure WordPress is loaded and then call this method.', WP_MEGAOPTIM_VER );
+
 			return;
 		}
 
@@ -218,10 +223,12 @@ class MGO_NGGLibrary extends MGO_Library {
 
 		/**
 		 * Fired before the optimization of the attachment
-		 * @since 1.0
 		 *
 		 * @param MGO_NGGAttachment $attachment_object
 		 * @param array $request_params
+		 *
+		 * @since 1.0
+		 *
 		 */
 		do_action( 'megaoptim_before_optimization', $attachment_object, $request_params );
 
@@ -238,12 +245,12 @@ class MGO_NGGLibrary extends MGO_Library {
 
 		// Run optimization
 		$resource = $this->get_attachment_path( $attachment );
-		$this->background_process->push_to_queue(array(
-			'resource' => $resource,
+		$this->background_process->push_to_queue( array(
+			'resource'      => $resource,
 			'attachment_id' => $attachment->ID,
-			'local_path' => $attachment->path,
-			'params' => $request_params,
-		));
+			'local_path'    => $attachment->path,
+			'params'        => $request_params,
+		) );
 		$this->background_process->save()->dispatch();
 	}
 
@@ -301,11 +308,11 @@ class MGO_NGGLibrary extends MGO_Library {
 	 *
 	 * @param MGO_File $attachment
 	 *
-	 * @return bool|string
+	 * @return string
 	 */
 	public function get_attachment_path( $attachment ) {
 		if ( $this->is_public_environment ) {
-			return $attachment->url;
+			return esc_url_raw( $attachment->url );
 		} else {
 			return $attachment->path;
 		}
