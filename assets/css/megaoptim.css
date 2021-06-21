@@ -772,17 +772,6 @@ span.mgo-field-error {
     margin-bottom: 25px;
 }
 
-.directory span {
-    padding: 2px;
-    font-size: 13px;
-    background-image: url(../img/plus.png);
-    background-size: contain;
-    height: 10px;
-    width: 10px;
-    position: relative;
-    top: 3px;
-}
-
 .directory .megaoptim-select-directory {
     display: none;
 }
