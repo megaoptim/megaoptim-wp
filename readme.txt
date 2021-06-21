@@ -139,6 +139,11 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 
 = 1.4.15 =
 - Fix problem related to the the constants definitions loading
+- Fix url validation problem causing bulk optimizer to hang
+- Fix conflict with File Manager plugins that use elfinder library
+- Fix WordFence false-positive related to php_uname()
+- Update api timeouts to prevent ui blocking if megaoptim api is down
+- Improved bulk optimizer. Add better error handling.
 
 = 1.4.14 =
 - Added UI sidebar for links and other information
