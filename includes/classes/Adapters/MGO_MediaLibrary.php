@@ -602,11 +602,10 @@ class MGO_MediaLibrary extends MGO_Library {
 				$size_name = pathinfo( $url[0], PATHINFO_FILENAME );
 				$dir       = megaoptim_strip_filename( $url[0] );
 
-				return esc_url_raw( $dir . '/' . $size_name . '@2x.' . $size_ext );
+				return megaoptim_rawurlencode( $dir . '/' . $size_name . '@2x.' . $size_ext );
 			}
 		}
-
-		return esc_url_raw( $url[0] );
+		return megaoptim_rawurlencode( $url[0] );
 	}
 
 	/**

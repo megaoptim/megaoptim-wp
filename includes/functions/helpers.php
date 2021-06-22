@@ -1051,3 +1051,31 @@ function megaoptim_create_datetime( $value, $format = 'Y-m-d' ) {
 function megaoptim_check_referer( $nonce_name, $query_parameter_key ) {
 	return check_ajax_referer( $nonce_name, $query_parameter_key, false );
 }
+
+
+/**
+ * Encodes url in RFC3986 format.
+ *
+ * @param $url
+ *
+ * @return array|mixed|string|string[]
+ */
+function megaoptim_rawurlencode( $url ) {
+	$path = wp_parse_url( $url, PHP_URL_PATH );
+	if ( ! empty( $path ) && $path !== '/' ) {
+		$encoded_path = explode( '/', $path );
+		// First decode the path, to prevent double encoding
+		$encoded_path = array_map( 'rawurldecode', $encoded_path );
+		$encoded_path = array_map( 'rawurlencode', $encoded_path );
+		$encoded_path = implode( '/', $encoded_path );
+		$url          = str_replace( $path, $encoded_path, $url );
+	}
+	$query = wp_parse_url( $url, PHP_URL_QUERY );
+	if ( ! empty( $query ) ) {
+		parse_str( $query, $parsed_query );
+		$parsed_query = http_build_query( $parsed_query, null, '&amp;', PHP_QUERY_RFC3986 );
+		$url          = str_replace( $query, $parsed_query, $url );
+	}
+
+	return $url;
+}

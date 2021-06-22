@@ -312,7 +312,7 @@ class MGO_NGGLibrary extends MGO_Library {
 	 */
 	public function get_attachment_path( $attachment ) {
 		if ( $this->is_public_environment ) {
-			return esc_url_raw( $attachment->url );
+			return megaoptim_rawurlencode( $attachment->url );
 		} else {
 			return $attachment->path;
 		}
