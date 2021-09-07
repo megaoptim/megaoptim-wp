@@ -4,7 +4,7 @@ Tags: convert webp, webp, optimize images, optimize, images, compress
 Requires at least: 3.6
 Tested up to: 5.8
 Requires PHP: 5.3
-Stable tag: 1.4.16
+Stable tag: 1.4.17
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -136,6 +136,9 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 10. WP CLI - Bulk Restore command
 
 == Changelog ==
+
+= 1.4.17 =
+- Fix PHP warnings related to the WebP features
 
 = 1.4.16 =
 - Fix url encoding for attachments that contain weird characters
