@@ -287,7 +287,7 @@ function megaoptim_replace_inline_backgrounds_with_webp( $matches, $content ) {
 /**
  * Returns the image dir if it's local. Otherwise it returns false.
  *
- * @param $src - Url of the image
+ * @param $src  - Url of the image
  *
  * @return bool|mixed|string
  */
@@ -349,7 +349,8 @@ function megaoptim_webp_get_image_dir( $src ) {
 		$base_url_host = array_reverse( explode( '.', $base_parsed['host'] ) );
 
 		if ( $src_host[0] === $base_url_host[0] && $src_host[1] === $base_url_host[1] && ( strlen( $src_host[1] ) > 3 || isset( $src_host[2] ) && $src_host[2] == $base_url_host[2] ) ) {
-			$baseurl      = str_replace( $base_parsed['scheme'] . '://' . $base_parsed['host'], $url_parsed['scheme'] . '://' . $url_parsed['host'], $base_url );
+			$baseurl      = str_replace( $base_parsed['scheme'] . '://' . $base_parsed['host'],
+				$url_parsed['scheme'] . '://' . $url_parsed['host'], $base_url );
 			$base_img_src = str_replace( $baseurl, $base_dir, $src );
 		}
 		// Bail if external url
@@ -366,7 +367,7 @@ function megaoptim_webp_get_image_dir( $src ) {
 /**
  * Returns the parameter needed out of array of parameters for specific html img tag.
  *
- * @param array $attribute_array
+ * @param  array  $attribute_array
  * @param $type
  *
  * @return array
@@ -430,8 +431,12 @@ function megaoptim_get_dom_element_attributes( $content, $element ) {
 		megaoptim_log( 'Class DOMDocument not found. Please enable the php-dom extension.' );
 	} else {
 		$dom = new \DOMDocument;
-		$dom->loadHTML( $content );
-		foreach ( $dom->getElementsByTagName( $element ) as $tag ) {
+		@$dom->loadHTML( $content );
+		$items = $dom->getElementsByTagName( $element );
+		foreach ( $items as $tag ) {
+			if ( ! is_object( $tag ) ) {
+				continue;
+			}
 			foreach ( $tag->attributes as $attribName => $attribNodeVal ) {
 				$attr[ $attribName ] = $tag->getAttribute( $attribName );
 			}
@@ -473,7 +478,8 @@ function megaoptim_add_webp_support_via_htaccess() {
 		ob_start();
 		include( $htaccess_path );
 		$htaccess_contents = ob_get_clean();
-		$htaccess_contents = trim( megaoptim_remove_between( '# BEGIN MegaOptimIO', '# END MegaOptimIO', $htaccess_contents ) );
+		$htaccess_contents = trim( megaoptim_remove_between( '# BEGIN MegaOptimIO', '# END MegaOptimIO',
+			$htaccess_contents ) );
 	}
 
 	ob_start();
@@ -498,8 +504,7 @@ function megaoptim_add_webp_support_via_htaccess() {
     </IfModule>
     <IfModule mod_mime.c>
         AddType image/webp .webp
-    </IfModule>
-    # END MegaOptimIO
+    </IfModule># END MegaOptimIO
 
 	<?php
 	$htaccess_contents .= ob_get_clean();
@@ -526,7 +531,8 @@ function megaoptim_remove_webp_support_via_htaccess() {
 	ob_start();
 	include( $htaccess_path );
 	$htaccess_contents = ob_get_clean();
-	$htaccess_contents = trim( megaoptim_remove_between( '# BEGIN MegaOptimIO', '# END MegaOptimIO', $htaccess_contents ) );
+	$htaccess_contents = trim( megaoptim_remove_between( '# BEGIN MegaOptimIO', '# END MegaOptimIO',
+		$htaccess_contents ) );
 	megaoptim_write( $htaccess_path, $htaccess_contents, 'w' );
 
 	return true;
