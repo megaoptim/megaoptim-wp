@@ -121,7 +121,7 @@ class MGO_CLI {
 		if ( isset( $args2['level'] ) ) {
 			$level = $args2['level'];
 			if ( ! \MegaOptim\Optimizer::valid_compression_level( $level ) ) {
-				WP_CLI::error( __( 'The level parameter should be one of the following: ultra, intelligent, lossless', 'megaoptim-image-optimizer' ) );
+				\WP_CLI::error( __( 'The level parameter should be one of the following: ultra, intelligent, lossless', 'megaoptim-image-optimizer' ) );
 
 				return;
 			}

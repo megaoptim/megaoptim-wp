@@ -257,7 +257,7 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	/**
 	 * Set the attachment data
 	 *
-	 * @param \MegaOptim\Responses\Response $response
+	 * @param \MegaOptim\Client\Responses\Response $response
 	 * @param $params
 	 */
 	public function set_data( $response, $params ) {
@@ -269,7 +269,7 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	 * Sets response for specific thumbnail
 	 *
 	 * @param $size
-	 * @param \MegaOptim\Responses\Response $response
+	 * @param \MegaOptim\Client\Responses\Response $response
 	 * @param $params
 	 */
 	public function set_thumbnail_data( $size, $response, $params ) {

@@ -152,7 +152,7 @@ class MGO_NGGLibrary extends MGO_Library {
 				 * Attachemnt object get_id() method returns  the ID of the nextgen picture that was optimized.
 				 *
 				 * @param MGO_FileAttachment $attachment_object - The media attachment. Useful to check with instanceof.
-				 * @param \MegaOptim\Responses\Response $response - The api request response
+				 * @param \MegaOptim\Client\Responses\Response $response - The api request response
 				 * @param array $request_params - The api request parameters
 				 * @param string $size
 				 *

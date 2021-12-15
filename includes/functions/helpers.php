@@ -573,7 +573,7 @@ function megaoptim_is_excluded( $dir ) {
  * @return bool
  */
 function megaoptim_is_url( $url ) {
-	return \MegaOptim\Tools\URL::validate( $url );
+	return \MegaOptim\Client\Tools\URL::validate( $url );
 }
 
 /**
@@ -811,7 +811,8 @@ function megaoptim_mb_basename( $path, $suffix = false ) {
 	$Separator = " qq ";
 	$qqPath    = preg_replace( "/[^ ]/u", $Separator . "\$0" . $Separator, $path );
 	if ( ! $qqPath ) { //this is not an UTF8 string!! Don't rely on basename either, since if filename starts with a non-ASCII character it strips it off
-		$fileName = end( explode( DIRECTORY_SEPARATOR, $path ) );
+		$parts = explode( DIRECTORY_SEPARATOR, $path );
+		$fileName = end( $parts );
 		$pos      = strpos( $fileName, $suffix );
 		if ( $pos !== false ) {
 			return substr( $fileName, 0, $pos );
@@ -880,8 +881,8 @@ function megaoptim_regenerate_thumbnails( $id, $path = null ) {
 /**
  * Generate data for specific optimization
  *
- * @param \MegaOptim\Responses\Result $file
- * @param \MegaOptim\Responses\Response $response
+ * @param \MegaOptim\Client\Responses\Result $file
+ * @param \MegaOptim\Client\Responses\Response $response
  * @param array $params
  *
  * @return array|mixed

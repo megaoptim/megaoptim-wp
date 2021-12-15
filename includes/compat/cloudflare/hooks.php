@@ -26,7 +26,7 @@ if ( ! function_exists( '_megaoptim_cloudflare_purge' ) ) {
 	/**
 	 * @param MGO_MediaAttachment|MGO_FileAttachment|MGO_NGGLibrary $attachment
 	 * @param string $resource
-	 * @param \MegaOptim\Responses\Response $response
+	 * @param \MegaOptim\Client\Responses\Response $response
 	 * @param array $params
 	 * @param array $size
 	 */

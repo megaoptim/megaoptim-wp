@@ -381,7 +381,7 @@ abstract class MGO_Attachment {
 	/**
 	 * Set metadata non-Thumb file
 	 *
-	 * @param \MegaOptim\Responses\Response $response
+	 * @param \MegaOptim\Client\Responses\Response $response
 	 * @param $params
 	 */
 	public function set_data( $response, $params ) {

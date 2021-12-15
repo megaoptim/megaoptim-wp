@@ -20,8 +20,6 @@
 
 namespace MegaOptim\Client\Tools;
 
-use MegaOptim\Optimizer;
-
 class FileSystem {
 
 

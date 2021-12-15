@@ -129,7 +129,7 @@ class MGO_FileLibrary extends MGO_Library {
 				 * Attachemnt object get_id() returns md5 hash of the file path. The get_path() method returns the path.
 				 *
 				 * @param MGO_FileAttachment $attachment_object - The media attachment. Useful to check with instanceof.
-				 * @param \MegaOptim\Responses\Response $response - The api request response
+				 * @param \MegaOptim\Client\Responses\Response $response - The api request response
 				 * @param array $request_params - The api request parameters
 				 * @param string $size
 				 *
@@ -197,7 +197,7 @@ class MGO_FileLibrary extends MGO_Library {
 	 * @return array
 	 */
 	public function get_images( $directory ) {
-		$types     = array_keys( \MegaOptim\Tools\PATH::accepted_types() );
+		$types     = array_keys( \MegaOptim\Client\Tools\PATH::accepted_types() );
 		$file_list = array();
 		foreach ( $types as $ext ) {
 			$found_files = glob( $directory . "*." . $ext );
