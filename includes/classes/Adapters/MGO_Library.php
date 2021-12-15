@@ -53,7 +53,12 @@ abstract class MGO_Library extends MGO_BaseObject {
 	public static function get_optimizer() {
 		$api_key = MGO_Settings::instance()->getApiKey();
 		if ( false !== $api_key ) {
-			return ( new \MegaOptim\Optimizer( $api_key, \MegaOptim\Client\Http\WPClient::class ) );
+			if( 'native' === apply_filters('megaoptim_http_client', 'native') ) {
+				$http_client = \MegaOptim\Client\Http\WPClient::class;
+			} else {
+				$http_client = \MegaOptim\Client\Http\CurlClient::class;
+			}
+			return ( new \MegaOptim\Optimizer( $api_key, $http_client ) );
 		}
 
 		return null;
