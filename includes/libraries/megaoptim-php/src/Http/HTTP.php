@@ -18,7 +18,7 @@
  * along with MegaOptim Image Optimizer. If not, see <https://www.gnu.org/licenses/>.
  **********************************************************************/
 
-namespace MegaOptim\Http;
+namespace MegaOptim\Client\Http;
 
 interface HTTP {
 

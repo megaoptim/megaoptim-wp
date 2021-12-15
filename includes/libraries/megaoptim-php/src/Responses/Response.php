@@ -18,11 +18,11 @@
  * along with MegaOptim Image Optimizer. If not, see <https://www.gnu.org/licenses/>.
  **********************************************************************/
 
-namespace MegaOptim\Responses;
+namespace MegaOptim\Client\Responses;
 
-use MegaOptim\Http\HTTP;
+use MegaOptim\Client\Http\HTTP;
 use MegaOptim\Optimizer;
-use MegaOptim\Tools\URL;
+use MegaOptim\Client\Tools\URL;
 
 class Response implements HTTP {
 	/**

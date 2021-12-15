@@ -18,10 +18,10 @@
  * along with MegaOptim Image Optimizer. If not, see <https://www.gnu.org/licenses/>.
  **********************************************************************/
 
-namespace MegaOptim\Responses;
+namespace MegaOptim\Client\Responses;
 
-use MegaOptim\Tools\FileSystem;
-use MegaOptim\Http\Client;
+use MegaOptim\Client\Tools\FileSystem;
+use MegaOptim\Client\Http\CurlClient;
 
 class ResultWebP {
 	public $url;
@@ -51,7 +51,7 @@ class ResultWebP {
 			return false;
 		}
 		FileSystem::maybe_prepare_output_dir( $path );
-		if ( ! Client::download( $this->url, $path ) ) {
+		if ( ! CurlClient::download( $this->url, $path ) ) {
 			throw new \Exception( 'Unable to overwrite the local file.' );
 		}
 		return $path;

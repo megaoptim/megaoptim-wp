@@ -18,7 +18,7 @@
  * along with MegaOptim Image Optimizer. If not, see <https://www.gnu.org/licenses/>.
  **********************************************************************/
 
-namespace MegaOptim\Responses;
+namespace MegaOptim\Client\Responses;
 
 class Profile {
 

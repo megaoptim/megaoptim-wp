@@ -18,7 +18,7 @@
  * along with MegaOptim Image Optimizer. If not, see <https://www.gnu.org/licenses/>.
  **********************************************************************/
 
-namespace MegaOptim\Http;
+namespace MegaOptim\Client\Http;
 
 abstract class BaseClient {
 
@@ -135,46 +135,9 @@ abstract class BaseClient {
 	 * @return string
 	 * @throws \Exception
 	 */
-	public static function download( $url, $save_filepath ) {
-		$ch = curl_init( $url );
-		curl_setopt( $ch, CURLOPT_HEADER, 0 );
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
-		curl_setopt( $ch, CURLOPT_BINARYTRANSFER, 1 );
-		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
-		curl_setopt( $ch, CURLOPT_HTTPHEADER, array( "Accept" => "application/json" ) );
-		curl_setopt( $ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1 );
-		$response = curl_exec( $ch );
-		if ( false === $response ) {
-			$curl_error = curl_error( $ch );
-			$curl_errno = curl_errno( $ch );
-			curl_close( $ch );
-			throw new \Exception( $curl_error, $curl_errno );
-		} else {
-			$fp = fopen( $save_filepath, 'w+' );
-			fwrite( $fp, $response );
-			fclose( $fp );
-			curl_close( $ch );
-		}
+	 public static function download( $url, $save_filepath ) {
 
-		return $save_filepath;
-	}
-
-
-	/**
-	 * Convert $resource to CURLFile, also backwards compatible with
-	 * version lower than 5.5
-	 *
-	 * @param $resource
-	 *
-	 * @return \CURLFile|string
-	 */
-	public static function to_curl_file( $resource ) {
-		if ( ! class_exists( 'CURLFile' ) ) {
-			return '@' . $resource;
-		} else {
-			return new \CURLFile( $resource );
-		}
-	}
+	 }
 
 	/**
 	 * Returns the MegaOptim PHP Client user agent

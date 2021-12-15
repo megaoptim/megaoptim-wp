@@ -20,12 +20,12 @@
 
 namespace MegaOptim;
 
-use MegaOptim\Http\Client;
-use MegaOptim\Responses\Response;
-use MegaOptim\Services\OptimizerService;
-use MegaOptim\Tools\FileSystem;
-use MegaOptim\Tools\PATH;
-use MegaOptim\Tools\URL;
+use MegaOptim\Client\Http\CurlClient;
+use MegaOptim\Client\Responses\Response;
+use MegaOptim\Client\Services\OptimizerService;
+use MegaOptim\Client\Tools\FileSystem;
+use MegaOptim\Client\Tools\PATH;
+use MegaOptim\Client\Tools\URL;
 
 class Optimizer {
 
@@ -72,7 +72,7 @@ class Optimizer {
 		if ( class_exists( $http_client_class ) ) {
 			$client = new $http_client_class( $api_key );
 		} else {
-			$client = new Client( $api_key );
+			$client = new CurlClient( $api_key );
 		}
 
 		$this->service   = new OptimizerService( $client );

@@ -18,11 +18,11 @@
  * along with MegaOptim Image Optimizer. If not, see <https://www.gnu.org/licenses/>.
  **********************************************************************/
 
-namespace MegaOptim\Responses;
+namespace MegaOptim\Client\Responses;
 
-use MegaOptim\Http\Client;
-use MegaOptim\Interfaces\IFile;
-use MegaOptim\Tools\FileSystem;
+use MegaOptim\Client\Http\CurlClient;
+use MegaOptim\Client\Interfaces\IFile;
+use MegaOptim\Client\Tools\FileSystem;
 
 class Result implements IFile {
 	/**
@@ -202,7 +202,7 @@ class Result implements IFile {
 		if ( is_null( $this->prev_local_path ) || ! file_exists( $this->prev_local_path ) ) {
 			throw new \Exception( 'There is no local file for this result to overwrite, If the source is url, you should save it with saveToFile() or saveToDir() methods.' );
 		} else {
-			if ( ! Client::download( $this->url, $this->prev_local_path ) ) {
+			if ( ! CurlClient::download( $this->url, $this->prev_local_path ) ) {
 				throw new \Exception( 'Unable to overwrite the local file.' );
 			}
 		}
@@ -220,7 +220,7 @@ class Result implements IFile {
 	 */
 	public function saveAsFile( $path ) {
 		FileSystem::maybe_prepare_output_dir( $path );
-		if ( ! Client::download( $this->url, $path ) ) {
+		if ( ! CurlClient::download( $this->url, $path ) ) {
 			throw new \Exception( 'Unable to overwrite the local file.' );
 		}
 
@@ -240,7 +240,7 @@ class Result implements IFile {
 	public function saveToDir( $dir ) {
 		$path = FileSystem::maybe_add_trailing_slash( $dir . DIRECTORY_SEPARATOR ) . $this->getFileName();
 		FileSystem::maybe_prepare_output_dir( $path );
-		if ( ! Client::download( $this->url, $path ) ) {
+		if ( ! CurlClient::download( $this->url, $path ) ) {
 			throw new \Exception( 'Unable to overwrite the local file.' );
 		}
 

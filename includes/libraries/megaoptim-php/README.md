@@ -94,14 +94,14 @@ $response   = $megaoptim->run( $resources, array( 'compression' => Optimizer::LO
 
 ## Handling Response
 
-Once we run the optimization with `run()` method we have the instance of `MegaOptim\Http\Response` which contains all the response variables and array of optimized image objects.
+Once we run the optimization with `run()` method we have the instance of `MegaOptim\Client\Http\Response` which contains all the response variables and array of optimized image objects.
 
 The contents of the ```$response``` methods are as follows:
 
 - ```$response->isSuccessful()``` - Returns boolean to determine if the optimization was successful.
 - ```$response->isError()``` - Returns boolean to determine if the optimization was not successful.
 - ```$response->getErrors()``` - Returns ```array``` with errors.
-- ```$response->getOptimizedFiles()``` - Returns array of ```optimized image objects``` from the class ```MegaOptim\Http\Result[]```
+- ```$response->getOptimizedFiles()``` - Returns array of ```optimized image objects``` from the class ```MegaOptim\Client\Http\Result[]```
 
 To get the optimized image objects and further process them we can use the `getOptimizedFiles()` method which will return array as mentioned above:
 

@@ -18,9 +18,9 @@
  * along with MegaOptim Image Optimizer. If not, see <https://www.gnu.org/licenses/>.
  **********************************************************************/
 
-namespace MegaOptim\Http;
+namespace MegaOptim\Client\Http;
 
-class Client extends BaseClient {
+class CurlClient extends BaseClient {
 
 	/**
 	 * Client constructor.
@@ -57,6 +57,38 @@ class Client extends BaseClient {
 	 */
 	public function get( $url ) {
 		return self::_get( $url, $this->api_key );
+	}
+
+	/**
+	 * Downloads a file.
+	 * @param  string  $url
+	 * @param  string  $save_filepath
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
+	public static function download( $url, $save_filepath ) {
+		$ch = curl_init( $url );
+		curl_setopt( $ch, CURLOPT_HEADER, 0 );
+		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
+		curl_setopt( $ch, CURLOPT_BINARYTRANSFER, 1 );
+		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
+		curl_setopt( $ch, CURLOPT_HTTPHEADER, array( "Accept" => "application/json" ) );
+		curl_setopt( $ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1 );
+		$response = curl_exec( $ch );
+		if ( false === $response ) {
+			$curl_error = curl_error( $ch );
+			$curl_errno = curl_errno( $ch );
+			curl_close( $ch );
+			throw new \Exception( $curl_error, $curl_errno );
+		} else {
+			$fp = fopen( $save_filepath, 'w+' );
+			fwrite( $fp, $response );
+			fclose( $fp );
+			curl_close( $ch );
+		}
+
+		return $save_filepath;
 	}
 
 
@@ -148,4 +180,29 @@ class Client extends BaseClient {
 
 		return $response;
 	}
+
+	/**
+	 * Convert $resource to CURLFile, also backwards compatible with
+	 * version lower than 5.5
+	 *
+	 * @param $resource
+	 *
+	 * @return \CURLFile|string
+	 */
+	public static function to_curl_file( $resource ) {
+		if ( ! class_exists( 'CURLFile' ) ) {
+			return '@' . $resource;
+		} else {
+			return new \CURLFile( $resource );
+		}
+	}
+
+	/**
+	 * Append Curl identifier to the user agent.
+	 * @return string
+	 */
+	public static function get_user_agent() {
+		return parent::get_user_agent() . ' / cURL';
+	}
+
 }

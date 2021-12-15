@@ -18,11 +18,11 @@
  * along with MegaOptim Image Optimizer. If not, see <https://www.gnu.org/licenses/>.
  **********************************************************************/
 
-namespace MegaOptim\Services;
+namespace MegaOptim\Client\Services;
 
-use MegaOptim\Http\BaseClient;
-use MegaOptim\Responses\Profile;
-use MegaOptim\Responses\Response;
+use MegaOptim\Client\Http\BaseClient;
+use MegaOptim\Client\Responses\Profile;
+use MegaOptim\Client\Responses\Response;
 
 class OptimizerService {
 

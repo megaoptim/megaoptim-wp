@@ -1,5 +1,5 @@
 <?php
-namespace MegaOptim\Tools;
+namespace MegaOptim\Client\Tools;
 
 class URL {
 	/**
