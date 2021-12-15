@@ -38,7 +38,7 @@ function megaoptim_get_tmp_path() {
  *
  * @param $file string
  * @param $contents string
- * @param string $force_flag
+ * @param  string  $force_flag
  */
 function megaoptim_write( $file, $contents, $force_flag = '' ) {
 	if ( file_exists( $file ) ) {
@@ -59,7 +59,7 @@ function megaoptim_write( $file, $contents, $force_flag = '' ) {
  * Makes specific dir secure.
  *
  * @param $dir
- * @param bool $noindex
+ * @param  bool  $noindex
  */
 function megaoptim_protect_dir( $dir, $noindex = true ) {
 	if ( ! is_dir( $dir ) ) {
@@ -88,7 +88,7 @@ Header set X-Robots-Tag "noindex"
  * Wrapper for writing the interactions to /wp-content/uploads/ file
  *
  * @param        $message
- * @param string $filename
+ * @param  string  $filename
  */
 function megaoptim_log( $message, $filename = "debug.log" ) {
 	$log_file_dir = megaoptim_get_tmp_path();
@@ -125,19 +125,10 @@ function megaoptim_dump( $data ) {
  * @return bool
  */
 function megaoptim_ping_api() {
-	$agent = "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_5_8; pt-pt) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27";
-	$ch    = curl_init();
-	curl_setopt( $ch, CURLOPT_URL, WP_MEGAOPTIM_API_BASE_URL );
-	curl_setopt( $ch, CURLOPT_USERAGENT, $agent );
-	curl_setopt( $ch, CURLOPT_NOBODY, true );
-	curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, true );
-	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
-	curl_setopt( $ch, CURLOPT_VERBOSE, false );
-	curl_setopt( $ch, CURLOPT_TIMEOUT, 5 );
-	curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
-	curl_exec( $ch );
-	$httpcode = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
-	curl_close( $ch );
+	$response = wp_remote_head( WP_MEGAOPTIM_API_BASE_URL . '/ping', array(
+		'user-agent' => "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_5_8; pt-pt) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27",
+	) );
+	$httpcode = wp_remote_retrieve_response_code( $response );
 	if ( $httpcode >= 200 && $httpcode < 300 ) {
 		return true;
 	} else {
@@ -156,7 +147,10 @@ function megaoptim_get_dir_size( $path ) {
 	$bytestotal = 0;
 	$path       = realpath( $path );
 	if ( $path !== false && $path != '' && file_exists( $path ) ) {
-		foreach ( new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $path, FilesystemIterator::SKIP_DOTS ) ) as $object ) {
+		foreach (
+			new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $path,
+				FilesystemIterator::SKIP_DOTS ) ) as $object
+		) {
 			try {
 				$bytestotal += $object->getSize();
 			} catch ( \Exception $e ) {
@@ -171,8 +165,8 @@ function megaoptim_get_dir_size( $path ) {
  * Returns human readable file size from bytes
  *
  * @param $size
- * @param string $unit
- * @param bool $include_unit
+ * @param  string  $unit
+ * @param  bool  $include_unit
  *
  * @return string
  */
@@ -209,9 +203,9 @@ function megaoptim_human_file_size( $size, $unit = "", $include_unit = true ) {
 /**
  * Convert bytes to the unit specified by the $to parameter.
  *
- * @param integer $bytes The filesize in Bytes.
- * @param string $to The unit type to convert to. Accepts K, M, or G for Kilobytes, Megabytes, or Gigabytes, respectively.
- * @param integer $decimal_places The number of decimal places to return.
+ * @param  integer  $bytes  The filesize in Bytes.
+ * @param  string  $to  The unit type to convert to. Accepts K, M, or G for Kilobytes, Megabytes, or Gigabytes, respectively.
+ * @param  integer  $decimal_places  The number of decimal places to return.
  *
  * @return integer Returns only the number of units, not the type letter. Returns 0 if the $to unit type is out of scope.
  *
@@ -385,7 +379,7 @@ function megaoptim_get_files_backup_dir() {
  *
  * @param $id
  * @param $path
- * @param null $size
+ * @param  null  $size
  *
  * @return string
  */
@@ -543,7 +537,7 @@ function megaoptim_is_excluded( $dir ) {
 		if ( in_array( megaoptim_basename( $dir ), $excluded ) ) {
 			return true;
 		}
-	} else if ( megaoptim_get_wp_root_path() === $parent_dir ) {
+	} elseif ( megaoptim_get_wp_root_path() === $parent_dir ) {
 		// we are in /
 		$excluded = array(
 			'wp-includes',
@@ -553,7 +547,7 @@ function megaoptim_is_excluded( $dir ) {
 		if ( in_array( megaoptim_basename( $dir ), $excluded ) ) {
 			return true;
 		}
-	} else if ( $wp_content === $parent_dir ) {
+	} elseif ( $wp_content === $parent_dir ) {
 		// we are in /wp-content
 		// TODO: If any?
 	}
@@ -590,15 +584,15 @@ function megaoptim_round( $number, $precision ) {
  * Returns megaoptim view
  *
  * @param $file
- * @param array $data
- * @param string $extension
+ * @param  array  $data
+ * @param  string  $extension
  *
  * @return string
  */
 function megaoptim_get_view( $file, $data = array(), $extension = '' ) {
 	if ( $extension === '' ) {
 		$extension = 'php';
-	} else if ( substr( $extension, 0, 1 ) === '.' ) {
+	} elseif ( substr( $extension, 0, 1 ) === '.' ) {
 		$extension = substr( $extension, 1 );
 	}
 	$file = WP_MEGAOPTIM_VIEWS_PATH . DIRECTORY_SEPARATOR . $file . '.' . $extension;
@@ -619,8 +613,8 @@ function megaoptim_get_view( $file, $data = array(), $extension = '' ) {
  * eturns megaoptim view
  *
  * @param $file
- * @param array $data
- * @param string $extension
+ * @param  array  $data
+ * @param  string  $extension
  */
 function megaoptim_view( $file, $data = array(), $extension = '' ) {
 	echo megaoptim_get_view( $file, $data, $extension );
@@ -630,7 +624,7 @@ function megaoptim_view( $file, $data = array(), $extension = '' ) {
 /**
  * Raise the WP Memory limit.
  *
- * @param string $context
+ * @param  string  $context
  */
 function megaoptim_raise_memory_limit( $context = 'image' ) {
 	if ( function_exists( 'wp_raise_memory_limit' ) ) {
@@ -703,9 +697,9 @@ function megaoptim_get_excluded_custom_dir_paths() {
  *
  * @param $dir
  *
- * @param bool $recursive
+ * @param  bool  $recursive
  *
- * @param array $excluded_dirs
+ * @param  array  $excluded_dirs
  *
  * @return array
  */
@@ -739,7 +733,7 @@ function megaoptim_find_images( $dir, $recursive = false, $excluded_dirs = array
  * Note: Quickier method than megaoptim_find_images() when no excluding is required.
  *
  * @param $dir
- * @param false $recursive
+ * @param  false  $recursive
  *
  * @return array
  */
@@ -787,7 +781,7 @@ function megaoptim_find_images_quick( $dir, $recursive = false ) {
  * Custom basename function. With planned multibyte enhancements in future.
  *
  * @param $str
- * @param string $suffix
+ * @param  string  $suffix
  *
  * @return string
  */
@@ -799,7 +793,7 @@ function megaoptim_basename( $str, $suffix = '' ) {
  * Multibyte Basename support
  *
  * @param $path
- * @param bool $suffix
+ * @param  bool  $suffix
  *
  * @return bool|mixed|string
  */
@@ -807,7 +801,7 @@ function megaoptim_mb_basename( $path, $suffix = false ) {
 	$Separator = " qq ";
 	$qqPath    = preg_replace( "/[^ ]/u", $Separator . "\$0" . $Separator, $path );
 	if ( ! $qqPath ) { //this is not an UTF8 string!! Don't rely on basename either, since if filename starts with a non-ASCII character it strips it off
-		$parts = explode( DIRECTORY_SEPARATOR, $path );
+		$parts    = explode( DIRECTORY_SEPARATOR, $path );
 		$fileName = end( $parts );
 		$pos      = strpos( $fileName, $suffix );
 		if ( $pos !== false ) {
@@ -877,9 +871,9 @@ function megaoptim_regenerate_thumbnails( $id, $path = null ) {
 /**
  * Generate data for specific optimization
  *
- * @param \MegaOptim\Client\Responses\Result $file
- * @param \MegaOptim\Client\Responses\Response $response
- * @param array $params
+ * @param  \MegaOptim\Client\Responses\Result  $file
+ * @param  \MegaOptim\Client\Responses\Response  $response
+ * @param  array  $params
  *
  * @return array|mixed
  */
@@ -1022,7 +1016,7 @@ function megaoptim_get_conflicting_plugins() {
  * USed to create and validate datetime object.
  *
  * @param $value
- * @param string $format
+ * @param  string  $format
  *
  * @return bool|DateTime
  */

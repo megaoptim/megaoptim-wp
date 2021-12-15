@@ -84,7 +84,7 @@ function megaoptim_include_file( $path, $require = true ) {
  */
 function megaoptim_prepare_optimizer() {
 	global $wp_version;
-	require_once( WP_MEGAOPTIM_LIBRARIES_PATH . 'megaoptim-php' . DIRECTORY_SEPARATOR . 'loadnoncomposer.php' );
+	require_once( WP_MEGAOPTIM_LIBRARIES_PATH . 'megaoptim-php' . DIRECTORY_SEPARATOR . 'autoload.php' );
 	$type                                = ( defined( 'WP_CLI' ) && WP_CLI ) ? ' / CLI' . ( defined( 'WP_CLI_VERSION' ) ? ' ' . WP_CLI_VERSION : '' ) : '';
 	\MegaOptim\Client\Http\BaseClient::$api_url = WP_MEGAOPTIM_API_BASE_URL;
 	\MegaOptim\Client\Http\BaseClient::set_user_agent( sprintf( 'WordPress %s / Plugin %s%s', $wp_version, WP_MEGAOPTIM_VER, $type ) );

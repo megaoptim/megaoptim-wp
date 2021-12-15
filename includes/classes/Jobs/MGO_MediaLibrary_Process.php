@@ -58,7 +58,7 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 		}
 
 		if ( $attachment->is_locked() ) {
-			return $item;
+			return false;
 		} else {
 
 			// Collect the resources

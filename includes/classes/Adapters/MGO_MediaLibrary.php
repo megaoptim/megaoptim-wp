@@ -22,6 +22,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( 'Direct access is not allowed.' );
 }
 
+/**
+ * Class MGO_MediaLibrary
+ */
 class MGO_MediaLibrary extends MGO_Library {
 
 	/**
@@ -66,6 +69,9 @@ class MGO_MediaLibrary extends MGO_Library {
 	public function optimize( $attachment, $params = array() ) {
 
 		@set_time_limit( 0 );
+
+		error_log(get_class($this->optimizer->get_client()));
+
 
 		$result = new MGO_ResultBag();
 
@@ -113,8 +119,7 @@ class MGO_MediaLibrary extends MGO_Library {
 		//Get the file names
 		$original_path = $this->get_attachment_path( $attachment, 'full', false );
 		if ( ! file_exists( $original_path ) ) {
-			throw new MGO_Exception( __( 'Original image version does not exist on the server.',
-				'megaoptim-image-optimizer' ) );
+			throw new MGO_Exception( __( 'Original image version does not exist on the server.', 'megaoptim-image-optimizer' ) );
 		}
 
 		// Optimize the original and the thumbnails

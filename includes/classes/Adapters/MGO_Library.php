@@ -42,8 +42,8 @@ abstract class MGO_Library extends MGO_BaseObject {
 	 * MGO_Library constructor.
 	 */
 	public function __construct() {
+		$this->settings  = MGO_Settings::instance();
 		$this->optimizer = self::get_optimizer();
-		$this->settings   = MGO_Settings::instance();
 	}
 
 	/**
@@ -53,11 +53,13 @@ abstract class MGO_Library extends MGO_BaseObject {
 	public static function get_optimizer() {
 		$api_key = MGO_Settings::instance()->getApiKey();
 		if ( false !== $api_key ) {
-			if( 'native' === apply_filters('megaoptim_http_client', 'native') ) {
-				$http_client = \MegaOptim\Client\Http\WPClient::class;
-			} else {
+
+			if ( 'curl' === apply_filters( 'megaoptim_http_client', 'native' ) && function_exists( 'curl_init' ) ) {
 				$http_client = \MegaOptim\Client\Http\CurlClient::class;
+			} else {
+				$http_client = \MegaOptim\Client\Http\WPClient::class;
 			}
+
 			return ( new \MegaOptim\Client\Optimizer( $api_key, $http_client ) );
 		}
 
@@ -68,7 +70,7 @@ abstract class MGO_Library extends MGO_BaseObject {
 	 * Optimizes specific attachment
 	 *
 	 * @param $attachment
-	 * @param array $params
+	 * @param  array  $params
 	 *
 	 * @return mixed
 	 */
@@ -77,10 +79,10 @@ abstract class MGO_Library extends MGO_BaseObject {
 	/**
 	 * Starts async optimization task for $attachment
 	 *
-	 * @param int|string $attachment
-	 * @param array $params
+	 * @param  int|string  $attachment
+	 * @param  array  $params
 	 *
-	 * @param string $type
+	 * @param  string  $type
 	 *
 	 * @return void
 	 */
@@ -136,7 +138,7 @@ abstract class MGO_Library extends MGO_BaseObject {
 		} else {
 			$params['cmyktorgb'] = $cmyktorgb;
 		}
-		if( $webp == 1 ) {
+		if ( $webp == 1 ) {
 			$params['webp'] = 1;
 		}
 		if ( ! empty( $http_user ) && ! empty( $http_pass ) ) {
