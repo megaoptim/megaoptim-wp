@@ -39,6 +39,10 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 
 		$optimizer = MGO_Library::get_optimizer();
 
+		if(empty($optimizer)) {
+			return false; // Prevent if the optimizer is not set up. (No api key).
+		}
+
 		// NOTE: This will only work if all items are from the same attachment.
 		$attachment_id  = $item[0]['attachment_id'];
 		$request_params = $item[0]['params'];
