@@ -1,5 +1,5 @@
 <?php
-/*–
+/*
 Plugin Name: MegaOptim Image Optimizer
 Plugin URI: https://megaoptim.com/tools/wordpress
 Description: Compress and optimize your WordPress images and save bandwidth, disk space and improve your pagespeed/lighthouse & seo score. Integrates seamlessly with NextGen, WP Retina 2x, Envira and other media/image plugins.
