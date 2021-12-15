@@ -56,8 +56,8 @@ class MGO_MediaLibrary extends MGO_Library {
 	/**
 	 * Optimizes specific attachment
 	 *
-	 * @param int|MGO_MediaAttachment $attachment
-	 * @param array $params
+	 * @param  int|MGO_MediaAttachment  $attachment
+	 * @param  array  $params
 	 *
 	 * @return MGO_ResultBag
 	 * @throws MGO_Attachment_Already_Optimized_Exception
@@ -102,8 +102,8 @@ class MGO_MediaLibrary extends MGO_Library {
 		/**
 		 * Fired before the optimization of the attachment
 		 *
-		 * @param MGO_MediaAttachment $attachment_object
-		 * @param array $request_params
+		 * @param  MGO_MediaAttachment  $attachment_object
+		 * @param  array  $request_params
 		 *
 		 * @since 1.0
 		 *
@@ -113,7 +113,8 @@ class MGO_MediaLibrary extends MGO_Library {
 		//Get the file names
 		$original_path = $this->get_attachment_path( $attachment, 'full', false );
 		if ( ! file_exists( $original_path ) ) {
-			throw new MGO_Exception( __( 'Original image version does not exist on the server.', 'megaoptim-image-optimizer' ) );
+			throw new MGO_Exception( __( 'Original image version does not exist on the server.',
+				'megaoptim-image-optimizer' ) );
 		}
 
 		// Optimize the original and the thumbnails
@@ -165,6 +166,8 @@ class MGO_MediaLibrary extends MGO_Library {
 			}
 
 			$resource_chunks = array_chunk( $resources, 5 );
+			megaoptim_log( '--- Prepared chunks: ' . json_encode( $resource_chunks ) );
+
 			for ( $i = 0; $i < count( $resource_chunks ); $i ++ ) {
 				$resource_chunk = $resource_chunks[ $i ];
 				if ( count( $resource_chunk ) > 0 ) {
@@ -203,14 +206,15 @@ class MGO_MediaLibrary extends MGO_Library {
 								/**
 								 * Fired when attachment thumbnail was successfully optimized and saved.
 								 *
-								 * @param MGO_MediaAttachment $attachment_object - The media attachment that was optimized
-								 * @param string $path - The result of the optimization for this attachment
-								 * @param array $request_params - The api parameters
-								 * @param string $size - The thumbnail version
+								 * @param  MGO_MediaAttachment  $attachment_object  - The media attachment that was optimized
+								 * @param  string  $path  - The result of the optimization for this attachment
+								 * @param  array  $request_params  - The api parameters
+								 * @param  string  $size  - The thumbnail version
 								 *
 								 * @since 1.0.0
 								 */
-								do_action( 'megaoptim_size_optimized', $attachment_object, $att['save_path'], $response, $request_params, $size );
+								do_action( 'megaoptim_size_optimized', $attachment_object, $att['save_path'], $response,
+									$request_params, $size );
 							} else {
 								megaoptim_log( '--- Saving Response: Response by filename not found. File name: ' . $filename );
 							}
@@ -240,9 +244,9 @@ class MGO_MediaLibrary extends MGO_Library {
 	/**
 	 * Starts async optimization task for $attachment
 	 *
-	 * @param int|string $attachment
-	 * @param array $params
-	 * @param string $needed_type
+	 * @param  int|string  $attachment
+	 * @param  array  $params
+	 * @param  string  $needed_type
 	 *
 	 * @return void
 	 * @throws MGO_Attachment_Locked_Exception
@@ -251,7 +255,8 @@ class MGO_MediaLibrary extends MGO_Library {
 	public function optimize_async( $attachment, $params = array(), $needed_type = '' ) {
 
 		if ( is_null( $this->background_process ) ) {
-			_doing_it_wrong( __METHOD__, 'Called too early. Please make sure WordPress is loaded and then call this method.', WP_MEGAOPTIM_VER );
+			_doing_it_wrong( __METHOD__,
+				'Called too early. Please make sure WordPress is loaded and then call this method.', WP_MEGAOPTIM_VER );
 
 			return;
 		}
@@ -284,8 +289,8 @@ class MGO_MediaLibrary extends MGO_Library {
 		/**
 		 * Fired before the optimization of the attachment
 		 *
-		 * @param MGO_MediaAttachment $attachment_object
-		 * @param array $request_params
+		 * @param  MGO_MediaAttachment  $attachment_object
+		 * @param  array  $request_params
 		 *
 		 * @since 1.0
 		 *
@@ -295,7 +300,8 @@ class MGO_MediaLibrary extends MGO_Library {
 		//Get the file names
 		$original_path = $this->get_attachment_path( $attachment, 'full', false );
 		if ( ! file_exists( $original_path ) ) {
-			throw new MGO_Exception( __( 'Original image version does not exist on the server.', 'megaoptim-image-optimizer' ) );
+			throw new MGO_Exception( __( 'Original image version does not exist on the server.',
+				'megaoptim-image-optimizer' ) );
 		}
 
 		//Create Backup If Enabled
@@ -332,8 +338,10 @@ class MGO_MediaLibrary extends MGO_Library {
 					$item = array(
 						'attachment_id'         => $attachment_object->get_id(),
 						'attachment_size'       => $size,
-						'attachment_resource'   => $this->get_attachment( $attachment_object->get_id(), $size, $is_retina ),
-						'attachment_local_path' => $this->get_attachment_path( $attachment_object->get_id(), $size, $is_retina ),
+						'attachment_resource'   => $this->get_attachment( $attachment_object->get_id(), $size,
+							$is_retina ),
+						'attachment_local_path' => $this->get_attachment_path( $attachment_object->get_id(), $size,
+							$is_retina ),
 						'params'                => $request_params,
 						'type'                  => $_type
 					);
@@ -345,6 +353,7 @@ class MGO_MediaLibrary extends MGO_Library {
 		// Chunk and Dispatch
 		if ( count( $items ) ) {
 			$chunks = array_chunk( $items, 5 );
+			megaoptim_log( '--- Prepared chunks: ' . json_encode( $chunks ) );
 			foreach ( $chunks as $chunk ) {
 				$this->background_process->push_to_queue( $chunk );
 			}
@@ -359,7 +368,7 @@ class MGO_MediaLibrary extends MGO_Library {
 	/**
 	 * Returns all the available media attachments.
 	 *
-	 * @param array $args
+	 * @param  array  $args
 	 *
 	 * @return array|null|object
 	 */
@@ -427,8 +436,8 @@ class MGO_MediaLibrary extends MGO_Library {
 	/**
 	 * Returns stats of optimization
 	 *
-	 * @param bool $include_remaining
-	 * @param array $args eg: (date_from => 'Y-m-d', date_to => 'Y-m-d', 'author' => 1)
+	 * @param  bool  $include_remaining
+	 * @param  array  $args  eg: (date_from => 'Y-m-d', date_to => 'Y-m-d', 'author' => 1)
 	 *
 	 * @return mixed|MGO_Stats
 	 */
@@ -519,7 +528,7 @@ class MGO_MediaLibrary extends MGO_Library {
 	 *
 	 * @param $attachment_id
 	 * @param $wp_image_size
-	 * @param bool $retina
+	 * @param  bool  $retina
 	 *
 	 * @return bool|false|string
 	 */
@@ -605,6 +614,7 @@ class MGO_MediaLibrary extends MGO_Library {
 				return megaoptim_rawurlencode( $dir . '/' . $size_name . '@2x.' . $size_ext );
 			}
 		}
+
 		return megaoptim_rawurlencode( $url[0] );
 	}
 
@@ -613,9 +623,9 @@ class MGO_MediaLibrary extends MGO_Library {
 	 *  - If the plugin runs on local host the function returns PATH so the php client will upload the file
 	 *  - If the plugin doesn't runs on local host the function returns URL so the php client will post the url and the server will download it.
 	 *
-	 * @param int $attachment_id
-	 * @param string $wp_image_size
-	 * @param bool $retina
+	 * @param  int  $attachment_id
+	 * @param  string  $wp_image_size
+	 * @param  bool  $retina
 	 *
 	 * @return string|false
 	 */
@@ -684,7 +694,7 @@ class MGO_MediaLibrary extends MGO_Library {
 	/**
 	 * Get size information for a specific image size.
 	 *
-	 * @param string $size The image size for which to retrieve data.
+	 * @param  string  $size  The image size for which to retrieve data.
 	 *
 	 * @return bool|array $size Size data about an image size or false if the size doesn't exist.
 	 * @uses   get_image_sizes()
@@ -703,7 +713,7 @@ class MGO_MediaLibrary extends MGO_Library {
 	/**
 	 * Get the width of a specific image size.
 	 *
-	 * @param string $size The image size for which to retrieve data.
+	 * @param  string  $size  The image size for which to retrieve data.
 	 *
 	 * @return bool|string $size Width of an image size or false if the size doesn't exist.
 	 * @uses   get_image_size()
@@ -724,7 +734,7 @@ class MGO_MediaLibrary extends MGO_Library {
 	/**
 	 * Get the height of a specific image size.
 	 *
-	 * @param string $size The image size for which to retrieve data.
+	 * @param  string  $size  The image size for which to retrieve data.
 	 *
 	 * @return bool|string $size Height of an image size or false if the size doesn't exist.
 	 * @uses   get_image_size()
@@ -766,7 +776,7 @@ class MGO_MediaLibrary extends MGO_Library {
 	 * Filter the api parameters based on the attachment.
 	 *
 	 * @param $params
-	 * @param MGO_MediaAttachment $attachment
+	 * @param  MGO_MediaAttachment  $attachment
 	 *
 	 * @return array
 	 */
@@ -805,7 +815,7 @@ class MGO_MediaLibrary extends MGO_Library {
 	/**
 	 * The attachment buttons?
 	 *
-	 * @param MGO_NGGAttachment|MGO_MediaAttachment|MGO_FileAttachment $attachment
+	 * @param  MGO_NGGAttachment|MGO_MediaAttachment|MGO_FileAttachment  $attachment
 	 *
 	 * @return string
 	 */

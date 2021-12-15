@@ -1,6 +1,6 @@
 <?php
 /********************************************************************
- * Copyright (C) 2018 MegaOptim (https://megaoptim.com)
+ * Copyright (C) 2021 MegaOptim (https://megaoptim.com)
  *
  * This file is part of MegaOptim Image Optimizer
  *
@@ -73,7 +73,7 @@ class WPClient extends BaseClient {
 	 */
 	public static function download( $url, $save_filepath ) {
 
-		$response = self::get( $url );
+		$response = self::_get( $url );
 
 		$fp = fopen( $save_filepath, 'w+' );
 		fwrite( $fp, $response );
@@ -96,20 +96,30 @@ class WPClient extends BaseClient {
 
 		@set_time_limit( 240 );
 
-		$headers = array(
-			'accept'     => 'application/json',
-			'user-agent' => self::get_user_agent(),
-			'timeout'    => '120',
+		$args = array(
+			'headers'     => array(
+				'accept' => 'application/json',
+			),
+			'timeout'     => self::default_request_timeout(),
+			'httpversion' => '1.1',
+			'sslverify'   => false,
+			'user-agent'  => self::get_user_agent(),
 		);
 
 		if ( ! is_null( $api_key ) ) {
-			$headers[ self::AUTH_HEADER ] = $api_key;
+			$args['headers'][ self::AUTH_HEADER ] = $api_key;
 		}
 
-		$response = wp_remote_get( $url, array( 'headers' => $headers ) );
+		/**
+		 * Some plugins will hook into this filter and modify it.
+		 * To avoid complications we will force the value only for this request.
+		 */
+		add_filter( 'http_request_timeout', array( WPClient::class, 'default_request_timeout' ), PHP_INT_MAX - 10 );
+		$response = wp_remote_get( $url, $args );
+		remove_filter( 'http_request_timeout', array( WPClient::class, 'default_request_timeout' ), PHP_INT_MAX - 10 );
 
 		if ( is_wp_error( $response ) ) {
-			throw new \Exception( $response->get_error_message(), $response->get_error_code() );
+			throw new \Exception( $response->get_error_message() ? $response->get_error_message() : 'Unknown error happened.' );
 		}
 
 		return isset( $response['body'] ) ? $response['body'] : null;
@@ -151,31 +161,37 @@ class WPClient extends BaseClient {
 		}
 		$multipart->finish();
 
-		$headers = array(
-			'accept'       => 'application/json',
-			'content-type' => 'multipart/form-data; boundary=' . $multipart->getBoundary(),
-			'user-agent'   => self::get_user_agent(),
-			'timeout'      => '120',
+		$params = array(
+			'body'        => (string) $multipart,
+			'headers'     => array(
+				'accept'       => 'application/json',
+				'content-type' => 'multipart/form-data; boundary=' . $multipart->getBoundary(),
+			),
+			'timeout'     => self::default_request_timeout(),
+			'httpversion' => '1.1',
+			'sslverify'   => false,
+			'user-agent'  => self::get_user_agent(),
 		);
+
 		if ( ! is_null( $api_key ) ) {
-			$headers[ self::AUTH_HEADER ] = $api_key;
+			$params['headers'][ self::AUTH_HEADER ] = $api_key;
 		}
 
-		$params = array(
-			'headers' => $headers,
-			'body'    => (string) $multipart,
-		);
-
+		/**
+		 * Some plugins will hook into this filter and modify it.
+		 * To avoid complications we will force the value only for this request.
+		 */
+		add_filter( 'http_request_timeout', array( WPClient::class, 'default_request_timeout' ), PHP_INT_MAX - 10 );
 		$response = wp_remote_post( $url, $params );
+		remove_filter( 'http_request_timeout', array( WPClient::class, 'default_request_timeout' ), PHP_INT_MAX - 10 );
 
 		if ( is_wp_error( $response ) ) {
-			throw new \Exception( $response->get_error_message(), $response->get_error_code() );
+			throw new \Exception( $response->get_error_message() ? $response->get_error_message() : 'Unknown error happened.' );
 		}
 
 		return isset( $response['body'] ) ? $response['body'] : null;
 
 	}
-
 
 	/**
 	 * Append WP identifier to the user agent.
@@ -183,6 +199,14 @@ class WPClient extends BaseClient {
 	 */
 	public static function get_user_agent() {
 		return parent::get_user_agent() . ' / WP';
+	}
+
+	/**
+	 * The default HTTP call timeout
+	 * @return int
+	 */
+	public static function default_request_timeout() {
+		return 120;
 	}
 
 }

@@ -31,7 +31,7 @@ class MGO_ResultBag {
 
 	/**
 	 * Contains all the API response objects for the main image and the thumbnails.
-	 * @var \MegaOptim\Responses\Response[]
+	 * @var \MegaOptim\Client\Responses\Response[]
 	 */
 	private $responses = array();
 
@@ -54,7 +54,7 @@ class MGO_ResultBag {
 	 * Add API Response object to the bag of results.
 	 *
 	 * @param $key
-	 * @param \MegaOptim\Responses\Response $response
+	 * @param \MegaOptim\Client\Responses\Response $response
 	 */
 	public function add( $key, $response ) {
 		$this->responses[ $key ] = $response;
@@ -71,7 +71,7 @@ class MGO_ResultBag {
 
 	/**
 	 * Returns the last response from the api. For example if multiple batches are sent to the api.
-	 * @return \MegaOptim\Responses\Response|mixed
+	 * @return \MegaOptim\Client\Responses\Response|mixed
 	 */
 	public function get_last_response() {
 		return end( $this->responses );
@@ -79,7 +79,7 @@ class MGO_ResultBag {
 
 	/**
 	 * Returns all the responses
-	 * @return \MegaOptim\Responses\Response[]
+	 * @return \MegaOptim\Client\Responses\Response[]
 	 */
 	public function get_responses() {
 		return $this->responses;

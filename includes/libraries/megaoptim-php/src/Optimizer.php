@@ -24,7 +24,6 @@ use MegaOptim\Client\Http\CurlClient;
 use MegaOptim\Client\Responses\Response;
 use MegaOptim\Client\Services\OptimizerService;
 use MegaOptim\Client\Tools\FileSystem;
-use MegaOptim\Client\Tools\PATH;
 use MegaOptim\Client\Tools\URL;
 
 class Optimizer {
@@ -300,7 +299,7 @@ class Optimizer {
 
 	/**
 	 * Returns the user profile info
-	 * @return Responses\Profile
+	 * @return Client\Responses\Profile
 	 * @throws \Exception
 	 */
 	public function get_user_info() {
