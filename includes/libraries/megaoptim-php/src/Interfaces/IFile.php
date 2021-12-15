@@ -20,6 +20,10 @@
 
 namespace MegaOptim\Client\Interfaces;
 
+/**
+ * Interface IFile
+ * @package MegaOptim\Client\Interfaces
+ */
 interface IFile {
 	/**
 	 * Overwrite the local file with the optimized file

@@ -20,6 +20,10 @@
 
 namespace MegaOptim\Client\Tools;
 
+/**
+ * Class FileSystem
+ * @package MegaOptim\Client\Tools
+ */
 class FileSystem {
 
 

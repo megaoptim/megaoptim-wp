@@ -21,7 +21,6 @@
 namespace MegaOptim\Client\Responses;
 
 use MegaOptim\Client\Http\HTTP;
-use MegaOptim\Client\Optimizer;
 use MegaOptim\Client\Tools\URL;
 
 class Response implements HTTP {
@@ -65,11 +64,20 @@ class Response implements HTTP {
 	private $process_id = null;
 
 	/**
+	 * The http client
+	 * @var null
+	 */
+	private $http_client;
+
+	/**
 	 * Response constructor.
 	 *
 	 * @param $response
 	 */
-	public function __construct( $response ) {
+	public function __construct( $response, $http_client = null ) {
+
+		$this->http_client = $http_client;
+
 		$this->raw = $response;
 		$response  = @json_decode( $response );
 		//$this->raw = $response;
@@ -80,7 +88,7 @@ class Response implements HTTP {
 			if ( is_array( $response->result ) ) {
 				$this->result = array();
 				foreach ( $response->result as $result ) {
-					array_push( $this->result, new Result( $result ) );
+					array_push( $this->result, new Result( $result, $http_client ) );
 				}
 			}
 		}
@@ -108,8 +116,6 @@ class Response implements HTTP {
 			$this->user->setCode( $response->code );
 			$this->user->setStatus( $response->status );
 		}
-
-
 	}
 
 	/**

@@ -20,6 +20,10 @@
 
 namespace MegaOptim\Client\Responses;
 
+/**
+ * Class Profile
+ * @package MegaOptim\Client\Responses
+ */
 class Profile {
 
 	/**

@@ -17,7 +17,7 @@ composer require megaoptim/megaoptim-php
 ### Without Composer
 This is not recommended way. But you can require the `loadnoncomposer.php` file that will load the library without composer.
 ```php
-require "megaoptim-php/loadnoncomposer.php"
+require "megaoptim-php/autoload.php"
 ```
 
 # How to Use

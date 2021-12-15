@@ -52,7 +52,7 @@ class OptimizerService {
 		$url      = BaseClient::get_endpoint( BaseClient::ENDPOINT_OPTIMIZE );
 		$response = $this->client->post( $url, $data, $files );
 
-		return new Response( $response );
+		return new Response( $response, $this->client );
 	}
 
 	/**
@@ -68,7 +68,7 @@ class OptimizerService {
 		$url      = BaseClient::get_endpoint( BaseClient::ENDPOINT_OPTIMIZE ) . '/' . $request_id . '/result?timeout=' . $max_wait_seconds;
 		$response = $this->client->post( $url, array() );
 
-		return new Response( $response );
+		return new Response( $response, $this->client );
 	}
 
 	/**

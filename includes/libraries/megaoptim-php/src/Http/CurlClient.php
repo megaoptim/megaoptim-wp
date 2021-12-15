@@ -20,12 +20,16 @@
 
 namespace MegaOptim\Client\Http;
 
+/**
+ * Class CurlClient
+ * @package MegaOptim\Client\Http
+ */
 class CurlClient extends BaseClient {
 
 	/**
 	 * Client constructor.
 	 *
-	 * @param string $api_key
+	 * @param  string  $api_key
 	 */
 	public function __construct( $api_key ) {
 		$this->api_key = $api_key;
@@ -37,7 +41,7 @@ class CurlClient extends BaseClient {
 	 *
 	 * @param $url
 	 * @param $data
-	 * @param $files ( List of files the key:path, the key is the handle for the file. )
+	 * @param $files  ( List of files the key:path, the key is the handle for the file. )
 	 *
 	 * @return mixed
 	 * @throws \Exception
@@ -61,13 +65,19 @@ class CurlClient extends BaseClient {
 
 	/**
 	 * Downloads a file.
+	 *
 	 * @param  string  $url
 	 * @param  string  $save_filepath
 	 *
 	 * @return string
 	 * @throws \Exception
 	 */
-	public static function download( $url, $save_filepath ) {
+	public function download( $url, $save_filepath ) {
+
+		if ( ! function_exists( 'curl_init' ) ) {
+			throw new \Exception( 'Curl is not installed.' );
+		}
+
 		$ch = curl_init( $url );
 		curl_setopt( $ch, CURLOPT_HEADER, 0 );
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
@@ -96,12 +106,17 @@ class CurlClient extends BaseClient {
 	 *  Send HTTP GET request to server
 	 *
 	 * @param $url
-	 * @param null $api_key
+	 * @param  null  $api_key
 	 *
 	 * @return mixed
 	 * @throws \Exception
 	 */
 	public static function _get( $url, $api_key = null ) {
+
+		if ( ! function_exists( 'curl_init' ) ) {
+			throw new \Exception( 'Curl is not installed.' );
+		}
+
 		@set_time_limit( 450 );
 		$ch = curl_init();
 		curl_setopt( $ch, CURLOPT_URL, $url );
@@ -137,12 +152,17 @@ class CurlClient extends BaseClient {
 	 * @param $url
 	 * @param $data
 	 * @param $files
-	 * @param null $api_key
+	 * @param  null  $api_key
 	 *
 	 * @return mixed
 	 * @throws \Exception
 	 */
 	public static function _post( $url, $data, $files = array(), $api_key = null ) {
+
+		if ( ! function_exists( 'curl_init' ) ) {
+			throw new \Exception( 'Curl is not installed.' );
+		}
+
 		@set_time_limit( 450 );
 		$ch = curl_init();
 		if ( ! empty( $files ) ) {

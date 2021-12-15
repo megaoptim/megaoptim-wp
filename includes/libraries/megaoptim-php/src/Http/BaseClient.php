@@ -20,6 +20,12 @@
 
 namespace MegaOptim\Client\Http;
 
+use Exception;
+
+/**
+ * Class BaseClient
+ * @package MegaOptim\Client\Http
+ */
 abstract class BaseClient {
 
 	/**
@@ -74,10 +80,10 @@ abstract class BaseClient {
 	 *
 	 * @param $url
 	 * @param $data
-	 * @param $files ( List of files the key:path, the key is the handle for the file. )
+	 * @param $files  ( List of files the key:path, the key is the handle for the file. )
 	 *
 	 * @return mixed
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	abstract public function post( $url, $data, $files = array() );
 
@@ -89,9 +95,20 @@ abstract class BaseClient {
 	 * @param $url
 	 *
 	 * @return mixed
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	abstract public function get( $url );
+
+	/**
+	 * Used to download image from url. Returns the local path or false on failure.
+	 *
+	 * @param  string  $url
+	 * @param  string  $save_filepath
+	 *
+	 * @return string
+	 * @throws Exception
+	 */
+	abstract public function download( $url, $save_filepath );
 
 
 	/**
@@ -101,13 +118,13 @@ abstract class BaseClient {
 	 * @param $url
 	 * @param $data
 	 * @param $files
-	 * @param null $api_key
+	 * @param  null  $api_key
 	 *
 	 * @return mixed
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function _post( $url, $data, $files = array(), $api_key = null ) {
-
+		throw new Exception( 'Method not implemented.' );
 	}
 
 
@@ -116,28 +133,15 @@ abstract class BaseClient {
 	 *    The method must throw exception in case of error.
 	 *
 	 * @param $url
-	 * @param null $api_key
+	 * @param  null  $api_key
 	 *
 	 * @return mixed
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function _get( $url, $api_key = null ) {
-
+		throw new Exception( 'Method not implemented.' );
 	}
 
-
-	/**
-	 * Used to download image from url. Returns the local path or false on failure.
-	 *
-	 * @param string $url
-	 * @param string $save_filepath
-	 *
-	 * @return string
-	 * @throws \Exception
-	 */
-	 public static function download( $url, $save_filepath ) {
-
-	 }
 
 	/**
 	 * Returns the MegaOptim PHP Client user agent

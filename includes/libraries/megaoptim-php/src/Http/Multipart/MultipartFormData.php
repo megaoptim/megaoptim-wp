@@ -1,4 +1,23 @@
 <?php
+/********************************************************************
+ * Copyright (C) 2021 MegaOptim (https://megaoptim.com)
+ *
+ * This file is part of MegaOptim Image Optimizer
+ *
+ * MegaOptim Image Optimizer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * MegaOptim Image Optimizer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MegaOptim Image Optimizer. If not, see <https://www.gnu.org/licenses/>.
+ **********************************************************************/
+
 namespace MegaOptim\Client\Http\Multipart;
 
 /**
@@ -14,13 +33,14 @@ final class MultipartFormData extends Multipart {
         parent::__construct($boundary, 'multipart/form-data');
     }
 
-    /**
-     * Adds a string parameter.
-     * @param string $name the parameter name.
-     * @param string $value the parameter value.
-     * @param string $charset the optional charset for the value.
-     * @return MultipartFormData this object.
-     */
+	/**
+	 * Adds a string parameter.
+	 *
+	 * @param  string  $name  the parameter name.
+	 * @param  string  $value  the parameter value.
+	 *
+	 * @return MultipartFormData this object.
+	 */
     public function addValue($name, $value) {
         Util::validateNonEmptyString($name, '$name');
         Util::validateString($value, '$value');

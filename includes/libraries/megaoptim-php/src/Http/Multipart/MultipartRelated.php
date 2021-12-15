@@ -1,4 +1,23 @@
 <?php
+/********************************************************************
+ * Copyright (C) 2021 MegaOptim (https://megaoptim.com)
+ *
+ * This file is part of MegaOptim Image Optimizer
+ *
+ * MegaOptim Image Optimizer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * MegaOptim Image Optimizer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MegaOptim Image Optimizer. If not, see <https://www.gnu.org/licenses/>.
+ **********************************************************************/
+
 namespace MegaOptim\Client\Http\Multipart;
 
 /**
@@ -41,18 +60,19 @@ final class MultipartRelated extends Multipart {
         return $this;
     }
 
-    /**
-     * Adds an inline file.
-     * @param string $contentID the content id of the file.
-     * @param string $filename the name of the file.
-     * @param string|resource|callable $content the file's content.
-     *        If it's a callable it should take a length argument and return a string that is not larger than the input.
-     * @param string $contentType the file's content type.
-     * @param int $contentLength the file's content length, or -1 if not known. Ignored if the file's content is a string.
-     * @param string $contentTransferEncoding the optional content transfer encoding.
-     * @param string $contentDisposition the content disposition (e.g. attachment or inline).
-     * @return MultipartRelated this object.
-     */
+	/**
+	 * Adds an inline file.
+	 *
+	 * @param  string  $contentID  the content id of the file.
+	 * @param  string  $filename  the name of the file.
+	 * @param  string|resource|callable  $content  the file's content.
+	 *        If it's a callable it should take a length argument and return a string that is not larger than the input.
+	 * @param  string  $contentType  the file's content type.
+	 * @param  int  $contentLength  the file's content length, or -1 if not known. Ignored if the file's content is a string.
+	 * @param  string  $contentTransferEncoding  the optional content transfer encoding.
+	 *
+	 * @return MultipartRelated this object.
+	 */
     public function addInlineFile($contentID, $filename, $content, $contentType, $contentLength = -1, $contentTransferEncoding = '') {
         Util::validateNonEmptyString($contentID, '$contentID');
         Util::validateNonEmptyString($filename, '$filename');

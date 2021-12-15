@@ -23,6 +23,10 @@ namespace MegaOptim\Client\Http;
 use MegaOptim\Client\Http\Multipart\MultipartFormData;
 use MegaOptim\Client\Tools\PATH;
 
+/**
+ * Class WPClient
+ * @package MegaOptim\Client\Http
+ */
 class WPClient extends BaseClient {
 
 	/**
@@ -71,7 +75,7 @@ class WPClient extends BaseClient {
 	 * @return string
 	 * @throws \Exception
 	 */
-	public static function download( $url, $save_filepath ) {
+	public function download( $url, $save_filepath ) {
 
 		$response = self::_get( $url );
 

@@ -20,6 +20,7 @@
 
 namespace MegaOptim\Client;
 
+use MegaOptim\Client\Http\BaseClient;
 use MegaOptim\Client\Http\CurlClient;
 use MegaOptim\Client\Responses\Response;
 use MegaOptim\Client\Services\OptimizerService;
@@ -61,20 +62,26 @@ class Optimizer {
 	private $current_resource = null;
 
 	/**
+	 * The client
+	 * @var BaseClient
+	 */
+	private $client;
+
+	/**
 	 * Optimizer constructor.
 	 *
 	 * @param $api_key
-	 * @param string $http_client_class
+	 * @param  string  $http_client_class
 	 */
 	public function __construct( $api_key, $http_client_class = '' ) {
 
-		if ( class_exists( $http_client_class ) ) {
-			$client = new $http_client_class( $api_key );
+		if ( ! empty( $http_client_class ) && class_exists( $http_client_class ) ) {
+			$this->client = new $http_client_class( $api_key );
 		} else {
-			$client = new CurlClient( $api_key );
+			$this->client = new CurlClient( $api_key );
 		}
 
-		$this->service   = new OptimizerService( $client );
+		$this->service   = new OptimizerService( $this->client );
 		$this->defaults  = array(
 			'max_width'   => 0,
 			'max_height'  => 0,
@@ -89,9 +96,9 @@ class Optimizer {
 	/**
 	 * Optimizes specific file or url
 	 *
-	 * @param string|array $resource (url, local path, array of urls, array of local paths)
-	 * @param bool $local_wait Not reliable as waiting on the server but better if you want to offload the CPU for some time while this is processing.
-	 * @param array $args
+	 * @param  string|array  $resource  (url, local path, array of urls, array of local paths)
+	 * @param  bool  $local_wait  Not reliable as waiting on the server but better if you want to offload the CPU for some time while this is processing.
+	 * @param  array  $args
 	 *
 	 * @return Response
 	 * @throws \Exception
@@ -167,7 +174,7 @@ class Optimizer {
 	 * Returns the results of the process
 	 *
 	 * @param $process_id
-	 * @param int $max_wait_seconds
+	 * @param  int  $max_wait_seconds
 	 *
 	 * @return Response
 	 * @throws \Exception
@@ -214,10 +221,10 @@ class Optimizer {
 				if ( file_exists( $file ) && is_file( $file ) ) {
 					$is_file = 1;
 					$is_url  = 0;
-				} else if ( file_exists( $file ) && is_dir( $file ) ) {
+				} elseif ( file_exists( $file ) && is_dir( $file ) ) {
 					$is_file = 0;
 					$is_url  = 0;
-				} else if ( URL::validate( $file ) ) {
+				} elseif ( URL::validate( $file ) ) {
 					$is_file = 0;
 					$is_url  = 1;
 				} else {
@@ -227,14 +234,14 @@ class Optimizer {
 			}
 			if ( $is_url ) {
 				$resource_type = Optimizer::RESOURCE_URLS;
-			} else if ( $is_file ) {
+			} elseif ( $is_file ) {
 				$resource_type = Optimizer::RESOURCE_FILES;
 			} else {
 				throw new \Exception( 'Unknown resource type' );
 			}
-		} else if ( file_exists( $resource ) ) {
+		} elseif ( file_exists( $resource ) ) {
 			$resource_type = Optimizer::RESOURCE_FILE;
-		} else if ( URL::validate( $resource ) ) {
+		} elseif ( URL::validate( $resource ) ) {
 			$resource_type = Optimizer::RESOURCE_URL;
 		} else {
 			throw new \Exception( 'Unknown resource type' );
@@ -299,11 +306,19 @@ class Optimizer {
 
 	/**
 	 * Returns the user profile info
-	 * @return Client\Responses\Profile
+	 * @return Responses\Profile
 	 * @throws \Exception
 	 */
 	public function get_user_info() {
 		return $this->service->get_user_info();
+	}
+
+	/**
+	 * Returns the HTTP client
+	 * @return BaseClient
+	 */
+	public function get_client() {
+		return $this->client;
 	}
 
 

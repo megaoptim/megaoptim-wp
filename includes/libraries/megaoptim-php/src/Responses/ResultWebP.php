@@ -20,21 +20,36 @@
 
 namespace MegaOptim\Client\Responses;
 
+use MegaOptim\Client\Http\BaseClient;
 use MegaOptim\Client\Tools\FileSystem;
 use MegaOptim\Client\Http\CurlClient;
 
 class ResultWebP {
+
 	public $url;
 	public $optimized_size;
 	public $saved_bytes;
 	public $saved_percent;
 
-	public function __construct($response) {
-		if(isset($response->webp) && isset($response->webp->url)) {
-			$this->url = $response->webp->url;
+	/**
+	 * The client
+	 * @var BaseClient
+	 */
+	private $http_client;
+
+	/**
+	 * ResultWebP constructor.
+	 *
+	 * @param $response
+	 * @param $http_client
+	 */
+	public function __construct( $response, $http_client ) {
+		$this->http_client = $http_client;
+		if ( isset( $response->webp ) && isset( $response->webp->url ) ) {
+			$this->url            = $response->webp->url;
 			$this->optimized_size = $response->webp->optimized_size;
-			$this->saved_bytes = $response->webp->saved_bytes;
-			$this->saved_percent = $response->webp->saved_percent;
+			$this->saved_bytes    = $response->webp->saved_bytes;
+			$this->saved_percent  = $response->webp->saved_percent;
 		}
 	}
 
@@ -47,13 +62,12 @@ class ResultWebP {
 	 * @throws \Exception
 	 */
 	public function saveAsFile( $path ) {
-		if(is_null($this->url)) {
+		if ( is_null( $this->url ) ) {
 			return false;
 		}
 		FileSystem::maybe_prepare_output_dir( $path );
-		if ( ! CurlClient::download( $this->url, $path ) ) {
-			throw new \Exception( 'Unable to overwrite the local file.' );
-		}
+		$this->http_client->download( $this->url, $path );
+
 		return $path;
 
 	}

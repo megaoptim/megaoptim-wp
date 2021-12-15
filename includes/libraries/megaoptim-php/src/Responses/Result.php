@@ -20,10 +20,15 @@
 
 namespace MegaOptim\Client\Responses;
 
-use MegaOptim\Client\Http\CurlClient;
+use Exception;
+use MegaOptim\Client\Http\BaseClient;
 use MegaOptim\Client\Interfaces\IFile;
 use MegaOptim\Client\Tools\FileSystem;
 
+/**
+ * Class Result
+ * @package MegaOptim\Client\Responses
+ */
 class Result implements IFile {
 	/**
 	 * The file name
@@ -77,11 +82,21 @@ class Result implements IFile {
 	private $prev_local_path = null;
 
 	/**
+	 * The client
+	 * @var BaseClient
+	 */
+	private $http_client = null;
+
+	/**
 	 * Result constructor.
 	 *
 	 * @param $result
+	 * @param $http_client
 	 */
-	public function __construct( $result ) {
+	public function __construct( $result, $http_client ) {
+
+		$this->http_client = $http_client;
+
 		if ( is_string( $result ) ) {
 			$result = @json_decode( $result );
 		}
@@ -104,10 +119,10 @@ class Result implements IFile {
 			$this->url = $result->url;
 		}
 		if ( isset( $result->success ) ) {
-			$this->success = intval($result->success);
+			$this->success = intval( $result->success );
 		}
 		if ( isset( $result->webp ) ) {
-			$this->webp = new ResultWebP($result);
+			$this->webp = new ResultWebP( $result, $http_client );
 		}
 	}
 
@@ -196,15 +211,13 @@ class Result implements IFile {
 	/**
 	 * Overwrite the local file with the optimized file
 	 * @return mixed
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function saveOverwrite() {
 		if ( is_null( $this->prev_local_path ) || ! file_exists( $this->prev_local_path ) ) {
-			throw new \Exception( 'There is no local file for this result to overwrite, If the source is url, you should save it with saveToFile() or saveToDir() methods.' );
+			throw new Exception( 'There is no local file for this result to overwrite, If the source is url, you should save it with saveToFile() or saveToDir() methods.' );
 		} else {
-			if ( ! CurlClient::download( $this->url, $this->prev_local_path ) ) {
-				throw new \Exception( 'Unable to overwrite the local file.' );
-			}
+			$this->http_client->download( $this->url, $this->prev_local_path );
 		}
 
 		return $this->prev_local_path;
@@ -216,13 +229,11 @@ class Result implements IFile {
 	 * @param $path
 	 *
 	 * @return mixed
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function saveAsFile( $path ) {
 		FileSystem::maybe_prepare_output_dir( $path );
-		if ( ! CurlClient::download( $this->url, $path ) ) {
-			throw new \Exception( 'Unable to overwrite the local file.' );
-		}
+		$this->http_client->download( $this->url, $path );
 
 		return $path;
 
@@ -234,15 +245,13 @@ class Result implements IFile {
 	 *
 	 * @param $dir
 	 *
-	 * @return mixed|null|string
-	 * @throws \Exception
+	 * @return string
+	 * @throws Exception
 	 */
 	public function saveToDir( $dir ) {
 		$path = FileSystem::maybe_add_trailing_slash( $dir . DIRECTORY_SEPARATOR ) . $this->getFileName();
 		FileSystem::maybe_prepare_output_dir( $path );
-		if ( ! CurlClient::download( $this->url, $path ) ) {
-			throw new \Exception( 'Unable to overwrite the local file.' );
-		}
+		$this->http_client->download( $this->url, $path );
 
 		return $path;
 

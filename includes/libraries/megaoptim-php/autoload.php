@@ -18,29 +18,24 @@
  * along with MegaOptim Image Optimizer. If not, see <https://www.gnu.org/licenses/>.
  **********************************************************************/
 
-require_once( 'src/Interfaces/IFile.php' );
+spl_autoload_register( function ( $className ) {
+	/**
+	 * Initial path and vars.
+	 */
+	$ds  = DIRECTORY_SEPARATOR;
+	$dir = dirname( __FILE__ ) . $ds . 'src';
 
-require_once( 'src/Tools/PATH.php' );
-require_once( 'src/Tools/URL.php' );
-require_once( 'src/Tools/FileSystem.php' );
+	/**
+	 * Generate the direct path to the class
+	 */
+	$className = str_replace( 'MegaOptim\\Client\\', '', $className );
+	$className = str_replace( '\\', $ds, $className );
 
-require_once( 'src/Http/Multipart/Util.php' );
-require_once( 'src/Http/Multipart/Multipart.php' );
-require_once( 'src/Http/Multipart/MultipartAlternative.php' );
-require_once( 'src/Http/Multipart/MultipartFormData.php' );
-require_once( 'src/Http/Multipart/MultipartMixed.php' );
-require_once( 'src/Http/Multipart/MultipartRelated.php' );
-
-require_once( 'src/Http/HTTP.php' );
-require_once( 'src/Http/BaseClient.php' );
-require_once( 'src/Http/CurlClient.php' );
-require_once( 'src/Http/WPClient.php' );
-
-require_once( 'src/Responses/ResultWebP.php' );
-require_once( 'src/Responses/Result.php' );
-require_once( 'src/Responses/Response.php' );
-require_once( 'src/Responses/Profile.php' );
-
-require_once( 'src/Services/OptimizerService.php' );
-
-require_once( 'src/Optimizer.php' );
+	/**
+	 * Load the class if all fine.
+	 */
+	$file = "{$dir}{$ds}{$className}.php";
+	if ( is_readable( $file ) ) {
+		require_once $file;
+	}
+} );
