@@ -21,7 +21,7 @@ require "megaoptim-php/loadnoncomposer.php"
 ```
 
 # How to Use
-This library has a class that will be used in 99% of the usecases and it is called ```MegaOptim\Optimizer``` and the ```run``` method is the method used for optimization. Its definition is as follows:
+This library has a class that will be used in 99% of the usecases and it is called ```MegaOptim\Client\Optimizer``` and the ```run``` method is the method used for optimization. Its definition is as follows:
 
 ```
 public function run($resource, $args = array())
@@ -53,21 +53,21 @@ To optimize single image call the ```run()``` method on some given parameters ju
 
 ## Single Local File
 ```php
-use MegaOptim\Optimizer;
+use MegaOptim\Client\Optimizer;
 $megaoptim = new Optimizer('your-api-key');
 $response   = $megaoptim->run( '/path/to/file.jpg', array( 'compression' => Optimizer::COMPRESSION_INTELLIGENT ) );
 ```
 
 ## Single URL
 ```php
-use MegaOptim\Optimizer;
+use MegaOptim\Client\Optimizer;
 $megaoptim = new Optimizer('your-api-key');
 $response   = $megaoptim->run( 'http://yoursite.com/some_image.jpg', array( 'compression' => Optimizer::COMPRESSION_INTELLIGENT ) );
 ```
 
 ## Multiple Files ( up to 5 )
 ```php
-use MegaOptim\Optimizer;
+use MegaOptim\Client\Optimizer;
 $megaoptim = new Optimizer('your-api-key');
 $resources = array(
 	'/path/to/file1.jpg',
@@ -75,12 +75,12 @@ $resources = array(
 	'/path/to/file3.jpg',
 );
 
-$response   = $megaoptim->run( $resources, array( 'compression' => Optimizer::LOSSY ) );
+$response   = $megaoptim->run( $resources, array( 'compression' => Optimizer::COMPRESSION_INTELLIGENT ) );
 ```
 
 ## Multiple URLs ( up to 5 )
 ```php
-use MegaOptim\Optimizer;
+use MegaOptim\Client\Optimizer;
 $megaoptim = new Optimizer('your-api-key');
 $resources = array(
 	'http://somesite.com/path/to/file1.jpg',
@@ -88,7 +88,7 @@ $resources = array(
 	'http://somesite.com/path/to/file3.jpg',
 );
 
-$response   = $megaoptim->run( $resources, array( 'compression' => Optimizer::LOSSY ) );
+$response   = $megaoptim->run( $resources, array( 'compression' => Optimizer::COMPRESSION_INTELLIGENT ) );
 ```
 
 

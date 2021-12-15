@@ -22,10 +22,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( 'Direct access is not allowed.' );
 }
 
-function megaoptim_get_optimizer() {
-	$optimizer = new \MegaOptim\Optimizer();
-}
-
 /**
  * Returns the megaoptim path
  * @return array|string
@@ -897,7 +893,7 @@ function megaoptim_generate_attachment_data( $file, $response, $params ) {
 	$params['success']        = $file->isSuccessfullyOptimized() ? 1 : 0;
 	$params['status']         = $response->isSuccessful() ? 1 : 0;
 	$params['time']           = date( 'Y-m-d H:i:s' );
-	$params['compression']    = isset( $params['compression'] ) ? $params['compression'] : \MegaOptim\Optimizer::COMPRESSION_INTELLIGENT;
+	$params['compression']    = isset( $params['compression'] ) ? $params['compression'] : \MegaOptim\Client\Optimizer::COMPRESSION_INTELLIGENT;
 
 	return $params;
 }

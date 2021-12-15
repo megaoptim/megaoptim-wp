@@ -29,7 +29,7 @@ abstract class MGO_Library extends MGO_BaseObject {
 	/**
 	 * The PHP MegaOptim optimizer instance
 	 *
-	 * @var \MegaOptim\Optimizer
+	 * @var \MegaOptim\Client\Optimizer
 	 */
 	protected $optimizer;
 
@@ -48,7 +48,7 @@ abstract class MGO_Library extends MGO_BaseObject {
 
 	/**
 	 * Returns the megaoptim optimizer
-	 * @return null|\MegaOptim\Optimizer
+	 * @return null|\MegaOptim\Client\Optimizer
 	 */
 	public static function get_optimizer() {
 		$api_key = MGO_Settings::instance()->getApiKey();
@@ -58,7 +58,7 @@ abstract class MGO_Library extends MGO_BaseObject {
 			} else {
 				$http_client = \MegaOptim\Client\Http\CurlClient::class;
 			}
-			return ( new \MegaOptim\Optimizer( $api_key, $http_client ) );
+			return ( new \MegaOptim\Client\Optimizer( $api_key, $http_client ) );
 		}
 
 		return null;

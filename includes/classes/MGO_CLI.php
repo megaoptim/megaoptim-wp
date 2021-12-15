@@ -120,7 +120,7 @@ class MGO_CLI {
 		}
 		if ( isset( $args2['level'] ) ) {
 			$level = $args2['level'];
-			if ( ! \MegaOptim\Optimizer::valid_compression_level( $level ) ) {
+			if ( ! \MegaOptim\Client\Optimizer::valid_compression_level( $level ) ) {
 				\WP_CLI::error( __( 'The level parameter should be one of the following: ultra, intelligent, lossless', 'megaoptim-image-optimizer' ) );
 
 				return;
@@ -239,7 +239,7 @@ class MGO_CLI {
 			foreach ( $images as $image ) {
 				try {
 					$api_params = array();
-					if ( \MegaOptim\Optimizer::valid_compression_level( $params['level'] ) ) {
+					if ( \MegaOptim\Client\Optimizer::valid_compression_level( $params['level'] ) ) {
 						$api_params['compression'] = $params['level'];
 					}
 					$result          = $media_library->optimize( $image['ID'], $api_params );

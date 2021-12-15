@@ -21,7 +21,7 @@
 namespace MegaOptim\Client\Responses;
 
 use MegaOptim\Client\Http\HTTP;
-use MegaOptim\Optimizer;
+use MegaOptim\Client\Optimizer;
 use MegaOptim\Client\Tools\URL;
 
 class Response implements HTTP {

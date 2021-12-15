@@ -18,7 +18,7 @@
  * along with MegaOptim Image Optimizer. If not, see <https://www.gnu.org/licenses/>.
  **********************************************************************/
 
-namespace MegaOptim;
+namespace MegaOptim\Client;
 
 use MegaOptim\Client\Http\CurlClient;
 use MegaOptim\Client\Responses\Response;
