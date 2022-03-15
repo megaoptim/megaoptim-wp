@@ -2,9 +2,9 @@
 Contributors: megaoptim, darkog
 Tags: convert webp, webp, optimize images, optimize, images, compress
 Requires at least: 3.6
-Tested up to: 5.8
+Tested up to: 5.9
 Requires PHP: 5.3
-Stable tag: 1.4.18
+Stable tag: 1.4.19
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -136,6 +136,10 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 10. WP CLI - Bulk Restore command
 
 == Changelog ==
+
+= 1.4.19 =
+* Added PHP 8.1 support
+* Tested with WordPress 5.9
 
 = 1.4.18 =
 * Removed the cURL API calls and rewrote it to use the WordPress HTTP API instead
