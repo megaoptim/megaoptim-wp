@@ -22,29 +22,30 @@
  * Class MGO_BaseObject
  */
 class MGO_BaseObject {
+
+	/**
+	 * List of instances
+	 * @var self[]
+	 */
+	protected static $instances;
+
 	/**
 	 * Call this method to get singleton
 	 */
 	public static function instance() {
-		static $instance = false;
-		if ( $instance === false ) {
-			// Late static binding (PHP 5.3+)
-			$instance = new static();
+		$class = get_called_class();
+
+		if ( ! isset( self::$instances[ $class ] ) ) {
+			self::$instances[ $class ] = new $class;
 		}
 
-		return $instance;
+		return self::$instances[ $class ];
 	}
 
 	/**
 	 * Make constructor private, so nobody can call "new Class".
 	 */
 	private function __construct() {
-	}
-
-	/**
-	 * Make clone magic method private, so nobody can clone instance.
-	 */
-	private function __clone() {
 	}
 
 }

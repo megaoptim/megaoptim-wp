@@ -12,11 +12,20 @@ class MGO_ImageFilter extends RecursiveFilterIterator {
 	 * MGO_DirFilter constructor.
 	 *
 	 * @param $iterator
-	 * @param array $exclude
+	 * @param  array  $exclude
 	 */
-	public function __construct( $iterator, $exclude ) {
+	public function __construct( $iterator ) {
 		parent::__construct( $iterator );
+	}
 
+	/**
+	 * Set excluded paths
+	 *
+	 * @param $exclude
+	 *
+	 * @return void
+	 */
+	public function setExcluded( $exclude ) {
 		$exclude = (array) $exclude;
 
 		foreach ( $exclude as $path ) {
@@ -27,6 +36,7 @@ class MGO_ImageFilter extends RecursiveFilterIterator {
 		}
 	}
 
+	#[\ReturnTypeWillChange]
 	/**
 	 * Accept?
 	 * @return bool
@@ -47,16 +57,21 @@ class MGO_ImageFilter extends RecursiveFilterIterator {
 				return false;
 			}
 		}
+
 		return true;
 	}
 
+	#[\ReturnTypeWillChange]
 	/**
 	 * Children
 	 *
-	 * @return MGO_ImageFilter|RecursiveFilterIterator
+	 * @return RecursiveFilterIterator
 	 */
 	public function getChildren() {
-		return new MGO_ImageFilter( $this->getInnerIterator()->getChildren(), $this->exclude );
+		$instance = new self( $this->getInnerIterator()->getChildren() );
+		$instance->setExcluded( $this->exclude );
+
+		return $instance;
 	}
 
 	/**

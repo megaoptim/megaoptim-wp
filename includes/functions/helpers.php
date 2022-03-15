@@ -715,7 +715,8 @@ function megaoptim_find_images( $dir, $recursive = false, $excluded_dirs = array
 		$files = megaoptim_find_images_quick( $dir, $recursive );
 	} else {
 		$directory = new RecursiveDirectoryIterator( $dir );
-		$filtered  = new MGO_ImageFilter( $directory, $excluded_dirs );
+		$filtered  = new MGO_ImageFilter( $directory );
+		$filtered->setExcluded($excluded_dirs);
 		$iterator  = new RecursiveIteratorIterator( $filtered );
 		$iterator  = new RegexIterator( $iterator, '/^.+(.jpe?g|.png|.gif)$/i', RecursiveRegexIterator::GET_MATCH );
 		foreach ( $iterator as $file ) {
