@@ -1065,7 +1065,7 @@ function megaoptim_rawurlencode( $url ) {
 	$query = wp_parse_url( $url, PHP_URL_QUERY );
 	if ( ! empty( $query ) ) {
 		parse_str( $query, $parsed_query );
-		$parsed_query = http_build_query( $parsed_query, null, '&amp;', PHP_QUERY_RFC3986 );
+		$parsed_query = http_build_query( $parsed_query, '', '&amp;', PHP_QUERY_RFC3986 );
 		$url          = str_replace( $query, $parsed_query, $url );
 	}
 
