@@ -319,6 +319,7 @@ class MGO_Admin_UI extends MGO_BaseObject {
 					'leave'                 => __( 'Are you sure you want to leave?', 'megaoptim-image-optimizer' ),
 					'clear'                 => __( 'Clear', 'megaoptim-image-optimizer' ),
 					'current_filters'       => __( 'Current Filters', 'megaoptim-image-optimizer' ),
+					'confirm_delete_db'     => __( 'Are you sure? Please confirm ONLY if you read and agree with the consequences of this operation just above the delete button.', 'megaoptim-image-optimizer' ),
 				),
 				'context'        => array(
 					'medialibrary' => MEGAOPTIM_TYPE_MEDIA_ATTACHMENT,

@@ -52,6 +52,8 @@ class MGO_Ajax extends MGO_BaseObject {
 		add_action( 'wp_ajax_megaoptim_empty_backup_dir', array( $this, 'empty_backup_dir' ) );
 		add_action( 'wp_ajax_megaoptim_ticker_upload', array( $this, 'ticker_upload' ) );
 
+		add_action( 'wp_ajax_megaoptim_delete_attachment_metadata', array( $this, 'delete_attachment_metadata' ) );
+
 		add_action( 'wp_ajax_megaoptim_get_profile', array( $this, 'get_profile' ) );
 		add_action( 'wp_ajax_megaoptim_optimize_single_attachment', array( $this, 'optimize_single_attachment' ) );
 		add_action( 'wp_ajax_megaoptim_restore_single_attachment', array( $this, 'restore_single_attachment' ) );
@@ -753,6 +755,30 @@ class MGO_Ajax extends MGO_BaseObject {
 				wp_send_json_error( $response );
 			}
 		}
+	}
+
+	/**
+	 * Deletes the MegaOptim database metadata
+	 * @return void
+	 */
+	public function delete_attachment_metadata() {
+		if ( ! megaoptim_check_referer( MGO_Ajax::NONCE_DEFAULT, 'nonce' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
+		}
+
+		if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Access denied.', 'megaoptim-image-optimizer' ) ) );
+		}
+
+		global $wpdb;
+		$result = $wpdb->delete( $wpdb->postmeta, array( 'meta_key' => '_megaoptim_data' ) );
+		if ( false === $result ) {
+			wp_send_json_error( array( 'message' => __( 'Unable to perform this operation.', 'megaoptim-image-optimizer' ) ) );
+		} else {
+			wp_send_json_success( array( 'message' => __( 'Database data is now deleted. Whenver you start the bulk optimizer it will start you from scratch. If you see "Already optimized" during the optimizations it means that the images were optimized in the previous runs.', 'megaoptim-image-optimizer' ) ) );
+		}
+
+		exit;
 	}
 
 	/**

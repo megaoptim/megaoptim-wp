@@ -151,7 +151,7 @@
                             $(this).find('.mgo-field-error').detach().remove();
                             $(this).removeClass('mgo-error');
                         });
-                        for (var i in  response.data.errors) {
+                        for (var i in response.data.errors) {
                             var $item = $('#mgo-' + i);
                             $item.addClass('mgo-error');
                             $item.find('.mgo-field-error').detach().remove();
@@ -323,6 +323,44 @@
     });
 })(jQuery);
 
+/**
+ * Remove the MegaOptim metadata
+ */
+(function ($) {
+    $(document).on('click', '#mgo-delete-metadata', function (e) {
+        e.preventDefault();
+        if (confirm(MegaOptim.strings.confirm_delete_db)) {
+            var $self = $(this);
+            if (!$self.is('disabled')) {
+                var initial_text = $self.text();
+                var action = 'megaoptim_delete_attachment_metadata';
+                var url = MegaOptim.ajax_url + '?action=' + action + '&nonce=' + MegaOptim.nonce_default;
+                var spinner = '<span class="megaoptim-spinner" style="height: 15px;width: 15px;top:2px;position: relative;margin-right: 3px;"></span>';
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    beforeSend: function () {
+                        $self.html(spinner + initial_text);
+                        $self.prop('disabled', true);
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            $self.html(initial_text);
+                            alert(response.data.message);
+                        } else {
+                            alert(response.data.message);
+                        }
+                    },
+                    complete: function () {
+                        $self.html(initial_text);
+                        $self.prop('disabled', false);
+                    }
+                });
+            }
+
+        }
+    });
+})(jQuery);
 
 /**
  * Media library
