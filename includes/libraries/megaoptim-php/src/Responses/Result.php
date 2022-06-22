@@ -218,9 +218,9 @@ class Result implements IFile {
 			throw new Exception( 'There is no local file for this result to overwrite, If the source is url, you should save it with saveToFile() or saveToDir() methods.' );
 		} else {
 			$this->http_client->download( $this->url, $this->prev_local_path );
-		}
 
-		return $this->prev_local_path;
+			return $this->safeDownload( $this->url, $this->prev_local_path );
+		}
 	}
 
 	/**
@@ -228,15 +228,11 @@ class Result implements IFile {
 	 *
 	 * @param $path
 	 *
-	 * @return mixed
+	 * @return string
 	 * @throws Exception
 	 */
 	public function saveAsFile( $path ) {
-		FileSystem::maybe_prepare_output_dir( $path );
-		$this->http_client->download( $this->url, $path );
-
-		return $path;
-
+		return $this->safeDownload( $this->url, $path );
 	}
 
 
@@ -250,11 +246,38 @@ class Result implements IFile {
 	 */
 	public function saveToDir( $dir ) {
 		$path = FileSystem::maybe_add_trailing_slash( $dir . DIRECTORY_SEPARATOR ) . $this->getFileName();
+
+		return $this->safeDownload( $this->url, $path );
+	}
+
+	/**
+	 * Download image files safely and prevent downloading zero byte image. Never trust the servers.
+	 *
+	 * @param $url
+	 * @param $path
+	 *
+	 * @return string
+	 * @throws Exception
+	 */
+	private function safeDownload( $url, $path ) {
+		$tmp_path = $path . '.tmp';
+
 		FileSystem::maybe_prepare_output_dir( $path );
-		$this->http_client->download( $this->url, $path );
+		$this->http_client->download( $url, $tmp_path );
 
-		return $path;
-
+		$is_downloaded = file_exists( $tmp_path );
+		if ( ! $is_downloaded || filesize( $tmp_path ) <= 1 ) {
+			throw new \Exception( 'The final image file is likely corrupted or not a valid image.' );
+		} else {
+			if ( file_exists( $path ) ) {
+				unlink( $path );
+			}
+			if ( rename( $tmp_path, $path ) ) {
+				return $path;
+			} else {
+				throw new \Exception( 'Unable to save the downloaded image. Please check your file system permissions.' );
+			}
+		}
 	}
 
 }
