@@ -1,0 +1,1466 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MegaOptim Image Optimizer\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-06-22 13:17+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.6.2; wp-6.0\n"
+"X-Domain: megaoptim-image-optimizer"
+
+#: includes/views/misc/buttons-ml.php:29
+#, php-format
+msgid "%s Optimization %s with the %s method."
+msgstr ""
+
+#: includes/functions/bootstrap.php:61
+msgid ""
+". Please contact your hosting or MegaOptim support for further assistence."
+msgstr ""
+
+#: includes/views/misc/instructions.php:13
+msgid "1. Get FREE API key"
+msgstr ""
+
+#: includes/views/misc/instructions.php:40
+msgid "2. Set your API Key"
+msgstr ""
+
+#: includes/views/misc/instructions.php:53
+msgid "3. Start Optimizing"
+msgstr ""
+
+#: includes/classes/MGO_Ajax.php:70 includes/classes/MGO_Ajax.php:74
+#: includes/classes/MGO_Ajax.php:202 includes/classes/MGO_Ajax.php:206
+#: includes/classes/MGO_Ajax.php:236 includes/classes/MGO_Ajax.php:240
+#: includes/classes/MGO_Ajax.php:280 includes/classes/MGO_Ajax.php:284
+#: includes/classes/MGO_Ajax.php:303 includes/classes/MGO_Ajax.php:307
+#: includes/classes/MGO_Ajax.php:396 includes/classes/MGO_Ajax.php:400
+#: includes/classes/MGO_Ajax.php:487 includes/classes/MGO_Ajax.php:491
+#: includes/classes/MGO_Ajax.php:508 includes/classes/MGO_Ajax.php:512
+#: includes/classes/MGO_Ajax.php:639 includes/classes/MGO_Ajax.php:643
+#: includes/classes/MGO_Ajax.php:673 includes/classes/MGO_Ajax.php:677
+#: includes/classes/MGO_Ajax.php:716 includes/classes/MGO_Ajax.php:720
+#: includes/classes/MGO_Ajax.php:766 includes/classes/MGO_Ajax.php:770
+#: includes/classes/MGO_Ajax.php:791 includes/classes/MGO_Ajax.php:795
+#: includes/classes/MGO_Ajax.php:809 includes/classes/MGO_Ajax.php:813
+#: includes/classes/MGO_Ajax.php:852 includes/classes/MGO_Ajax.php:856
+#: includes/compat/nextgen-gallery/hooks/ajax.php:27
+#: includes/compat/nextgen-gallery/hooks/ajax.php:31
+msgid "Access denied."
+msgstr ""
+
+#: includes/classes/MGO_Ajax.php:145
+msgid "Access denied. Security validation didn't passed. Are you cheatin'?"
+msgstr ""
+
+#: includes/views/parts/header.php:30
+msgid "Advanced"
+msgstr ""
+
+#: includes/views/optimizers/media-library.php:152
+#: includes/views/optimizers/folders.php:142
+#: includes/views/optimizers/nextgen.php:154
+msgid "After Compression"
+msgstr ""
+
+#: includes/views/optimizers/webp-converter.php:128
+msgid "After Conversion"
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:368
+msgid "Already Optimized"
+msgstr ""
+
+#: includes/views/misc/buttons-ml.php:85
+msgid "Already optimized. No further processing needed."
+msgstr ""
+
+#: includes/views/modals/setapikey.php:22
+msgid "API KEY"
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:311
+msgid ""
+"Are you sure you want to delete your backups? This action can not be "
+"reversed!"
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:319
+msgid "Are you sure you want to leave?"
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:322
+msgid ""
+"Are you sure? Please confirm ONLY if you read and agree with the "
+"consequences of this operation just above the delete button."
+msgstr ""
+
+#: includes/classes/MGO_CLI.php:258
+#, php-format
+msgid "Attachment %s already optimized. No further optimization needed."
+msgstr ""
+
+#: includes/classes/MGO_CLI.php:260 includes/classes/MGO_CLI.php:263
+#: includes/classes/MGO_CLI.php:269 includes/classes/MGO_CLI.php:449
+#, php-format
+msgid "Attachment %s not optimized. Reason: %s"
+msgstr ""
+
+#: includes/classes/MGO_CLI.php:308
+#, php-format
+msgid "Attachment %s not restored. Reason: Missing Backup."
+msgstr ""
+
+#: includes/classes/MGO_CLI.php:252 includes/classes/MGO_CLI.php:443
+#, php-format
+msgid "Attachment %s optimized. Total thumbnails %s, Total saved %s"
+msgstr ""
+
+#: includes/classes/MGO_CLI.php:306 includes/classes/MGO_CLI.php:367
+#, php-format
+msgid "Attachment %s successfully restored."
+msgstr ""
+
+#: includes/classes/MGO_CLI.php:250 includes/classes/MGO_CLI.php:446
+#, php-format
+msgid "Attachment already %s optimized. No further optimization needed."
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:372
+msgid ""
+"Attachment could not be processed. It's either optimized or there is some "
+"error."
+msgstr ""
+
+#: includes/classes/MGO_Ajax.php:187
+#: includes/compat/nextgen-gallery/hooks/ajax.php:45
+msgid "Attachment was not optimized."
+msgstr ""
+
+#: includes/views/settings/general.php:119
+msgid "Auto Optimize Uploads"
+msgstr ""
+
+#: includes/views/settings/advanced.php:151
+msgid "Backup Management"
+msgstr ""
+
+#: includes/views/settings/advanced.php:300
+msgid ""
+"Backup restoration will NOT work, because the backup file references are "
+"stored in the meta data."
+msgstr ""
+
+#: includes/views/settings/advanced.php:156
+msgid ""
+"Backups are useful if you want to restore the original version of the "
+"optimized image or reoptimize it using other method such as Lossless or "
+"Lossy and we recommend to keep this option On."
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:49
+msgid "Bulk MegaOptim"
+msgstr ""
+
+#: includes/views/optimizers/media-library.php:117
+#: includes/views/optimizers/folders.php:115
+#: includes/views/optimizers/webp-converter.php:102
+#: includes/views/optimizers/nextgen.php:118
+#: includes/views/modals/register.php:75 includes/views/modals/setapikey.php:37
+#: includes/views/modals/folders.php:21 includes/views/modals/filters.php:27
+msgid "Cancel"
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:367
+msgid "Cancelling"
+msgstr ""
+
+#: includes/views/modals/register.php:57
+msgid "Check your email!"
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:310
+#: includes/views/settings/advanced.php:180
+#: includes/views/settings/advanced.php:189
+#: includes/views/settings/advanced.php:198
+msgid "Clean"
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:320
+msgid "Clear"
+msgstr ""
+
+#: includes/hooks/general.php:55
+msgid "Click here"
+msgstr ""
+
+#: includes/views/modals/folders.php:7
+msgid ""
+"Click on the check icon to select a folder you want to optimize! The icon "
+"will be green if you selected a folder correctly."
+msgstr ""
+
+#: includes/views/settings/advanced.php:272
+msgid "CloudFlare Credentials"
+msgstr ""
+
+#. Description of the plugin
+msgid ""
+"Compress and optimize your WordPress images and save bandwidth, disk space "
+"and improve your pagespeed/lighthouse & seo score. Integrates seamlessly "
+"with NextGen, WP Retina 2x, Envira and other media/image plugins."
+msgstr ""
+
+#: includes/views/settings/general.php:53
+msgid "Compression"
+msgstr ""
+
+#: includes/views/settings/advanced.php:54
+msgid "Configure next-gen image formats settings"
+msgstr ""
+
+#: includes/views/modals/register.php:46
+msgid "Confirm your Password"
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:393
+msgid ""
+"Congratulations! This folder is fully optimized. Come back later when there "
+"are more images."
+msgstr ""
+
+#: includes/views/modals/setapikey.php:10
+msgid "Connect to MegaOptim"
+msgstr ""
+
+#: includes/views/settings/general.php:102
+msgid "Convert CMYK to RGB"
+msgstr ""
+
+#: includes/classes/MGO_Ajax.php:319
+msgid ""
+"Could not connect to the MegaOptim API. The provided API key is empty or "
+"invalid."
+msgstr ""
+
+#: includes/views/modals/register.php:21
+msgid "Create MegaOptim Account"
+msgstr ""
+
+#: includes/views/settings/advanced.php:59
+#, php-format
+msgid "Create WebP Images upon optimization for %s"
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:321
+msgid "Current Filters"
+msgstr ""
+
+#: includes/views/parts/header.php:47
+msgid "Custom Folders"
+msgstr ""
+
+#: includes/views/settings/key.php:4
+msgid "dashboard"
+msgstr ""
+
+#: includes/classes/MGO_Ajax.php:778
+msgid ""
+"Database data is now deleted. Whenver you start the bulk optimizer it will "
+"start you from scratch. If you see \"Already optimized\" during the "
+"optimizations it means that the images were optimized in the previous runs."
+msgstr ""
+
+#: includes/views/modals/filters.php:16
+msgid "Date from"
+msgstr ""
+
+#: includes/views/modals/filters.php:20
+msgid "Date to"
+msgstr ""
+
+#: includes/views/parts/header.php:35
+msgid "Debug"
+msgstr ""
+
+#: includes/views/settings/advanced.php:291
+msgid "Delete MegaOptim database metadata"
+msgstr ""
+
+#: includes/views/settings/advanced.php:295
+msgid ""
+"Delete the MegaOptim database megadata if you AGREE with the following "
+"consequences:"
+msgstr ""
+
+#: includes/views/settings/advanced.php:214
+msgid ""
+"Depending of the theme and plugin you are using WordPress generates multiple "
+"thumbnails for the images you upload through the WordPress Media Library. "
+"Those thumbnails are used in different places in the theme/pages. For "
+"example if you print multiple posts in one page and the post image column is "
+"small it might not be optimal to use the full version but use the custom "
+"defined thumbnail size for it."
+msgstr ""
+
+#: includes/views/misc/buttons-ml.php:69
+msgid "Details"
+msgstr ""
+
+#: includes/views/misc/instructions.php:68
+msgid "Developer Happiness"
+msgstr ""
+
+#: includes/classes/MGO_CLI.php:360
+msgid "Directory not writable"
+msgstr ""
+
+#: includes/views/misc/instructions.php:73
+msgid "Dismiss this notice"
+msgstr ""
+
+#: includes/classes/MGO_Ajax.php:290
+msgid "Done. Instructions will be hidden."
+msgstr ""
+
+#: includes/views/modals/register.php:38
+msgid "E-mail Address"
+msgstr ""
+
+#: includes/views/settings/advanced.php:262
+msgid ""
+"Each image size of those will cost you one optimization token meaning this "
+"option will affect your optimization token usage."
+msgstr ""
+
+#: includes/views/settings/general.php:43
+msgid "Enter API Key"
+msgstr ""
+
+#: includes/views/modals/setapikey.php:27
+msgid "Enter api key"
+msgstr ""
+
+#: includes/views/modals/register.php:39
+msgid "Enter e-mail address"
+msgstr ""
+
+#: includes/views/modals/register.php:31
+msgid "Enter first name"
+msgstr ""
+
+#: includes/views/modals/register.php:35
+msgid "Enter last name"
+msgstr ""
+
+#: includes/views/modals/register.php:42
+msgid "Enter Password"
+msgstr ""
+
+#: includes/views/misc/instructions.php:42
+msgid "enter the api key"
+msgstr ""
+
+#: includes/views/settings/general.php:45
+#, php-format
+msgid "Enter the api key. Do not have it yet? Register %s here for %s"
+msgstr ""
+
+#: includes/views/modals/register.php:62
+msgid "Enter your api key"
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:366
+msgid "Error"
+msgstr ""
+
+#: includes/classes/Models/MGO_Attachment.php:100
+msgid "Error while trying to restore attachment."
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:316
+msgid ""
+"Error! We can not retrieve your profile. Please check if there is active "
+"internet connection or open a ticket in our dashboard area."
+msgstr ""
+
+#: includes/classes/MGO_Ajax.php:293
+msgid "Error, invalid data supplied."
+msgstr ""
+
+#: includes/views/settings/advanced.php:171
+msgid "Existing Backups"
+msgstr ""
+
+#: includes/views/settings/status.php:41
+msgid "Export"
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:365
+msgid "Failed"
+msgstr ""
+
+#: includes/classes/MGO_CLI.php:311 includes/classes/MGO_CLI.php:360
+#: includes/classes/MGO_CLI.php:370
+#, php-format
+msgid "Failed to restore attachment %s. Reason: %s"
+msgstr ""
+
+#: includes/classes/MGO_CLI.php:412
+#, php-format
+msgid "File %s not optimized. Reason: %s"
+msgstr ""
+
+#: includes/classes/MGO_CLI.php:404
+#, php-format
+msgid "File %s optimized. Total saved %s"
+msgstr ""
+
+#: includes/classes/MGO_CLI.php:409
+#, php-format
+msgid "File already %s optimized. No further optimization needed."
+msgstr ""
+
+#: includes/classes/MGO_CLI.php:370
+msgid "File not writable"
+msgstr ""
+
+#: includes/classes/MGO_Ajax.php:221
+msgid "File was not optimized."
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:362
+msgid "Finished"
+msgstr ""
+
+#: includes/views/modals/register.php:30
+msgid "First Name"
+msgstr ""
+
+#: includes/views/settings/advanced.php:135
+msgid "Follow the Guide"
+msgstr ""
+
+#: includes/views/settings/advanced.php:59
+msgid "free"
+msgstr ""
+
+#: includes/views/settings/general.php:45
+msgid "free!"
+msgstr ""
+
+#: includes/views/misc/buttons-ngg.php:9
+msgid "Full size image already optimized, no further optimization needed!"
+msgstr ""
+
+#: includes/views/parts/header.php:25
+msgid "General"
+msgstr ""
+
+#: includes/views/misc/instructions.php:34
+msgid "Get API Key"
+msgstr ""
+
+#: includes/views/misc/instructions.php:7
+msgid "get started"
+msgstr ""
+
+#: includes/views/settings/key.php:2
+msgid "Getting Started"
+msgstr ""
+
+#: includes/views/parts/footer.php:43
+msgid ""
+"Give us <a target=\"_blank\" href=\"https://wordpress."
+"org/support/plugin/megaoptim-image-optimizer/reviews/#new-post\">5 star "
+"rating</a> and <a target=\"_blank\" href=\"https://megaoptim.com/claim-free-"
+"tokens/\">claim your <strong>1500 tokens for free</strong></a>"
+msgstr ""
+
+#: includes/views/settings/advanced.php:94
+msgid ""
+"Global (Captures the output using output buffer and replaces the images. May "
+"not work sometimes.)"
+msgstr ""
+
+#: includes/views/settings/advanced.php:97
+msgid "Greater &lt;PICTURE&gt; tag compatibility"
+msgstr ""
+
+#: includes/hooks/notices.php:21 includes/views/misc/instructions.php:69
+#: includes/views/settings/general.php:45 includes/views/settings/key.php:4
+msgid "here"
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:318
+msgid "Hide More Info"
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:370
+msgid "Hiring ultrasonic optimizers..."
+msgstr ""
+
+#: includes/views/parts/footer.php:18
+msgid "How to use WP-CLI"
+msgstr ""
+
+#: includes/views/settings/general.php:162
+msgid "HTTP AUTH credentials"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://megaoptim.com"
+msgstr ""
+
+#. URI of the plugin
+msgid "https://megaoptim.com/tools/wordpress"
+msgstr ""
+
+#: includes/views/modals/register.php:51
+#, php-format
+msgid "I accept the %s"
+msgstr ""
+
+#: includes/views/settings/advanced.php:306
+msgid "I agree! Delete"
+msgstr ""
+
+#: includes/views/settings/general.php:127
+msgid ""
+"If enabled, the images uploaded through Media Library or NextGen galleries "
+"will be auto-optimized after uploading so you don't have to run bulk "
+"optimization."
+msgstr ""
+
+#: includes/views/settings/advanced.php:61
+msgid ""
+"If enbaled, the plugin creates optimized WebP versions of your images after "
+"optimization. Below you can choose delivery method to make use of the "
+"generated webp versions."
+msgstr ""
+
+#: includes/views/modals/setapikey.php:12
+msgid "If you already have MegaOptim API Key please enter it below"
+msgstr ""
+
+#: includes/views/misc/instructions.php:69
+#, php-format
+msgid ""
+"If you are developer or you already know about WP CLI, click %s to read more "
+"about how to use our new WP CLI commands to optimize images from your "
+"command-line interface."
+msgstr ""
+
+#: includes/views/settings/advanced.php:281
+msgid ""
+"If you are running using CloudFlare APIs and or any WordPress CloudFlare "
+"plugins enter your details to be able to purge the cached urls of the files "
+"that MegaOptim optimizes."
+msgstr ""
+
+#: includes/classes/MGO_CLI.php:50
+msgid ""
+"If you do not have api key. Please sign up at https://megaoptim.com/register"
+msgstr ""
+
+#: includes/classes/MGO_Ajax.php:346
+msgid ""
+"If you enabled the option for mimimum image size, you need to set at least "
+"one of the fields with correct number greater than 100."
+msgstr ""
+
+#: includes/views/modals/register.php:59
+msgid ""
+"If you haven't confirmed your account yet, simply confirm your account and "
+"copy the api key from the email, paste it below and proceed!"
+msgstr ""
+
+#: includes/views/optimizers/media-library.php:100
+#: includes/views/optimizers/webp-converter.php:85
+#: includes/views/optimizers/nextgen.php:98
+msgid ""
+"If you stop/close the optimizer you can continue later from where you "
+"stopped."
+msgstr ""
+
+#: includes/views/settings/general.php:169
+msgid ""
+"If your site is behind HTTP Basic Authentication please enter the User & "
+"Password credentials. If you don't know what is this then just leave the "
+"fields empty"
+msgstr ""
+
+#: includes/classes/MGO_Ajax.php:352
+msgid "Image maximum height should be greater than 100."
+msgstr ""
+
+#: includes/classes/MGO_Ajax.php:349
+msgid "Image maximum width should be greater than 100."
+msgstr ""
+
+#: includes/views/settings/advanced.php:210
+msgid "Image thumbnails/sizes to be optimized"
+msgstr ""
+
+#: includes/views/optimizers/webp-converter.php:63
+msgid "Images Converted"
+msgstr ""
+
+#: includes/views/optimizers/media-library.php:66
+#: includes/views/optimizers/folders.php:76
+#: includes/views/optimizers/nextgen.php:61
+msgid "Images Optimized"
+msgstr ""
+
+#: includes/views/optimizers/media-library.php:97
+#: includes/views/optimizers/webp-converter.php:82
+#: includes/views/optimizers/nextgen.php:92
+msgid "Important:"
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:394
+msgid ""
+"In order the plugin to work, you need to keep the tab open, you can always "
+"open a new tab and continue in that tab. If you close this tab the optimizer "
+"will stop but don't worry, you can always continue later from where you "
+"stopped."
+msgstr ""
+
+#: includes/views/misc/instructions.php:19
+#, php-format
+msgid ""
+"In order to use MegaOptim you will need %s. You can register for %s that "
+"comes with %s per month for %s. If you need larger quota you can get our "
+"premium %s plan for only %s or any other from our %s."
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:363
+msgid "In queue"
+msgstr ""
+
+#: includes/views/misc/instructions.php:17 includes/views/settings/key.php:4
+#: includes/views/settings/key.php:4
+msgid ""
+"In the dahsboard you can monitor see your optimization reports, api key, "
+"open support tickets and much more"
+msgstr ""
+
+#: includes/views/settings/advanced.php:101
+msgid ""
+"Include Picturefill.js polyfill for better &lt;PICTURE&gt; compatibility. "
+"Please note that &lt;PICTURE&gt; tag is already supported by all modern "
+"browsers and you may not need this. Only enable this if you want a support "
+"older browsers e.g Internet Explorer 11."
+msgstr ""
+
+#: includes/views/settings/general.php:66
+msgid "Intelligent"
+msgstr ""
+
+#: includes/views/misc/buttons-ngg.php:35
+#: includes/views/misc/buttons-ml.php:137
+msgid "Intelligently"
+msgstr ""
+
+#: includes/classes/MGO_Ajax.php:516
+msgid "Invalid context."
+msgstr ""
+
+#: includes/classes/MGO_Ajax.php:252
+msgid "Invalid results received. Please contact support."
+msgstr ""
+
+#: includes/views/settings/general.php:85
+msgid "Keep EXIF Metadata"
+msgstr ""
+
+#: includes/views/modals/register.php:34
+msgid "Last Name"
+msgstr ""
+
+#: includes/views/parts/footer.php:19
+msgid ""
+"Learn how to use MegaOptim WP-CLI commands to make your life easier with the "
+"command line."
+msgstr ""
+
+#: includes/views/parts/footer.php:42
+msgid "Liked MegaOptim?"
+msgstr ""
+
+#: includes/hooks/general.php:56
+msgid "list"
+msgstr ""
+
+#: includes/views/settings/advanced.php:137
+msgid ""
+"Looks like you are using unsupported web server. This feature will not be "
+"supported. Please choose the picture method instead."
+msgstr ""
+
+#: includes/views/settings/general.php:73
+msgid "Lossless"
+msgstr ""
+
+#: includes/views/misc/buttons-ngg.php:38
+#: includes/views/misc/buttons-ml.php:141
+msgid "Losslessly"
+msgstr ""
+
+#: includes/views/parts/footer.php:8
+msgid "Manage your support"
+msgstr ""
+
+#: includes/views/settings/advanced.php:178
+msgid "Media Library Backups"
+msgstr ""
+
+#: includes/views/misc/instructions.php:55
+msgid "Media Library, NextGen Galleries or Local Folders"
+msgstr ""
+
+#. Author of the plugin
+#: includes/classes/MGO_Admin_UI.php:60 includes/classes/MGO_Admin_UI.php:188
+#: includes/classes/MGO_Admin_UI.php:222
+msgid "MegaOptim"
+msgstr ""
+
+#: includes/views/settings/general.php:40
+msgid "MegaOptim API Key"
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:48
+msgid "MegaOptim Bulk Optimizer"
+msgstr ""
+
+#: includes/views/settings/key.php:4
+msgid "MegaOptim Dashboard"
+msgstr ""
+
+#: includes/views/settings/advanced.php:218
+msgid ""
+"MegaOptim gives you option to choose which sizes to be optimized by the "
+"optimizer from normal to retina ones if available."
+msgstr ""
+
+#. Name of the plugin
+#: includes/functions/bootstrap.php:56 includes/hooks/notices.php:19
+#: includes/views/misc/instructions.php:6
+msgid "MegaOptim Image Optimizer"
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:59
+msgid "MegaOptim Settings"
+msgstr ""
+
+#: includes/views/settings/general.php:93
+msgid ""
+"Most of the images have EXIF metadata which contains information about gps "
+"location ( if the device had GPS ) where the image is taken, time, camera "
+"model and much more and this makes the image take more space. Removing the "
+"EXIF metadata will reduce the image size while keeping the image quality "
+"intact."
+msgstr ""
+
+#: includes/views/optimizers/media-library.php:150
+#: includes/views/optimizers/folders.php:140
+#: includes/views/optimizers/webp-converter.php:126
+#: includes/views/optimizers/nextgen.php:152
+msgid "Name"
+msgstr ""
+
+#: includes/views/parts/header.php:48
+msgid "NextGen Galeries"
+msgstr ""
+
+#: includes/classes/MGO_Ajax.php:159 includes/classes/MGO_Ajax.php:210
+#: includes/compat/nextgen-gallery/hooks/ajax.php:35
+msgid "No attachment provided."
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:315
+msgid ""
+"No enough tokens left. You can always top up your account at https:"
+"//megaoptim.com/dashboard/"
+msgstr ""
+
+#: includes/views/settings/advanced.php:72
+msgid "No front-end delivery"
+msgstr ""
+
+#: includes/views/misc/buttons-ml.php:45
+msgid "No further optimization needed."
+msgstr ""
+
+#: includes/classes/MGO_Ajax.php:410
+msgid "No image sizes selected. Please select some!"
+msgstr ""
+
+#: includes/classes/MGO_CLI.php:233
+msgid "No images found for your query."
+msgstr ""
+
+#: includes/classes/MGO_CLI.php:321
+msgid "No optimized attachments found."
+msgstr ""
+
+#: includes/classes/MGO_CLI.php:345
+msgid "No optimized attachments with valid backups found."
+msgstr ""
+
+#: includes/views/parts/out-of-tokens.php:2
+msgid "No tokens :("
+msgstr ""
+
+#: includes/classes/MGO_CLI.php:49
+msgid ""
+"Not connected. To set your api key type: wp megaoptim set_api_key=your-api-"
+"key"
+msgstr ""
+
+#: includes/views/settings/key.php:4
+msgid "not registered"
+msgstr ""
+
+#: includes/views/modals/register.php:23
+msgid "Obtain MegaOptim api key and start optimizing your galleries."
+msgstr ""
+
+#: includes/views/modals/register.php:77 includes/views/modals/setapikey.php:39
+#: includes/views/modals/folders.php:22 includes/views/modals/filters.php:28
+msgid "OK"
+msgstr ""
+
+#: includes/views/misc/instructions.php:42
+#, php-format
+msgid ""
+"On the \"Settings\" page you need to %s from step 1 and you can configure "
+"how the plugin behaves. Various options are available like auto-optimization "
+"on upload, which image sizes to be optimized, backup settings, etc."
+msgstr ""
+
+#: includes/views/optimizers/folders.php:40
+msgid ""
+"On this screen you can optimize your folders that contain images and are "
+"outside of the WordPress Media Library or the NextGen Galleries."
+msgstr ""
+
+#: includes/views/settings/advanced.php:299
+msgid ""
+"Optimization progress will be lost, bulk optimizer will start from scratch "
+"next time you run it. Images that are optimized will detected, skipped and "
+"marked as \"Already Optimized\", with no detailed data."
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:312 includes/views/misc/buttons-ngg.php:28
+#: includes/views/misc/buttons-ml.php:120
+msgid "Optimize"
+msgstr ""
+
+#: includes/views/optimizers/folders.php:39
+msgid "Optimize folders"
+msgstr ""
+
+#: includes/views/misc/buttons-ml.php:42 includes/views/misc/buttons-ml.php:90
+#, php-format
+msgid "Optimized Size: %s"
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:364
+msgid "Optimizing"
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:313 includes/views/misc/buttons-ngg.php:17
+#: includes/views/misc/buttons-ngg.php:22
+#: includes/views/misc/buttons-ml.php:110
+msgid "Optimizing..."
+msgstr ""
+
+#: includes/views/misc/instructions.php:34
+#: includes/views/misc/instructions.php:46 includes/views/settings/key.php:14
+msgid "or"
+msgstr ""
+
+#: includes/views/settings/general.php:154
+msgid "Original aspect ratio is preserved and image is not cropped"
+msgstr ""
+
+#: includes/classes/Adapters/MGO_FileLibrary.php:71
+#: includes/classes/Adapters/MGO_MediaLibrary.php:122
+#: includes/classes/Adapters/MGO_MediaLibrary.php:308
+#: includes/compat/nextgen-gallery/classes/MGO_NGGLibrary.php:112
+#: includes/compat/nextgen-gallery/classes/MGO_NGGLibrary.php:243
+msgid "Original image version does not exist on the server."
+msgstr ""
+
+#: includes/views/optimizers/media-library.php:151
+#: includes/views/optimizers/folders.php:141
+#: includes/views/optimizers/webp-converter.php:127
+#: includes/views/optimizers/nextgen.php:153
+msgid "Original Size"
+msgstr ""
+
+#: includes/views/misc/buttons-ml.php:41 includes/views/misc/buttons-ml.php:89
+#, php-format
+msgid "Original Size: %s"
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:373
+msgid ""
+"Ow snap! Unfortunately there were _number_ consecutive errors. This is not "
+"normal behaviour and there is either a problem on your site or MegaOptim "
+"servers. Please contact support for help."
+msgstr ""
+
+#: includes/views/modals/register.php:43
+msgid "Password"
+msgstr ""
+
+#: includes/views/modals/register.php:47
+msgid "Password Confirmation"
+msgstr ""
+
+#: includes/views/misc/buttons-ml.php:43
+#, php-format
+msgid "Percentage: %s"
+msgstr ""
+
+#: includes/views/settings/advanced.php:126
+msgid ""
+"Permission denied. We tried to alter your .htaccess file but it looks like "
+"we don't have enough permissions to do it. We kindly ask you to contact your "
+"administrator and ask to grant you with permissions to write to .htaccess "
+"and then come back on this page and re-save the advanced settings tab. If "
+"everything is alright the .htaccess webp snippet will be added automatically "
+"upon save."
+msgstr ""
+
+#: includes/classes/MGO_Ajax.php:152
+msgid ""
+"Permission denied. You must be able to upload attachments in order to "
+"optimize them."
+msgstr ""
+
+#: includes/views/parts/footer.php:14
+msgid ""
+"Place where you can manage your MegaOptim account, api key and subscription."
+msgstr ""
+
+#: includes/hooks/notices.php:55
+msgid ""
+"Please consider deactivating those plugins to ensure better integration with "
+"MegaOptim. Only leave those plugins active if you know what you are doing."
+msgstr ""
+
+#: includes/classes/MGO_Ajax.php:384 includes/classes/MGO_Ajax.php:475
+msgid "Please fix the following errors:"
+msgstr ""
+
+#: includes/classes/MGO_Ajax.php:245
+msgid "Please provide valid MegaOptim API key."
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:392
+msgid "Please select a folder you want to optimize from the list."
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:369
+msgid "Preparing..."
+msgstr ""
+
+#: includes/classes/MGO_CLI.php:274
+#, php-format
+msgid "Process finished in %s seconds. Total optimized %s, Totaal saved %s"
+msgstr ""
+
+#: includes/classes/MGO_CLI.php:376
+#, php-format
+msgid "Process finished in %s seconds. Total restored %s attachments."
+msgstr ""
+
+#: includes/views/misc/buttons-ml.php:116
+msgid "Re-Optimize"
+msgstr ""
+
+#: includes/views/optimizers/media-library.php:153
+#: includes/views/optimizers/folders.php:143
+#: includes/views/optimizers/webp-converter.php:129
+#: includes/views/optimizers/nextgen.php:155
+msgid "Reduced By"
+msgstr ""
+
+#: includes/views/misc/buttons-ml.php:91
+#, php-format
+msgid "Reduction: %s"
+msgstr ""
+
+#: includes/views/settings/key.php:14
+msgid "Register for free API Key"
+msgstr ""
+
+#: includes/views/misc/instructions.php:35 includes/views/settings/key.php:14
+msgid "register here"
+msgstr ""
+
+#: includes/views/optimizers/media-library.php:76
+#: includes/views/optimizers/folders.php:84
+#: includes/views/optimizers/webp-converter.php:71
+#: includes/views/optimizers/nextgen.php:71
+msgid "Remaining Images"
+msgstr ""
+
+#: includes/classes/MGO_CLI.php:43
+msgid "Remaining tokens"
+msgstr ""
+
+#: includes/views/settings/advanced.php:262
+msgid "Remember:"
+msgstr ""
+
+#: includes/functions/bootstrap.php:59
+msgid "required is"
+msgstr ""
+
+#: includes/views/settings/general.php:135
+msgid "Resize large images"
+msgstr ""
+
+#: includes/views/parts/footer.php:28
+msgid "Resources"
+msgstr ""
+
+#: includes/views/misc/buttons-ml.php:59
+msgid "Restore"
+msgstr ""
+
+#: includes/views/settings/general.php:177
+#: includes/views/settings/advanced.php:317
+msgid "Save Settings"
+msgstr ""
+
+#: includes/views/optimizers/media-library.php:154
+#: includes/views/optimizers/folders.php:144
+#: includes/views/optimizers/webp-converter.php:130
+#: includes/views/optimizers/nextgen.php:156
+msgid "Savings"
+msgstr ""
+
+#: includes/views/optimizers/folders.php:46
+msgid "Scan child theme folder"
+msgstr ""
+
+#: includes/views/modals/filters.php:5
+msgid "Scan Filters"
+msgstr ""
+
+#: includes/views/optimizers/media-library.php:37
+#: includes/views/optimizers/webp-converter.php:36
+#: includes/views/optimizers/nextgen.php:39
+msgid "Scan for unoptimized images"
+msgstr ""
+
+#: includes/views/optimizers/folders.php:45
+msgid "Scan parent theme folder"
+msgstr ""
+
+#: includes/views/modals/folders.php:10
+msgid "Scan recursively"
+msgstr ""
+
+#: includes/views/optimizers/folders.php:48
+#: includes/views/optimizers/folders.php:62
+msgid "Scan theme folder"
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:396 includes/classes/MGO_Admin_UI.php:415
+msgid "Scanning..."
+msgstr ""
+
+#: includes/views/optimizers/folders.php:50
+#: includes/views/optimizers/folders.php:61
+msgid "Select custom folder"
+msgstr ""
+
+#: includes/views/modals/folders.php:5
+msgid "Select Folder"
+msgstr ""
+
+#: includes/views/parts/header.php:44
+msgid "Select tool"
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:395
+msgid "Selected Folder"
+msgstr ""
+
+#: includes/views/misc/instructions.php:45
+msgid "Set API Key"
+msgstr ""
+
+#: includes/classes/MGO_Ajax.php:381 includes/classes/MGO_Ajax.php:472
+msgid "Settings updated successfully!"
+msgstr ""
+
+#: includes/views/optimizers/media-library.php:48
+#: includes/views/optimizers/webp-converter.php:47
+msgid "Show Filters"
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:317 includes/views/misc/buttons-ml.php:56
+msgid "Show More Info"
+msgstr ""
+
+#: includes/views/parts/footer.php:32
+msgid "Some useful links"
+msgstr ""
+
+#: includes/views/modals/filters.php:7
+msgid "Specify filters for the scanner"
+msgstr ""
+
+#: includes/views/optimizers/media-library.php:116
+#: includes/views/optimizers/folders.php:113
+#: includes/views/optimizers/webp-converter.php:101
+#: includes/views/optimizers/nextgen.php:115
+msgid "Start Bulk Optimizer"
+msgstr ""
+
+#: includes/views/optimizers/media-library.php:43
+#: includes/views/optimizers/webp-converter.php:42
+#: includes/views/optimizers/nextgen.php:47
+msgid "Start now"
+msgstr ""
+
+#: includes/views/misc/instructions.php:58
+msgid "Start Optimizing"
+msgstr ""
+
+#: includes/views/optimizers/media-library.php:156
+#: includes/views/optimizers/folders.php:146
+#: includes/views/optimizers/webp-converter.php:132
+#: includes/views/optimizers/nextgen.php:158
+msgid "Status"
+msgstr ""
+
+#: includes/views/misc/buttons-ngg.php:13
+#, php-format
+msgid "Success! Image is optimized successfully with %s method."
+msgstr ""
+
+#: includes/views/settings/advanced.php:86
+msgid "Target to replace WebP"
+msgstr ""
+
+#: includes/views/parts/footer.php:13
+msgid "Technical support"
+msgstr ""
+
+#: includes/views/modals/register.php:51
+msgid "Terms and Conditions"
+msgstr ""
+
+#: includes/views/misc/instructions.php:5
+msgid "Thanks for installing"
+msgstr ""
+
+#: includes/hooks/notices.php:46
+msgid "The following plugins will likely conflict with"
+msgstr ""
+
+#: includes/classes/MGO_CLI.php:124
+msgid ""
+"The level parameter should be one of the following: ultra, intelligent, "
+"lossless"
+msgstr ""
+
+#: includes/classes/MGO_Ajax.php:250
+msgid "The MegaOptim api can not be reached. Please contact support."
+msgstr ""
+
+#: includes/views/settings/general.php:110
+msgid ""
+"The RGB color profile is better for web and it could also help with reducing "
+"the image size."
+msgstr ""
+
+#: includes/views/settings/general.php:75
+msgid ""
+"This compression level keeps the resulting image identical to the original "
+"version and the size reduction will be smaller than lossy compression "
+"because it only attempts to remove EXIF data and does not touch the quality. "
+"It't not recommended if you are looking for speed or to satisfy the "
+"pagespeed needs"
+msgstr ""
+
+#: includes/views/settings/general.php:68
+msgid ""
+"This compression level uses our advanced algorithms to find good compromise "
+"between file size and image quality. The optimized image will be almost "
+"identical in terms of quality as the original image but there will be "
+"significant reduction of its size, some images are even reduced by 80% while "
+"keeping the quality almost identical."
+msgstr ""
+
+#: includes/views/settings/general.php:61
+msgid ""
+"This compression level uses our advanced algorithms to optimize the image as "
+"much as possible with some quality loss but not very noticeable and "
+"acceptable for web usage. The resulting image will be much smaller in terms "
+"of size and will load much faster."
+msgstr ""
+
+#: includes/views/settings/advanced.php:298
+msgid ""
+"This operation is for advanced purposes only. You must have backup and know "
+"what are you doing, otherwise you will lose meaningful data for this plugin."
+msgstr ""
+
+#: includes/views/misc/buttons-ml.php:68
+msgid "Thumbnail"
+msgstr ""
+
+#: includes/views/optimizers/media-library.php:155
+#: includes/views/optimizers/folders.php:145
+#: includes/views/optimizers/webp-converter.php:131
+#: includes/views/optimizers/nextgen.php:157
+msgid "Thumbnails"
+msgstr ""
+
+#: includes/views/misc/instructions.php:7
+#, php-format
+msgid "To %s with image optimization follow the steps below."
+msgstr ""
+
+#: includes/views/optimizers/media-library.php:86
+#: includes/views/optimizers/folders.php:92
+#: includes/views/optimizers/nextgen.php:81
+msgid "Total saved MB"
+msgstr ""
+
+#: includes/views/misc/buttons-ngg.php:32
+#: includes/views/misc/buttons-ml.php:133
+#: includes/views/settings/general.php:59
+msgid "Ultra"
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:371
+msgid "Unable to parse the optimizer response"
+msgstr ""
+
+#: includes/classes/MGO_Ajax.php:776
+msgid "Unable to perform this operation."
+msgstr ""
+
+#: includes/classes/MGO_CLI.php:38
+msgid "Unlimited"
+msgstr ""
+
+#: includes/classes/MGO_Ajax.php:537
+msgid "Unsupported context."
+msgstr ""
+
+#: includes/functions/bootstrap.php:56
+msgid "Update your PHP version if you want to run"
+msgstr ""
+
+#: includes/views/modals/filters.php:15
+msgid "Upload date from"
+msgstr ""
+
+#: includes/views/modals/filters.php:19
+msgid "Upload date to (can be blank)"
+msgstr ""
+
+#: includes/classes/MGO_CLI.php:40
+msgid "User"
+msgstr ""
+
+#: includes/views/settings/advanced.php:73
+msgid "Using &lt;PICTURE&gt; TAG"
+msgstr ""
+
+#: includes/views/settings/advanced.php:74
+msgid "Using server-side rewritting"
+msgstr ""
+
+#: includes/views/settings/advanced.php:82
+msgid ""
+"Using the &lt;PICTURE&gt; method replaces &lt;img&gt; tags with &lt;"
+"PICTURE&gt; tags. While this is recommended method of delivery, please note "
+"that there can be display inconssitency after switching if your site relies "
+"on styling the &lt;img&gt; tags. You can switch to other option anytime."
+msgstr ""
+
+#: includes/views/settings/key.php:4 includes/views/settings/key.php:13
+msgid "Validate your API key"
+msgstr ""
+
+#: includes/views/misc/instructions.php:47
+msgid "verify preferences"
+msgstr ""
+
+#: includes/classes/MGO_CLI.php:348
+#, php-format
+msgid ""
+"We are about tore restore %d attachments. Are you sure you want to continue?"
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:416
+msgid ""
+"We are currently scanning for unoptimized images... Once finished if any "
+"unoptimized images are found you will be able to start optimizing."
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:397
+msgid ""
+"We are currently scanning the selected folder for unoptimized images. Once "
+"finished if any unoptimized images are found you will be able to start "
+"optimizing."
+msgstr ""
+
+#: includes/views/modals/register.php:58
+msgid ""
+"We sent you an email to the address you used to sign up with confirmation "
+"link and the api key."
+msgstr ""
+
+#: includes/views/settings/advanced.php:129
+msgid ""
+"We will try to automatically alter your .htaccess file to add support for "
+"webp rewriting. Once you hit \"Save\" button below, you can check your ."
+"htaccess file to see if there is block of code that starts with \"# BEGIN "
+"MegaOptimIO\". If the code is there, no other action required."
+msgstr ""
+
+#: includes/views/parts/header.php:49
+msgid "WebP Converter (Coming Soon)"
+msgstr ""
+
+#: includes/views/settings/advanced.php:67
+msgid "WebP Front-end Delivery Method"
+msgstr ""
+
+#: includes/views/settings/advanced.php:53
+msgid "WebP Management"
+msgstr ""
+
+#: includes/views/misc/buttons-ml.php:48 includes/views/misc/buttons-ml.php:93
+#, php-format
+msgid "WebP Size: %s"
+msgstr ""
+
+#: includes/views/misc/instructions.php:26
+msgid "website"
+msgstr ""
+
+#: includes/classes/MGO_Admin_UI.php:314
+msgid "Working..."
+msgstr ""
+
+#: includes/views/parts/header.php:46
+msgid "WP Media Library"
+msgstr ""
+
+#: includes/views/settings/general.php:90
+#: includes/views/settings/general.php:107
+#: includes/views/settings/general.php:124
+msgid "Yes, please!"
+msgstr ""
+
+#: includes/views/modals/register.php:67
+msgid "You are all set!"
+msgstr ""
+
+#: includes/views/modals/setapikey.php:29
+msgid "You are already connected"
+msgstr ""
+
+#: includes/classes/MGO_Ajax.php:422
+msgid ""
+"You are missing CloudFlare Api Key. In order to use the feature you need to "
+"set all the fields."
+msgstr ""
+
+#: includes/classes/MGO_Ajax.php:419
+msgid ""
+"You are missing CloudFlare Email. In order to use the feature you need to "
+"set all the fields."
+msgstr ""
+
+#: includes/classes/MGO_Ajax.php:425
+msgid ""
+"You are missing CloudFlare Zone ID. In order to use the feature you need to "
+"set all the fields."
+msgstr ""
+
+#: includes/views/settings/advanced.php:133
+#, php-format
+msgid ""
+"You are using %s which doesn't support .htaccess. To enable WebP for nginx "
+"you need to edit your nginx config using administrative permissions and "
+"restart the web server. Note: Please be careful and do this only if you know "
+"what you are doing."
+msgstr ""
+
+#: includes/views/settings/advanced.php:128
+#, php-format
+msgid "You are using %s which supports .htaccess."
+msgstr ""
+
+#: includes/views/misc/instructions.php:55
+#, php-format
+msgid ""
+"You can optimize your %s . The plugin supports bulk mode, one by one from "
+"the Media page in the admin or auto optimization after the upload. Auto "
+"optimization is turned on by default."
+msgstr ""
+
+#: includes/views/parts/out-of-tokens.php:7
+msgid ""
+"You can top up your account anytime at <a href=\"https://megaoptim.com\" "
+"target=\"_blank\">https://megaoptim.com</a> dashboard area and <strong>"
+"continue</strong> with optimization."
+msgstr ""
+
+#: includes/views/parts/out-of-tokens.php:4
+msgid ""
+"Your account is out of tokens. Tokens are used to optimize images, one token "
+"= one image."
+msgstr ""
+
+#: includes/functions/bootstrap.php:58
+msgid "Your actual version is:"
+msgstr ""
+
+#: includes/classes/MGO_Ajax.php:254
+msgid ""
+"Your API key is invalid. Please make sure you use correct API issued by "
+"MegaOptim.com"
+msgstr ""
+
+#: includes/classes/MGO_Ajax.php:264
+msgid ""
+"Your API key is now set up, you can configure your settings on the plugin "
+"Settings page. Redirecting to settings page"
+msgstr ""
+
+#: includes/views/settings/general.php:43
+msgid "Your API Key is valid!"
+msgstr ""
+
+#: includes/hooks/notices.php:18
+msgid "Your MegaOptim account is out of optimization tokens. To continue using"
+msgstr ""
+
+#: includes/views/modals/register.php:68
+msgid "Your WordPress instance is successfully connected to MegaOptim Cloud."
+msgstr ""
