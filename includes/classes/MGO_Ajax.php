@@ -582,7 +582,7 @@ class MGO_Ajax extends MGO_BaseObject {
 		 * ex: $root = $_SERVER['DOCUMENT_ROOT'];
 		 */
 		//$root = null;
-		$root = megaoptim_get_wp_root_path();
+        $root = rtrim( megaoptim_get_wp_root_path(), '/' );
 
 		if ( ! $root ) {
 			exit( "ERROR: Root filesystem directory not set in jqueryFileTree.php" );

@@ -62,7 +62,7 @@ class MGO_NGGAttachment extends MGO_Attachment {
 			unset( $entry['gid'] );
 			unset( $entry['object_id'] );
 			$this->data               = $entry;
-			$this->data['file_path']  = wp_normalize_path( megaoptim_get_wp_root_path() . DIRECTORY_SEPARATOR . $path . $filename );
+			$this->data['file_path']  = wp_normalize_path( megaoptim_get_wp_root_path() . $path . $filename );
 			$this->data['type']       = self::TYPE;
 			$this->data['object_id']  = $this->ID;
 			$this->data['gallery_id'] = $gallery_id;

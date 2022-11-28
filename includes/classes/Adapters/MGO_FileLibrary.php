@@ -179,9 +179,9 @@ class MGO_FileLibrary extends MGO_Library {
 	public function get_image( $path ) {
 
 		$file_id = md5( $path );
-		$url     = get_site_url() . '/' . str_replace( megaoptim_get_wp_root_path() . '/', '', $path );
+		$url     = get_site_url() . '/' . str_replace( megaoptim_get_wp_root_path(), '', $path );
 
-		return array(
+        return array(
 			'ID'        => $file_id,
 			'title'     => megaoptim_basename( $path ),
 			'thumbnail' => $url,

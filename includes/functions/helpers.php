@@ -453,7 +453,8 @@ function megaoptim_is_wp_module() {
  * @return mixed
  */
 function megaoptim_get_wp_root_path() {
-	return $_SERVER['DOCUMENT_ROOT'];
+    $value = defined('ABSPATH') ? ABSPATH : $_SERVER['DOCUMENT_ROOT'];
+    return rtrim($value, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
 }
 
 /**
@@ -461,7 +462,7 @@ function megaoptim_get_wp_root_path() {
  * @return string
  */
 function megaoptim_get_htaccess_path() {
-	return megaoptim_get_wp_root_path() . DIRECTORY_SEPARATOR . '.htaccess';
+	return megaoptim_get_wp_root_path() . '.htaccess';
 }
 
 
@@ -537,7 +538,7 @@ function megaoptim_is_excluded( $dir ) {
 		if ( in_array( megaoptim_basename( $dir ), $excluded ) ) {
 			return true;
 		}
-	} elseif ( megaoptim_get_wp_root_path() === $parent_dir ) {
+	} elseif ( megaoptim_get_wp_root_path() === $parent_dir || rtrim(megaoptim_get_wp_root_path(), '/') === $parent_dir ) {
 		// we are in /
 		$excluded = array(
 			'wp-includes',
