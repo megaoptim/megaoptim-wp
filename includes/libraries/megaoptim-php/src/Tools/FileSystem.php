@@ -26,7 +26,6 @@ namespace MegaOptim\Client\Tools;
  */
 class FileSystem {
 
-
 	/**
 	 * Scan directory for resources
 	 *
@@ -40,7 +39,8 @@ class FileSystem {
 			return $resources;
 		} else {
 			foreach ( PATH::accepted_types() as $extension => $mime_type ) {
-				$paths = glob( $dir . DIRECTORY_SEPARATOR . '*.' . $extension );
+                $paths = glob( $dir . DIRECTORY_SEPARATOR . "*" );
+                $paths = preg_grep('/\.'.$extension.'$/i', $paths);
 				if ( is_array( $paths ) ) {
 					$resources = array_merge( $resources, $paths );
 				}

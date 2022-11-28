@@ -672,14 +672,16 @@ function megaoptim_dir_contains_children( $dir ) {
  * @return array|false
  */
 function megaoptim_find_images_non_recursively( $path ) {
-	$files = glob( $path . DIRECTORY_SEPARATOR . "*.{jpg,jpeg,png,gif}", GLOB_BRACE );
-	if ( ! empty( $files ) ) {
-		foreach ( $files as $key => $file ) {
-			$files[ $key ] = realpath( $files[ $key ] );
-		}
-	}
-
-	return $files;
+    $types     = array_keys( \MegaOptim\Client\Tools\PATH::accepted_types() );
+    $file_list = array();
+    foreach ( $types as $ext ) {
+        $found_files = glob( trailingslashit( $path) . "*" );
+        $found_files =  preg_grep('/\.'.$ext.'$/i', $found_files);
+        foreach ( $found_files as $file ) {
+            array_push( $file_list, realpath($file) );
+        }
+    }
+    return $file_list;
 }
 
 /**

@@ -200,14 +200,13 @@ class MGO_FileLibrary extends MGO_Library {
 		$types     = array_keys( \MegaOptim\Client\Tools\PATH::accepted_types() );
 		$file_list = array();
 		foreach ( $types as $ext ) {
-			$found_files = glob( $directory . "*." . $ext );
+            $found_files = glob( trailingslashit( $directory) . "*" );
+            $found_files =  preg_grep('/\.'.$ext.'$/i', $found_files);
 			foreach ( $found_files as $file ) {
 				array_push( $file_list, $this->get_image( $file ) );
 			}
-			array_merge( $file_list, $found_files );
 		}
-
-		return $file_list;
+        return $file_list;
 	}
 
 	/**
