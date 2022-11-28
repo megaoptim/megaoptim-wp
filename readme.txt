@@ -2,9 +2,9 @@
 Contributors: megaoptim, darkog
 Tags: convert webp, webp, optimize images, optimize, images, compress
 Requires at least: 3.6
-Tested up to: 5.9
+Tested up to: 6.1
 Requires PHP: 5.3
-Stable tag: 1.4.19
+Stable tag: 1.4.20
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,7 +16,7 @@ Optimize and compress your images to speed up your site and boost your SEO.
 
 The plugin uses minimal resources on your server and all the heavy lifting is done by our API service on our servers. No binaries will be ever installed on your server that will slowdown your site.
 
-We strive to make the plguin as lightweight as possible and will never bloat your dashboard with ads, notifications, upsells or run background services that will cause high CPU usage constantly. The plugin only runs when it's really necessary.
+We strive to make the plugin as lightweight as possible and will never bloat your dashboard with ads, notifications, upsells or run background services that will cause high CPU usage constantly. The plugin only runs when it's really necessary.
 
 ## What is image optimization and why it is important?
 
@@ -77,7 +77,7 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 = Can i use the same API Key on multiple websites? =
     Absolutely. You can use your API key on as many websites as you want or you can also create sub accounts for each of the sites you manage if you want to keep the things separate or bill your clients separate.
 
-= Do you offer CDN?
+= Do you offer CDN? =
     No, but our plugin integrates with WP Offload Media and that way you can easily use Amazon S3 bucket as your CDN which is much cheaper than actual CDN service.
 
 = Is the plugin compatible with WP Offload Media? =
@@ -89,11 +89,14 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 = Can i backup and restore the images? =
     Yes, MegaOptim have option to backup the images and it is enabled by default. You can alawys restore the original images if there is backup.
 
-= Can i manage multiple sites separately with sub-accounts?
+= Can i manage multiple sites separately with sub-accounts? =
     Sure! You can create sub-account for your client and transfer tokens to the sub-account balance. This way your client will have separate account and api key and you will be managing it. You have the option to add or remove api tokens from it.
 
-= Is WP CLI (command line) supported?
+= Is WP CLI (command line) supported? =
     Sure! You can optimize and restore images from the command line using WP CLI. Please see this <a href="https://megaoptim.com/blog/how-to-optimize-wordpress-images-with-wp-cli-and-megaoptim/">guide</a> for more information.
+
+= How to delete the MegaOptim database data? =
+    To delete the database data, set define('WP_DEBUG', true) in wp-config.php, navigate to "Settings" > "MegaOptim" > "Advanced" and in the bottom you will see the option "Delete MegaOptim database metadata". Use it with caution and read about the consequences.
 
 = Is this plugin heavy for my site? =
     The plugin optimizes images on our external servers and does not run anything on your own servers that may cause slowndowns. In addition it only runs when you start bulk process or if you upload image via Media Library to autoamatically optimize it. It's not active in background unlike some other plugins.
@@ -136,6 +139,14 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 10. WP CLI - Bulk Restore command
 
 == Changelog ==
+
+= 1.4.20 =
+* Added option to delete attachment metadata via Settings > MegaOptim > Advanced if WP_DEBUG is enabled.
+* Added additional safeguarding of the original images if invalid/corrupt image is received through the API.
+* Fix 'Custom folders' optimizer issue, not finding files with all uppercase.
+* Fix 'Custom Folders' optimizer issue, not correctly transforming local to public path in some hosting environments.
+
+* Fix various warnings related to PHP8.1
 
 = 1.4.19 =
 * Added PHP 8.1 support
