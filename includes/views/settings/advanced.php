@@ -111,30 +111,36 @@ $is_debug = defined( 'WP_DEBUG' ) && WP_DEBUG;
                                 <!-- REWRITE Method settings-->
                                 <div id="megaoptim-<?php echo MGO_Settings::WEBP_DELIVERY_METHOD; ?>-rewrite" class="megaoptim-explanation-wrapper" style="<?php echo $settings->get( MGO_Settings::WEBP_DELIVERY_METHOD ) === 'rewrite' ? '' : 'display: none;'; ?>">
                                     <p class="megaoptim-option-explanation">
-										<?php if ( megaoptim_contains( strtolower( $_SERVER['SERVER_SOFTWARE'] ), 'apache' ) || megaoptim_contains( strtolower( $_SERVER['SERVER_SOFTWARE'] ), 'litespeed' ) ): ?>
-											<?php
-											$htaccess_path = megaoptim_get_htaccess_path();
+										<?php if ( megaoptim_contains( strtolower( $_SERVER['SERVER_SOFTWARE'] ), 'apache' ) || megaoptim_contains( strtolower( $_SERVER['SERVER_SOFTWARE'] ), 'litespeed' ) ): ?><?php
+
+                                            $htaccess_path = megaoptim_get_htaccess_path();
 											if ( ! file_exists( $htaccess_path ) && is_writable( dirname( $htaccess_path ) ) ) { // if .htaccess doesn't exist and the root dir is writable, we can create it probably.
 												$writable = 1;
-											} else if ( file_exists( $htaccess_path ) && is_writable( $htaccess_path ) ) { // if .htaccess exists and is writable, we can alter it probably.
+											} elseif ( file_exists( $htaccess_path ) && is_writable( $htaccess_path ) ) { // if .htaccess exists and is writable, we can alter it probably.
 												$writable = 1;
 											} else { // If none of those, htaccess is not writable.
 												$writable = 0;
 											}
 											?>
+
 											<?php if ( ! $writable ): ?>
+
                                                 <span style="color: red;"><?php _e( 'Permission denied. We tried to alter your .htaccess file but it looks like we don\'t have enough permissions to do it. We kindly ask you to contact your administrator and ask to grant you with permissions to write to .htaccess and then come back on this page and re-save the advanced settings tab. If everything is alright the .htaccess webp snippet will be added automatically upon save.', 'megaoptim-image-optimizer' ); ?></span>
+
 											<?php else: ?>
-												<?php echo sprintf( __( 'You are using %s which supports .htaccess.', 'megaoptim-image-optimizer' ), '<strong>' . $_SERVER['SERVER_SOFTWARE'] . '</strong>' ); ?>
-												<?php _e( 'We will try to automatically alter your .htaccess file to add support for webp rewriting. Once you hit "Save" button below, you can check your .htaccess file to see if there is block of code that starts with "# BEGIN MegaOptimIO". If the code is there, no other action required.', 'megaoptim-image-optimizer' ); ?>
+
+												<?php echo sprintf( __( 'You are using %s which supports .htaccess.', 'megaoptim-image-optimizer' ), '<strong>' . $_SERVER['SERVER_SOFTWARE'] . '</strong>' ); ?><?php _e( 'We will try to automatically alter your .htaccess file to add support for webp rewriting. Once you hit "Save" button below, you can check your .htaccess file to see if there is block of code that starts with "# BEGIN MegaOptimIO". If the code is there, no other action required.', 'megaoptim-image-optimizer' ); ?>
+
 											<?php endif; ?>
-                                            ?>
+
 										<?php elseif ( megaoptim_contains( strtolower( $_SERVER['SERVER_SOFTWARE'] ), 'nginx' ) ): ?>
-                                            <span style="color:red"><?php echo sprintf( __( 'You are using %s which doesn\'t support .htaccess. To enable WebP for nginx you need to edit your nginx config using administrative permissions and restart the web server. Note: Please be careful and do this only if you know what you are doing.', 'megaoptim-image-optimizer' ), '<strong>' . $_SERVER['SERVER_SOFTWARE'] . '</strong>' ); ?></span>
-                                            <br/>
-                                            <a style="margin-top: 10px;" target="_blank" href="https://megaoptim.com/blog/how-to-serve-webp-images-in-wordpress-with-nginx"><?php _e( 'Follow the Guide', 'megaoptim-image-optimizer' ); ?></a>
+
+                                            <span style="color:red"><?php echo sprintf( __( 'You are using %s which doesn\'t support .htaccess. To enable WebP for nginx you need to edit your nginx config using administrative permissions and restart the web server. Note: Please be careful and do this only if you know what you are doing.', 'megaoptim-image-optimizer' ), '<strong>' . $_SERVER['SERVER_SOFTWARE'] . '</strong>' ); ?></span><br/><a style="margin-top: 10px;" target="_blank" href="https://megaoptim.com/blog/how-to-serve-webp-images-in-wordpress-with-nginx"><?php _e( 'Follow the Guide', 'megaoptim-image-optimizer' ); ?></a>
+
 										<?php else: ?>
+
 											<?php _e( 'Looks like you are using unsupported web server. This feature will not be supported. Please choose the picture method instead.', 'megaoptim-image-optimizer' ); ?>
+
 										<?php endif; ?>
                                     </p>
                                 </div>
@@ -224,6 +230,9 @@ $is_debug = defined( 'WP_DEBUG' ) && WP_DEBUG;
 								<?php
 								$image_sizes          = MGO_MediaLibrary::get_image_sizes();
 								$selected_image_sizes = $settings->get( MGO_Settings::IMAGE_SIZES, array() );
+								if ( ! is_array( $selected_image_sizes ) ) {
+									$selected_image_sizes = [];
+								}
 								foreach ( $image_sizes as $key => $image_size ) {
 									$is_checked = in_array( $key, $selected_image_sizes );
 									?>
@@ -243,6 +252,9 @@ $is_debug = defined( 'WP_DEBUG' ) && WP_DEBUG;
 								<?php
 								$image_sizes       = MGO_MediaLibrary::get_image_sizes();
 								$reina_image_sizes = $settings->get( MGO_Settings::RETINA_IMAGE_SIZES, array() );
+								if ( ! is_array( $reina_image_sizes ) ) {
+									$reina_image_sizes = [];
+								}
 								foreach ( $image_sizes as $key => $image_size ) {
 									$is_selected = in_array( $key, $reina_image_sizes );
 									?>
@@ -292,18 +304,15 @@ $is_debug = defined( 'WP_DEBUG' ) && WP_DEBUG;
                     </div>
                     <div class="megaoptim-field-wrap">
                         <p class="megaoptim-bold">
-							<strong><?php _e( 'Delete the MegaOptim database megadata if you AGREE with the following consequences:', 'megaoptim-image-optimizer' ); ?></strong>
+                            <strong><?php _e( 'Delete the MegaOptim database megadata if you AGREE with the following consequences:', 'megaoptim-image-optimizer' ); ?></strong>
                         </p>
                         <ul class="megaoptim-field-desc" style="list-style:square;padding-left:30px;margin-bottom: 15px;">
-                            <li><?php _e('This operation is for advanced purposes only. You must have backup and know what are you doing, otherwise you will lose meaningful data for this plugin.', 'megaoptim-image-optimizer'); ?></li>
-                            <li><?php _e('Optimization progress will be lost, bulk optimizer will start from scratch next time you run it. Images that are optimized will detected, skipped and marked as "Already Optimized", with no detailed data.', 'megaoptim-image-optimizer'); ?></li>
-                            <li><?php _e('Backup restoration will NOT work, because the backup file references are stored in the meta data.', 'megaoptim-image-optimizer'); ?></li>
+                            <li><?php _e( 'This operation is for advanced purposes only. You must have backup and know what are you doing, otherwise you will lose meaningful data for this plugin.', 'megaoptim-image-optimizer' ); ?></li>
+                            <li><?php _e( 'Optimization progress will be lost, bulk optimizer will start from scratch next time you run it. Images that are optimized will detected, skipped and marked as "Already Optimized", with no detailed data.', 'megaoptim-image-optimizer' ); ?></li>
+                            <li><?php _e( 'Backup restoration will NOT work, because the backup file references are stored in the meta data.', 'megaoptim-image-optimizer' ); ?></li>
                         </ul>
                         <p>
-                            <button
-                                    type="button"
-                                    id="mgo-delete-metadata"
-                                    class="button megaoptim-button-small"><?php _e( 'I agree! Delete', 'megaoptim-image-optimizer' ); ?>
+                            <button type="button" id="mgo-delete-metadata" class="button megaoptim-button-small"><?php _e( 'I agree! Delete', 'megaoptim-image-optimizer' ); ?>
                             </button>
                         </p>
                     </div>
