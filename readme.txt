@@ -2,9 +2,9 @@
 Contributors: megaoptim, darkog
 Tags: convert webp, webp, optimize images, optimize, images, compress
 Requires at least: 3.6
-Tested up to: 6.1
+Tested up to: 6.2
 Requires PHP: 5.3
-Stable tag: 1.4.20
+Stable tag: 1.4.21
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,7 +14,7 @@ Optimize and compress your images to speed up your site and boost your SEO.
 
 **MegaOptim is image optimization plugin and that is easy to use, stable and actively maintained by dedicated team of experts. :)**
 
-The plugin uses minimal resources on your server and all the heavy lifting is done by our API service on our servers. No binaries will be ever installed on your server that will slowdown your site.
+The plugin uses minimal resources on your server and all the heavy lifting is done by our API service on our servers. No binaries will be ever installed on your server that will slow down your site.
 
 We strive to make the plugin as lightweight as possible and will never bloat your dashboard with ads, notifications, upsells or run background services that will cause high CPU usage constantly. The plugin only runs when it's really necessary.
 
@@ -22,7 +22,7 @@ We strive to make the plugin as lightweight as possible and will never bloat you
 
 Image Optimization is delivering the high-quality images in the right format, dimension, size, and resolution while keeping the smallest possible size.
 
-## What features does MegaOptim offer?
+## What features do MegaOptim offer?
 
 - Bulk optimization for the Media Library, NextGen, MediaPress, etc
 - Bulk optimization of Folders by your choice in your server
@@ -30,7 +30,7 @@ Image Optimization is delivering the high-quality images in the right format, di
 - Uses progressive JPEG format for faster rendering
 - Supports <strong>WebP</strong>. Creates and serves WebP when possible
 - Supports Sub-accounts support with detailed statistics
-- Supports Backups/Restore + option to configure what to backup
+- Supports Backups/Restore + option to configure what to back up
 - Option to select which thumbnails to optimize
 - Option to enable/disable conversion from CMYK to RGB
 - Option to preserve/remove the EXIF/IPTC metadata
@@ -41,13 +41,13 @@ Image Optimization is delivering the high-quality images in the right format, di
 - Compatible with WP 5.3+ BIG Image Threshold feature
 - Compatible with Windows/UNIX hosting environments
 - Compatible with WP Engine, SiteGround and other providers
-- Compatbile with localhost and password protected sites
+- Compatible with localhost and password-protected sites
 - No credits charged if %5 or less is saved per image
 - Multisite Support
 
 ## How much does MegaOptim cost?
 
-The service comes with **500 FREE images/tokens per month for everyone**. We also have <strong>unlimited plan</strong> at only $9.99. Check our pricing <a href="https://megaoptim.com/pricing" target="_blank">here</a>.
+The service comes with **500 FREE images/tokens per month for everyone**. We also have <strong>unlimited plan</strong> at only **$7.50**. Check our pricing <a href="https://megaoptim.com/pricing/" target="_blank">here</a>.
 
 ## Have a question? Contact us!
 
@@ -74,8 +74,8 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 = What is API token? =
     One API token is one image. Please note that WordPress generates multiple thumbnails per one image. You will be charged one token for each thumbnail. If the total saved size per image is less than %5 you will not be charged.
 
-= Can i use the same API Key on multiple websites? =
-    Absolutely. You can use your API key on as many websites as you want or you can also create sub accounts for each of the sites you manage if you want to keep the things separate or bill your clients separate.
+= Can I use the same API Key on multiple websites? =
+    Absolutely. You can use your API key on as many websites as you want, or you can also create subaccounts for each of the sites you manage if you want to keep the things separate or bill your clients separate.
 
 = Do you offer CDN? =
     No, but our plugin integrates with WP Offload Media and that way you can easily use Amazon S3 bucket as your CDN which is much cheaper than actual CDN service.
@@ -86,11 +86,11 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 = How the WebP feature works?
     The WebP versions are free of charge and our API service will create optimized WebP for each image upon optimization and store it in your storage. If you enable Front-End delivery the content will be re-written and if .webp version exist for specific image it will be used instead.
 
-= Can i backup and restore the images? =
-    Yes, MegaOptim have option to backup the images and it is enabled by default. You can alawys restore the original images if there is backup.
+= Can I back up and restore the images? =
+    Yes, MegaOptim have option to back up the images, and it is enabled by default. You can alawys restore the original images if there is backup.
 
-= Can i manage multiple sites separately with sub-accounts? =
-    Sure! You can create sub-account for your client and transfer tokens to the sub-account balance. This way your client will have separate account and api key and you will be managing it. You have the option to add or remove api tokens from it.
+= Can I manage multiple sites separately with subaccounts? =
+    Sure! You can create subaccount for your client and transfer tokens to the subaccount balance. This way your client will have separate account and api key and you will be managing it. You have the option to add or remove api tokens from it.
 
 = Is WP CLI (command line) supported? =
     Sure! You can optimize and restore images from the command line using WP CLI. Please see this <a href="https://megaoptim.com/blog/how-to-optimize-wordpress-images-with-wp-cli-and-megaoptim/">guide</a> for more information.
@@ -99,9 +99,9 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
     To delete the database data, set define('WP_DEBUG', true) in wp-config.php, navigate to "Settings" > "MegaOptim" > "Advanced" and in the bottom you will see the option "Delete MegaOptim database metadata". Use it with caution and read about the consequences.
 
 = Is this plugin heavy for my site? =
-    The plugin optimizes images on our external servers and does not run anything on your own servers that may cause slowndowns. In addition it only runs when you start bulk process or if you upload image via Media Library to autoamatically optimize it. It's not active in background unlike some other plugins.
+    The plugin optimizes images on our external servers and does not run anything on your own servers that may cause slowndowns. In addition, it only runs when you start bulk process or if you upload image via Media Library to autoamatically optimize it. It's not active in background unlike some other plugins.
 
-= I used ShortPixel, Imagify and other plugins. Will your plugin reduce the images size further more? =
+= I used ShortPixel, Imagify and other plugins. Will your plugin reduce the images size furthermore? =
     In most cases yes! The plugin will make attempt to optimize the image further. If the saved size result is less or equal to 5% no token will be charged!
 
 = What happens if i stop using or deactivate MegaOptim plugin? =
@@ -110,20 +110,20 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 = What are the pricing packages? =
     We do both one-time and monthly. Please check out <a href="https://megaoptim.com/pricing">here</a>.
 
-= Can i cancel my subscription? =
+= Can I cancel my subscription? =
     Absolutely! You can cancel your subscription whenever you want.
 
 = Do you have an API? =
    Yes, please check out <a href="https://megaoptim.com/docs/api">here</a> for more documentation. Need to optimize images in your custom projects? You can even use our <a href="https://github.com/megaoptim/megaoptim-php">PHP Library</a> via composer.
 
 = Will MegaOptim work with CloudFlare? =
-    Yes! You need to use the CloudFlare plugin with correct credentials or setup credentials in the Settings > Advanced menu. If the credentials are setup correctly, the plugin will automatically purge from the CloudFlare cached images when they are optimized with MegaOptim.
+    Yes! You need to use the CloudFlare plugin with correct credentials or setup credentials in the Settings > Advanced menu. If the credentials are set up correctly, the plugin will automatically purge from the CloudFlare cached images when they are optimized with MegaOptim.
 
 = Do you have referral program? =
     Sure! Help us spread MegaOptim and earn 120 tokens per sign up and 300 tokens once customer becomes paid customer. Our Referral program can be found in the <a target="_blank" href="https://app.megaoptim.com/">dashboard area</a>.
 
 = I have problem, the plugin won't work. =
-   Before anything, please <a target="_blank" href="https://megaoptim.com/contact">contact us</a> as soon as possible and we can assist you. We even have a live chat on our site.
+   Before anything, please <a target="_blank" href="https://megaoptim.com/contact">contact us</a> as soon as possible, and we can assist you. We even have a live chat on our site.
 
 
 == Screenshots ==
@@ -139,6 +139,9 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 10. WP CLI - Bulk Restore command
 
 == Changelog ==
+
+= 1.4.21 =
+* Fix issue related to file name encodings which prevented to correctly optimize that used special characters in file name
 
 = 1.4.20 =
 * Added option to delete attachment metadata via Settings > MegaOptim > Advanced if WP_DEBUG is enabled.
