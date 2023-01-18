@@ -243,12 +243,13 @@ class Response implements HTTP {
 	 *
 	 * @return Result|mixed|null
 	 */
-	public function getResultByFileName($file_name) {
-		foreach($this->result as $result) {
-			if($result->getFileName() === $file_name) {
+	public function getResultByFileName( $file_name ) {
+		foreach ( $this->result as $result ) {
+			if ( urldecode( $result->getFileName() ) === urldecode( $file_name ) ) {
 				return $result;
 			}
 		}
+
 		return null;
 	}
 }
