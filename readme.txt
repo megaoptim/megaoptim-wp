@@ -4,7 +4,7 @@ Tags: convert webp, webp, optimize images, optimize, images, compress
 Requires at least: 3.6
 Tested up to: 6.2
 Requires PHP: 5.3
-Stable tag: 1.4.21
+Stable tag: 1.4.22
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,7 +47,7 @@ Image Optimization is delivering the high-quality images in the right format, di
 
 ## How much does MegaOptim cost?
 
-The service comes with **500 FREE images/tokens per month for everyone**. We also have <strong>unlimited plan</strong> at only **$7.50**. Check our pricing <a href="https://megaoptim.com/pricing/" target="_blank">here</a>.
+The service comes with **750 FREE images/tokens per month for everyone**. We also have <strong>unlimited plan</strong> at only **$7.50**. Check our pricing <a href="https://megaoptim.com/pricing/" target="_blank">here</a>.
 
 ## Have a question? Contact us!
 
@@ -139,6 +139,11 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 10. WP CLI - Bulk Restore command
 
 == Changelog ==
+
+= 1.4.22 =
+* Test compatibility with WordPress 6.3
+* Change 500 free tokens to 750 free tokens
+* Update plugin resources
 
 = 1.4.21 =
 * Fix issue related to file name encodings which prevented to correctly optimize that used special characters in file name

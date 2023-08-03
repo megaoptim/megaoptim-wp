@@ -38,10 +38,6 @@ $links = array(
 					?>
                 </ul>
             </div>
-            <div class="megaoptim-widget-resource">
-                <h4><?php _e( 'Liked MegaOptim?', 'megaoptim-image-optimizer' ); ?></h4>
-                <p><?php _e( 'Give us <a target="_blank" href="https://wordpress.org/support/plugin/megaoptim-image-optimizer/reviews/#new-post">5 star rating</a> and <a target="_blank" href="https://megaoptim.com/claim-free-tokens/">claim your <strong>1500 tokens for free</strong></a>', 'megaoptim-image-optimizer' ); ?></p>
-            </div>
         </div>
     </div>
 
