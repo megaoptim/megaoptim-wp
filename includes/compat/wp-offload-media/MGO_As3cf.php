@@ -208,7 +208,6 @@ class MGO_As3cf {
      */
     public function webp_uploads_base($url, $original)
     {
-
         if ($url === false) {
             return $this->convert_webp_path($url, $original);
         } elseif ( ! empty($this->util->cname) && ! is_null($this->util->cname)) {

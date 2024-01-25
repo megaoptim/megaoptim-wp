@@ -167,13 +167,76 @@ class MGO_As3cf_Util {
      * @return bool|Media_Library_Item
      */
     public function get_item_by_url($url) {
-        $source_id = Media_Library_Item::get_source_id_by_remote_url($url);
+        $source_id = self::get_source_id_by_remote_url($url);
         if($source_id === false) {
             $source = false;
         } else {
             $source = $this->get_item_by_id($source_id);
         }
         return $source;
+    }
+
+    /**
+     * Get the source id for a given remote URL.
+     *
+     * Copied from older version
+     *
+     * @param string $url
+     *
+     * @return int|bool
+     */
+    public static function get_source_id_by_remote_url( $url ) {
+        global $wpdb;
+
+        $parts = AS3CF_Utils::parse_url( $url );
+        $path  = AS3CF_Utils::decode_filename_in_path( ltrim( $parts['path'], '/' ) );
+
+        // Remove the first directory to cater for bucket in path domain settings.
+        if ( false !== strpos( $path, '/' ) ) {
+            $path = explode( '/', $path );
+            array_shift( $path );
+            $path = implode( '/', $path );
+        }
+
+        $sql = $wpdb->prepare(
+            "SELECT * FROM " . Item::items_table() . " WHERE source_type = %s AND (path LIKE %s OR original_path LIKE %s);"
+            , 'media-library'
+            , '%' . $path
+            , '%' . $path
+        );
+
+        $results = $wpdb->get_results( $sql );
+
+        // Nothing found, shortcut out.
+        if ( 0 === count( $results ) ) {
+            // TODO: If upgrade in progress, fallback to 'amazonS3_info' in Media_Library_Item override of this function.
+            return false;
+        }
+
+        // Only one attachment matched, return ID.
+        if ( 1 === count( $results ) ) {
+            return $results[0]->source_id;
+        }
+
+        $path = ltrim( $parts['path'], '/' );
+
+        foreach ( $results as $result ) {
+            $as3cf_item = Media_Library_Item::get_by_id( $result->id );
+
+            // If item's bucket matches first segment of URL path, remove it from URL path before checking match.
+            if ( 0 === strpos( $path, trailingslashit( $as3cf_item->bucket() ) ) ) {
+                $match_path = ltrim( substr_replace( $path, '', 0, strlen( $as3cf_item->bucket() ) ), '/' );
+            } else {
+                $match_path = $path;
+            }
+
+            // Exact match, return ID.
+            if ( $as3cf_item->path() === $match_path || $as3cf_item->original_path() === $match_path ) {
+                return $as3cf_item->source_id();
+            }
+        }
+
+        return false;
     }
 
 	/**
