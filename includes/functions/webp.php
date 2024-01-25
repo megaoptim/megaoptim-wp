@@ -537,3 +537,17 @@ function megaoptim_remove_webp_support_via_htaccess() {
 
 	return true;
 }
+
+
+/**
+ * Start the output buffer
+ * @return void
+ */
+function megaoptim_webp_start_output_buffer() {
+
+    if (is_admin() || (defined('DOING_AJAX') && DOING_AJAX)) {
+        return;
+    }
+
+    ob_start('megaoptim_webp_filter_content');
+}

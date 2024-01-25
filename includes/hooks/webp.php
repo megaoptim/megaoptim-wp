@@ -28,16 +28,7 @@ function megaoptim_webp_init() {
 	if($delivery_method === 'picture') {
 		$target = MGO_Settings::instance()->get(MGO_Settings::WEBP_TARGET_TO_REPLACE);
 		if($target === 'global') {
-			ob_start();
-			add_action('shutdown', function() {
-				$final = '';
-				$levels = ob_get_level();
-				for ($i = 0; $i < $levels; $i++) {
-					$final .= ob_get_clean();
-				}
-				echo apply_filters('megaoptim_final_output', $final);
-			}, 0);
-			add_filter('megaoptim_final_output', 'megaoptim_webp_filter_content');
+            add_action('init', 'megaoptim_webp_start_output_buffer');
 		} else {
 			$filters = megaoptim_webp_target_filters();
 			foreach($filters as $filter) {
@@ -46,7 +37,7 @@ function megaoptim_webp_init() {
 		}
 	}
 }
-add_action('init', 'megaoptim_webp_init', 0);
+add_action('plugins_loaded', 'megaoptim_webp_init', 5);
 
 /**
  * Enqueues required scripts.
