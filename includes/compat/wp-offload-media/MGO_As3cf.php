@@ -143,7 +143,7 @@ class MGO_As3cf {
 		$auto_optimize = (int) MGO_Settings::instance()->get( MGO_Settings::AUTO_OPTIMIZE, 1 );
 
 		if ( $auto_optimize ) {
-            error_log(' - Cancelled original.');
+            $this->util->log( 'prevent_initial_upload', 'Cancelled original' );
 			return true;
 		}
 

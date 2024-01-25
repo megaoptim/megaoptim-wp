@@ -70,9 +70,6 @@ class MGO_MediaLibrary extends MGO_Library {
 
 		@set_time_limit( 0 );
 
-		error_log(get_class($this->optimizer->get_client()));
-
-
 		$result = new MGO_ResultBag();
 
 		//Check if Attachment is image
