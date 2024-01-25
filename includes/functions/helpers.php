@@ -864,7 +864,7 @@ function megaoptim_regenerate_thumbnails( $id, $path = null ) {
 		require_once( ABSPATH . 'wp-admin/includes/media.php' );
 	}
 	if ( is_null( $path ) || empty( $path ) ) {
-		$path = get_attached_file( $id );
+		$path = get_attached_file( $id, true );
 	}
 	$meta = wp_generate_attachment_metadata( $id, $path );
 	wp_update_attachment_metadata( $id, $meta );

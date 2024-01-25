@@ -539,7 +539,7 @@ class MGO_MediaLibrary extends MGO_Library {
 	 */
 	public function get_attachment_path( $attachment_id, $wp_image_size, $retina = false ) {
 		$path_with_size           = '';
-		$original_attachment_path = get_attached_file( $attachment_id );
+		$original_attachment_path = get_attached_file( $attachment_id, true );
 		if ( $wp_image_size !== 'full' ) {
 			$meta_data = get_post_meta( $attachment_id, '_wp_attachment_metadata', true );
 			$directory = pathinfo( $original_attachment_path, PATHINFO_DIRNAME );

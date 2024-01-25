@@ -18,7 +18,10 @@
  * along with MegaOptim Image Optimizer. If not, see <https://www.gnu.org/licenses/>.
  **********************************************************************/
 
+use DeliciousBrains\WP_Offload_Media\Items\Item;
 use DeliciousBrains\WP_Offload_Media\Items\Media_Library_Item;
+use DeliciousBrains\WP_Offload_Media\Items\Remove_Provider_Handler;
+use DeliciousBrains\WP_Offload_Media\Items\Upload_Handler;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	die( 'Direct access is not allowed.' );
@@ -50,7 +53,6 @@ class MGO_As3cf_Util {
         }
 	}
 
-
 	/**
 	 * Upload attachment to remote storage
 	 *
@@ -61,12 +63,27 @@ class MGO_As3cf_Util {
 	 */
 	public function upload_attachment( $attachment ) {
 
+        $this->log('upload_attachment', 'Offloading item');
+
 		if ( ! $this->as3cf->get_setting( 'copy-to-s3' ) ) {
 			return false;
 		}
-		$attachment_id = $attachment->get_id();
-		$metadata = $attachment->get_metadata();
-		return $this->as3cf->upload_attachment( $attachment_id, $metadata );
+
+        $as3cf_item = Media_Library_Item::get_by_source_id( $attachment->get_id() );
+
+        if(empty($as3cf_item) || is_wp_error($as3cf_item)) {
+            $as3cf_item = Media_Library_Item::create_from_source_id(  $attachment->get_id() );
+            $this->log('upload_attachment', 'Created new item');
+        }
+
+        // Remove the objects from the provider
+        $upload_handler = $this->as3cf->get_item_handler( Upload_Handler::get_item_handler_key_name() );
+        $upload_handler->handle( $as3cf_item, array( 'offloaded_files' => [] ) );
+
+        $this->log('upload_attachment', 'Item offloaded');
+
+
+        return true;
 	}
 
 	/**
@@ -76,8 +93,19 @@ class MGO_As3cf_Util {
 	 */
 	public function remove_attachment( $attachment ) {
 
-		$attachment_id = $attachment->get_id();
-		$this->as3cf->delete_attachment( $attachment_id );
+        $as3cf_item = Media_Library_Item::get_by_source_id( $attachment->get_id() );
+        if(empty($as3cf_item) || is_wp_error($as3cf_item)) {
+            $this->log('remove_attachment', 'Already removed');
+            return;
+        }
+
+        // Remove the objects from the provider
+        $remove_provider_handler = $this->as3cf->get_item_handler( Remove_Provider_Handler::get_item_handler_key_name() );
+        $remove_provider_handler->handle( $as3cf_item, array( 'verify_exists_on_local' => false ) );
+        $as3cf_item->delete();
+
+        $this->log('remove_attachment', 'Item removed');
+
 	}
 
 
@@ -155,7 +183,7 @@ class MGO_As3cf_Util {
 	 * @param $msg
 	 */
 	public function log( $tag, $msg ) {
-		megaoptim_log( 'MegaOptim -> WP Offload Media: In ' . $tag . ' message: ' . $msg );
+		megaoptim_log( sprintf('MegaOptim -> WP Offload Media -> %s: %s', $tag, is_scalar($msg) ? $msg : print_r($msg, true) )  );
 	}
 
 }

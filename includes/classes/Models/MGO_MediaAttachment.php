@@ -140,7 +140,7 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	 * @return string
 	 */
 	public function backup() {
-		$attachment_path = get_attached_file( $this->get_id() );
+		$attachment_path = get_attached_file( $this->get_id(), true );
 		$backup_path     = megaoptim_get_ml_attachment_backup_path( $this->get_id(), $attachment_path );
 		$dir_path        = dirname( $backup_path );
 		$dir_path        = wp_normalize_path( $dir_path );
@@ -174,7 +174,7 @@ class MGO_MediaAttachment extends MGO_Attachment {
 	 * @throws MGO_Exception
 	 */
 	public function restore() {
-		$attachment_path = get_attached_file( $this->get_id() );
+		$attachment_path = get_attached_file( $this->get_id(), true );
 		$backup_path     = $this->get_backup_path();
 		if ( empty( $backup_path ) || ! file_exists( $backup_path ) ) {
 			throw new MGO_Exception( "Backup path is empty!" );
@@ -639,7 +639,7 @@ class MGO_MediaAttachment extends MGO_Attachment {
 		$key  = 'attached_file_' . $this->get_id();
 		$file = megaoptim_memcache_get( $key );
 		if ( ! $file ) {
-			$file = get_attached_file( $this->get_id() );
+			$file = get_attached_file( $this->get_id(), true );
 			megaoptim_memcache_set( $key, $file );
 		}
 

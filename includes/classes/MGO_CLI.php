@@ -353,7 +353,7 @@ class MGO_CLI {
 				foreach ( $optimized_attachments_with_backups as $optimized_attachment_with_backups ) {
 
 					$attachment_ID          = $optimized_attachment_with_backups['ID'];
-					$attachment_path        = get_attached_file( $attachment_ID );
+					$attachment_path        = get_attached_file( $attachment_ID, true );
 					$attachment_backup_path = $optimized_attachment_with_backups['backup_path'];
 					$attachment_dir         = dirname( $attachment_path );
 					if ( ! is_writable( $attachment_dir ) ) {

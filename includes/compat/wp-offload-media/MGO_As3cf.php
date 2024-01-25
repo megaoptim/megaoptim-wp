@@ -54,10 +54,11 @@ class MGO_As3cf {
             return;
         }
         add_filter('wp_check_filetype_and_ext', array($this, 'add_webp_support'), 10, 4);
-        add_filter('get_attached_file', array($this, 'prevent_filtering_s3_paths'), 10, 2);
+        //add_filter('get_attached_file', array($this, 'prevent_filtering_s3_paths'), 10, 2);
         add_filter('as3cf_pre_update_attachment_metadata', array($this, 'prevent_initial_upload'), 10, 4);
         add_filter('as3cf_attachment_file_paths', array($this, 'add_webp_paths'), 15, 1);
         add_filter('as3cf_remove_attachment_paths', array($this, 'remove_webp_paths'), 15, 1);
+
         add_action('megaoptim_attachment_optimized', array($this, 'upload_attachment'), 10, 1);
         add_action('megaoptim_after_restore_attachment', array($this, 'restore_attachment'), 10, 1);
         add_filter('megaoptim_webp_uploads_base', array($this, 'webp_uploads_base'), 10, 2);
@@ -72,14 +73,17 @@ class MGO_As3cf {
 	 */
 	public function upload_attachment( $attachment ) {
 
+        $this->util->log('upload_attachment', 'Handling upload #'.$attachment->get_id());
+
 		// Bail if not a Media Library attachment.
 		if ( ! ( $attachment instanceof MGO_MediaAttachment ) ) {
-			return;
+            $this->util->log('upload_attachment', 'Invalid attachment');
+            return;
 		}
 		try {
 			$this->util->upload_attachment( $attachment );
 		} catch ( \Exception $e ) {
-			$this->util->log( 'upload_attachment', $e->getMessage() );
+            $this->util->log( 'upload_attachment', $e->getMessage() );
 		}
 	}
 
@@ -113,7 +117,7 @@ class MGO_As3cf {
 	 */
 	public function prevent_filtering_s3_paths( $file, $id ) {
 		$scheme = parse_url( $file, PHP_URL_SCHEME );
-		if ( $scheme !== false && strpos( $scheme, 's3' ) !== false ) {
+		if ( !empty($scheme) && strpos( $scheme, 's3' ) !== false ) {
 			return get_attached_file( $id, true );
 		}
 
@@ -130,15 +134,16 @@ class MGO_As3cf {
 	 * @param $bool
 	 * @param $data
 	 * @param $post_id
-	 * @param $old_provider_object
+	 * @param \DeliciousBrains\WP_Offload_Media\Items\Item $old_provider_object
 	 *
 	 * @return bool
 	 */
 	public function prevent_initial_upload( $bool, $data, $post_id, $old_provider_object ) {
 
-		$auto_optimize = MGO_Settings::instance()->get( MGO_Settings::AUTO_OPTIMIZE, 1 );
+		$auto_optimize = (int) MGO_Settings::instance()->get( MGO_Settings::AUTO_OPTIMIZE, 1 );
 
 		if ( $auto_optimize ) {
+            error_log(' - Cancelled original.');
 			return true;
 		}
 
