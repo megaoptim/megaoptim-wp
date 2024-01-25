@@ -246,7 +246,7 @@ class MGO_As3cf_Util {
 	 * @param $msg
 	 */
 	public function log( $tag, $msg ) {
-		megaoptim_log( sprintf('MegaOptim -> WP Offload Media -> %s: %s', $tag, is_scalar($msg) ? $msg : print_r($msg, true) )  );
+		megaoptim_log( sprintf('WP Offload Media - %s: %s', $tag, is_scalar($msg) ? $msg : print_r($msg, true) )  );
 	}
 
 }

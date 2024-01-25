@@ -143,7 +143,7 @@ class MGO_As3cf {
 		$auto_optimize = (int) MGO_Settings::instance()->get( MGO_Settings::AUTO_OPTIMIZE, 1 );
 
 		if ( $auto_optimize ) {
-            $this->util->log( 'prevent_initial_upload', 'Cancelled "WP Media Offload" process, MegaOptim will re-trigger it.' );
+            $this->util->log( 'prevent_initial_upload', 'Cancelled the S3 upload process, MegaOptim will re-trigger it.' );
 			return true;
 		}
 

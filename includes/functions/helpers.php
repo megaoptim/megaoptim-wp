@@ -98,11 +98,14 @@ function megaoptim_log( $message, $filename = "debug.log" ) {
 	if ( file_exists( $log_file_path ) && filesize( $log_file_path ) > 10485760 ) {
 		@unlink( $log_file_path );
 	}
-	if ( ! is_string( $message ) && ! is_numeric( $message ) ) {
+	if ( ! is_scalar( $message ) ) {
 		ob_start();
 		megaoptim_dump( $message );
 		$message = ob_get_clean();
-	}
+        $message = sprintf("[%s] Dump:%s%s", wp_date('Y-m-d H:i:s'), PHP_EOL, $message);
+    } else {
+        $message = sprintf("[%s] %s", wp_date('Y-m-d H:i:s'), $message);
+    }
 	megaoptim_write( $log_file_path, $message );
 }
 
