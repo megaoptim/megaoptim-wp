@@ -19,7 +19,7 @@
 						echo sprintf( __( 'In order to use MegaOptim you will need %s. You can register for %s that comes with %s per month for %s. If you need larger quota you can get our premium %s plan for only %s or any other from our %s.', 'megaoptim-image-optimizer' ),
 							'<strong>API KEY</strong>',
 							'<strong>FREE API KEY</strong>',
-							'<strong>750 tokens</strong>',
+							'<strong>500 tokens</strong>',
 							'<strong>FREE</strong>',
 							'<strong>UNLIMITED</strong>',
 							'<strong>$9.99/month</strong>',
