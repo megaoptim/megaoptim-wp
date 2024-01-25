@@ -87,7 +87,7 @@ Header set X-Robots-Tag "noindex"
 /**
  * Wrapper for writing the interactions to /wp-content/uploads/ file
  *
- * @param        $message
+ * @param  mixed   $message
  * @param  string  $filename
  */
 function megaoptim_log( $message, $filename = "debug.log" ) {
@@ -1073,4 +1073,18 @@ function megaoptim_rawurlencode( $url ) {
 	}
 
 	return $url;
+}
+
+
+/**
+ * Gets the last key of an array
+ *
+ * @param mixed $arr An array.
+ * @return mixed Returns the last key of array if the array is not empty; NULL otherwise.
+ */
+function megaoptim_array_key_last($arr) {
+    if (!empty($arr)) {
+        return key(array_slice($arr, -1, 1, true));
+    }
+    return '';
 }

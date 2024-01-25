@@ -31,11 +31,11 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 
 		@set_time_limit( 460 );
 
-		if ( count( $item ) == 0 ) {
-			return false;
-		}
-
-		$result = new MGO_ResultBag();
+        if ( ! isset($item['chunk_items']) || count($item['chunk_items']) == 0) {
+            megaoptim_log('Chunk items not found. Skipping.');
+            megaoptim_log( $item );
+            return false;
+        }
 
 		$optimizer = MGO_Library::get_optimizer();
 
@@ -43,9 +43,8 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 			return false; // Prevent if the optimizer is not set up. (No api key).
 		}
 
-		// NOTE: This will only work if all items are from the same attachment.
-		$attachment_id  = $item[0]['attachment_id'];
-		$request_params = $item[0]['params'];
+		$attachment_id  = (int) $item['attachment_id'];
+		$request_params = $item['request_params'];
 
 		megaoptim_log( 'Optimizing images chunk of the attachment with id ' . $attachment_id . ' in background.' );
 
@@ -57,15 +56,23 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 			return false; // Remove
 		}
 
+        // Save the responses
+        $trans_key = 'mgo_async_'.$attachment_id.'_responses';
+        $responses = get_transient($trans_key);
+        if(!is_array($responses)) {
+            $responses = [];
+        }
+
 		if ( $attachment->is_locked() ) {
 			return false;
 		} else {
 
 			// Collect the resources
 			$resources = array();
-			foreach ( $item as $_itm ) {
+			foreach ( $item['chunk_items'] as $_itm ) {
 				array_push( $resources, $_itm['attachment_resource'] );
 			}
+
 			// Try to send them for optimization
 			try {
 
@@ -74,6 +81,9 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 
 				// Run Optimizer
 				$response = $optimizer->run( $resources, $request_params );
+
+                // Save response
+                $responses['chunk_'.$item['chunk_id']] = $response;
 
 				if ( $response->isError() ) {
 					$error     = $response->getErrors();
@@ -88,7 +98,7 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 				megaoptim_log( '--- Response: ' . $response->getRawResponse() );
 
 				// Loop through the files and save the results.
-				foreach ( $item as $_itm ) {
+				foreach ( $item['chunk_items'] as $_itm ) {
 
 					$attachment->refresh();
 					//$attachment_id  = $_itm['attachment_id'];
@@ -118,15 +128,6 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 								$webp->saveAsFile( $local_path . '.webp' );
 							}
 						}
-
-						// Set Stats
-						if ( $size !== 'full' ) {
-							$result->total_thumbnails = $result->total_thumbnails + 1;
-						} else {
-							$result->total_full_size = $result->total_full_size + 1;
-						}
-						$result->total_saved_bytes = $result->total_saved_bytes + $file->getSavedBytes();
-
 
 						$size = $is_retina ? $size . '@2x' : $size;
 
@@ -158,8 +159,23 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
 		// END
 		$attachment->unlock();
 
-		do_action( 'megaoptim_attachment_optimized', $attachment, $request_params, $result );
+        // Trigger hook
+        if(isset($item['is_final']) && (bool) $item['is_final']) {
+            $result = new MGO_ResultBag();
+            $attachment->refresh();
+            $stats = $attachment->get_optimization_stats();
+            $result->total_thumbnails = isset($stats['processed_total']) ? $stats['processed_total'] : 0;
+            $result->total_full_size = isset($stats['saved_bytes']) && $stats['saved_bytes'] > 0 ? 1 : 0;
+            $result->total_saved_bytes = (isset($stats['saved_bytes']) ? $stats['saved_bytes'] : 0) + (isset($stats['saved_thumbs_retina']) ? $stats['saved_thumbs_retina'] : 0);
+            foreach($responses as $key => $response) {
+                $result->add($key, $response);
+            }
+            do_action( 'megaoptim_attachment_optimized', $attachment, $request_params, $result );
+            delete_transient($trans_key);
+        } else {
+            set_transient($trans_key, $responses, MEGAOPTIM_ONE_MINUTE_IN_SECONDS * 10);
+        }
 
-		return false;
+        return false;
 	}
 }

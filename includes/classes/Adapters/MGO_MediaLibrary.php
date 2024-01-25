@@ -215,8 +215,7 @@ class MGO_MediaLibrary extends MGO_Library {
 								 *
 								 * @since 1.0.0
 								 */
-								do_action( 'megaoptim_size_optimized', $attachment_object, $att['save_path'], $response,
-									$request_params, $size );
+								do_action( 'megaoptim_size_optimized', $attachment_object, $att['save_path'], $response, $request_params, $size );
 							} else {
 								megaoptim_log( '--- Saving Response: Response by filename not found. File name: ' . $filename );
 							}
@@ -328,7 +327,6 @@ class MGO_MediaLibrary extends MGO_Library {
 						'attachment_size'       => 'full',
 						'attachment_resource'   => $full_resource,
 						'attachment_local_path' => $full_local_path,
-						'params'                => $request_params,
 						'type'                  => $_type
 					);
 					array_push( $items, $item );
@@ -340,11 +338,8 @@ class MGO_MediaLibrary extends MGO_Library {
 					$item = array(
 						'attachment_id'         => $attachment_object->get_id(),
 						'attachment_size'       => $size,
-						'attachment_resource'   => $this->get_attachment( $attachment_object->get_id(), $size,
-							$is_retina ),
-						'attachment_local_path' => $this->get_attachment_path( $attachment_object->get_id(), $size,
-							$is_retina ),
-						'params'                => $request_params,
+						'attachment_resource'   => $this->get_attachment( $attachment_object->get_id(), $size, $is_retina ),
+						'attachment_local_path' => $this->get_attachment_path( $attachment_object->get_id(), $size, $is_retina ),
 						'type'                  => $_type
 					);
 					array_push( $items, $item );
@@ -355,9 +350,19 @@ class MGO_MediaLibrary extends MGO_Library {
 		// Chunk and Dispatch
 		if ( count( $items ) ) {
 			$chunks = array_chunk( $items, 5 );
-			megaoptim_log( '--- Prepared chunks: ' . json_encode( $chunks ) );
-			foreach ( $chunks as $chunk ) {
-				$this->background_process->push_to_queue( $chunk );
+            megaoptim_log( '--- Prepared chunks: ' . json_encode( $chunks ) );
+            $last_key = megaoptim_array_key_last($chunks);
+            $total_chunks = count($chunks);
+			foreach ( $chunks as $current_key => $chunk ) {
+                $is_final = $current_key === $last_key;
+				$this->background_process->push_to_queue( [
+                    'chunk_id' => $current_key,
+                    'chunk_items' => $chunk,
+                    'total_chunks' => $total_chunks,
+                    'attachment_id' => $attachment_object->get_id(),
+                    'request_params' => $request_params,
+                    'is_final' => $is_final
+                ]);
 			}
 			$this->background_process->save()->dispatch();
 		}
