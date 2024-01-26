@@ -4,7 +4,7 @@ Tags: convert webp, webp, optimize images, optimize, images, compress
 Requires at least: 3.6
 Tested up to: 6.4
 Requires PHP: 5.3
-Stable tag: 1.4.22
+Stable tag: 1.4.23
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -142,7 +142,11 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 
 = 1.4.23 =
 * Test compatibility with WordPress 6.4
-*
+* Improve error logging
+* Fix compatibility with WP Offload Media
+* Fix webp loading when using with WP Offload Media
+* Fix bugs during the async upload
+* Upgrade wp-background-processing library
 
 = 1.4.22 =
 * Test compatibility with WordPress 6.3
