@@ -166,7 +166,7 @@ class MGO_MediaLibrary_Process extends MGO_Background_Process {
             $stats = $attachment->get_optimization_stats();
             $result->total_thumbnails = isset($stats['processed_total']) ? $stats['processed_total'] : 0;
             $result->total_full_size = isset($stats['saved_bytes']) && $stats['saved_bytes'] > 0 ? 1 : 0;
-            $result->total_saved_bytes = (isset($stats['saved_bytes']) ? $stats['saved_bytes'] : 0) + (isset($stats['saved_thumbs_retina']) ? $stats['saved_thumbs_retina'] : 0);
+            $result->total_saved_bytes = (isset($stats['saved_bytes']) ? (int) $stats['saved_bytes'] : 0) + (isset($stats['saved_thumbs_retina']) ? (int) $stats['saved_thumbs_retina'] : 0);
             foreach($responses as $key => $response) {
                 $result->add($key, $response);
             }
