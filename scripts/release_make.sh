@@ -7,7 +7,7 @@ SCRIPT_DIR="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 PLUGIN_DIR="$( cd -- "$(dirname "$SCRIPT_DIR")" >/dev/null 2>&1 ; pwd -P )"
 PLUGINS_ROOT_DIR="$( cd -- "$(dirname "$PLUGIN_DIR")" >/dev/null 2>&1 ; pwd -P )"
 PLUGIN_SLUG=$(basename $PLUGIN_DIR)
-MAINFILE="$PLUGIN_SLUG.php"
+MAINFILE="megaoptim.php"
 
 # svn config
 SVNTMP="/tmp/$PLUGIN_SLUG-tmp"
@@ -33,7 +33,7 @@ fi
 # Check version in readme.txt is the same as plugin file
 NEWVERSION1=$(grep "^Stable tag:" $PLUGIN_DIR/readme.txt | awk '{print $NF}')
 echo "readme version: $NEWVERSION1"
-NEWVERSION2=$(grep "Version:" $PLUGIN_DIR/megaoptim.php | awk '{print $NF}')
+NEWVERSION2=$(grep "Version:" $PLUGIN_DIR/$MAINFILE | awk '{print $NF}')
 echo "$MAINFILE version: $NEWVERSION2"
 
 if [ "$NEWVERSION1" != "$NEWVERSION2" ]; then
