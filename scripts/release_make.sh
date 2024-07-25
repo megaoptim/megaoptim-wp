@@ -33,7 +33,7 @@ fi
 # Check version in readme.txt is the same as plugin file
 NEWVERSION1=$(grep "^Stable tag:" $PLUGIN_DIR/readme.txt | awk '{print $NF}')
 echo "readme version: $NEWVERSION1"
-NEWVERSION2=$(grep "Version:" $PLUGIN_DIR/$MAINFILE | awk '{print $NF}')
+NEWVERSION2=$(grep "Version:" $PLUGIN_DIR/megaoptim.php | awk '{print $NF}')
 echo "$MAINFILE version: $NEWVERSION2"
 
 if [ "$NEWVERSION1" != "$NEWVERSION2" ]; then
