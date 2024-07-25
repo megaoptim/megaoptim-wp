@@ -422,9 +422,8 @@ function megaoptim_get_dom_element_attributes( $content, $element ) {
 	if ( empty( $content ) ) {
 		return array();
 	}
-	if ( function_exists( "mb_convert_encoding" ) ) {
-		$content = mb_convert_encoding( $content, 'HTML-ENTITIES', 'UTF-8' );
-	}
+
+	$content = htmlentities( $content );
 
 	$attr = array();
 	if ( ! class_exists( 'DOMDocument' ) ) {
