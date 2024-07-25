@@ -2,9 +2,9 @@
 Contributors: megaoptim, darkog
 Tags: convert webp, webp, optimize images, optimize, images, compress
 Requires at least: 3.6
-Tested up to: 6.4
+Tested up to: 6.6
 Requires PHP: 5.3
-Stable tag: 1.4.23
+Stable tag: 1.4.24
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -139,6 +139,10 @@ Click <a target="_blank" href="https://megaoptim.com/tools/wordpress">here</a> t
 10. WP CLI - Bulk Restore command
 
 == Changelog ==
+
+= 1.4.24 =
+* Test compatibility with WordPress 6.6
+* Replace deprecated function mb_convert_encoding
 
 = 1.4.23 =
 * Test compatibility with WordPress 6.4
